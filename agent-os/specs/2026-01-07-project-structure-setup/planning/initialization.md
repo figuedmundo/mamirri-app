@@ -1,0 +1,1 @@
+Setup the project structure for the initial "Hello World" phase. This involves creating a Monorepo with `/client` and `/server` directories, initializing a PostgreSQL database with Prisma, setting up a NestJS backend with Swagger, and creating a React/Vite frontend with Shadcn/UI and TailwindCSS. The goal is to have the environment ready and the "plumbing" connected.
