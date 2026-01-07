@@ -1,9 +1,12 @@
-import Login from "./pages/Login"
+import { MainLayout } from '../components/MainLayout';
+import { Dashboard } from './pages/Dashboard';
 
-function App() {
+const App = () => {
   return (
-    <Login />
-  )
-}
+    <MainLayout>
+      <Dashboard />
+    </MainLayout>
+  );
+};
 
-export default App
+export default App;

@@ -1,42 +1,63 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
+enum SessionStatus {
+  DRAFT
+  FINALIZED
+}
+
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
+  id           String   @id @default(cuid())
+  email        String    @unique
   passwordHash String
-  name         String?
-  createdAt    DateTime @default(now())
+  name         String
+  role         String     @default("THERAPIST")
+  createdAt     DateTime   @default(now())
+
+  // Relations
+  sessions     Session[]
+
+  @@index([email])
+  @@map("users")
 }
 
 model Patient {
-  id         String    @id @default(uuid())
-  fullName   String
-  birthDate  DateTime
-  occupation String?
-  phone      String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  sessions   Session[]
+  id          String    @id @default(cuid())
+  firstName   String
+  lastName    String
+  dob         DateTime
+  phone       String?
+  email       String?
+
+  therapistId String
+  createdAt   DateTime   @default(now())
+
+  // Relations
+  sessions    Session[]
+
+  @@index([firstName, lastName])
+  @@map("patients")
 }
 
 model Session {
-  id           String   @id @default(uuid())
-  patientId    String
-  patient      Patient  @relation(fields: [patientId], references: [id])
-  date         DateTime
-  status       String
-  observations String?
-  attachments  String[]
+  id          String       @id @default(cuid())
+  
+  patientId   String
+  patient     Patient      @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  
+  therapistId String
+  therapist   User         @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+  
+  status      SessionStatus @default(DRAFT)
+  notes       String?
+  date        DateTime     @default(now())
+  createdAt   DateTime      @default(now())
+
+  @@index([patientId, therapistId, date])
+  @@map("sessions")
 }
