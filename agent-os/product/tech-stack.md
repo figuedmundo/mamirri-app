@@ -16,7 +16,7 @@
 - **Storage:** S3 Compatible (AWS S3 or Supabase Storage)
 
 ## AI & Services
-- **Transcription:** OpenAI Whisper API (whisper-large-v3 using trough groq)
+- **Transcription:** OpenAI Whisper API (whisper-large-v3 using trough groq service)
 - **Intelligence & Vision:** Gemini 3
 - **Vector Search:** pgvector (PostgreSQL) or ChromaDB
 

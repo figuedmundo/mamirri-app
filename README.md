@@ -48,7 +48,7 @@ This project is a **Monorepo** managed with [Turborepo](https://turbo.build/repo
 2. **Start Infrastructure (Database):**
 
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 3. **Initialize Database:**

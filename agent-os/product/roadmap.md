@@ -1,153 +1,263 @@
-# 🗺️ Roadmap
+# 🗺️ Optimized Roadmap (14-16 Weeks)
 
-Tiempo Estimado Total: 12 a 16 Semanas (3-4 meses) para la versión con IA completa.
-Metodología: Desarrollo Ágil (Sprints de 1 semana).
-
----
-
-## 🏁 Fase 0: Cimientos e Infraestructura (Semanas 1-2)
-
-**Objetivo:** Tener el entorno de desarrollo listo y la "tubería" conectada. Nada de lógica de negocio aún, solo infraestructura.
-
-### Semana 1: Setup del Entorno (The "Hello World")
-
-- [x] **1.1 Repositorio:** Crear Repo Monorepo (Git) con estructura `/client` y `/server`.
-- [x] **1.2 Base de Datos:**
-  - [x] 1.2.1 Levantar instancia de PostgreSQL (Docker local).
-  - [x] 1.2.2 Inicializar proyecto **Prisma ORM**.
-  - [x] 1.2.3 Definir el `schema.prisma` v1 (Tablas `User`, `Patient`, `Session`).
-- [x] **1.3 Backend (NestJS):**
-  - [x] 1.3.1 `npm install @nestjs/cli`
-  - [x] 1.3.2 Configurar conexión a DB.
-  - [x] 1.3.3 Configurar Swagger (Documentación automática de API).
-- [x] **1.4 Frontend (React/Vite):**
-  - [x] 1.4.1 Inicializar proyecto Vite + TypeScript.
-  - [x] 1.4.2 Instalar `Shadcn/UI` y `TailwindCSS`.
-  - [x] 1.4.3 Crear pantalla de "Login" (aunque sea dummy por ahora).
-
-### Semana 2: Autenticación y Despliegue Temprano
-
-- [ ] **2.1 Auth:** Implementar JWT simple en NestJS (Login/Logout).
-- [ ] **2.2 Storage:** Configurar Bucket (AWS S3, MinIO o Supabase Storage) para archivos.
-- [ ] **2.3 CI/CD Básico:**
-  - [ ] 2.3.1 Configurar despliegue automático en **Render/Railway** (Backend) y **Vercel** (Frontend).
-  - [ ] 2.3.2 _Hito:_ Poder abrir la URL en el iPad de tu madre y ver una pantalla en blanco que diga "PhysioCopilot v0.1".
+Estimated Total Time: 12-16 Weeks (3-4 months) for full AI version.
+Methodology: Agile Development (1-week Sprints).
 
 ---
 
-## 🏗️ Fase 1: El MVP "Gestor Clínico" (Semanas 3-6)
+## 🏁 Phase 0: Foundations & Infrastructure (Weeks 1-4)
 
-**Objetivo:** Reemplazar el papel. Que tu madre pueda guardar pacientes, grabar voz y subir fotos. **Cero IA generativa aquí.**
+**Goal:** Solid foundation, DevOps, and critical infrastructure. No business logic yet.
 
-### Semana 3: Gestión de Pacientes (CRUD)
+### Week 1: Infrastructure
 
-- [ ] **3.1 Backend:** Endpoints `POST /patients`, `GET /patients`, `PATCH /patients`.
-- [ ] **3.2 Frontend:**
-  - [ ] 3.2.1 Lista de Pacientes (Buscador simple).
-  - [ ] 3.2.2 Formulario "Nuevo Paciente" (Nombre, Edad, Ocupación).
-  - [ ] 3.2.3 Vista "Detalle de Paciente" (Historial vacío).
+- [ ] **1.1 Docker Infrastructure:** PostgreSQL (w/ pgvector), MinIO, Redis.
+- [ ] **1.2 Prisma Schema v1:** User, Patient, Session tables.
+- [ ] **1.3 NestJS Structure:** Create module shells (auth, patients, sessions, media).
+- [ ] **1.4 Frontend Setup:** React + Shadcn/UI basic layout.
 
-### Semana 4: La Sesión Clínica (El Core)
+### Week 2: Auth & Storage
 
-- [ ] **4.1 Backend:** Lógica de `Session` (Draft vs Finalized).
-- [ ] **4.2 Frontend:**
-  - [ ] 4.2.1 Pantalla "Nueva Consulta".
-  - [ ] 4.2.2 Componente de pasos: 1. Datos -> 2. Anamnesis -> 3. Fotos -> 4. Guardar.
-- [ ] **4.3 UX Táctica:** Asegurar que los botones sean de tamaño "Dedo" (min 44px) para Tablet.
+- [ ] **2.1 JWT Authentication:** Register/Login/Logout flows.
+- [ ] **2.2 MinIO Integration:** Upload/Download service.
+- [ ] **2.3 Frontend Auth:** Protected routes & context.
+- [ ] **2.4 Basic Error Handling:** Global filters.
 
-### Semana 5: Multimedia y "IA de Utilidad"
+### Week 3: DevOps
 
-- [ ] **5.1 Módulo de Cámara:** Integrar `react-webcam` o input nativo de archivo. Subida a S3 y guardado de URL en BD.
-- [ ] **5.2 Módulo de Voz (Groq/Whisper):**
-  - [ ] 5.2.1 Componente `<VoiceRecorder />` en React.
-  - [ ] 5.2.2 Endpoint NestJS que recibe audio -> Envía a **Groq (Whisper)** -> Retorna Texto.
-  - [ ] 5.2.3 _Prueba:_ Dictar un párrafo médico rápido y verificar precisión.
+- [ ] **3.1 Database Backups:** Automated backup scripts.
+- [ ] **3.2 Environment:** Secure .env management (Single source of truth).
+- [ ] **3.3 CI/CD:** Basic GitHub Actions (lint/test).
+- [ ] **3.4 Deployment:** Deploy to Ubuntu home lab.
 
-### Semana 6: Pulido y "Entrega v1.0"
+### Week 4: Testing Foundation
 
-- [ ] **6.1 Manejo de Errores:** Pantallas de "Cargando..." y "Error de Red" amigables.
-- [ ] **6.2 Prueba de Campo:** Instalar la Web App en el iPad (Agregar a Pantalla de Inicio).
-- [ ] **6.3 Entrenamiento:** Enseñar a tu madre a usarlo con un paciente real (o contigo actuando).
+- [ ] **4.1 Unit Tests:** Critical backend services.
+- [ ] **4.2 E2E Tests:** Auth flow verification.
+- [ ] **4.3 API Docs:** Swagger setup & refinement.
+- [ ] **4.4 Onboarding:** Developer guide & setup scripts.
 
----
-
-## 🧪 Fase 2: Validación y Estabilización (Semanas 7-8)
-
-**Objetivo:** Observar, callar y corregir. No escribir código nuevo, solo arreglar lo que le molesta a ella.
-
-### Semana 7: La "Prueba de la Abuela"
-
-- [ ] **7.1 Observación Pasiva:** Siéntate en una esquina mientras ella trabaja.
-  - [ ] 7.1.1 _¿Dónde se traba?_
-  - [ ] 7.1.2 _¿Qué botones no ve?_
-  - [ ] 7.1.3 _¿La transcripción entiende sus términos médicos?_
-- [ ] **7.2 Hotfixes:** Corregir bugs críticos esa misma noche.
-
-### Semana 8: Robustez de Datos
-
-- [ ] **8.1 Backups:** Configurar dump diario automático de PostgreSQL.
-- [ ] **8.2 Optimización:** Asegurar que las fotos no pesen 10MB (comprimir en cliente antes de subir).
-- [ ] **8.3 Seguridad:** Rotación de tokens, asegurar headers de seguridad (Helmet).
+**🎯 Milestone 1:** "I can login and see an empty dashboard"
 
 ---
 
-## 🧠 Fase 3: El Cerebro "Post-MVP" (Semanas 9-12)
+## 🏗️ Phase 1: MVP (Weeks 5-8) - REORDERED
 
-**Objetivo:** Ahora que la app es útil, la hacemos inteligente. Introducimos RAG y Visión.
+### Week 5: Patients (Core Data Model)
+- [ ] **5.1** Backend: Patients CRUD (routes, validation, Prisma)
+- [ ] **5.2** Frontend: Patient list with search
+- [ ] **5.3** Frontend: Create/Edit patient form
+- [ ] **5.4** Frontend: Patient detail view (empty history for now)
+- [ ] **5.5** Tests: Patient CRUD unit tests
 
-### Semana 9: Infraestructura de Conocimiento (RAG Setup)
+**🎯 Milestone 2:** "I can create and search patients"
 
-- [ ] **9.1 Vector DB:** Activar extensión `pgvector` en Postgres.
-- [ ] **9.2 Script de Ingesta:**
-  - [ ] 9.2.1 Crear script Python/Node para leer PDFs.
-  - [ ] 9.2.2 Procesar 2 o 3 libros clave de ella.
-  - [ ] 9.2.3 Generar Embeddings y guardar en BD.
+### Week 6: Clinical Sessions (The Workflow)
+- [ ] **6.1** Backend: Session schema (Draft/Finalized states)
+- [ ] **6.2** Backend: Session CRUD endpoints
+- [ ] **6.3** Frontend: "New Session" wizard (3 steps)
+- [ ] **6.4** Frontend: Session list on patient detail
+- [ ] **6.5** UX: Large buttons (>44px) for tablet
 
-### Semana 10: El Agente Backend
+**🎯 Milestone 3:** "I can start a session and add text notes"
 
-- [ ] **10.1 NestJS:** Crear módulo `AIAnalysis`.
-- [ ] **10.2 Lógica RAG:** Implementar búsqueda por similitud (Cosine Similarity).
-- [ ] **10.3 Prompt Engineering:** Implementar el "System Prompt Maestro" (Chain of Thought) en el código.
+### Week 7: Media & Dictation
+- [ ] **7.1** Backend: Media upload endpoint (validation, S3)
+- [ ] **7.2** Frontend: Camera capture component
+- [ ] **7.3** Frontend: Photo gallery per session
+- [ ] **7.4** Backend: Whisper integration (Groq API)
+- [ ] **7.5** Frontend: Voice recorder button + transcription
+- [ ] **7.6** Test: Dictate medical terms, verify accuracy
 
-### Semana 11: Visión y Orquestación
+**🎯 Milestone 4:** "I can take photos and dictate notes"
 
-- [ ] **11.1 Visión:** Conectar **Gemini 1.5 Pro** Vision para describir las fotos de las huellas guardadas en Fase 1.
-- [ ] **11.2 Endpoint "Analizar":** Crear el botón mágico que dispara: Visión + Búsqueda Libros + Resumen LLM.
+### Week 8: PWA Basics (Offline Skeleton)
+- [ ] **8.1** Service Worker: Cache static assets
+- [ ] **8.2** Offline indicator (connection status)
+- [ ] **8.3** PWA manifest (install to home screen)
+- [ ] **8.4** Test: Works without internet (static pages only)
 
-### Semana 12: Interfaz de Sugerencias
+**Note:** Full offline editing (IndexedDB sync) deferred to Phase 2.5
 
-- [ ] **12.1 Frontend:** Crear la UI de "Resultados del Análisis".
-  - [ ] 12.1.1 Tarjetas de sugerencia.
-  - [ ] 12.1.2 Citas bibliográficas desplegables.
-- [ ] **12.2 Feedback Loop:** Botones "Me gusta" / "Corregir" para que la IA aprenda (guardar feedback en BD).
+**🎯 Milestone 5:** "App loads offline, shows cached data"
 
 ---
 
-## 🚀 Fase 4: Futuro y Escala (Opcional / +3 meses)
+## 🧪 Phase 2: Validation & Hardening (Weeks 9-11)
 
-**Objetivo:** Si la app es un éxito rotundo y otros fisios la quieren.
+### Week 9: Field Testing ("The Truth")
+- [ ] **9.1** Install on mother's iPad
+- [ ] **9.2** Observe 3-5 real consultations
+- [ ] **9.3** Document friction points (what breaks her flow?)
+- [ ] **9.4** Collect performance data (slow queries?)
+- [ ] **9.5** User feedback interview
 
-- [ ] **13.1 Multitenancy:** Adaptar BD para soportar múltiples clínicas (`clinic_id`).
-- [ ] **13.2 Facturación:** Integrar Stripe.
-- [ ] **13.3 App Nativa:** Migrar React a React Native (si se necesita acceso offline real).
+**🎯 Milestone 6:** "Mother used it with a real patient without asking for help"
+
+### Week 10: Pivot & Fix Week 🔧
+**Critical Buffer Week - Expect the Unexpected**
+
+- [ ] **10.1** Prioritize top 3 UX blockers from Week 9
+- [ ] **10.2** Fix critical bugs (data loss, crashes)
+- [ ] **10.3** Refine UI based on real usage (button sizes, wording)
+- [ ] **10.4** Performance: Only fix proven bottlenecks
+- [ ] **10.5** Decision: AI-ready or need more MVP work?
+
+**Possible outcomes:**
+- ✅ MVP solid → Proceed to Week 11
+- ⚠️ Major issues → Extend MVP work, push AI to later
+
+### Week 11: Security & Performance (Post-Validation)
+- [ ] **11.1** Input sanitization (based on real attack vectors)
+- [ ] **11.2** File upload security (malware scan if needed)
+- [ ] **11.3** Rate limiting (if API abuse detected)
+- [ ] **11.4** Database indexing (based on slow query logs)
+- [ ] **11.5** Image compression (if storage is an issue)
+- [ ] **11.6** Audit logging for sensitive operations
+
+**Why now?** You know what needs securing based on real usage.
+
+**🎯 Milestone 7:** "App is production-ready (no AI yet)"
 
 ---
 
-## 📋 Lista de Compras (Recursos Necesarios)
+## 🧠 Phase 3: The AI Brain (Weeks 12-15)
 
-Para empezar hoy, necesitas tener esto a mano:
+**Pre-requisite Check:**
+- [ ] Do you have 3-5 reference books (PDFs) ready?
+- [ ] Are they legally yours to process?
+- [ ] Is the MVP stable enough to build on?
 
-### ✅ Ya tienes (Infraestructura Propia)
+### Week 12: Knowledge Base Preparation
+- [ ] **12.1** Research: PDF extraction tools (pdf-parse vs. Unstructured.io)
+- [ ] **12.2** Chunking strategy design (500 words, 50-word overlap)
+- [ ] **12.3** Metadata schema (book, page, chapter, section)
+- [ ] **12.4** Manual test: Extract 1 book, verify quality
+- [ ] **12.5** Write ingestion script with error handling
 
-- [x] **Dominio:** Propio.
-- [x] **Hosting:** Ubuntu Home Lab + Caddy (Reverse Proxy) + Cloudflare.
-- [x] **IA Subscription:** Gemini 3 (Google).
-- [x] **Hardware:** iPad/Tablet + Ordenador de desarrollo.
+### Week 13: Vector Database (RAG Foundation)
+- [ ] **13.1** Enable pgvector on Postgres
+- [ ] **13.2** Create embeddings table schema
+- [ ] **13.3** Generate embeddings (OpenAI text-embedding-3-small)
+- [ ] **13.4** Bulk insert vectors into database
+- [ ] **13.5** Test similarity search queries
+- [ ] **13.6** Optimize: Vector index for <200ms queries
 
-### 🛠 Configuración Pendiente
+### Week 14: The AI Agent (Backend)
+- [ ] **14.1** NestJS: AIAnalysis module
+- [ ] **14.2** RAG logic: Semantic search implementation
+- [ ] **14.3** LLM integration: OpenAI GPT-4 or Gemini
+- [ ] **14.4** System Prompt engineering (Chain of Thought)
+- [ ] **14.5** Anonymization: Strip PII before sending to LLM
+- [ ] **14.6** Test: Query "fascitis plantar" → returns relevant book passages
 
-- [ ] **Groq API Key:** Necesaria para el servicio de Whisper (Transcripción ultra rápida).
-- [ ] **Google Cloud Project:** Necesario para habilitar API de Gemini (Visión).
-- [ ] **Almacenamiento de Archivos:**
-  - Opción A: **MinIO** (Self-hosted en tu Ubuntu Docker).
-  - Opción B: AWS S3 / Supabase Storage (Nube barata/gratis).
+### Week 15: Vision & Full Analysis
+- [ ] **15.1** Gemini Vision: Image description API
+- [ ] **15.2** Orchestration: Combine Voice + Vision + RAG + LLM
+- [ ] **15.3** "Analyze Case" endpoint (orchestrates all services)
+- [ ] **15.4** Frontend: Suggestions UI (cards, citations)
+- [ ] **15.5** Feedback loop: Like/Dislike buttons
+- [ ] **15.6** Test: Complete flow with real patient data
+
+**🎯 Milestone 8:** "The AI provides a cited treatment suggestion"
+
+---
+
+## 🔄 Phase 3.5: AI Refinement (Week 16) - OPTIONAL
+
+**If AI output quality is poor:**
+- [ ] **16.1** Prompt iteration (based on real output quality)
+- [ ] **16.2** Add more books to knowledge base
+- [ ] **16.3** Improve chunking strategy
+- [ ] **16.4** Vision prompt refinement
+- [ ] **16.5** Explainability: Show which book passages influenced suggestion
+
+---
+
+## 📊 Risk Management Strategy
+
+### High-Risk Items (Have a Plan B)
+
+| Risk | Mitigation | Plan B |
+|------|------------|--------|
+| **Week 9: Mother hates the UX** | Week 10 pivot buffer | Extend MVP, delay AI |
+| **Week 12: No books available** | Start collecting in Week 1 | Use free PubMed articles |
+| **Week 13: pgvector too slow** | Optimize indexes early | Use Pinecone (cloud) |
+| **Week 15: AI hallucinates** | Strict citation requirement | Disable AI, manual mode only |
+| **Groq API down** | Monitor uptime early | Fallback to OpenAI Whisper |
+
+### Low-Risk Items (Can Defer)
+
+- Full offline sync (IndexedDB) → Phase 4
+- Multi-tenancy → Phase 4
+- React Native app → Phase 4
+- Stripe billing → Phase 4
+
+---
+
+## 🎯 Success Criteria (Gate Checks)
+
+### After Phase 1 (Week 8):
+- ✅ Mother can complete a full consultation without your help
+- ✅ No data loss in 10 test sessions
+- ✅ Page load time < 3 seconds on iPad
+
+### After Phase 2 (Week 11):
+- ✅ Used for 20+ real patients
+- ✅ Zero security vulnerabilities in audit
+- ✅ Backup/restore tested and works
+
+### After Phase 3 (Week 15):
+- ✅ AI suggestions are clinically relevant 70%+ of the time
+- ✅ Citations trace back to actual book content
+- ✅ Mother trusts the AI enough to use it regularly
+
+---
+
+## 📅 Calendar View (16 Weeks)
+
+```
+Weeks 1-4:   Foundation (DevOps, Auth, Infrastructure)
+Weeks 5-8:   MVP Features (Patients, Sessions, Media)
+Weeks 9-11:  Validation & Hardening (Real-world testing)
+Weeks 12-15: AI Integration (RAG, Vision, Analysis)
+Week 16:     Buffer / AI Refinement
+```
+
+**Total Time: 16 weeks (4 months)**  
+**Buffer Time: 2 weeks built-in (Week 10, Week 16)**  
+**Realistic Completion: 4.5-5 months** (because life happens)
+
+---
+
+## 🚨 When to Hit Pause
+
+**Stop and reassess if:**
+- Week 9 reveals the core UX is fundamentally broken
+- Week 13 shows pgvector performance is unacceptable
+- Week 15 shows AI quality is worse than manual work
+- You're consistently 2+ weeks behind schedule
+
+**Don't be afraid to:**
+- Skip Phase 3 entirely if MVP is enough
+- Ship MVP first, add AI in 6 months after real usage data
+- Pivot from Gemini to GPT-4 if vision quality is poor
+
+---
+
+## 💡 Final Advice
+
+1. **Milestone 6 (Week 9) is the most critical**  
+   If she doesn't want to use it daily, AI won't save you.
+
+2. **Don't gold-plate Phase 1**  
+   Ugly but functional beats pretty but broken.
+
+3. **The books for RAG must be acquired NOW**  
+   Don't wait until Week 12 to realize you can't get them.
+
+4. **Expect Week 10 to be chaos**  
+   Real-world testing always reveals surprises.
+
+5. **Phase 3 is optional**  
+   A solid MVP without AI is better than a broken AI system.
