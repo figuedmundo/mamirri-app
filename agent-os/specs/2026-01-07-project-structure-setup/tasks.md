@@ -10,18 +10,18 @@ Total Tasks: 20
 #### Task Group 1: Monorepo Initialization
 **Dependencies:** None
 
-- [ ] 1.0 Initialize Monorepo Structure
-  - [ ] 1.1 Verify Prerequisites
+- [x] 1.0 Initialize Monorepo Structure
+  - [x] 1.1 Verify Prerequisites
     - Ensure Node.js and pnpm (or npm) are installed (latest versions).
-  - [ ] 1.2 Initialize Turborepo Workspace
+  - [x] 1.2 Initialize Turborepo Workspace
     - Initialize workspace using `pnpm dlx create-turbo@latest`.
     - Set up directory structure with `apps/client` and `apps/server`.
     - Configure root `package.json` scripts (`dev`, `build`, `lint`).
-  - [ ] 1.3 Configure Root Tooling
+  - [x] 1.3 Configure Root Tooling
     - Set up root-level ESLint configuration.
     - Set up root-level Prettier configuration.
     - Ensure `.gitignore` ignores `node_modules`, `dist`, `.env`, etc.
-  - [ ] 1.4 Verify Monorepo
+  - [x] 1.4 Verify Monorepo
     - Run `pnpm install` to ensure workspace linking works.
 
 **Acceptance Criteria:**
@@ -34,31 +34,31 @@ Total Tasks: 20
 #### Task Group 2: Database & Docker Setup
 **Dependencies:** Task Group 1
 
-- [ ] 2.0 Database Infrastructure
-  - [ ] 2.1 Create Docker Compose File
+- [x] 2.0 Database Infrastructure
+  - [x] 2.1 Create Docker Compose File
     - Create `docker-compose.yml` at project root.
     - Define PostgreSQL service (version 16).
     - Configure ports (5432) and environment variables (user, password, db name).
-  - [ ] 2.2 Verify Database Connection
+  - [x] 2.2 Verify Database Connection
     - Run `docker-compose up -d`.
     - Verify connection using a DB client or command line.
 
 #### Task Group 3: ORM Setup (Prisma)
 **Dependencies:** Task Group 2
 
-- [ ] 3.0 Prisma Setup
-  - [ ] 3.1 Initialize Prisma in Backend
+- [x] 3.0 Prisma Setup
+  - [x] 3.1 Initialize Prisma in Backend
     - Install Prisma CLI and Client in `apps/server`.
     - Initialize Prisma (`npx prisma init`) to generate `schema.prisma`.
-  - [ ] 3.2 Define Data Schema
+  - [x] 3.2 Define Data Schema
     - Define `User` model (id, email, passwordHash, name, createdAt).
     - Define `Patient` model (id, fullName, birthDate, occupation, phone, createdAt, updatedAt).
     - Define `Session` model (id, patientId, date, status, observations, attachments).
     - Establish relations (Patient has many Sessions).
-  - [ ] 3.3 Configure Environment
+  - [x] 3.3 Configure Environment
     - Create `.env` in `apps/server` with `DATABASE_URL` pointing to local Docker Postgres.
     - Add `.env` to `.gitignore`.
-  - [ ] 3.4 Run Migrations
+  - [x] 3.4 Run Migrations
     - Run `npx prisma migrate dev --name init` to create tables.
     - Verify tables exist in the database.
 
@@ -72,16 +72,16 @@ Total Tasks: 20
 #### Task Group 4: NestJS Backend Setup
 **Dependencies:** Task Group 1, Task Group 3
 
-- [ ] 4.0 Backend Application
-  - [ ] 4.1 Initialize NestJS App
+- [x] 4.0 Backend Application
+  - [x] 4.1 Initialize NestJS App
     - Create NestJS app in `apps/server` (if not already scaffolded).
     - Ensure it uses the monorepo's dependency management.
-  - [ ] 4.2 Configure API Global Prefix
+  - [x] 4.2 Configure API Global Prefix
     - Set global prefix to `/api/v1` in `main.ts`.
-  - [ ] 4.3 Setup Swagger Documentation
+  - [x] 4.3 Setup Swagger Documentation
     - Install `@nestjs/swagger`.
     - Configure Swagger builder in `main.ts` (title: "MamirriApp API", path: `/api/docs`).
-  - [ ] 4.4 Verify Backend
+  - [x] 4.4 Verify Backend
     - Run `pnpm dev` (or equivalent) for the backend.
     - Access `http://localhost:3000/api/docs` (or configured port) to see Swagger UI.
 
@@ -95,22 +95,22 @@ Total Tasks: 20
 #### Task Group 5: React Frontend Setup
 **Dependencies:** Task Group 1
 
-- [ ] 5.0 Frontend Application
-  - [ ] 5.1 Initialize React App
+- [x] 5.0 Frontend Application
+  - [x] 5.1 Initialize React App
     - Create React + TypeScript + Vite app in `apps/client`.
-  - [ ] 5.2 Configure TailwindCSS
+  - [x] 5.2 Configure TailwindCSS
     - Install TailwindCSS, PostCSS, Autoprefixer.
     - Initialize `tailwind.config.js` and `postcss.config.js`.
     - Add Tailwind directives to `index.css`.
-  - [ ] 5.3 Setup Shadcn/UI
+  - [x] 5.3 Setup Shadcn/UI
     - Initialize Shadcn/UI (`npx shadcn-ui@latest init`).
     - Configure `components.json`.
     - Add `Button`, `Input`, `Card` components (`npx shadcn-ui@latest add button input card`).
-  - [ ] 5.4 Implement Dummy Login
+  - [x] 5.4 Implement Dummy Login
     - Create `src/pages/Login.tsx` (or similar).
     - Build a centered Login Card with Email/Password inputs and a Login Button.
     - Mount it at the root route `/`.
-  - [ ] 5.5 Verify Frontend
+  - [x] 5.5 Verify Frontend
     - Run `pnpm dev` for the frontend.
     - Verify UI renders correctly with Tailwind styles and Shadcn components.
 

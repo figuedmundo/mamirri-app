@@ -1,0 +1,34 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "markitdown": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "uvx",
+        "markitdown-mcp"
+      ]
+    },
+    "tavily": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "tavily-mcp"
+      ],
+      "environment": {
+        "TAVILY_API_KEY": "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"
+      }
+    },
+    "context7": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    }
+  }
+}
