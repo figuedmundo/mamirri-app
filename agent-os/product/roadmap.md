@@ -19,7 +19,7 @@ Methodology: Agile Development (1-week Sprints).
 ### Week 2: Auth & Storage
 
 - [x] **2.1 JWT Authentication:** Register/Login/Logout flows.
-- [ ] **2.2 MinIO Integration:** Upload/Download service.
+- [x] **2.2 MinIO Integration:** Upload/Download service.
 - [ ] **2.3 Frontend Auth:** Protected routes & context.
 - [ ] **2.4 Basic Error Handling:** Global filters.
 
