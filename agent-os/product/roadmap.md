@@ -18,7 +18,7 @@ Methodology: Agile Development (1-week Sprints).
 
 ### Week 2: Auth & Storage
 
-- [ ] **2.1 JWT Authentication:** Register/Login/Logout flows.
+- [x] **2.1 JWT Authentication:** Register/Login/Logout flows.
 - [ ] **2.2 MinIO Integration:** Upload/Download service.
 - [ ] **2.3 Frontend Auth:** Protected routes & context.
 - [ ] **2.4 Basic Error Handling:** Global filters.
@@ -44,6 +44,7 @@ Methodology: Agile Development (1-week Sprints).
 ## 🏗️ Phase 1: MVP (Weeks 5-8) - REORDERED
 
 ### Week 5: Patients (Core Data Model)
+
 - [ ] **5.1** Backend: Patients CRUD (routes, validation, Prisma)
 - [ ] **5.2** Frontend: Patient list with search
 - [ ] **5.3** Frontend: Create/Edit patient form
@@ -53,6 +54,7 @@ Methodology: Agile Development (1-week Sprints).
 **🎯 Milestone 2:** "I can create and search patients"
 
 ### Week 6: Clinical Sessions (The Workflow)
+
 - [ ] **6.1** Backend: Session schema (Draft/Finalized states)
 - [ ] **6.2** Backend: Session CRUD endpoints
 - [ ] **6.3** Frontend: "New Session" wizard (3 steps)
@@ -62,6 +64,7 @@ Methodology: Agile Development (1-week Sprints).
 **🎯 Milestone 3:** "I can start a session and add text notes"
 
 ### Week 7: Media & Dictation
+
 - [ ] **7.1** Backend: Media upload endpoint (validation, S3)
 - [ ] **7.2** Frontend: Camera capture component
 - [ ] **7.3** Frontend: Photo gallery per session
@@ -72,6 +75,7 @@ Methodology: Agile Development (1-week Sprints).
 **🎯 Milestone 4:** "I can take photos and dictate notes"
 
 ### Week 8: PWA Basics (Offline Skeleton)
+
 - [ ] **8.1** Service Worker: Cache static assets
 - [ ] **8.2** Offline indicator (connection status)
 - [ ] **8.3** PWA manifest (install to home screen)
@@ -86,6 +90,7 @@ Methodology: Agile Development (1-week Sprints).
 ## 🧪 Phase 2: Validation & Hardening (Weeks 9-11)
 
 ### Week 9: Field Testing ("The Truth")
+
 - [ ] **9.1** Install on mother's iPad
 - [ ] **9.2** Observe 3-5 real consultations
 - [ ] **9.3** Document friction points (what breaks her flow?)
@@ -95,6 +100,7 @@ Methodology: Agile Development (1-week Sprints).
 **🎯 Milestone 6:** "Mother used it with a real patient without asking for help"
 
 ### Week 10: Pivot & Fix Week 🔧
+
 **Critical Buffer Week - Expect the Unexpected**
 
 - [ ] **10.1** Prioritize top 3 UX blockers from Week 9
@@ -104,10 +110,12 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **10.5** Decision: AI-ready or need more MVP work?
 
 **Possible outcomes:**
+
 - ✅ MVP solid → Proceed to Week 11
 - ⚠️ Major issues → Extend MVP work, push AI to later
 
 ### Week 11: Security & Performance (Post-Validation)
+
 - [ ] **11.1** Input sanitization (based on real attack vectors)
 - [ ] **11.2** File upload security (malware scan if needed)
 - [ ] **11.3** Rate limiting (if API abuse detected)
@@ -124,11 +132,13 @@ Methodology: Agile Development (1-week Sprints).
 ## 🧠 Phase 3: The AI Brain (Weeks 12-15)
 
 **Pre-requisite Check:**
+
 - [ ] Do you have 3-5 reference books (PDFs) ready?
 - [ ] Are they legally yours to process?
 - [ ] Is the MVP stable enough to build on?
 
 ### Week 12: Knowledge Base Preparation
+
 - [ ] **12.1** Research: PDF extraction tools (pdf-parse vs. Unstructured.io)
 - [ ] **12.2** Chunking strategy design (500 words, 50-word overlap)
 - [ ] **12.3** Metadata schema (book, page, chapter, section)
@@ -136,6 +146,7 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **12.5** Write ingestion script with error handling
 
 ### Week 13: Vector Database (RAG Foundation)
+
 - [ ] **13.1** Enable pgvector on Postgres
 - [ ] **13.2** Create embeddings table schema
 - [ ] **13.3** Generate embeddings (OpenAI text-embedding-3-small)
@@ -144,6 +155,7 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **13.6** Optimize: Vector index for <200ms queries
 
 ### Week 14: The AI Agent (Backend)
+
 - [ ] **14.1** NestJS: AIAnalysis module
 - [ ] **14.2** RAG logic: Semantic search implementation
 - [ ] **14.3** LLM integration: OpenAI GPT-4 or Gemini
@@ -152,6 +164,7 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **14.6** Test: Query "fascitis plantar" → returns relevant book passages
 
 ### Week 15: Vision & Full Analysis
+
 - [ ] **15.1** Gemini Vision: Image description API
 - [ ] **15.2** Orchestration: Combine Voice + Vision + RAG + LLM
 - [ ] **15.3** "Analyze Case" endpoint (orchestrates all services)
@@ -166,6 +179,7 @@ Methodology: Agile Development (1-week Sprints).
 ## 🔄 Phase 3.5: AI Refinement (Week 16) - OPTIONAL
 
 **If AI output quality is poor:**
+
 - [ ] **16.1** Prompt iteration (based on real output quality)
 - [ ] **16.2** Add more books to knowledge base
 - [ ] **16.3** Improve chunking strategy
@@ -178,13 +192,13 @@ Methodology: Agile Development (1-week Sprints).
 
 ### High-Risk Items (Have a Plan B)
 
-| Risk | Mitigation | Plan B |
-|------|------------|--------|
-| **Week 9: Mother hates the UX** | Week 10 pivot buffer | Extend MVP, delay AI |
-| **Week 12: No books available** | Start collecting in Week 1 | Use free PubMed articles |
-| **Week 13: pgvector too slow** | Optimize indexes early | Use Pinecone (cloud) |
-| **Week 15: AI hallucinates** | Strict citation requirement | Disable AI, manual mode only |
-| **Groq API down** | Monitor uptime early | Fallback to OpenAI Whisper |
+| Risk                            | Mitigation                  | Plan B                       |
+| ------------------------------- | --------------------------- | ---------------------------- |
+| **Week 9: Mother hates the UX** | Week 10 pivot buffer        | Extend MVP, delay AI         |
+| **Week 12: No books available** | Start collecting in Week 1  | Use free PubMed articles     |
+| **Week 13: pgvector too slow**  | Optimize indexes early      | Use Pinecone (cloud)         |
+| **Week 15: AI hallucinates**    | Strict citation requirement | Disable AI, manual mode only |
+| **Groq API down**               | Monitor uptime early        | Fallback to OpenAI Whisper   |
 
 ### Low-Risk Items (Can Defer)
 
@@ -198,16 +212,19 @@ Methodology: Agile Development (1-week Sprints).
 ## 🎯 Success Criteria (Gate Checks)
 
 ### After Phase 1 (Week 8):
+
 - ✅ Mother can complete a full consultation without your help
 - ✅ No data loss in 10 test sessions
 - ✅ Page load time < 3 seconds on iPad
 
 ### After Phase 2 (Week 11):
+
 - ✅ Used for 20+ real patients
 - ✅ Zero security vulnerabilities in audit
 - ✅ Backup/restore tested and works
 
 ### After Phase 3 (Week 15):
+
 - ✅ AI suggestions are clinically relevant 70%+ of the time
 - ✅ Citations trace back to actual book content
 - ✅ Mother trusts the AI enough to use it regularly
@@ -233,12 +250,14 @@ Week 16:     Buffer / AI Refinement
 ## 🚨 When to Hit Pause
 
 **Stop and reassess if:**
+
 - Week 9 reveals the core UX is fundamentally broken
 - Week 13 shows pgvector performance is unacceptable
 - Week 15 shows AI quality is worse than manual work
 - You're consistently 2+ weeks behind schedule
 
 **Don't be afraid to:**
+
 - Skip Phase 3 entirely if MVP is enough
 - Ship MVP first, add AI in 6 months after real usage data
 - Pivot from Gemini to GPT-4 if vision quality is poor
