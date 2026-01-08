@@ -1,40 +1,96 @@
 # Developer Setup Guide
 
 ## Prerequisites
+
 - Node.js 20+
-- pnpm 8+
+- pnpm 10+
 - Docker & Docker Compose
 - Git
 
-## Quick Start
+## Docker-Native Workflow
 
-1. Clone the repository
+This project supports a fully automated initialization. If you have Docker installed, you can start the entire infrastructure (including migrations and seeding) with:
+
 ```bash
-git clone <repo-url>
-cd mamirri-app
+docker compose up -d server
 ```
 
-2. Run setup script
+The `server` container will automatically:
+
+1. Wait for Postgres to be healthy.
+2. Run Prisma migrations.
+3. Seed the default user.
+4. Provision MinIO buckets.
+
+## Environment Reset
+
+If you need to wipe the database and start completely fresh:
+
 ```bash
+docker compose down -v
+docker compose up -d server
+```
+
+The setup script will automatically:
+
+- Create `.env` from the example.
+- Generate secure random secrets for `JWT_SECRET`.
+- Start Docker containers.
+- Install dependencies via `pnpm`.
+- Run database migrations and seeding.
+- Provision MinIO buckets.
+
+## Environment Reset
+
+If you need to wipe the database and all volumes to start completely fresh:
+
+```bash
+docker compose down -v
 ./scripts/setup-dev.sh
 ```
 
-3. Edit .env with your API keys
+2. **Initialize Infrastructure**
+
 ```bash
-nano .env
-# Add: GROQ_API_KEY, GOOGLE_API_KEY
+# Start Postgres, MinIO, and Redis
+docker compose up -d
+
+# Generate secure secrets for .env
+./scripts/generate-password.sh 32 hex # Use for JWT_SECRET
+./scripts/generate-password.sh 16 human # Use for DB/Storage passwords
 ```
 
-4. Start development servers
+3. **Configure Environment**
+   Copy `.env.example` to `.env` and fill in the secrets generated in step 2.
+   Make sure `DATABASE_URL` is updated with your `POSTGRES_PASSWORD`.
+
+4. **Initialize Database**
+
+```bash
+# Run migrations
+pnpm --filter server exec prisma migrate deploy
+
+# Seed default user (physio@mamirri.com)
+pnpm --filter server exec prisma db seed
+```
+
+5. **Start Development**
+
 ```bash
 pnpm dev
 ```
 
-5. Access
-- Frontend: http://localhost:5173
-- Backend: http://localhost:3000
-- MinIO: http://localhost:9001
+## Useful Tools
+
+### Password Generation
+
+Use `./scripts/generate-password.sh` to create URL-safe alphanumeric strings for any internal config.
+
+### Database Management
+
+- `pnpm seed`: Re-runs the idempotent seed script.
+- `pnpm prisma studio`: Opens a GUI to view your data.
 
 ---
 
-**Last Updated:** $(date +%Y-%m-%d)
+**Last Updated:** 2026-01-08
