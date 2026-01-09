@@ -1,17 +1,18 @@
--- CreateEnum
+CREATE SCHEMA IF NOT EXISTS "public";
+
 CREATE TYPE "SessionStatus" AS ENUM ('DRAFT', 'FINALIZED');
 
--- CreateTable: users
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
     "role" TEXT NOT NULL DEFAULT 'THERAPIST',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable: patients
 CREATE TABLE "patients" (
     "id" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
@@ -20,37 +21,33 @@ CREATE TABLE "patients" (
     "phone" TEXT,
     "email" TEXT,
     "therapistId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "patients_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable: sessions
 CREATE TABLE "sessions" (
     "id" TEXT NOT NULL,
     "patientId" TEXT NOT NULL,
     "therapistId" TEXT NOT NULL,
-    "status" TEXT NOT NULL DEFAULT 'DRAFT',
+    "status" "SessionStatus" NOT NULL DEFAULT 'DRAFT',
     "notes" TEXT,
     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "sessions_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
 CREATE INDEX "users_email_idx" ON "users"("email");
 
--- CreateIndex
-CREATE INDEX "patients_name_idx" ON "patients"("firstName", "lastName");
+CREATE INDEX "patients_firstName_lastName_idx" ON "patients"("firstName", "lastName");
 
--- CreateIndex
-CREATE INDEX "sessions_patient_idx" ON "sessions"("patientId");
+CREATE INDEX "sessions_patientId_therapistId_date_idx" ON "sessions"("patientId", "therapistId", "date");
 
--- CreateIndex
-CREATE INDEX "sessions_therapist_idx" ON "sessions"("therapistId");
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "patients"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- CreateIndex
-CREATE INDEX "sessions_date_idx" ON "sessions"("date");
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_therapistId_fkey" FOREIGN KEY ("therapistId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- Enable pgvector extension
 CREATE EXTENSION IF NOT EXISTS vector;
-
--- Alter tables for pgvector (optional, for future use)
-ALTER TABLE sessions ADD COLUMN "embedding" vector(1536);

@@ -9,9 +9,21 @@ if (!process.env.DATABASE_URL) {
   dotenv.config({ path: path.join(__dirname, '../../.env') });
 }
 
+let connectionString = process.env.DATABASE_URL;
+if (connectionString && connectionString.includes('${')) {
+  connectionString = connectionString
+    .replace('${POSTGRES_USER}', process.env.POSTGRES_USER || 'postgres')
+    .replace(
+      '${POSTGRES_PASSWORD}',
+      process.env.POSTGRES_PASSWORD || 'postgres',
+    )
+    .replace('${POSTGRES_PORT}', process.env.POSTGRES_PORT || '5432')
+    .replace('${POSTGRES_DB}', process.env.POSTGRES_DB || 'mamirri');
+}
+
 async function main() {
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString,
   });
   const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });
