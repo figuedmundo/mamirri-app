@@ -7,33 +7,38 @@ import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import AuthLayout from './components/auth/AuthLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { Toaster } from './components/ui/toaster';
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route element={<AuthLayout />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-          </Route>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+            </Route>
 
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <MainLayout>
-                  <Dashboard />
-                </MainLayout>
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Dashboard />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+      <Toaster />
+    </ErrorBoundary>
   );
 }
 

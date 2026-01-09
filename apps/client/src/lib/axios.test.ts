@@ -27,6 +27,10 @@ vi.mock('axios', async (importOriginal) => {
   };
 });
 
+vi.mock('@/lib/toast', () => ({
+  showErrorToast: vi.fn(),
+}));
+
 describe('Axios Interceptor', () => {
   let requestInterceptor: (
     config: InternalAxiosRequestConfig,
@@ -139,9 +143,7 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {
-      // expected
-    }
+    } catch (e) {}
 
     expect(mockAxiosInstance.post).toHaveBeenCalledWith('/auth/refresh');
     expect(localStorage.getItem('access_token')).toBeNull();
@@ -162,5 +164,237 @@ describe('Axios Interceptor', () => {
     }
 
     expect(mockAxiosInstance.post).not.toHaveBeenCalled();
+  });
+
+  it('should show error toast for 403 Forbidden errors', async () => {
+    const error = {
+      config: { url: '/api/v1/protected', headers: {} },
+      response: {
+        status: 403,
+        data: { message: 'Access denied' },
+        headers: {},
+      },
+      isAxiosError: true,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {}
+
+    const { showErrorToast } = await import('./toast');
+    expect(showErrorToast).toHaveBeenCalledWith(
+      expect.stringContaining("You don't have permission"),
+    );
+  });
+
+  it('should show error toast for 404 Not Found errors', async () => {
+    const error = {
+      config: { url: '/api/v1/resource', headers: {} },
+      response: {
+        status: 404,
+        data: { message: 'Not found' },
+        headers: {},
+      },
+      isAxiosError: true,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {}
+
+    const { showErrorToast } = await import('./toast');
+    expect(showErrorToast).toHaveBeenCalledWith(
+      expect.stringContaining('Resource not found'),
+    );
+  });
+
+  it('should show error toast for 500 Internal Server errors', async () => {
+    const error = {
+      config: { url: '/api/v1/resource', headers: {} },
+      response: {
+        status: 500,
+        data: { message: 'Server error' },
+        headers: {},
+      },
+      isAxiosError: true,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {}
+
+    const { showErrorToast } = await import('./toast');
+    expect(showErrorToast).toHaveBeenCalledWith(
+      expect.stringContaining('Something went wrong'),
+    );
+  });
+
+  it('should show correlation ID in toast when present', async () => {
+    const correlationId = '123e4567-e89b-12d3-a456-426614174000';
+
+    const error = {
+      config: { url: '/api/v1/resource', headers: {} },
+      response: {
+        status: 500,
+        data: { message: 'Server error' },
+        headers: { 'x-correlation-id': correlationId },
+      },
+      isAxiosError: true,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {}
+
+    const { showErrorToast } = await import('./toast');
+    expect(showErrorToast).toHaveBeenCalledWith(
+      expect.stringContaining(`Ref: ${correlationId}`),
+    );
+  });
+
+  it('should handle network errors', async () => {
+    const error = {
+      config: { url: '/api/v1/resource', headers: {} },
+      isAxiosError: true,
+      response: undefined,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {}
+
+    const { showErrorToast } = await import('./toast');
+    expect(showErrorToast).toHaveBeenCalledWith(
+      expect.stringContaining('Network error'),
+    );
+  });
+
+  it('Response Interceptor: should NOT intercept 401 on refresh endpoint itself', async () => {
+    const error = {
+      config: { url: '/api/v1/auth/refresh', headers: {} },
+      response: { status: 401 },
+      isAxiosError: true,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {
+      expect(e).toBe(error);
+    }
+
+    expect(mockAxiosInstance.post).not.toHaveBeenCalled();
+  });
+
+  it('should show error toast for 403 Forbidden errors', async () => {
+    const error = {
+      config: { url: '/api/v1/protected', headers: {} },
+      response: {
+        status: 403,
+        data: { message: 'Access denied' },
+        headers: {},
+      },
+      isAxiosError: true,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {
+      // expected
+    }
+
+    const { showErrorToast } = await import('./toast');
+    expect(showErrorToast).toHaveBeenCalledWith(
+      expect.stringContaining("You don't have permission"),
+    );
+  });
+
+  it('should show error toast for 404 Not Found errors', async () => {
+    const error = {
+      config: { url: '/api/v1/resource', headers: {} },
+      response: {
+        status: 404,
+        data: { message: 'Not found' },
+        headers: {},
+      },
+      isAxiosError: true,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {
+      // expected
+    }
+
+    const { showErrorToast } = await import('./toast');
+    expect(showErrorToast).toHaveBeenCalledWith(
+      expect.stringContaining('Resource not found'),
+    );
+  });
+
+  it('should show error toast for 500 Internal Server errors', async () => {
+    const error = {
+      config: { url: '/api/v1/resource', headers: {} },
+      response: {
+        status: 500,
+        data: { message: 'Server error' },
+        headers: {},
+      },
+      isAxiosError: true,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {
+      // expected
+    }
+
+    const { showErrorToast } = await import('./toast');
+    expect(showErrorToast).toHaveBeenCalledWith(
+      expect.stringContaining('Something went wrong'),
+    );
+  });
+
+  it('should show correlation ID in toast when present', async () => {
+    const correlationId = '123e4567-e89b-12d3-a456-426614174000';
+
+    const error = {
+      config: { url: '/api/v1/resource', headers: {} },
+      response: {
+        status: 500,
+        data: { message: 'Server error' },
+        headers: { 'x-correlation-id': correlationId },
+      },
+      isAxiosError: true,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {
+      // expected
+    }
+
+    const { showErrorToast } = await import('./toast');
+    expect(showErrorToast).toHaveBeenCalledWith(
+      expect.stringContaining(`Ref: ${correlationId}`),
+    );
+  });
+
+  it('should handle network errors', async () => {
+    const error = {
+      config: { url: '/api/v1/resource', headers: {} },
+      isAxiosError: true,
+      response: undefined,
+    };
+
+    try {
+      await responseErrorInterceptor(error);
+    } catch (e) {
+      // expected
+    }
+
+    const { showErrorToast } = await import('./toast');
+    expect(showErrorToast).toHaveBeenCalledWith(
+      expect.stringContaining('Network error'),
+    );
   });
 });
