@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '../components/ui/card';
-import axios from 'axios';
+import { api } from '../lib/axios';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
@@ -29,7 +29,7 @@ const Register: React.FC = () => {
       return;
     }
     try {
-      const response = await axios.post('/api/v1/auth/register', {
+      const response = await api.post('/auth/register', {
         name,
         email,
         password,

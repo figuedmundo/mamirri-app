@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '../components/ui/card';
-import axios from 'axios';
+import { api } from '../lib/axios';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/v1/auth/login', {
+      const response = await api.post('/auth/login', {
         email,
         password,
       });
