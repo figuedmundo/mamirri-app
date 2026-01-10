@@ -24,6 +24,7 @@ async function bootstrap() {
     .setTitle('MamirriApp API')
     .setDescription('The MamirriApp API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);

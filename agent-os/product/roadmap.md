@@ -32,10 +32,10 @@ Methodology: Agile Development (1-week Sprints).
 
 ### Week 4: Testing Foundation
 
-- [ ] **4.1 Unit Tests:** Critical backend services.
-- [ ] **4.2 E2E Tests:** Auth flow verification.
-- [ ] **4.3 API Docs:** Swagger setup & refinement.
-- [ ] **4.4 Onboarding:** Developer guide & setup scripts.
+- [x] **4.1 Unit Tests:** Critical backend services.
+- [x] **4.2 E2E Tests:** Auth flow verification.
+- [x] **4.3 API Docs:** Swagger setup & refinement.
+- [x] **4.4 Onboarding:** Developer guide & setup scripts.
 
 **🎯 Milestone 1:** "I can login and see an empty dashboard"
 

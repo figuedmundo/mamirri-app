@@ -1,49 +1,56 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from '../app.module';
+import { StorageModule } from './storage.module';
 import { StorageService } from './storage.service';
 import { S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import storageConfig from '../../config/storage.config';
+
+jest.mock('@aws-sdk/client-s3');
+jest.mock('@aws-sdk/s3-request-presigner');
+jest.mock('../../config/storage.config');
 
 describe('Storage Integration Tests', () => {
   let app: INestApplication;
   let service: StorageService;
-  let mockS3Client: jest.Mocked<S3Client>;
+  let s3ClientMock: any;
 
   beforeAll(async () => {
-    mockS3Client = {
+    s3ClientMock = {
       send: jest.fn(),
-    } as any;
+    };
+
+    (S3Client as unknown as jest.Mock).mockImplementation(() => s3ClientMock);
+    (getSignedUrl as jest.Mock).mockResolvedValue(
+      'http://localhost:9000/test.jpg?signature=...',
+    );
+
+    (storageConfig as jest.Mock).mockReturnValue({
+      endpoint: 'localhost',
+      port: '9000',
+      accessKey: 'test-key',
+      secretKey: 'test-secret',
+      useSSL: false,
+      bucket: 'test-bucket',
+    });
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-      providers: [
-        {
-          provide: StorageService,
-          useValue: {
-            onModuleInit: jest.fn().mockResolvedValue(undefined),
-            uploadFile: jest.fn().mockResolvedValue('uploads/test.jpg'),
-            getFileUrl: jest
-              .fn()
-              .mockResolvedValue(
-                'http://localhost:9000/test.jpg?signature=...',
-              ),
-            deleteFile: jest.fn().mockResolvedValue(undefined),
-            fileExists: jest.fn().mockResolvedValue(true),
-          },
-        },
-      ],
-    })
-      .overrideProvider(S3Client, {
-        useValue: mockS3Client,
-      })
-      .compile();
+      imports: [StorageModule],
+    }).compile();
 
     app = module.createNestApplication();
     service = module.get<StorageService>(StorageService);
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe('End-to-End File Upload Flow', () => {
     it('should upload file, generate URL, and delete it', async () => {
+      s3ClientMock.send.mockResolvedValue({ $metadata: {} });
+
       const testFile = {
         fieldname: 'file',
         originalname: 'integration-test.jpg',
@@ -61,10 +68,15 @@ describe('Storage Integration Tests', () => {
       const url = await service.getFileUrl(uploadedPath, 3600);
       expect(url).toContain('test.jpg');
 
+      s3ClientMock.send.mockResolvedValueOnce({
+        $metadata: { httpStatusCode: 200 },
+      });
       const exists = await service.fileExists(uploadedPath);
       expect(exists).toBe(true);
 
       await service.deleteFile(uploadedPath);
+
+      s3ClientMock.send.mockRejectedValueOnce({ name: 'NotFound' });
       const existsAfterDelete = await service.fileExists(uploadedPath);
       expect(existsAfterDelete).toBe(false);
     });
