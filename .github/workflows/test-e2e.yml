@@ -1,0 +1,58 @@
+name: E2E Tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  e2e-test:
+    name: Run E2E Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create .env for testing
+        run: |
+          cp .env.example .env
+          # Adjust database host for CI if needed, but localhost usually works with docker compose networking type 'bridge' + port mapping
+          # We use default values from .env.example which points to localhost
+
+      - name: Start Infrastructure Services
+        run: docker compose up -d postgres minio redis
+        # Wait for postgres to be ready
+        # Using pg_isready inside the container or a sleep loop
+
+      - name: Wait for Postgres
+        run: |
+          echo "Waiting for postgres..."
+          sleep 10
+          # Better approach: check health or loop until connected
+          # But for simple MVP, sleep is often used. 
+          # Or use docker compose wait if available in newer versions
+
+      - name: Run E2E Tests
+        run: pnpm run test:e2e
+        env:
+          DATABASE_URL: postgresql://physio_user:physio_password_change_me@localhost:5432/physio_db
+          # Ensure other env vars match .env.example
+
+      - name: Stop Services
+        if: always()
+        run: docker compose down

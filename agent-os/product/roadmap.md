@@ -25,10 +25,10 @@ Methodology: Agile Development (1-week Sprints).
 
 ### Week 3: DevOps
 
-- [ ] **3.1 Database Backups:** Automated backup scripts.
-- [ ] **3.2 Environment:** Secure .env management (Single source of truth).
-- [ ] **3.3 CI/CD:** Basic GitHub Actions (lint/test).
-- [ ] **3.4 Deployment:** Deploy to Ubuntu home lab.
+- [x] **3.1 Database Backups:** Automated backup scripts.
+- [x] **3.2 Environment:** Secure .env management (Single source of truth).
+- [x] **3.3 CI/CD:** Basic GitHub Actions (lint/test).
+- [x] **3.4 Deployment:** Deploy to Ubuntu home lab.
 
 ### Week 4: Testing Foundation
 
@@ -41,7 +41,7 @@ Methodology: Agile Development (1-week Sprints).
 
 ---
 
-## 🏗️ Phase 1: MVP (Weeks 5-8) - REORDERED
+## 🏗️ Phase 1: MVP (Weeks 5-8)
 
 ### Week 5: Patients (Core Data Model)
 
