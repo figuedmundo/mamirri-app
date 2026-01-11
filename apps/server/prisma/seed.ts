@@ -5,9 +5,7 @@ import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-if (!process.env.DATABASE_URL) {
-  dotenv.config({ path: path.join(__dirname, '../../.env') });
-}
+dotenv.config({ path: path.join(__dirname, '../../../.env') });
 
 let connectionString = process.env.DATABASE_URL;
 if (connectionString && connectionString.includes('${')) {

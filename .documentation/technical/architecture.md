@@ -31,6 +31,9 @@ The project uses a **Docker-Native** initialization strategy. This ensures that 
      - Migrations: Automatically executes `prisma migrate deploy` on boot.
      - Seeding: Executes `prisma db seed` to ensure a default `THERAPIST` user exists.
      - Health Tracking: Blocks until the database is ready to accept connections.
+   - **Global Configuration**:
+     - `ValidationPipe`: Enabled globally with `whitelist: true` to enforce DTO validation rules.
+     - `AllExceptionsFilter`: Standardizes error responses across the API.
 
 4. **Redis (`physio_cache`)**:
    - Placeholder for future session management and caching.
@@ -39,6 +42,11 @@ The project uses a **Docker-Native** initialization strategy. This ensures that 
 
 The application uses **Driver Adapters** (`@prisma/adapter-pg`) to manage runtime database connections. This separates CLI configuration (in `prisma.config.ts`) from application runtime, improving portability and control over connection pools.
 
+### Data Management Patterns
+
+- **Soft Deletes**: Critical entities (like `Patient`) implement soft deletes using a `deletedAt` timestamp. Records are not physically removed from the database to maintain audit trails.
+- **Tenant Isolation**: Data access is strictly scoped to the authenticated user (`therapistId`). Service layers enforce this isolation in all queries.
+
 ---
 
-**Last Updated:** 2026-01-08
+**Last Updated:** 2026-01-10

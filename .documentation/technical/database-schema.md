@@ -29,15 +29,16 @@ When Docker starts, it automatically executes the initialization script to:
 
 Stores clinical profile for individuals receiving treatment.
 
-| Field         | Type       | Description                     |
-| ------------- | ---------- | ------------------------------- |
-| `id`          | `String`   | Unique identifier (CUID)        |
-| `firstName`   | `String`   | Patient's first name            |
-| `lastName`    | `String`   | Patient's last name             |
-| `dob`         | `DateTime` | Date of birth                   |
-| `phone`       | `String?`  | Optional contact number         |
-| `email`       | `String?`  | Optional email                  |
-| `therapistId` | `String`   | Relation to the assigned `User` |
+| Field         | Type        | Description                     |
+| ------------- | ----------- | ------------------------------- |
+| `id`          | `String`    | Unique identifier (CUID)        |
+| `firstName`   | `String`    | Patient's first name            |
+| `lastName`    | `String`    | Patient's last name             |
+| `dob`         | `DateTime`  | Date of birth                   |
+| `phone`       | `String?`   | Optional contact number         |
+| `email`       | `String?`   | Optional email                  |
+| `therapistId` | `String`    | Relation to the assigned `User` |
+| `deletedAt`   | `DateTime?` | Soft delete timestamp           |
 
 **Indexes:**
 

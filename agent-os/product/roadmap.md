@@ -45,7 +45,7 @@ Methodology: Agile Development (1-week Sprints).
 
 ### Week 5: Patients (Core Data Model)
 
-- [ ] **5.1** Backend: Patients CRUD (routes, validation, Prisma)
+- [x] **5.1** Backend: Patients CRUD (routes, validation, Prisma)
 - [ ] **5.2** Frontend: Patient list with search
 - [ ] **5.3** Frontend: Create/Edit patient form
 - [ ] **5.4** Frontend: Patient detail view (empty history for now)

@@ -1,4 +1,5 @@
 import { NestFactory, HttpAdapterHost } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { config } from 'dotenv';
@@ -12,6 +13,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api/v1');
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   // Register Global Interceptors (before filters to ensure correlation ID is available)
   app.useGlobalInterceptors(new CorrelationIdInterceptor());

@@ -1,0 +1,40 @@
+# Verification Report: Patients CRUD Backend **Spec:**
+`2026-01-10-patients-crud-backend` **Date:** 2026-01-10 **Verifier:**
+implementation-verifier **Status:** ✅ Passed --- ## Executive Summary The
+backend CRUD implementation for Patients has been successfully completed. All
+tasks from the database layer to the API layer were executed, including the
+addition of soft delete functionality, custom validation for dates, and strict
+therapist isolation. The entire test suite, including new integration tests for
+patients, is passing. --- ## 1. Tasks Verification **Status:** ✅ All Complete
+### Completed Tasks - [x] Task Group 1: Schema Migration for Soft Delete - [x]
+1.0 Complete database layer - [x] 1.1 Write 3-5 focused tests for Patient model
+with soft delete - [x] 1.2 Create Prisma migration to add deletedAt field - [x]
+1.3 Run migration and verify - [x] 1.4 Ensure database layer tests pass - [x]
+Task Group 2: DTOs and Custom Validators - [x] 2.0 Complete validation layer -
+[x] 2.1 Write 2-3 focused tests for validators and DTOs - [x] 2.2 Create custom
+@IsDateStringNotFuture() validator - [x] 2.3 Create CreatePatientDto - [x] 2.4
+Create UpdatePatientDto - [x] 2.5 Create PatientResponseDto - [x] 2.6 Ensure
+validation layer tests pass - [x] Task Group 3: Controller and Service
+Implementation - [x] 3.0 Complete API layer - [x] 3.1 Write 3-5 focused tests
+for patient endpoints - [x] 3.2 Create @CurrentTherapist() decorator - [x] 3.3
+Implement PatientsService - [x] 3.4 Implement PatientsController - [x] 3.5
+Update PatientsModule to import PrismaModule - [x] 3.6 Ensure API layer tests
+pass - [x] Task Group 4: Enable Global Validation - [x] 4.0 Complete global
+validation setup - [x] 4.1 Register ValidationPipe in main.ts - [x] 4.2 Verify
+ValidationPipe works with patient endpoints ### Incomplete or Issues None --- ##
+2. Documentation Verification **Status:** ✅ Complete ### Implementation
+Documentation - [x] Task Group 1 Implementation:
+`implementations/1-database-layer-implementation.md` - [x] Task Group 2
+Implementation: `implementations/2-validation-layer-implementation.md` - [x]
+Task Group 3 Implementation: `implementations/3-api-layer-implementation.md` -
+[x] Task Group 4 Implementation:
+`implementations/4-global-config-implementation.md` ### Verification
+Documentation N/A ### Missing Documentation None --- ## 3. Roadmap Updates
+**Status:** ✅ Updated ### Updated Roadmap Items - [x] 5.1 Backend: Patients
+CRUD (routes, validation, Prisma) ### Notes This completes the first item for
+Week 5 in Phase 1 (MVP). --- ## 4. Test Suite Results **Status:** ✅ All Passing
+### Test Summary - **Total Tests:** 15 - **Passing:** 15 - **Failing:** 0 -
+**Errors:** 0 ### Failed Tests None - all tests passing ### Notes Test suite
+includes new focused tests for Patient integration (3), DTO validation (3), and
+Controller logic (6), along with existing Auth tests (3). All are passing
+successfully.
