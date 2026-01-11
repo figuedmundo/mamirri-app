@@ -14,6 +14,11 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api/v1');
 
+  app.enableCors({
+    origin: true, // Allow all origins for dev (or specific frontend URL)
+    credentials: true, // Allow cookies
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
