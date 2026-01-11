@@ -26,9 +26,9 @@ async function main() {
   const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });
 
-  const email = 'physio@mamirri.com';
+  const email = 'test@test.com';
   const name = 'Default Physio';
-  const password = 'physio_password_change_me';
+  const password = 'test';
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);

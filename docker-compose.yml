@@ -71,33 +71,33 @@ services:
     networks:
       - physio_network
 
-  server:
-    build:
-      context: .
-      dockerfile: docker/server/Dockerfile
-    container_name: physio_server
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRATION: ${JWT_EXPIRATION}
-      MINIO_ENDPOINT: minio
-      MINIO_PORT: 9000
-      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
-      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
-      MINIO_BUCKET: ${MINIO_BUCKET}
-      MINIO_USE_SSL: 'false'
-    ports:
-      - '${SERVER_PORT}:3000'
-    depends_on:
-      postgres:
-        condition: service_healthy
-      minio-provisioner:
-        condition: service_completed_successfully
-    networks:
-      - physio_network
+  # server:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/server/Dockerfile
+  #   container_name: physio_server
+  #   environment:
+  #     POSTGRES_USER: ${POSTGRES_USER}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #     POSTGRES_DB: ${POSTGRES_DB}
+  #     DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+  #     JWT_SECRET: ${JWT_SECRET}
+  #     JWT_EXPIRATION: ${JWT_EXPIRATION}
+  #     MINIO_ENDPOINT: minio
+  #     MINIO_PORT: 9000
+  #     MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+  #     MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+  #     MINIO_BUCKET: ${MINIO_BUCKET}
+  #     MINIO_USE_SSL: 'false'
+  #   ports:
+  #     - '${SERVER_PORT}:3000'
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     minio-provisioner:
+  #       condition: service_completed_successfully
+  #   networks:
+  #     - physio_network
 
 volumes:
   postgres_data:
