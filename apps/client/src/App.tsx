@@ -9,6 +9,11 @@ import AuthLayout from './components/auth/AuthLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Toaster } from './components/ui/toaster';
+import Pacientes from './pages/Pacientes';
+import Analisis from './pages/Analisis';
+import Biblioteca from './pages/Biblioteca';
+import Plantillas from './pages/Plantillas';
+import Ajustes from './pages/Ajustes';
 
 function App() {
   return (
@@ -28,6 +33,61 @@ function App() {
                 <ProtectedRoute>
                   <MainLayout>
                     <Dashboard />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pacientes"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Pacientes />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/analisis"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Analisis />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/biblioteca"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Biblioteca />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/plantillas"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Plantillas />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/ajustes"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Ajustes />
                   </MainLayout>
                 </ProtectedRoute>
               }

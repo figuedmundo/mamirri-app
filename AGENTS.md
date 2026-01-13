@@ -55,9 +55,9 @@
 
 You have new skills. If any skill might be relevant then you MUST read it.
 
-- [docs-write](.skills/docs-write/SKILL.md) - Write documentation following Metabase's conversational, clear, and user-focused style. Use when creating or editing documentation files (markdown, MDX, etc.).
-- [frontend-design](.skills/frontend-design/SKILL.md) - Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished code that avoids generic AI aesthetics.
-- [modern-javascript-patterns](.skills/modern-javascript-patterns/SKILL.md) - Master ES6+ features including async/await, destructuring, spread operators, arrow functions, promises, modules, iterators, generators, and functional programming patterns for writing clean, efficient JavaScript code. Use when refactoring legacy code, implementing modern patterns, or optimizing JavaScript applications.
-- [systematic-debugging](.skills/systematic-debugging/SKILL.md) - Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes - four-phase framework (root cause investigation, pattern analysis, hypothesis testing, implementation) that ensures understanding before attempting solutions
-- [test-writer](.skills/test-writer/SKILL.md) - Generate comprehensive Vitest tests for code examples in JavaScript concept documentation pages, following project conventions and referencing source lines
+- [docs-write](.opencode/skill/docs-write/SKILL.md) - Write documentation following Metabase's conversational, clear, and user-focused style. Use when creating or editing documentation files (markdown, MDX, etc.).
+- [frontend-design](.opencode/skill/frontend-design/SKILL.md) - Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished code that avoids generic AI aesthetics.
+- [modern-javascript-patterns](.opencode/skill/modern-javascript-patterns/SKILL.md) - Master ES6+ features including async/await, destructuring, spread operators, arrow functions, promises, modules, iterators, generators, and functional programming patterns for writing clean, efficient JavaScript code. Use when refactoring legacy code, implementing modern patterns, or optimizing JavaScript applications.
+- [systematic-debugging](.opencode/skill/systematic-debugging/SKILL.md) - Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes - four-phase framework (root cause investigation, pattern analysis, hypothesis testing, implementation) that ensures understanding before attempting solutions
+- [test-writer](.opencode/skill/test-writer/SKILL.md) - Generate comprehensive Vitest tests for code examples in JavaScript concept documentation pages, following project conventions and referencing source lines
 </skills>
