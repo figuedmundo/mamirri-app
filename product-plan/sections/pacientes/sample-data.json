@@ -1,0 +1,331 @@
+{
+  "_meta": {
+    "models": {
+      "paciente": "Cada paciente representa una persona que recibe tratamiento fisioterapéutico. Incluye datos personales, antecedentes clínicos y múltiples casos clínicos a lo largo del tiempo.",
+      "casoClinico": "Un caso clínico representa un episodio de atención para una condición específica (ej: 'dolor lumbar', 'pie plano'). Contiene la evaluación inicial, plan de tratamiento y sesiones de seguimiento.",
+      "evaluacion": "La evaluación es una sesión de diagnóstico donde se capturan datos cinético-funcionales: posturograma, test ortopédicos, evaluación AVD, escala de dolor y multimedia (huellas, videos).",
+      "planDeTratamiento": "El plan de tratamiento define los objetivos (terapéuticos, profilácticos, educativos) y las fases o modalidades de intervención (plantillas, masajes, ejercicios).",
+      "sesionDeTratamiento": "Cada sesión de tratamiento es una visita donde se ejecuta el plan, se aplican técnicas específicas y se registra la respuesta del paciente (calambres, mejora de flexibilidad, etc.).",
+      "huella": "Las huellas son imágenes capturadas de las plantas del paciente para análisis visual y comparación de evolución a lo largo del tratamiento.",
+      "videoDePostura": "Los videos de postura capturan caminatas o posiciones estáticas para análisis biomecánico y detección de patrones de movimiento."
+    },
+    "relationships": [
+      "Cada Paciente tiene uno o más Casos clínicos (episodios de atención para diferentes condiciones)",
+      "Cada Caso Clínico pertenece a un Paciente específico",
+      "Cada Caso Clínico tiene una Evaluación inicial",
+      "Cada Caso Clínico tiene un Plan de Tratamiento",
+      "Cada Caso Clínico tiene muchas Sesiones de Tratamiento (visitas de seguimiento)",
+      "Cada Evaluación tiene muchas Huellas (imágenes de huellas plantares)",
+      "Cada Evaluación tiene muchos Videos de Postura",
+      "Cada Plan de Tratamiento puede tener muchas Referencias Bibliográficas (libros, artículos consultados)"
+    ]
+  },
+  "pacientes": [
+    {
+      "id": "pac-008",
+      "nombre": "M.H.Z.",
+      "edad": 88,
+      "ocupacion": "Jubilado, dedicado a la jardinería",
+      "ocupacionAnterior": "Funcionario del servicio de Télex en Entel por más de 30 años (trabajo de oficina)",
+      "direccion": "Urb. Adela Jordán",
+      "genero": "Masculino",
+      "telefono": "+34 600 123 456",
+      "email": "mhz@email.com",
+      "fechaNacimiento": "1936-09-29",
+      "activo": true,
+      "fechaCreacion": "2025-01-02",
+      "casosClinicos": [
+        {
+          "id": "caso-006",
+          "pacienteId": "pac-008",
+          "titulo": "Dolor Lumbo-Pélvico Crónico + Fractura de Ramas Ileopubianas",
+          "estado": "activo",
+          "fechaInicio": "2024-05-15",
+          "motivoConsulta": "Molestias en zona glútea bilateral y descargas eléctricas intensas en la pelvis izquierda que le paralizan al intentar pararse o realizar movimientos bruscos. Dolor crónico lumbo-pélvico desde hace más de 6 años; antecedentes de dolor de espalda desde hace 20 años.",
+          "antecedentesPatologicos": [
+            "Artrosis (confirmada en 2017)",
+            "Osteopenia difusa y Osteoporosis (diagnosticada en 2009)"
+          ],
+          "antecedentesFarmacologicos": "Suplementos vitamínicos, minerales y melatonina para dormir",
+          "diagnosticoMedicoInicial": "Fractura de ramas ileopubianas no desplazadas en cadera izquierda (ocurrida en mayo de 2024)",
+          "evaluacion": {
+            "id": "eval-006",
+            "casoClinicoId": "caso-006",
+            "fecha": "2024-05-15",
+            "posturograma": {
+              "vistaAnterior": {
+                "cabeza": "Lateralización derecha",
+                "hombros": "Derecho ascendido",
+                "trianguloDeTales": "Aumentado a la derecha",
+                "espinaIliaca": "Anterosuperior izquierda ascendida"
+              },
+              "vistaSagitalLateral": {
+                "cabeza": "Anteriorizada",
+                "hombros": "Antepulsión (hacia adelante)",
+                "columnaCervical": "Hiperlordosis",
+                "columnaDorsal": "Hipercifosis",
+                "columnaLumbar": "Rectificada",
+                "rodillas": "Genuflexa (ligeramente flexionada)"
+              },
+              "marcha": "Realizada con ayuda mecánica (bastón)"
+            },
+            "testOrtopedicos": {
+              "thomas": { "resultado": "Positivo a contractura bilateral", "interpretacion": "Acortamiento flexores de cadera" },
+              "ely": { "resultado": "Positivo (retracción presente)", "interpretacion": "Retracción TFL bilateral" },
+              "ober": { "resultado": 1, "interpretacion": "Normal" },
+              "schober": { "resultado": "Flexión aumenta 3 cm, Extensión 0 cm", "interpretacion": "Lumbalgia mecánica severa" },
+              "otto": { "resultado": "Inicial 10 cm", "interpretacion": "Disminución marcada flexibilidad" }
+            },
+            "evaluacionAVD": {
+              "barthel": {
+                "comer": 2,
+                "trasladarse": 1,
+                "aseoPersonal": 0,
+                "desplazarse": 2,
+                "escaleras": 1,
+                "vestirse": 1,
+                "total": 7,
+                "interpretacion": "Independiente con dificultades"
+              },
+              "lawton": {
+                "preparacionComida": 1,
+                "cuidadoCasa": 1,
+                "lavadoRopa": 2,
+                "transporte": 2,
+                "medicacion": 1,
+                "total": 7,
+                "interpretacion": "Necesita asistencia considerable"
+              }
+            },
+            "escalaDolor": {
+              "actividad": 9,
+              "reposo": 10,
+              "palpacion": 9,
+              "tipo": "cronico"
+            },
+            "diagnostico": {
+              "indicadorFuncional": "Limitación funcional severa por dolor lumbo-pélvico crónico y parálisis funcional por descargas eléctricas",
+              "aspectoClinico": "Dolor crónico en zona lumbar y glútea bilateral, con descargas eléctricas en pelvis izquierda. Antecedentes de fractura de ramas ileopubianas.",
+              "anatomopatologia": "Artrosis múltiple (cadera, columna), Osteoporosis difusa con antecedente de fractura ileopubiana. Contractura bilateral de flexores de cadera.",
+              "consecuenciasAVD": "Dificultad para AVD básicas, necesidad de ayuda para traslados y aseo, peligro al cruzar calles, dependencia de bastón para marcha."
+            },
+            "huellas": [],
+            "videosPostura": [
+              {
+                "id": "video-005",
+                "evaluacionId": "eval-006",
+                "tipo": "caminata",
+                "fecha": "2024-05-15",
+                "url": "/videos/postura/mhz-caminata-001.mp4",
+                "duracion": 60,
+                "observaciones": "Marcha con bastón, inestabilidad pélvica con descargas eléctricas en cadera izquierda"
+              }
+            ],
+            "notasVoz": [
+              {
+                "id": "voz-001",
+                "tipo": "anamnesis",
+                "fecha": "2024-05-15",
+                "urlAudio": "/audio/anamnesis-mhz.mp3",
+                "transcripcion": "Paciente refiere dolor intenso en zona glútea y sensación de descarga eléctrica. Antecedente de fractura reciente en mayo.",
+                "duracionSegundos": 120
+              }
+            ]
+          },
+          "planDeTratamiento": {
+            "id": "plan-006",
+            "casoClinicoId": "caso-006",
+            "fechaCreacion": "2024-05-15",
+            "objetivos": {
+              "terapeutico": "Reducir dolor lumbo-pélvico de 9/10 a 5/10, mejorar movilidad funcional y estabilidad pélvica",
+              "profilactico": "Prevenir caídas y deterioro funcional progresivo en paciente con osteoporosis",
+              "educativo": "Ejercicios de movilización suave, fortalecimiento de cadera y educación sobre transferencias seguras"
+            },
+            "fases": [
+              {
+                "numero": 1,
+                "nombre": "Movilización y Descarga",
+                "duracionSemanas": 3,
+                "tecnicas": ["Movilizaciones suaves de columna", "Movilizaciones de cadera", "Crioterapia local"],
+                "objetivos": "Reducir contracturas, mejorar circulación y controlar dolor agudo"
+              },
+              {
+                "numero": 2,
+                "nombre": "Fortalecimiento y Equilibrio",
+                "duracionSemanas": 4,
+                "tecnicas": ["Ejercicios de fortalecimiento de cadera", "Propiocepción", "Entrenamiento de transferencias"],
+                "objetivos": "Mejorar estabilidad de cadera y pelvis, prevenir caídas"
+              },
+              {
+                "numero": 3,
+                "nombre": "Ejercicios Funcionales",
+                "duracionSemanas": 6,
+                "tecnicas": ["Marcha con bastón", "Ejercicios de equilibrio dinámico", "Elongación de flexores de cadera"],
+                "objetivos": "Recuperar independencia en AVD, mejorar patrón de marcha"
+              }
+            ],
+            "plantilla": null
+          },
+          "sesionesTratamiento": [
+            {
+              "id": "sesion-017",
+              "casoClinicoId": "caso-006",
+              "fecha": "2024-05-20",
+              "faseNumero": 1,
+              "tecnicasAplicadas": ["Movilizaciones suaves columna", "Movilización cadera", "Crioterapia"],
+              "respuestaPaciente": "Refiere alivio leve durante movilización, descargas eléctricas disminuyen en frecuencia",
+              "dolorFinal": 8,
+              "observaciones": "Continuar con movilización suave, introducir ejercicios de fortalecimiento leve",
+              "notasVoz": [
+                {
+                  "id": "voz-002",
+                  "tipo": "evolucion",
+                  "fecha": "2024-05-20",
+                  "urlAudio": "/audio/evolucion-017.mp3",
+                  "transcripcion": "Paciente reporta menos calambres hoy. La movilización fue bien tolerada.",
+                  "duracionSegundos": 45
+                }
+              ]
+            },
+            {
+              "id": "sesion-018",
+              "casoClinicoId": "caso-006",
+              "fecha": "2024-06-05",
+              "faseNumero": 1,
+              "tecnicasAplicadas": ["Crioterapia", "Movilización"],
+              "respuestaPaciente": "Mejora en movilidad cadera, todavía presenta dificultad para traslados",
+              "dolorFinal": 7,
+              "observaciones": "Iniciar ejercicios de fortalecimiento de cadera"
+            },
+            {
+              "id": "sesion-019",
+              "casoClinicoId": "caso-006",
+              "fecha": "2024-06-20",
+              "faseNumero": 2,
+              "tecnicasAplicadas": ["Fortalecimiento cadera", "Propiocepción"],
+              "respuestaPaciente": "Mejora notable en estabilidad estática, todavía requiere ayuda para traslados",
+              "dolorFinal": 6,
+              "observaciones": "Reforzar ejercicios de equilibrio y transferencias seguras"
+            },
+            {
+              "id": "sesion-020",
+              "casoClinicoId": "caso-006",
+              "fecha": "2024-07-10",
+              "faseNumero": 2,
+              "tecnicasAplicadas": ["Marcha con bastón", "Ejercicios equilibrio"],
+              "respuestaPaciente": "Caminata más segura con bastón, mejora en independencia parcial",
+              "dolorFinal": 5,
+              "observaciones": "Continuar elongación de flexores de cadera"
+            },
+            {
+              "id": "sesion-021",
+              "casoClinicoId": "caso-006",
+              "fecha": "2024-09-05",
+              "faseNumero": 3,
+              "tecnicasAplicadas": ["Reevaluación AVD", "Reevaluación dolor", "Reevaluación Schober"],
+              "respuestaPaciente": "Barthel mejora a 8/10, dolor reducido a 4/10, Schober mejora a flexión +4cm",
+              "dolorFinal": 4,
+              "observaciones": "Progreso significativo, continuar mantenimiento"
+            },
+            {
+              "id": "sesion-022",
+              "casoClinicoId": "caso-006",
+              "fecha": "2024-10-15",
+              "faseNumero": 3,
+              "tecnicasAplicadas": ["Ejercicios mantenimiento"],
+              "respuestaPaciente": "Mantiene ganancias funcionales, dolor controlado",
+              "dolorFinal": 4,
+              "observaciones": "Caso estable, seguimiento mensual"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pac-001",
+      "nombre": "Juan Pérez",
+      "edad": 45,
+      "ocupacion": "Camarero",
+      "telefono": "+34 612 345 678",
+      "email": "juan.perez@email.com",
+      "fechaNacimiento": "1979-03-15",
+      "activo": true,
+      "fechaCreacion": "2025-01-05",
+      "casosClinicos": [
+        {
+          "id": "caso-001",
+          "pacienteId": "pac-001",
+          "titulo": "Fascitis Plantar - Pie Derecho",
+          "estado": "activo",
+          "fechaInicio": "2025-01-05",
+          "motivoConsulta": "Dolor punzante en el talón derecho al correr. Trabaja 8 horas de pie.",
+          "evaluacion": {
+            "id": "eval-001",
+            "casoClinicoId": "caso-001",
+            "fecha": "2025-01-05",
+            "posturograma": {
+              "vistaPosterior": {
+                "pies": "Valgo bilateral"
+              }
+            },
+            "testOrtopedicos": {
+              "thomas": { "resultado": 3, "interpretacion": "Acortamiento flexores de cadera" },
+              "ely": { "resultado": 2, "interpretacion": "Retracción TFL" },
+              "ober": { "resultado": 1, "interpretacion": "Normal" },
+              "schober": { "resultado": 12, "interpretacion": "Lumbalgia mecánica" },
+              "ott": { "resultado": 45, "interpretacion": "Disminución flexibilidad" }
+            },
+            "evaluacionAVD": {
+              "barthel": {
+                "comer": 2,
+                "trasladarse": 2,
+                "aseoPersonal": 2,
+                "desplazarse": 2,
+                "escaleras": 1,
+                "vestirse": 2,
+                "total": 11,
+                "interpretacion": "Independiente leve"
+              },
+              "lawton": {
+                "preparacionComida": 2,
+                "cuidadoCasa": 2,
+                "lavadoRopa": 2,
+                "transporte": 1,
+                "medicacion": 1,
+                "total": 8,
+                "interpretacion": "Independiente con dificultad leve"
+              }
+            },
+            "escalaDolor": {
+              "actividad": 7,
+              "reposo": 3,
+              "palpacion": 8,
+              "tipo": "cronico"
+            },
+            "diagnostico": {
+              "indicadorFuncional": "Disminución de la capacidad funcional por dolor en apoyo",
+              "aspectoClinico": "Dolor en zona plantar medial, agravado por bipedestación prolongada",
+              "anatomopatologia": "Inflamación de fascia plantar con alteración de arco longitudinal interno",
+              "consecuenciasAVD": "Dificultad para mantener bipedestación por más de 2 horas"
+            },
+            "huellas": [],
+            "videosPostura": []
+          },
+          "planDeTratamiento": {
+            "id": "plan-001",
+            "casoClinicoId": "caso-001",
+            "fechaCreacion": "2025-01-05",
+            "objetivos": {
+              "terapeutico": "Reducir dolor",
+              "profilactico": "Prevenir progresión",
+              "educativo": "Enseñar ejercicios"
+            },
+            "fases": [],
+            "plantilla": null
+          },
+          "sesionesTratamiento": []
+        }
+      ]
+    }
+  ]
+}

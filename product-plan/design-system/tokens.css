@@ -1,0 +1,13 @@
+/* Design Tokens for Mamirri App */
+
+:root {
+  /* Colors */
+  --color-primary: teal;
+  --color-secondary: sky;
+  --color-neutral: slate;
+
+  /* Typography */
+  --font-heading: 'DM Sans', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
