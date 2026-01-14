@@ -325,7 +325,7 @@ const mockEmptyList: Paciente[] = []
 
 const mockPatientNoActiveCase: Paciente = {
   id: "pac-002",
-  nombre: "María García",
+  nombre: "Noemi Herbas",
   edad: 32,
   ocupacion: "Profesora",
   telefono: "+34 678 901 234",

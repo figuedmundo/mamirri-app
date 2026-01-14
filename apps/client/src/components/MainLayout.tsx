@@ -38,7 +38,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   ];
 
   const user = {
-    name: 'Dr. María García',
+    name: 'Dra. Noemi Herbas',
     avatarUrl: undefined,
   };
 
