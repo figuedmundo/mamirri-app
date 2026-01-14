@@ -57,18 +57,18 @@ Total Tasks: 2
 
 **Dependencies:** Task Group 1
 
-- [ ] 2.0 Review existing tests and fill critical gaps only
-  - [ ] 2.1 Review tests from Task Group 1
+- [x] 2.0 Review existing tests and fill critical gaps only
+  - [x] 2.1 Review tests from Task Group 1
     - Review the 2-8 tests written by api-engineer (Task 1.1)
-  - [ ] 2.2 Analyze test coverage gaps for THIS feature only
+  - [x] 2.2 Analyze test coverage gaps for THIS feature only
     - Identify critical user workflows that lack test coverage
     - Focus ONLY on gaps related to strict isolation and validation
     - Do NOT assess entire application test coverage
-  - [ ] 2.3 Write up to 10 additional strategic tests maximum
+  - [x] 2.3 Write up to 10 additional strategic tests maximum
     - Add maximum of 10 new tests to fill identified critical gaps
     - Focus on integration points (e.g., Service <-> DB isolation)
     - Do NOT write comprehensive coverage for all scenarios
-  - [ ] 2.4 Run feature-specific tests only
+  - [x] 2.4 Run feature-specific tests only
     - Run ONLY tests related to this spec's feature (tests from 1.1 and 2.3)
     - Do NOT run the entire application test suite
     - Verify critical workflows pass
