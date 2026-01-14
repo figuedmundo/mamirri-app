@@ -9,7 +9,8 @@ import AuthLayout from './components/auth/AuthLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Toaster } from './components/ui/toaster';
-import Pacientes from './pages/Pacientes';
+import Patients from './pages/Patients';
+import PatientDetail from './pages/PatientDetail';
 import Analisis from './pages/Analisis';
 import Biblioteca from './pages/Biblioteca';
 import Plantillas from './pages/Plantillas';
@@ -43,7 +44,18 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MainLayout>
-                    <Pacientes />
+                    <Patients />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pacientes/:id"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <PatientDetail />
                   </MainLayout>
                 </ProtectedRoute>
               }

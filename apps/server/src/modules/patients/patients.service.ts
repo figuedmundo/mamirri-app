@@ -1,70 +1,134 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreatePatientDto } from './dto/create-patient.dto';
-import { UpdatePatientDto } from './dto/update-patient.dto';
-import { Prisma } from '@prisma/client';
+import {
+  Patient,
+  ClinicalCase,
+  TreatmentSession,
+  Evaluation,
+} from '@prisma/client';
+
+export interface CreatePatientDto {
+  name: string;
+  age: number;
+  occupation: string;
+  previousOccupation?: string;
+  address?: string;
+  gender?: string;
+  phone: string;
+  email?: string;
+  birthDate: string;
+}
+
+export interface CreateTreatmentSessionDto {
+  date: string;
+  phaseNumber: number;
+  procedures: string[];
+  patientResponse: string;
+  finalPainLevel: number;
+  observations: string;
+}
+
+export interface UpdateEvaluationDto {
+  posturogram?: any;
+  orthopedicTests?: any;
+  avdEvaluation?: any;
+  painScale?: any;
+  diagnosis?: any;
+}
 
 @Injectable()
 export class PatientsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
-  async create(createPatientDto: CreatePatientDto, therapistId: string) {
-    return this.prisma.patient.create({
-      data: {
-        ...createPatientDto,
-        dob: new Date(createPatientDto.dob),
+  async create(
+    createPatientDto: CreatePatientDto,
+    therapistId: string,
+  ): Promise<Patient> {
+    const { birthDate, ...rest } = createPatientDto;
+
+    return this.prisma.$transaction(async (tx) => {
+      const patient = await tx.patient.create({
+        data: {
+          ...rest,
+          birthDate: new Date(birthDate),
+          therapistId,
+          clinicalCases: {
+            create: {
+              title: 'Initial Case - General Evaluation',
+              status: 'active',
+              startDate: new Date(),
+              consultationReason: 'Initial evaluation',
+              evaluation: {
+                create: {
+                  date: new Date(),
+                  posturogram: {},
+                  orthopedicTests: {},
+                  avdEvaluation: {},
+                  painScale: {},
+                  diagnosis: {},
+                },
+              },
+              treatmentPlan: {
+                create: {
+                  objectives: {},
+                  phases: [],
+                },
+              },
+            },
+          },
+        },
+        include: {
+          clinicalCases: {
+            include: {
+              evaluation: true,
+              treatmentPlan: true,
+            },
+          },
+        },
+      });
+
+      return patient;
+    });
+  }
+
+  async findAll(therapistId: string): Promise<Patient[]> {
+    return this.prisma.patient.findMany({
+      where: {
         therapistId,
+        deletedAt: null,
+      },
+      include: {
+        clinicalCases: {
+          include: {
+            treatmentSessions: true,
+            evaluation: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }
 
-  async findAll(
-    therapistId: string,
-    page: number = 1,
-    limit: number = 20,
-    search?: string,
-  ) {
-    const skip = (page - 1) * limit;
-
-    const where: Prisma.PatientWhereInput = {
-      therapistId,
-      deletedAt: null,
-      ...(search
-        ? {
-            OR: [
-              { firstName: { contains: search, mode: 'insensitive' } },
-              { lastName: { contains: search, mode: 'insensitive' } },
-            ],
-          }
-        : {}),
-    };
-
-    const [data, total] = await Promise.all([
-      this.prisma.patient.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' },
-      }),
-      this.prisma.patient.count({ where }),
-    ]);
-
-    return {
-      data,
-      meta: {
-        total,
-        page,
-        lastPage: Math.ceil(total / limit),
-      },
-    };
-  }
-
-  async findOne(id: string, therapistId: string) {
+  async findOne(id: string, therapistId: string): Promise<Patient> {
     const patient = await this.prisma.patient.findFirst({
-      where: {
-        id,
-        therapistId,
-        deletedAt: null,
+      where: { id, therapistId, deletedAt: null },
+      include: {
+        clinicalCases: {
+          include: {
+            evaluation: true,
+            treatmentPlan: true,
+            treatmentSessions: {
+              orderBy: { date: 'desc' },
+            },
+            insoles: true,
+          },
+        },
       },
     });
 
@@ -77,17 +141,15 @@ export class PatientsService {
 
   async update(
     id: string,
+    updatePatientDto: Partial<CreatePatientDto>,
     therapistId: string,
-    updatePatientDto: UpdatePatientDto,
-  ) {
+  ): Promise<Patient> {
     await this.findOne(id, therapistId);
 
-    const data: Prisma.PatientUpdateInput = {
-      ...updatePatientDto,
-    };
-
-    if (updatePatientDto.dob) {
-      data.dob = new Date(updatePatientDto.dob);
+    const { birthDate, ...rest } = updatePatientDto;
+    const data: any = { ...rest };
+    if (birthDate) {
+      data.birthDate = new Date(birthDate);
     }
 
     return this.prisma.patient.update({
@@ -96,14 +158,64 @@ export class PatientsService {
     });
   }
 
-  async remove(id: string, therapistId: string) {
+  async remove(id: string, therapistId: string): Promise<void> {
     await this.findOne(id, therapistId);
 
     await this.prisma.patient.update({
       where: { id },
-      data: {
-        deletedAt: new Date(),
+      data: { deletedAt: new Date() },
+    });
+  }
+
+  async addSession(
+    clinicalCaseId: string,
+    createSessionDto: CreateTreatmentSessionDto,
+    therapistId: string,
+  ): Promise<TreatmentSession> {
+    const clinicalCase = await this.prisma.clinicalCase.findFirst({
+      where: {
+        id: clinicalCaseId,
+        patient: { therapistId },
       },
+    });
+
+    if (!clinicalCase) {
+      throw new BadRequestException('Clinical case not found or access denied');
+    }
+
+    const { date, ...rest } = createSessionDto;
+
+    return this.prisma.treatmentSession.create({
+      data: {
+        ...rest,
+        date: new Date(date),
+        clinicalCaseId,
+        therapistId,
+      },
+    });
+  }
+
+  async updateEvaluation(
+    evaluationId: string,
+    updateDto: UpdateEvaluationDto,
+    therapistId: string,
+  ): Promise<Evaluation> {
+    const evaluation = await this.prisma.evaluation.findFirst({
+      where: {
+        id: evaluationId,
+        clinicalCase: {
+          patient: { therapistId },
+        },
+      },
+    });
+
+    if (!evaluation) {
+      throw new NotFoundException('Evaluation not found or access denied');
+    }
+
+    return this.prisma.evaluation.update({
+      where: { id: evaluationId },
+      data: updateDto,
     });
   }
 }
