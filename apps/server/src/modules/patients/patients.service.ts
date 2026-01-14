@@ -40,6 +40,8 @@ export interface UpdateEvaluationDto {
   diagnosis?: any;
 }
 
+import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
+
 @Injectable()
 export class PatientsService {
   constructor(private prisma: PrismaService) {}
@@ -101,7 +103,7 @@ export class PatientsService {
     page: number = 1,
     limit: number = 20,
     search?: string,
-  ): Promise<{ data: Patient[]; meta: any }> {
+  ): Promise<PaginatedResponseDto<Patient>> {
     const skip = (page - 1) * limit;
     const where: any = {
       therapistId,

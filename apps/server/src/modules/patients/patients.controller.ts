@@ -26,6 +26,9 @@ import type {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTherapist } from './decorators/current-therapist.decorator';
 
+import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
+import { Patient } from '@prisma/client';
+
 @ApiTags('patients')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -42,7 +45,7 @@ export class PatientsController {
   async create(
     @Body() createPatientDto: CreatePatientDto,
     @CurrentTherapist() user: any,
-  ) {
+  ): Promise<Patient> {
     return this.patientsService.create(createPatientDto, user.userId);
   }
 
@@ -57,7 +60,7 @@ export class PatientsController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 20,
     @Query('search') search?: string,
-  ) {
+  ): Promise<PaginatedResponseDto<Patient>> {
     return this.patientsService.findAll(user.userId, page, limit, search);
   }
 
@@ -71,7 +74,10 @@ export class PatientsController {
     status: HttpStatus.NOT_FOUND,
     description: 'Patient not found.',
   })
-  async findOne(@Param('id') id: string, @CurrentTherapist() user: any) {
+  async findOne(
+    @Param('id') id: string,
+    @CurrentTherapist() user: any,
+  ): Promise<Patient> {
     return this.patientsService.findOne(id, user.userId);
   }
 
@@ -89,7 +95,7 @@ export class PatientsController {
     @Param('id') id: string,
     @Body() updatePatientDto: Partial<CreatePatientDto>,
     @CurrentTherapist() user: any,
-  ) {
+  ): Promise<Patient> {
     return this.patientsService.update(id, updatePatientDto, user.userId);
   }
 
@@ -104,7 +110,10 @@ export class PatientsController {
     status: HttpStatus.NOT_FOUND,
     description: 'Patient not found.',
   })
-  async remove(@Param('id') id: string, @CurrentTherapist() user: any) {
+  async remove(
+    @Param('id') id: string,
+    @CurrentTherapist() user: any,
+  ): Promise<void> {
     return this.patientsService.remove(id, user.userId);
   }
 

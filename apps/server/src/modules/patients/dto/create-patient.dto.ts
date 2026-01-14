@@ -7,6 +7,8 @@ import {
   IsPhoneNumber,
   Length,
   IsDateString,
+  IsInt,
+  Min,
 } from 'class-validator';
 import { IsDateStringNotFuture } from '../../../common/validators/is-date-string-not-future.validator';
 
@@ -27,6 +29,8 @@ export class CreatePatientDto {
     example: 30,
   })
   @IsNotEmpty()
+  @IsInt()
+  @Min(0)
   age: number;
 
   @ApiProperty({
