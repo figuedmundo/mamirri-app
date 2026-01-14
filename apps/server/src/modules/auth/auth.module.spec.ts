@@ -3,13 +3,14 @@ import { AuthModule } from './auth.module';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
 
 describe('AuthModule Infrastructure', () => {
   let moduleRef: TestingModule;
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
-      imports: [AuthModule],
+      imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule],
     })
       .overrideProvider(AuthService)
       .useValue({})

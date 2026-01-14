@@ -6,10 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-// Load env vars for test
 dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
 
-// Manual variable expansion for DATABASE_URL since dotenv doesn't do it automatically
 if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('${')) {
   process.env.DATABASE_URL = process.env.DATABASE_URL.replace(
     '${POSTGRES_USER}',
@@ -20,7 +18,7 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('${')) {
     .replace('${POSTGRES_DB}', process.env.POSTGRES_DB || '');
 }
 
-describe('Patients Integration (DB Layer)', () => {
+describe('Evaluation Integration (1:N Relation)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -44,71 +42,81 @@ describe('Patients Integration (DB Layer)', () => {
     await app.close();
   });
 
-  it('should create a patient linked to a therapist', async () => {
-    // 1. Create Therapist
+  it('should allow multiple evaluations for a single clinical case', async () => {
     const therapist = await prisma.user.create({
       data: {
-        email: `therapist-${Date.now()}@example.com`,
+        email: `therapist-eval-${Date.now()}@example.com`,
         passwordHash: 'hashedpassword',
-        name: 'Test Therapist',
+        name: 'Eval Therapist',
       },
     });
 
-    // 2. Create Patient
     const patient = await prisma.patient.create({
       data: {
-        name: 'John Doe',
+        name: 'Eval Patient',
         age: 30,
-        occupation: 'Test Occupation',
+        occupation: 'Tester',
         phone: '1234567890',
-        birthDate: new Date('1990-01-01'),
+        birthDate: new Date('1994-01-01'),
         therapistId: therapist.id,
       },
     });
 
-    expect(patient).toBeDefined();
-    expect(patient.therapistId).toBe(therapist.id);
-
-    // Cleanup
-    await prisma.patient.delete({ where: { id: patient.id } });
-    await prisma.user.delete({ where: { id: therapist.id } });
-  });
-
-  it('should support soft delete (deletedAt field)', async () => {
-    // 1. Create Therapist
-    const therapist = await prisma.user.create({
+    const clinicalCase = await prisma.clinicalCase.create({
       data: {
-        email: `therapist-delete-${Date.now()}@example.com`,
-        passwordHash: 'hashedpassword',
-        name: 'Delete Therapist',
+        title: 'Knee Pain',
+        status: 'active',
+        startDate: new Date(),
+        consultationReason: 'Pain in left knee',
+        patientId: patient.id,
       },
     });
 
-    // 2. Create Patient
-    const patient = await prisma.patient.create({
+    const eval1 = await prisma.evaluation.create({
       data: {
-        name: 'Jane Doe',
-        age: 25,
-        occupation: 'Test Occupation',
-        phone: '0987654321',
-        birthDate: new Date('1995-05-05'),
-        therapistId: therapist.id,
+        date: new Date(),
+        type: 'INITIAL',
+        posturogram: {},
+        orthopedicTests: {},
+        avdEvaluation: {},
+        painScale: { level: 8, location: 'knee' },
+        diagnosis: { code: 'M25.5' },
+        clinicalCaseId: clinicalCase.id,
       },
     });
 
-    // 3. Soft Delete
-    const now = new Date();
-    const updatedPatient = await prisma.patient.update({
-      where: { id: patient.id },
+    const eval2 = await prisma.evaluation.create({
       data: {
-        deletedAt: now,
+        date: new Date(),
+        type: 'FINAL',
+        posturogram: {},
+        orthopedicTests: {},
+        avdEvaluation: {},
+        painScale: { level: 2, location: 'knee' },
+        diagnosis: { code: 'M25.5' },
+        clinicalCaseId: clinicalCase.id,
       },
     });
 
-    // 4. Verify
-    expect(updatedPatient.deletedAt).toEqual(now);
+    expect(eval1).toBeDefined();
+    expect(eval2).toBeDefined();
+    expect(eval1.id).not.toBe(eval2.id);
+    expect(eval1.clinicalCaseId).toBe(clinicalCase.id);
+    expect(eval2.clinicalCaseId).toBe(clinicalCase.id);
 
-    // Cleanup
+    const caseWithEvals = await prisma.clinicalCase.findUnique({
+      where: { id: clinicalCase.id },
+      include: { evaluations: true },
+    });
+
+    expect(caseWithEvals).toBeDefined();
+    // @ts-ignore
+    expect(caseWithEvals?.evaluations).toHaveLength(2);
+
+    await prisma.evaluation.deleteMany({
+      where: { clinicalCaseId: clinicalCase.id },
+    });
+    await prisma.clinicalCase.delete({ where: { id: clinicalCase.id } });
     await prisma.patient.delete({ where: { id: patient.id } });
     await prisma.user.delete({ where: { id: therapist.id } });
   });

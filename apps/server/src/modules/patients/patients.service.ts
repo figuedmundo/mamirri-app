@@ -62,9 +62,10 @@ export class PatientsService {
               status: 'active',
               startDate: new Date(),
               consultationReason: 'Initial evaluation',
-              evaluation: {
+              evaluations: {
                 create: {
                   date: new Date(),
+                  type: 'INITIAL',
                   posturogram: {},
                   orthopedicTests: {},
                   avdEvaluation: {},
@@ -84,7 +85,7 @@ export class PatientsService {
         include: {
           clinicalCases: {
             include: {
-              evaluation: true,
+              evaluations: true,
               treatmentPlan: true,
             },
           },
@@ -95,24 +96,53 @@ export class PatientsService {
     });
   }
 
-  async findAll(therapistId: string): Promise<Patient[]> {
-    return this.prisma.patient.findMany({
-      where: {
-        therapistId,
-        deletedAt: null,
-      },
-      include: {
-        clinicalCases: {
-          include: {
-            treatmentSessions: true,
-            evaluation: true,
+  async findAll(
+    therapistId: string,
+    page: number = 1,
+    limit: number = 20,
+    search?: string,
+  ): Promise<{ data: Patient[]; meta: any }> {
+    const skip = (page - 1) * limit;
+    const where: any = {
+      therapistId,
+      deletedAt: null,
+    };
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { phone: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    const [total, patients] = await this.prisma.$transaction([
+      this.prisma.patient.count({ where }),
+      this.prisma.patient.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          clinicalCases: {
+            include: {
+              treatmentSessions: true,
+              evaluations: true,
+            },
           },
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+    ]);
+
+    return {
+      data: patients,
+      meta: {
+        total,
+        page,
+        lastPage: Math.ceil(total / limit),
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    };
   }
 
   async findOne(id: string, therapistId: string): Promise<Patient> {
@@ -121,7 +151,7 @@ export class PatientsService {
       include: {
         clinicalCases: {
           include: {
-            evaluation: true,
+            evaluations: true,
             treatmentPlan: true,
             treatmentSessions: {
               orderBy: { date: 'desc' },

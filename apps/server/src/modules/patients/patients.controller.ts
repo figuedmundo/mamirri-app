@@ -9,6 +9,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -51,8 +52,13 @@ export class PatientsController {
     status: HttpStatus.OK,
     description: 'List of patients belonging to the therapist.',
   })
-  async findAll(@CurrentTherapist() user: any) {
-    return this.patientsService.findAll(user.userId);
+  async findAll(
+    @CurrentTherapist() user: any,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 20,
+    @Query('search') search?: string,
+  ) {
+    return this.patientsService.findAll(user.userId, page, limit, search);
   }
 
   @Get(':id')

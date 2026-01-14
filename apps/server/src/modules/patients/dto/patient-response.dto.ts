@@ -8,22 +8,46 @@ export class PatientResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'First name of the patient',
-    example: 'John',
+    description: 'Full name of the patient',
+    example: 'John Doe',
   })
-  firstName: string;
+  name: string;
 
   @ApiProperty({
-    description: 'Last name of the patient',
-    example: 'Doe',
+    description: 'Age of the patient',
+    example: 30,
   })
-  lastName: string;
+  age: number;
+
+  @ApiProperty({
+    description: 'Occupation',
+    example: 'Engineer',
+  })
+  occupation: string;
+
+  @ApiPropertyOptional({
+    description: 'Previous occupation',
+    example: 'Student',
+  })
+  previousOccupation: string | null;
+
+  @ApiPropertyOptional({
+    description: 'Address',
+    example: '123 Main St',
+  })
+  address: string | null;
+
+  @ApiPropertyOptional({
+    description: 'Gender',
+    example: 'Male',
+  })
+  gender: string | null;
 
   @ApiProperty({
     description: 'Date of birth',
     example: '1990-01-01T00:00:00.000Z',
   })
-  dob: Date;
+  birthDate: Date;
 
   @ApiPropertyOptional({
     description: 'Email address of the patient',

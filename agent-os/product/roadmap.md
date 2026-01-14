@@ -55,14 +55,14 @@ Methodology: Agile Development (1-week Sprints).
 
 **Components:**
 
-- [ ] **5.1** PacientesList — Grid of patient cards with search, filters, quick actions
-- [ ] **5.2** PacienteProfile — Detailed view with cases history, photos, action buttons
-- [ ] **5.3** CaseDetailLayout — Split layout wrapper for clinical timeline and content
-- [ ] **5.4** CaseTimeline — Visual timeline of clinical case phases and sessions
+- [x] **5.1** PacientesList — Grid of patient cards with search, filters, quick actions
+- [x] **5.2** PacienteProfile — Detailed view with cases history, photos, action buttons
+- [x] **5.3** CaseDetailLayout — Split layout wrapper for clinical timeline and content
+- [x] **5.4** CaseTimeline — Visual timeline of clinical case phases and sessions
 
 **Backend & Data Layer:**
 
-- [ ] **5.5** Database schema: Patient, ClinicalCase, Evaluation, TreatmentSession
+- [x] **5.5** Database schema: Patient, ClinicalCase, Evaluation, TreatmentSession
 - [ ] **5.6** API endpoints: Patients CRUD with therapist isolation
 - [ ] **5.7** API endpoints: Clinical cases CRUD
 - [ ] **5.8** API endpoints: Treatment sessions CRUD

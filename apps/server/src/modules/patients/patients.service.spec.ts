@@ -14,6 +14,7 @@ describe('PatientsService', () => {
       findMany: jest.fn(),
       findUnique: jest.fn(),
       update: jest.fn(),
+      count: jest.fn(),
     },
     clinicalCase: {
       create: jest.fn(),
@@ -90,22 +91,25 @@ describe('PatientsService', () => {
   });
 
   describe('findAll', () => {
-    it('should return an array of patients scoped to therapist', async () => {
+    it('should return paginated patients scoped to therapist', async () => {
       const patients = [{ id: 'p1', name: 'John' }];
-      mockPrismaService.patient.findMany.mockResolvedValue(patients);
+      const count = 1;
+      mockPrismaService.$transaction.mockResolvedValue([count, patients]);
 
-      const result = await service.findAll(mockTherapistId);
+      const result = await service.findAll(mockTherapistId, 1, 20);
 
-      expect(result).toEqual(patients);
-      expect(mockPrismaService.patient.findMany).toHaveBeenCalledWith({
-        where: { therapistId: mockTherapistId, deletedAt: null },
-        include: {
-          clinicalCases: {
-            include: { treatmentSessions: true, evaluation: true },
-          },
-        },
-        orderBy: { createdAt: 'desc' },
+      expect(result).toEqual({
+        data: patients,
+        meta: { total: 1, page: 1, lastPage: 1 },
       });
+
+      expect(mockPrismaService.patient.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ therapistId: mockTherapistId }),
+          skip: 0,
+          take: 20,
+        }),
+      );
     });
   });
 

@@ -66,7 +66,7 @@ model ClinicalCase {
   patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
 
   // Relations
-  evaluation          Evaluation?
+  evaluations         Evaluation[]
   treatmentPlan       TreatmentPlan?
   treatmentSessions   TreatmentSession[]
   insoles             Insole[]
@@ -80,6 +80,7 @@ model ClinicalCase {
 model Evaluation {
   id              String   @id @default(cuid())
   date            DateTime
+  type            String   // 'INITIAL' | 'PROGRESS' | 'FINAL'
   
   // JSON fields for complex nested data types
   posturogram     Json     // Posturograma
@@ -89,7 +90,7 @@ model Evaluation {
   diagnosis       Json     // Diagnostico
   voiceNotes      Json?    // VoiceNote[]
 
-  clinicalCaseId  String   @unique
+  clinicalCaseId  String
   clinicalCase    ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
 
   // Relations

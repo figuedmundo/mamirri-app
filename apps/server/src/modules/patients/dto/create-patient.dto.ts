@@ -12,26 +12,54 @@ import { IsDateStringNotFuture } from '../../../common/validators/is-date-string
 
 export class CreatePatientDto {
   @ApiProperty({
-    description: 'First name of the patient',
-    example: 'John',
+    description: 'Full name of the patient',
+    example: 'John Doe',
     minLength: 2,
-    maxLength: 50,
+    maxLength: 100,
   })
   @IsString()
   @IsNotEmpty()
-  @Length(2, 50)
-  firstName: string;
+  @Length(2, 100)
+  name: string;
 
   @ApiProperty({
-    description: 'Last name of the patient',
-    example: 'Doe',
-    minLength: 2,
-    maxLength: 50,
+    description: 'Age of the patient',
+    example: 30,
+  })
+  @IsNotEmpty()
+  age: number;
+
+  @ApiProperty({
+    description: 'Occupation of the patient',
+    example: 'Engineer',
   })
   @IsString()
   @IsNotEmpty()
-  @Length(2, 50)
-  lastName: string;
+  occupation: string;
+
+  @ApiPropertyOptional({
+    description: 'Previous occupation of the patient',
+    example: 'Student',
+  })
+  @IsOptional()
+  @IsString()
+  previousOccupation?: string;
+
+  @ApiPropertyOptional({
+    description: 'Home address',
+    example: '123 Main St',
+  })
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @ApiPropertyOptional({
+    description: 'Gender',
+    example: 'Male',
+  })
+  @IsOptional()
+  @IsString()
+  gender?: string;
 
   @ApiProperty({
     description: 'Date of birth in ISO 8601 format (YYYY-MM-DD)',
@@ -40,7 +68,7 @@ export class CreatePatientDto {
   @IsNotEmpty()
   @IsDateString()
   @IsDateStringNotFuture()
-  dob: string;
+  birthDate: string;
 
   @ApiPropertyOptional({
     description: 'Email address of the patient',
@@ -50,11 +78,11 @@ export class CreatePatientDto {
   @IsEmail()
   email?: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Phone number in E.164 format',
     example: '+1234567890',
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsPhoneNumber()
-  phone?: string;
+  phone: string;
 }

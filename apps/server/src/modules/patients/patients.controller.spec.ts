@@ -37,30 +37,25 @@ describe('PatientsController', () => {
   describe('create', () => {
     it('should create a patient with therapistId', async () => {
       const dto: CreatePatientDto = {
-        firstName: 'John',
-        lastName: 'Doe',
-        dob: '1990-01-01',
+        name: 'John Doe',
+        age: 30,
+        occupation: 'Worker',
+        phone: '123',
+        birthDate: '1990-01-01',
       };
       const therapistId = 'therapist-1';
       const serviceResult = {
         id: '1',
         ...dto,
-        dob: new Date(dto.dob),
+        birthDate: new Date(dto.birthDate),
         therapistId,
         createdAt: new Date(),
         email: null,
-        phone: null,
+        previousOccupation: null,
+        address: null,
+        gender: null,
         deletedAt: null,
-      };
-
-      const expectedResult: PatientResponseDto = {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        dob: new Date(dto.dob),
-        email: null,
-        phone: null,
-        createdAt: serviceResult.createdAt,
+        isActive: true,
       };
 
       (service.create as jest.Mock).mockResolvedValue(serviceResult);
@@ -70,7 +65,7 @@ describe('PatientsController', () => {
       } as any);
 
       expect(service.create).toHaveBeenCalledWith(dto, therapistId);
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(serviceResult);
     });
   });
 
@@ -108,24 +103,15 @@ describe('PatientsController', () => {
       const therapistId = 'therapist-1';
       const serviceResult = {
         id,
-        firstName: 'John',
-        lastName: 'Doe',
+        name: 'John Doe',
+        age: 30,
+        occupation: 'Engineer',
         therapistId,
-        dob: new Date('1990-01-01'),
+        birthDate: new Date('1990-01-01'),
         createdAt: new Date(),
         email: null,
         phone: null,
         deletedAt: null,
-      };
-
-      const expectedResult: PatientResponseDto = {
-        id,
-        firstName: 'John',
-        lastName: 'Doe',
-        dob: serviceResult.dob,
-        createdAt: serviceResult.createdAt,
-        email: null,
-        phone: null,
       };
 
       (service.findOne as jest.Mock).mockResolvedValue(serviceResult);
@@ -135,7 +121,7 @@ describe('PatientsController', () => {
       } as any);
 
       expect(service.findOne).toHaveBeenCalledWith(id, therapistId);
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(serviceResult);
     });
   });
 
@@ -143,28 +129,19 @@ describe('PatientsController', () => {
     it('should update a patient', async () => {
       const id = 'patient-1';
       const therapistId = 'therapist-1';
-      const dto: UpdatePatientDto = { firstName: 'Jane' };
+      const dto: UpdatePatientDto = { name: 'Jane Doe' };
 
       const serviceResult = {
         id,
-        firstName: 'Jane',
-        lastName: 'Doe',
+        name: 'Jane Doe',
+        age: 30,
+        occupation: 'Engineer',
         therapistId,
-        dob: new Date('1990-01-01'),
+        birthDate: new Date('1990-01-01'),
         createdAt: new Date(),
         email: null,
         phone: null,
         deletedAt: null,
-      };
-
-      const expectedResult: PatientResponseDto = {
-        id,
-        firstName: 'Jane',
-        lastName: 'Doe',
-        dob: serviceResult.dob,
-        createdAt: serviceResult.createdAt,
-        email: null,
-        phone: null,
       };
 
       (service.update as jest.Mock).mockResolvedValue(serviceResult);
@@ -173,8 +150,8 @@ describe('PatientsController', () => {
         userId: therapistId,
       } as any);
 
-      expect(service.update).toHaveBeenCalledWith(id, therapistId, dto);
-      expect(result).toEqual(expectedResult);
+      expect(service.update).toHaveBeenCalledWith(id, dto, therapistId);
+      expect(result).toEqual(serviceResult);
     });
   });
 

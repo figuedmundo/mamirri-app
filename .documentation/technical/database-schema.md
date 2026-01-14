@@ -44,9 +44,53 @@ Stores clinical profile for individuals receiving treatment.
 
 - `patients_firstName_lastName_idx`: Optimized search for patients by name.
 
+## Clinical Cases (`clinical_cases`)
+
+Represents a specific medical issue or "Episode of Care" for a patient. A patient can have multiple cases over time.
+
+| Field                 | Type       | Description                        |
+| --------------------- | ---------- | ---------------------------------- |
+| `id`                  | `String`   | Unique identifier (CUID)           |
+| `title`               | `String`   | Short title (e.g., "Knee Pain")    |
+| `status`              | `String`   | `active`, `completed`, `inactive`  |
+| `startDate`           | `DateTime` | When the case started              |
+| `consultationReason`  | `String`   | Primary reason for consultation    |
+| `pathologicalHistory` | `Json?`    | Flexible history (e.g., surgeries) |
+| `patientId`           | `String`   | Foreign key to `Patient`           |
+
+## Evaluations (`evaluations`)
+
+Clinical assessments performed within a Clinical Case. Supports 1:N cardinality (Initial, Progress, Final).
+
+| Field            | Type       | Description                        |
+| ---------------- | ---------- | ---------------------------------- |
+| `id`             | `String`   | Unique identifier (CUID)           |
+| `date`           | `DateTime` | Date of evaluation                 |
+| `type`           | `String`   | `INITIAL`, `PROGRESS`, `FINAL`     |
+| `painScale`      | `Json`     | Detailed pain map (location, 0-10) |
+| `diagnosis`      | `Json`     | Clinical diagnosis structure       |
+| `clinicalCaseId` | `String`   | Foreign key to `ClinicalCase`      |
+
+**Relations:**
+
+- **Many-to-One** with `ClinicalCase` (One Case has Many Evaluations).
+
+## Treatment Sessions (`treatment_sessions`)
+
+Records of individual therapy sessions linked to a Clinical Case.
+
+| Field            | Type       | Description                              |
+| ---------------- | ---------- | ---------------------------------------- |
+| `id`             | `String`   | Unique identifier (CUID)                 |
+| `date`           | `DateTime` | Session timestamp                        |
+| `finalPainLevel` | `Int`      | Simple 0-10 pain score at end of session |
+| `procedures`     | `String[]` | List of techniques applied               |
+| `clinicalCaseId` | `String`   | Foreign key to `ClinicalCase`            |
+| `therapistId`    | `String`   | Foreign key to `User`                    |
+
 ## Sessions (`sessions`)
 
-Represents individual treatment encounters.
+**Deprecated / Legacy**: Use `treatment_sessions` for clinical data. This table is kept for backward compatibility during migration.
 
 | Field         | Type       | Description                         |
 | ------------- | ---------- | ----------------------------------- |
@@ -63,4 +107,4 @@ Represents individual treatment encounters.
 
 ---
 
-**Last Updated:** 2026-01-08
+**Last Updated:** 2026-01-14
