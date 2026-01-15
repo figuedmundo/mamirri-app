@@ -25,14 +25,6 @@ export function PatientProfile({
   const pastCases =
     patient.clinicalCases?.filter((c) => c.status !== 'active') || [];
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':

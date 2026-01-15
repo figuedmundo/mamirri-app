@@ -2,7 +2,6 @@ import type { PatientListProps, Patient } from '../../types/patient';
 import {
   Search,
   Plus,
-  User,
   Calendar,
   Clock,
   Edit2,
@@ -17,6 +16,7 @@ export function PatientList({
   onCreate,
   onEdit,
   onDelete,
+  onSchedule,
 }: PatientListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState<
@@ -138,17 +138,14 @@ export function PatientList({
       </div>
 
       {filteredPatients.length === 0 ? (
-        <div className="text-center py-20 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700">
-          <div className="w-16 h-16 mx-auto mb-4 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm">
-            <User className="text-slate-300 dark:text-slate-600" size={32} />
-          </div>
-          <h3 className="text-lg font-medium text-slate-900 dark:text-white">
-            No se encontraron pacientes
-          </h3>
-          <p className="text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
-            Intenta ajustar los filtros o agrega un nuevo paciente al sistema.
-          </p>
-        </div>
+        <EmptyState
+          hasPatients={(patients || []).length > 0}
+          searchTerm={searchTerm}
+          activeFilter={activeFilter}
+          onCreate={onCreate}
+          onClearSearch={() => setSearchTerm('')}
+          onClearFilter={() => setActiveFilter('all')}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredPatients.map((patient) => {
@@ -255,23 +252,35 @@ export function PatientList({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onEdit?.(patient.id);
+                      onSchedule?.(patient.id);
                     }}
                     className="p-2 text-slate-400 hover:text-teal-600 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors"
-                    title="Editar"
+                    title="Agendar cita"
                   >
-                    <Edit2 size={16} />
+                    <Calendar size={16} />
                   </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete?.(patient.id);
-                    }}
-                    className="p-2 text-slate-400 hover:text-rose-500 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors"
-                    title="Eliminar"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit?.(patient.id);
+                      }}
+                      className="p-2 text-slate-400 hover:text-teal-600 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors"
+                      title="Editar"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete?.(patient.id);
+                      }}
+                      className="p-2 text-slate-400 hover:text-rose-500 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors"
+                      title="Eliminar"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -287,4 +296,100 @@ function formatDate(dateString: string): string {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return dateString;
   return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+}
+
+function EmptyState({
+  hasPatients,
+  searchTerm,
+  activeFilter,
+  onCreate,
+  onClearSearch,
+  onClearFilter,
+}: {
+  hasPatients: boolean;
+  searchTerm: string;
+  activeFilter: 'all' | 'active' | 'recent' | 'today';
+  onCreate?: () => void;
+  onClearSearch: () => void;
+  onClearFilter: () => void;
+}) {
+  if (!hasPatients) {
+    return (
+      <div className="text-center py-20 bg-gradient-to-br from-teal-50 to-sky-50 dark:from-slate-900 dark:to-slate-800 rounded-3xl border-2 border-dashed border-teal-200 dark:border-teal-800">
+        <div className="w-20 h-20 mx-auto mb-5 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center shadow-lg shadow-teal-100 dark:shadow-none">
+          <Plus className="text-teal-500" size={36} />
+        </div>
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+          Comienza agregando tu primer paciente
+        </h3>
+        <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
+          Tu lista de pacientes está vacía. Agrega un nuevo paciente para
+          empezar a gestionar sus expedientes clínicos.
+        </p>
+        {onCreate && (
+          <button
+            onClick={onCreate}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl shadow-lg shadow-teal-600/20 transition-all hover:scale-105 active:scale-95 font-medium"
+          >
+            <Plus size={20} />
+            Agregar Primer Paciente
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  if (searchTerm) {
+    return (
+      <div className="text-center py-20 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700">
+        <div className="w-16 h-16 mx-auto mb-4 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm">
+          <Search className="text-slate-300 dark:text-slate-600" size={28} />
+        </div>
+        <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-1">
+          Sin resultados para "{searchTerm}"
+        </h3>
+        <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-5">
+          No encontramos pacientes que coincidan con tu búsqueda. Intenta con
+          otro término.
+        </p>
+        <button
+          onClick={onClearSearch}
+          className="inline-flex items-center gap-2 px-4 py-2 text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 rounded-lg font-medium transition-colors"
+        >
+          Limpiar búsqueda
+        </button>
+      </div>
+    );
+  }
+
+  const filterLabels: Record<string, string> = {
+    active: 'activos',
+    recent: 'recientes',
+    today: 'con cita hoy',
+  };
+
+  return (
+    <div className="text-center py-20 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700">
+      <div className="w-16 h-16 mx-auto mb-4 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm">
+        <Activity className="text-slate-300 dark:text-slate-600" size={28} />
+      </div>
+      <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-1">
+        No hay pacientes {filterLabels[activeFilter]}
+      </h3>
+      <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-5">
+        {activeFilter === 'active' &&
+          'No tienes pacientes con casos activos en este momento.'}
+        {activeFilter === 'recent' &&
+          'No tienes pacientes agregados en los últimos 30 días.'}
+        {activeFilter === 'today' &&
+          'No tienes pacientes con cita programada para hoy.'}
+      </p>
+      <button
+        onClick={onClearFilter}
+        className="inline-flex items-center gap-2 px-4 py-2 text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 rounded-lg font-medium transition-colors"
+      >
+        Ver todos los pacientes
+      </button>
+    </div>
+  );
 }

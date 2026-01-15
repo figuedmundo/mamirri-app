@@ -70,15 +70,15 @@ Methodology: Agile Development (1-week Sprints).
 
 **Integrations:**
 
-- [ ] **5.10** Wire callbacks: onView, onCreate, onEdit, onDelete
-- [ ] **5.11** Wire callback: onSchedule (Google Calendar pre-fill)
-- [ ] **5.12** Empty states: No patients, no active case, no search results
-- [ ] **5.13** Loading states and error handling with toasts
+- [x] **5.10** Wire callbacks: onView, onCreate, onEdit, onDelete
+- [x] **5.11** Wire callback: onSchedule (Google Calendar pre-fill)
+- [x] **5.12** Empty states: No patients, no active case, no search results
+- [x] **5.13** Loading states and error handling with toasts
 
 **Tests:**
 
-- [ ] **5.14** Backend unit tests: Patient, ClinicalCase services
-- [ ] **5.15** Backend integration tests: Patient endpoints
+- [x] **5.14** Backend unit tests: Patient, ClinicalCase services
+- [x] **5.15** Backend integration tests: Patient endpoints
 
 ### Week 6: Pacientes — Evaluation & Timeline (Milestone 2b)
 

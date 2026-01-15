@@ -30,10 +30,19 @@ export interface UpdateEvaluationDto {
   diagnosis?: any;
 }
 
+interface PaginatedResponse<T> {
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    lastPage: number;
+  };
+}
+
 export const patientsApi = {
   findAll: async () => {
-    const response = await axios.get<Patient[]>('/patients');
-    return response.data;
+    const response = await axios.get<PaginatedResponse<Patient>>('/patients');
+    return response.data.data;
   },
 
   findOne: async (id: string) => {

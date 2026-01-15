@@ -30,8 +30,6 @@ export function EvaluationForm({
     'posturogram' | 'tests' | 'avd' | 'pain'
   >('posturogram');
 
-  const isNormal = (value: string) => value.toLowerCase() === 'normal';
-
   const handlePosturogramChange = (
     part: keyof Posturogram,
     field: string,

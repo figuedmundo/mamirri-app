@@ -1,33 +1,38 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PatientList } from '../components/patients/PatientList';
+import {
+  PatientForm,
+  type PatientFormData,
+} from '../components/patients/PatientForm';
 import { patientsApi } from '../api/patients';
 import type { Patient } from '../types/patient';
 import { useToast } from '../hooks/use-toast';
+import { Dialog, DialogContent } from '../components/ui/dialog';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '../components/ui/dialog';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '../components/ui/alert-dialog';
+import { Loader2 } from 'lucide-react';
 
 export default function Patients() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [newPatient, setNewPatient] = useState({
-    name: '',
-    age: '',
-    occupation: '',
-    phone: '',
-    birthDate: '',
-  });
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editPatient, setEditPatient] = useState<Patient | null>(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const loadPatients = async () => {
     try {
@@ -50,12 +55,9 @@ export default function Patients() {
     loadPatients();
   }, []);
 
-  const handleCreate = async () => {
+  const handleCreate = async (formData: PatientFormData) => {
     try {
-      await patientsApi.create({
-        ...newPatient,
-        age: parseInt(newPatient.age),
-      });
+      await patientsApi.create(formData);
       toast({ title: 'Éxito', description: 'Paciente creado correctamente' });
       setIsCreateOpen(false);
       loadPatients();
@@ -66,6 +68,7 @@ export default function Patients() {
         description: 'No se pudo crear el paciente',
         variant: 'destructive',
       });
+      throw error;
     }
   };
 
@@ -73,25 +76,106 @@ export default function Patients() {
     navigate(`/pacientes/${id}`);
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm('¿Estás seguro de eliminar este paciente?')) {
-      try {
-        await patientsApi.delete(id);
-        toast({ title: 'Eliminado', description: 'Paciente eliminado' });
-        loadPatients();
-      } catch (error) {
-        console.error(error);
-        toast({
-          title: 'Error',
-          description: 'No se pudo eliminar el paciente',
-          variant: 'destructive',
-        });
-      }
+  const handleEditClick = (id: string) => {
+    const patient = patients.find((p) => p.id === id);
+    if (patient) {
+      setEditPatient(patient);
+      setIsEditOpen(true);
     }
   };
 
-  if (loading)
-    return <div className="p-8 text-center">Cargando pacientes...</div>;
+  const handleEditSubmit = async (formData: PatientFormData) => {
+    if (!editPatient) return;
+
+    try {
+      await patientsApi.update(editPatient.id, formData);
+      toast({
+        title: 'Éxito',
+        description: 'Paciente actualizado correctamente',
+      });
+      setIsEditOpen(false);
+      setEditPatient(null);
+      loadPatients();
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo actualizar el paciente',
+        variant: 'destructive',
+      });
+      throw error;
+    }
+  };
+
+  const handleDeleteClick = (id: string) => {
+    const patient = patients.find((p) => p.id === id);
+    if (patient) {
+      setPatientToDelete(patient);
+      setIsDeleteOpen(true);
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!patientToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      await patientsApi.delete(patientToDelete.id);
+      toast({
+        title: 'Eliminado',
+        description: `${patientToDelete.name} ha sido eliminado`,
+      });
+      setIsDeleteOpen(false);
+      setPatientToDelete(null);
+      loadPatients();
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo eliminar el paciente',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleSchedule = (id: string) => {
+    const patient = patients.find((p) => p.id === id);
+    if (patient) {
+      const text = `Cita Fisioterapia - ${patient.name}`;
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+  };
+
+  const getEditInitialData = (): Partial<PatientFormData> | undefined => {
+    if (!editPatient) return undefined;
+    return {
+      name: editPatient.name,
+      age: editPatient.age,
+      occupation: editPatient.occupation,
+      phone: editPatient.phone,
+      email: editPatient.email || '',
+      birthDate: editPatient.birthDate,
+      address: editPatient.address || '',
+      gender: editPatient.gender || '',
+      previousOccupation: editPatient.previousOccupation || '',
+    };
+  };
+
+  if (loading) {
+    return (
+      <div className="p-8 flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-slate-500 dark:text-slate-400">
+            Cargando pacientes...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -99,94 +183,72 @@ export default function Patients() {
         patients={patients}
         onView={handleView}
         onCreate={() => setIsCreateOpen(true)}
-        onEdit={(id) =>
-          toast({ title: 'Editar', description: `Editar paciente ${id}` })
-        }
-        onDelete={handleDelete}
+        onEdit={handleEditClick}
+        onDelete={handleDeleteClick}
+        onSchedule={handleSchedule}
       />
 
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Nuevo Paciente</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Nombre
-              </Label>
-              <Input
-                id="name"
-                value={newPatient.name}
-                onChange={(e) =>
-                  setNewPatient({ ...newPatient, name: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="age" className="text-right">
-                Edad
-              </Label>
-              <Input
-                id="age"
-                type="number"
-                value={newPatient.age}
-                onChange={(e) =>
-                  setNewPatient({ ...newPatient, age: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="occupation" className="text-right">
-                Ocupación
-              </Label>
-              <Input
-                id="occupation"
-                value={newPatient.occupation}
-                onChange={(e) =>
-                  setNewPatient({ ...newPatient, occupation: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="phone" className="text-right">
-                Teléfono
-              </Label>
-              <Input
-                id="phone"
-                value={newPatient.phone}
-                onChange={(e) =>
-                  setNewPatient({ ...newPatient, phone: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="birthDate" className="text-right">
-                Fecha Nac.
-              </Label>
-              <Input
-                id="birthDate"
-                type="date"
-                value={newPatient.birthDate}
-                onChange={(e) =>
-                  setNewPatient({ ...newPatient, birthDate: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={handleCreate}>Guardar</Button>
-          </DialogFooter>
+        <DialogContent className="sm:max-w-[500px]">
+          <PatientForm
+            mode="create"
+            onSubmit={handleCreate}
+            onCancel={() => setIsCreateOpen(false)}
+          />
         </DialogContent>
       </Dialog>
+
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <PatientForm
+            mode="edit"
+            initialData={getEditInitialData()}
+            onSubmit={handleEditSubmit}
+            onCancel={() => {
+              setIsEditOpen(false);
+              setEditPatient(null);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Eliminar paciente?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer.{' '}
+              {patientToDelete && (
+                <>
+                  Se eliminarán todos los registros de{' '}
+                  <span className="font-semibold">{patientToDelete.name}</span>,
+                  incluyendo sus casos clínicos, evaluaciones y sesiones de
+                  tratamiento.
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+              className="bg-rose-600 hover:bg-rose-700 focus:ring-rose-600"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Eliminando...
+                </>
+              ) : (
+                'Eliminar'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

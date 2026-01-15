@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verification Report: Wire Patient Callbacks</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        color: #1e293b;
+        background: #f8fafc;
+        padding: 2rem;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        padding: 2rem;
+      }
+      h1 {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+        color: #0f172a;
+      }
+      h2 {
+        font-size: 1.25rem;
+        color: #334155;
+        margin: 1.5rem 0 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+      }
+      h3 {
+        font-size: 1rem;
+        color: #475569;
+        margin: 1rem 0 0.5rem;
+      }
+      .meta {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+      }
+      .meta strong {
+        color: #334155;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+      .status-passed {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .status-warning {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .status-failed {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .summary {
+        background: #f0fdf4;
+        border-left: 4px solid #22c55e;
+        padding: 1rem;
+        border-radius: 0 8px 8px 0;
+        margin: 1rem 0;
+      }
+      .section {
+        margin-bottom: 2rem;
+      }
+      ul {
+        margin-left: 1.5rem;
+      }
+      li {
+        margin: 0.25rem 0;
+      }
+      .check {
+        color: #22c55e;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.875rem;
+      }
+      th,
+      td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      th {
+        background: #f8fafc;
+        font-weight: 600;
+        color: #475569;
+      }
+      .test-summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      .test-stat {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .test-stat .number {
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+      .test-stat .label {
+        font-size: 0.75rem;
+        color: #64748b;
+        text-transform: uppercase;
+      }
+      .test-stat.passing .number {
+        color: #22c55e;
+      }
+      .test-stat.failing .number {
+        color: #ef4444;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid #e2e8f0;
+        margin: 1.5rem 0;
+      }
+      code {
+        background: #f1f5f9;
+        padding: 0.125rem 0.375rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Verification Report: Wire Patient Callbacks</h1>
+
+      <div class="meta">
+        <p>
+          <strong>Spec:</strong> <code>2026-01-15-wire-patient-callbacks</code>
+        </p>
+        <p><strong>Date:</strong> January 15, 2026</p>
+        <p><strong>Verifier:</strong> implementation-verifier</p>
+        <p>
+          <strong>Status:</strong>
+          <span class="status-badge status-passed">✅ Passed</span>
+        </p>
+      </div>
+
+      <hr />
+
+      <div class="section">
+        <h2>Executive Summary</h2>
+        <div class="summary">
+          <p>
+            All implementation tasks for the Wire Patient Callbacks spec have
+            been completed successfully. The feature connects the patient UI
+            components to backend API endpoints with fully functional CRUD
+            callbacks, including modal dialogs, Zod validation, loading states,
+            and toast notifications. All 150 tests across the application pass,
+            and the production build compiles without errors.
+          </p>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="section">
+        <h2>1. Tasks Verification</h2>
+        <p>
+          <strong>Status:</strong>
+          <span class="status-badge status-passed">✅ All Complete</span>
+        </p>
+
+        <h3>Completed Tasks</h3>
+        <ul>
+          <li>
+            <span class="check">✓</span> Task Group 1: Dependencies and
+            Component Infrastructure
+            <ul>
+              <li>
+                <span class="check">✓</span> 1.1 Install Zod validation library
+              </li>
+              <li>
+                <span class="check">✓</span> 1.2 Add AlertDialog component via
+                shadcn
+              </li>
+              <li>
+                <span class="check">✓</span> 1.3 Fix pre-existing Dialog
+                component type issue
+              </li>
+            </ul>
+          </li>
+          <li>
+            <span class="check">✓</span> Task Group 2: PatientForm Component
+            <ul>
+              <li>
+                <span class="check">✓</span> 2.1 Create PatientForm component
+                file
+              </li>
+              <li>
+                <span class="check">✓</span> 2.2 Implement Zod validation schema
+              </li>
+              <li>
+                <span class="check">✓</span> 2.3 Build form UI with
+                field-specific error display
+              </li>
+              <li>
+                <span class="check">✓</span> 2.4 Add loading state for submit
+                button
+              </li>
+            </ul>
+          </li>
+          <li>
+            <span class="check">✓</span> Task Group 3: Patients Page Callbacks
+            <ul>
+              <li>
+                <span class="check">✓</span> 3.1 Implement onCreate callback
+              </li>
+              <li>
+                <span class="check">✓</span> 3.2 Implement onEdit callback
+              </li>
+              <li>
+                <span class="check">✓</span> 3.3 Implement onDelete callback
+                with AlertDialog
+              </li>
+              <li>
+                <span class="check">✓</span> 3.4 Add loading state for patient
+                list
+              </li>
+            </ul>
+          </li>
+          <li>
+            <span class="check">✓</span> Task Group 4: PatientDetail Page
+            Callbacks
+            <ul>
+              <li>
+                <span class="check">✓</span> 4.1 Implement onEdit callback
+              </li>
+              <li>
+                <span class="check">✓</span> 4.2 Add loading state for patient
+                detail
+              </li>
+              <li><span class="check">✓</span> 4.3 Wire existing callbacks</li>
+            </ul>
+          </li>
+          <li>
+            <span class="check">✓</span> Task Group 5: Build Verification
+            <ul>
+              <li>
+                <span class="check">✓</span> 5.1 Fix any TypeScript errors
+              </li>
+              <li><span class="check">✓</span> 5.2 Run production build</li>
+              <li>
+                <span class="check">✓</span> 5.3 Verify bundle size is
+                reasonable
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>Incomplete or Issues</h3>
+        <p>None - all tasks completed successfully.</p>
+      </div>
+
+      <hr />
+
+      <div class="section">
+        <h2>2. Documentation Verification</h2>
+        <p>
+          <strong>Status:</strong>
+          <span class="status-badge status-passed">✅ Complete</span>
+        </p>
+
+        <h3>Spec Documentation</h3>
+        <ul>
+          <li>
+            <span class="check">✓</span>
+            <code>planning/initialization.md</code> - Initial feature
+            description
+          </li>
+          <li>
+            <span class="check">✓</span> <code>planning/requirements.md</code> -
+            Gathered requirements and decisions
+          </li>
+          <li>
+            <span class="check">✓</span> <code>spec.md</code> - Full
+            specification document
+          </li>
+          <li>
+            <span class="check">✓</span> <code>tasks.md</code> - Task breakdown
+            with completion status
+          </li>
+        </ul>
+
+        <h3>Missing Documentation</h3>
+        <p>None - all required documentation is in place.</p>
+      </div>
+
+      <hr />
+
+      <div class="section">
+        <h2>3. Roadmap Updates</h2>
+        <p>
+          <strong>Status:</strong>
+          <span class="status-badge status-passed">✅ Updated</span>
+        </p>
+
+        <h3>Updated Roadmap Items</h3>
+        <ul>
+          <li>
+            <span class="check">✓</span> <strong>5.10</strong> Wire callbacks:
+            onView, onCreate, onEdit, onDelete
+          </li>
+        </ul>
+
+        <h3>Notes</h3>
+        <p>
+          Roadmap item 5.10 has been marked as complete in
+          <code>agent-os/product/roadmap.md</code>.
+        </p>
+      </div>
+
+      <hr />
+
+      <div class="section">
+        <h2>4. Test Suite Results</h2>
+        <p>
+          <strong>Status:</strong>
+          <span class="status-badge status-passed">✅ All Passing</span>
+        </p>
+
+        <h3>Test Summary</h3>
+        <div class="test-summary">
+          <div class="test-stat">
+            <div class="number">150</div>
+            <div class="label">Total Tests</div>
+          </div>
+          <div class="test-stat passing">
+            <div class="number">150</div>
+            <div class="label">Passing</div>
+          </div>
+          <div class="test-stat failing">
+            <div class="number">0</div>
+            <div class="label">Failing</div>
+          </div>
+          <div class="test-stat">
+            <div class="number">0</div>
+            <div class="label">Errors</div>
+          </div>
+        </div>
+
+        <h3>Test Breakdown</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Application</th>
+              <th>Test Files</th>
+              <th>Tests</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Server (NestJS)</td>
+              <td>22</td>
+              <td>111</td>
+              <td><span class="status-badge status-passed">✅ Passed</span></td>
+            </tr>
+            <tr>
+              <td>Client (React)</td>
+              <td>8</td>
+              <td>39</td>
+              <td><span class="status-badge status-passed">✅ Passed</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Failed Tests</h3>
+        <p>None - all tests passing.</p>
+
+        <h3>Notes</h3>
+        <ul>
+          <li>Server tests completed in 27.9s</li>
+          <li>Client tests completed in 29.3s</li>
+          <li>No regressions introduced by this implementation</li>
+          <li>Build output: 468KB JS, 47KB CSS (gzipped: 147KB, 8KB)</li>
+        </ul>
+      </div>
+
+      <hr />
+
+      <div class="section">
+        <h2>5. Files Changed</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Status</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>apps/client/src/components/patients/PatientForm.tsx</code>
+              </td>
+              <td><span class="status-badge status-passed">NEW</span></td>
+              <td>Reusable form with Zod validation</td>
+            </tr>
+            <tr>
+              <td><code>apps/client/src/pages/Patients.tsx</code></td>
+              <td><span class="status-badge status-warning">UPDATED</span></td>
+              <td>Full CRUD callbacks with modals</td>
+            </tr>
+            <tr>
+              <td><code>apps/client/src/pages/PatientDetail.tsx</code></td>
+              <td><span class="status-badge status-warning">UPDATED</span></td>
+              <td>Edit callback with modal</td>
+            </tr>
+            <tr>
+              <td>
+                <code>apps/client/src/components/ui/alert-dialog.tsx</code>
+              </td>
+              <td><span class="status-badge status-passed">NEW</span></td>
+              <td>Added via shadcn</td>
+            </tr>
+            <tr>
+              <td><code>apps/client/src/components/ui/dialog.tsx</code></td>
+              <td><span class="status-badge status-warning">FIXED</span></td>
+              <td>Type error fix</td>
+            </tr>
+            <tr>
+              <td><code>apps/client/package.json</code></td>
+              <td><span class="status-badge status-warning">UPDATED</span></td>
+              <td>Added zod dependency</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr />
+
+      <div class="section">
+        <h2>6. Dependencies Added</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Package</th>
+              <th>Version</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>zod</code></td>
+              <td>^4.3.5</td>
+              <td>Form validation library</td>
+            </tr>
+            <tr>
+              <td><code>@radix-ui/react-alert-dialog</code></td>
+              <td>(via shadcn)</td>
+              <td>Alert dialog primitive</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
