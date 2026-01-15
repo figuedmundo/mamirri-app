@@ -49,7 +49,10 @@ export interface OrthopedicTests {
   ober: TestResult;
   schober: TestResult;
   ott?: TestResult;
-  otto?: TestResult; // Alternative spelling
+  otto?: TestResult;
+  patrick?: TestResult;
+  lasegue?: TestResult;
+  dedoSuelo?: TestResult;
 }
 
 export interface TestResult {

@@ -19,15 +19,24 @@ export interface CreateTreatmentSessionDto {
   procedures: string[];
   patientResponse: string;
   finalPainLevel: number;
-  observations: string;
+  observations?: string;
+}
+
+export interface UpdateTreatmentSessionDto {
+  date?: string;
+  phaseNumber?: number;
+  procedures?: string[];
+  patientResponse?: string;
+  finalPainLevel?: number;
+  observations?: string;
 }
 
 export interface UpdateEvaluationDto {
-  posturogram?: Record<string, unknown>;
-  orthopedicTests?: Record<string, unknown>;
-  avdEvaluation?: Record<string, unknown>;
-  painScale?: Record<string, unknown>;
-  diagnosis?: Record<string, unknown>;
+  posturogram?: Partial<Evaluation['posturogram']>;
+  orthopedicTests?: Partial<Evaluation['orthopedicTests']>;
+  avdEvaluation?: Partial<Evaluation['avdEvaluation']>;
+  painScale?: Partial<Evaluation['painScale']>;
+  diagnosis?: Partial<Evaluation['diagnosis']>;
 }
 
 interface PaginatedResponse<T> {
@@ -70,6 +79,18 @@ export const patientsApi = {
       data,
     );
     return response.data;
+  },
+
+  updateSession: async (sessionId: string, data: UpdateTreatmentSessionDto) => {
+    const response = await axios.patch<TreatmentSession>(
+      `/patients/sessions/${sessionId}`,
+      data,
+    );
+    return response.data;
+  },
+
+  deleteSession: async (sessionId: string) => {
+    await axios.delete(`/patients/sessions/${sessionId}`);
   },
 
   updateEvaluation: async (id: string, data: UpdateEvaluationDto) => {

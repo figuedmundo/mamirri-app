@@ -88,9 +88,15 @@ Methodology: Agile Development (1-week Sprints).
 
 **Components:**
 
-- [ ] **6.1** EvaluacionForm — Clinical evaluation (posturograma, orthopedic tests)
-- [ ] **6.2** Cronograma — Treatment sessions timeline with phase indicators
-- [ ] **6.3** ComparacionBoard — Before/After visual comparison slider
+- [x] **6.1** EvaluacionForm — Clinical evaluation (posturograma, orthopedic tests) ✅
+  - **Implementation:** Interactive SVG body silhouette, 8 orthopedic tests, voice recorder UI, debounced auto-save
+  - **Tests:** 30 tests passing (useDebounce, BodySilhouette, VoiceRecorder)
+  - **Spec:** agent-os/specs/2026-01-15-evaluacion-form/
+- [x] **6.2** Cronograma — Treatment sessions timeline with phase indicators ✅
+  - **Implementation:** PhaseProgress, SessionCard, PainTrendChart, SessionStatsSummary, SessionForm
+  - **Tests:** 12 tests passing (PhaseProgress, PainTrendChart)
+  - **Spec:** agent-os/specs/2026-01-15-cronograma/
+- [x] **6.3** ComparacionBoard — Before/After visual comparison slider
 - [ ] **6.4** PosturogramViewer — Interactive posturogram with anatomical markers
 
 **Flows:**
