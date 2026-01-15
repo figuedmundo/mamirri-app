@@ -10,9 +10,17 @@ vi.mock('axios', async (importOriginal) => {
     default: {
       ...actual.default,
       create: vi.fn(() => {
-        const instance: any = vi.fn(() =>
+        const instance = vi.fn(() =>
           Promise.resolve({ data: 'mock data' }),
-        );
+        ) as unknown as Mock & {
+          interceptors: {
+            request: { use: Mock; eject: Mock };
+            response: { use: Mock; eject: Mock };
+          };
+          defaults: { headers: { common: Record<string, string> } };
+          get: Mock;
+          post: Mock;
+        };
         instance.interceptors = {
           request: { use: vi.fn(), eject: vi.fn() },
           response: { use: vi.fn(), eject: vi.fn() },
@@ -36,16 +44,26 @@ describe('Axios Interceptor', () => {
     config: InternalAxiosRequestConfig,
   ) => InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig>;
   let responseSuccessInterceptor: (response: AxiosResponse) => AxiosResponse;
-  let responseErrorInterceptor: (error: any) => any;
+  let responseErrorInterceptor: (error: unknown) => unknown;
 
-  let mockAxiosInstance: any;
+  let mockAxiosInstance: Mock & {
+    interceptors: {
+      request: { use: Mock };
+      response: { use: Mock };
+    };
+    defaults: { headers: { common: Record<string, string> } };
+    post: Mock;
+    request: Mock;
+  };
 
   beforeEach(async () => {
     vi.clearAllMocks();
     localStorage.clear();
     vi.resetModules();
 
-    const mockFn: any = vi.fn(() => Promise.resolve({ data: 'retry success' }));
+    const mockFn = vi.fn(() =>
+      Promise.resolve({ data: 'retry success' }),
+    ) as unknown as typeof mockAxiosInstance;
 
     mockFn.interceptors = {
       request: {
@@ -79,7 +97,7 @@ describe('Axios Interceptor', () => {
     const config = { headers: {} } as InternalAxiosRequestConfig;
     const result = await requestInterceptor(config);
 
-    const headers = result.headers as any;
+    const headers = result.headers as Record<string, string>;
     expect(headers.Authorization).toBe('Bearer test-token');
   });
 
@@ -117,9 +135,9 @@ describe('Axios Interceptor', () => {
     expect(mockAxiosInstance.post).toHaveBeenCalledWith('/auth/refresh');
     expect(localStorage.getItem('access_token')).toBe(newToken);
 
-    expect((originalRequest.headers as any)['Authorization']).toBe(
-      `Bearer ${newToken}`,
-    );
+    expect(
+      (originalRequest.headers as Record<string, string>)['Authorization'],
+    ).toBe(`Bearer ${newToken}`);
     expect(mockAxiosInstance).toHaveBeenCalledWith(originalRequest);
 
     expect(result).toEqual({ data: 'retry success' });
@@ -143,7 +161,9 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {}
+    } catch {
+      // ignore
+    }
 
     expect(mockAxiosInstance.post).toHaveBeenCalledWith('/auth/refresh');
     expect(localStorage.getItem('access_token')).toBeNull();
@@ -179,7 +199,9 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {}
+    } catch {
+      // ignore
+    }
 
     const { showErrorToast } = await import('./toast');
     expect(showErrorToast).toHaveBeenCalledWith(
@@ -200,7 +222,9 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {}
+    } catch {
+      // ignore
+    }
 
     const { showErrorToast } = await import('./toast');
     expect(showErrorToast).toHaveBeenCalledWith(
@@ -221,7 +245,9 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {}
+    } catch {
+      // ignore
+    }
 
     const { showErrorToast } = await import('./toast');
     expect(showErrorToast).toHaveBeenCalledWith(
@@ -244,7 +270,9 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {}
+    } catch {
+      // ignore
+    }
 
     const { showErrorToast } = await import('./toast');
     expect(showErrorToast).toHaveBeenCalledWith(
@@ -261,7 +289,9 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {}
+    } catch {
+      // ignore
+    }
 
     const { showErrorToast } = await import('./toast');
     expect(showErrorToast).toHaveBeenCalledWith(
@@ -298,7 +328,7 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {
+    } catch {
       // expected
     }
 
@@ -321,7 +351,7 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {
+    } catch {
       // expected
     }
 
@@ -344,7 +374,7 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {
+    } catch {
       // expected
     }
 
@@ -369,7 +399,7 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {
+    } catch {
       // expected
     }
 
@@ -388,7 +418,7 @@ describe('Axios Interceptor', () => {
 
     try {
       await responseErrorInterceptor(error);
-    } catch (e) {
+    } catch {
       // expected
     }
 

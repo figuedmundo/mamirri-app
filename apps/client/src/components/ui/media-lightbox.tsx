@@ -33,13 +33,13 @@ export function MediaLightbox({
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < items.length - 1;
 
-  const goToPrev = () => {
-    if (hasPrev) setCurrentIndex(currentIndex - 1);
-  };
+  const goToPrev = React.useCallback(() => {
+    if (hasPrev) setCurrentIndex((prev) => prev - 1);
+  }, [hasPrev]);
 
-  const goToNext = () => {
-    if (hasNext) setCurrentIndex(currentIndex + 1);
-  };
+  const goToNext = React.useCallback(() => {
+    if (hasNext) setCurrentIndex((prev) => prev + 1);
+  }, [hasNext]);
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -55,7 +55,7 @@ export function MediaLightbox({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, currentIndex, items.length]);
+  }, [open, goToPrev, goToNext]);
 
   if (!currentItem) return null;
 

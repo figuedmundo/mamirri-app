@@ -23,7 +23,7 @@ export class AuthService {
     });
 
     if (user && (await bcrypt.compare(pass, user.passwordHash))) {
-      const { passwordHash, ...result } = user;
+      const { passwordHash: _hash, ...result } = user;
       return result;
     }
     return null;
@@ -85,14 +85,14 @@ export class AuthService {
       });
       if (!user) throw new UnauthorizedException();
 
-      const { passwordHash, ...result } = user;
+      const { passwordHash: _hash, ...result } = user;
       return this.login(result);
-    } catch (e) {
+    } catch {
       throw new UnauthorizedException();
     }
   }
 
-  async logout(userId: string) {
+  async logout(_userId: string) {
     return true;
   }
 }

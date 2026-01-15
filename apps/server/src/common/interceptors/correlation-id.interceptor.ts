@@ -7,11 +7,13 @@ import {
 import { Observable } from 'rxjs';
 import { randomUUID } from 'crypto';
 
+import { Response, Request } from 'express';
+
 @Injectable()
 export class CorrelationIdInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const request = context.switchToHttp().getRequest();
-    const response = context.switchToHttp().getResponse();
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+    const request = context.switchToHttp().getRequest<Request>();
+    const response = context.switchToHttp().getResponse<Response>();
 
     const correlationId = randomUUID();
 

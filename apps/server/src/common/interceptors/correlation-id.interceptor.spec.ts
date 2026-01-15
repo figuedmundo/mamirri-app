@@ -10,7 +10,7 @@ describe('CorrelationIdInterceptor', () => {
       return Promise.resolve({
         ...data,
         headers: {},
-      } as any);
+      });
     }),
   };
 

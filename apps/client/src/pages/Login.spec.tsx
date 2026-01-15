@@ -2,20 +2,19 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Login from './Login';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '../context/AuthContext';
+import { AuthProvider } from '../context/AuthProvider';
 
-vi.mock('../context/AuthContext', async () => {
-  const actual = await vi.importActual('../context/AuthContext');
-  return {
-    ...actual,
-    useAuth: () => ({
-      login: vi.fn(),
-    }),
-    AuthProvider: ({ children }: { children: React.ReactNode }) => (
-      <div>{children}</div>
-    ),
-  };
-});
+vi.mock('../hooks/use-auth', () => ({
+  useAuth: () => ({
+    login: vi.fn(),
+  }),
+}));
+
+vi.mock('../context/AuthProvider', () => ({
+  AuthProvider: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+}));
 
 describe('Login Page', () => {
   it('renders login form', () => {

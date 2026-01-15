@@ -14,11 +14,11 @@ describe('Global Error Handling (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    
+
     // Reproduce the global filter setup from main.ts
     const httpAdapter = app.get(HttpAdapterHost);
     app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
-    
+
     await app.init();
   });
 

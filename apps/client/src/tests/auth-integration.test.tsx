@@ -5,8 +5,9 @@ import {
   waitFor,
   act,
 } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AuthProvider, useAuth } from '../context/AuthContext';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import { AuthProvider } from '../context/AuthProvider';
+import { useAuth } from '../hooks/use-auth';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -52,7 +53,7 @@ describe('Auth Integration Flows', () => {
       role: 'user',
     };
     const mockToken = 'new-user-token';
-    (api.post as any).mockResolvedValueOnce({
+    (api.post as Mock).mockResolvedValueOnce({
       data: { user: mockUser, accessToken: mockToken },
     });
 
@@ -112,7 +113,7 @@ describe('Auth Integration Flows', () => {
       role: 'user',
     };
     const mockToken = 'integration-token';
-    (api.post as any).mockResolvedValueOnce({
+    (api.post as Mock).mockResolvedValueOnce({
       data: { user: mockUser, accessToken: mockToken },
     });
 
@@ -201,7 +202,7 @@ describe('Auth Integration Flows', () => {
     localStorage.setItem('access_token', 'logout-token');
     localStorage.setItem('user_data', JSON.stringify(storedUser));
 
-    (api.post as any).mockResolvedValueOnce({});
+    (api.post as Mock).mockResolvedValueOnce({});
 
     render(
       <AuthProvider>

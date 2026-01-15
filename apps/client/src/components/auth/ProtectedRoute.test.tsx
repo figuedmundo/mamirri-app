@@ -1,16 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, type Mock } from 'vitest';
 import { ProtectedRoute } from './ProtectedRoute';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/use-auth';
 
-vi.mock('../../context/AuthContext', () => ({
+vi.mock('../../hooks/use-auth', () => ({
   useAuth: vi.fn(),
 }));
 
 describe('ProtectedRoute', () => {
   it('renders loading state when isLoading is true', () => {
-    (useAuth as any).mockReturnValue({
+    (useAuth as Mock).mockReturnValue({
       isAuthenticated: false,
       isLoading: true,
     });
@@ -27,7 +27,7 @@ describe('ProtectedRoute', () => {
   });
 
   it('renders children when authenticated', () => {
-    (useAuth as any).mockReturnValue({
+    (useAuth as Mock).mockReturnValue({
       isAuthenticated: true,
       isLoading: false,
     });
@@ -44,7 +44,7 @@ describe('ProtectedRoute', () => {
   });
 
   it('redirects to login when not authenticated and not loading', () => {
-    (useAuth as any).mockReturnValue({
+    (useAuth as Mock).mockReturnValue({
       isAuthenticated: false,
       isLoading: false,
     });
@@ -70,7 +70,7 @@ describe('ProtectedRoute', () => {
   });
 
   it('does not redirect while loading (prevents flash)', () => {
-    (useAuth as any).mockReturnValue({
+    (useAuth as Mock).mockReturnValue({
       isAuthenticated: false,
       isLoading: true,
     });

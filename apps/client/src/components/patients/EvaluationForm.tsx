@@ -83,20 +83,27 @@ export function EvaluationForm({
       [scaleType]: {
         ...currentScaleData,
         [field]: value,
-        total: calculateAVDTotal(currentScaleData, field, value),
+        total: calculateAVDTotal(
+          currentScaleData as unknown as Record<string, unknown>,
+          field,
+          value,
+        ),
       },
     };
     setAvdEvaluation(updated);
   };
 
   const calculateAVDTotal = (
-    currentScaleData: any,
+    currentScaleData: Record<string, unknown>,
     field: string,
     newValue: number,
   ) => {
     let total = 0;
     // Check fields based on scale type properties
-    const fields = currentScaleData.hasOwnProperty('feeding')
+    const fields = Object.prototype.hasOwnProperty.call(
+      currentScaleData,
+      'feeding',
+    )
       ? [
           'feeding',
           'bathing',
@@ -121,7 +128,8 @@ export function EvaluationForm({
         ];
 
     fields.forEach((f) => {
-      total += f === field ? newValue : currentScaleData[f] || 0;
+      const val = f === field ? newValue : (currentScaleData[f] as number) || 0;
+      total += val;
     });
     return total;
   };
@@ -203,7 +211,11 @@ export function EvaluationForm({
         ].map((section) => (
           <button
             key={section.id}
-            onClick={() => setActiveSection(section.id as any)}
+            onClick={() =>
+              setActiveSection(
+                section.id as 'posturogram' | 'tests' | 'avd' | 'pain',
+              )
+            }
             className={`px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
               activeSection === section.id
                 ? 'border-teal-500 text-teal-700 dark:text-teal-400'
@@ -266,7 +278,7 @@ export function EvaluationForm({
                           {field}
                         </label>
                         <select
-                          value={(partValue as any)[field]}
+                          value={(partValue as Record<string, string>)[field]}
                           onChange={(e) =>
                             handlePosturogramChange(part, field, e.target.value)
                           }

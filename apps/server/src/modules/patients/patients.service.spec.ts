@@ -48,6 +48,7 @@ describe('PatientsService', () => {
     }).compile();
 
     service = module.get<PatientsService>(PatientsService);
+
     prisma = module.get<PrismaService>(PrismaService);
   });
 

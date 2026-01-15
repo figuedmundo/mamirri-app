@@ -23,11 +23,11 @@ export interface CreateTreatmentSessionDto {
 }
 
 export interface UpdateEvaluationDto {
-  posturogram?: any;
-  orthopedicTests?: any;
-  avdEvaluation?: any;
-  painScale?: any;
-  diagnosis?: any;
+  posturogram?: Record<string, unknown>;
+  orthopedicTests?: Record<string, unknown>;
+  avdEvaluation?: Record<string, unknown>;
+  painScale?: Record<string, unknown>;
+  diagnosis?: Record<string, unknown>;
 }
 
 interface PaginatedResponse<T> {

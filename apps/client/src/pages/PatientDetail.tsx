@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PatientProfile } from '../components/patients/PatientProfile';
 import {
@@ -18,29 +18,32 @@ export default function PatientDetail() {
   const [loading, setLoading] = useState(true);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
+  const loadPatient = useCallback(
+    async (patientId: string) => {
+      try {
+        setLoading(true);
+        const data = await patientsApi.findOne(patientId);
+        setPatient(data);
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: 'Error',
+          description: 'No se pudo cargar el paciente',
+          variant: 'destructive',
+        });
+        navigate('/pacientes');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [navigate, toast],
+  );
+
   useEffect(() => {
     if (id) {
-      loadPatient(id);
+      void loadPatient(id);
     }
-  }, [id]);
-
-  const loadPatient = async (patientId: string) => {
-    try {
-      setLoading(true);
-      const data = await patientsApi.findOne(patientId);
-      setPatient(data);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo cargar el paciente',
-        variant: 'destructive',
-      });
-      navigate('/pacientes');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [id, loadPatient]);
 
   const handleEdit = () => {
     setIsEditOpen(true);

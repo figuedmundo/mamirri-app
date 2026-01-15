@@ -27,10 +27,12 @@ export function ComparisonBoard({
       clinicalCase.evaluation.postureVideos.length - 1
     ];
 
-  const renderComparisonCard = (
-    itemInitial: any,
-    itemFinal: any,
-    renderContent: (item: any) => React.ReactNode,
+  const renderComparisonCard = <
+    T extends { date?: string; analysis?: { arch: string; deviation: string } },
+  >(
+    itemInitial: T | undefined,
+    itemFinal: T | undefined,
+    renderContent: (item: T) => React.ReactNode,
   ) => (
     <div className="grid md:grid-cols-2 gap-6">
       <div className="space-y-3">
@@ -165,7 +167,9 @@ export function ComparisonBoard({
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() =>
+              setActiveTab(tab.id as 'footprints' | 'posture' | 'tests')
+            }
             className={`px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
               activeTab === tab.id
                 ? 'border-teal-500 text-teal-700 dark:text-teal-400'

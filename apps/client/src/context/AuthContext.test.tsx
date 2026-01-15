@@ -1,6 +1,7 @@
 import { render, screen, act, waitFor } from '@testing-library/react';
-import { AuthProvider, useAuth } from './AuthContext';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { AuthProvider } from './AuthProvider';
+import { useAuth } from '../hooks/use-auth';
+import { vi, describe, it, expect, beforeEach, type Mock } from 'vitest';
 import { api } from '../lib/axios';
 
 vi.mock('../lib/axios', () => ({
@@ -113,7 +114,7 @@ describe('AuthContext', () => {
       expect(screen.getByTestId('is-authenticated')).toHaveTextContent('true');
     });
 
-    (api.post as any).mockResolvedValue({});
+    (api.post as Mock).mockResolvedValue({});
 
     await act(async () => {
       screen.getByText('Logout').click();
