@@ -71,18 +71,21 @@ export default function PatientDetail() {
   const handleVoiceDictation = () => {
     toast({
       title: 'Dictado por Voz',
-      description: 'Simulando grabación y transcripción...',
+      description: 'Disponible próximamente',
     });
   };
 
   const handleCaptureFootprint = () => {
-    toast({ title: 'Captura', description: 'Abrir cámara para huella' });
+    toast({
+      title: 'Capturar Huella',
+      description: 'Disponible próximamente',
+    });
   };
 
   const handleCaptureVideo = () => {
     toast({
-      title: 'Captura',
-      description: 'Abrir cámara para video postural',
+      title: 'Video Postura',
+      description: 'Disponible próximamente',
     });
   };
 
@@ -92,6 +95,10 @@ export default function PatientDetail() {
       const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
     }
+  };
+
+  const handleViewCase = (caseId: string) => {
+    navigate(`/pacientes/${id}/casos/${caseId}`);
   };
 
   if (loading) {
@@ -132,6 +139,7 @@ export default function PatientDetail() {
         onCaptureFootprint={handleCaptureFootprint}
         onCaptureVideo={handleCaptureVideo}
         onSchedule={handleSchedule}
+        onViewCase={handleViewCase}
       />
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>

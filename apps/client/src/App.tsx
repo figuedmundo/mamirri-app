@@ -15,6 +15,7 @@ import Analisis from './pages/Analisis';
 import Biblioteca from './pages/Biblioteca';
 import Plantillas from './pages/Plantillas';
 import Ajustes from './pages/Ajustes';
+import CaseDetail from './pages/CaseDetail';
 
 function App() {
   return (
@@ -57,6 +58,15 @@ function App() {
                   <MainLayout>
                     <PatientDetail />
                   </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pacientes/:id/casos/:caseId"
+              element={
+                <ProtectedRoute>
+                  <CaseDetail />
                 </ProtectedRoute>
               }
             />

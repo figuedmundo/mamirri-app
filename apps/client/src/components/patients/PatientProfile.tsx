@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { PatientProfileProps } from '../../types/patient';
 import {
   User,
@@ -11,7 +12,10 @@ import {
   Footprints,
   Mic,
   Edit2,
+  ImageIcon,
 } from 'lucide-react';
+import { MediaGallery, type MediaItem } from './MediaGallery';
+import { MediaLightbox } from '../ui/media-lightbox';
 
 export function PatientProfile({
   patient,
@@ -20,10 +24,25 @@ export function PatientProfile({
   onCaptureFootprint,
   onCaptureVideo,
   onSchedule,
-}: PatientProfileProps) {
+  onViewCase,
+}: PatientProfileProps & { onViewCase?: (caseId: string) => void }) {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [lightboxItems, setLightboxItems] = useState<MediaItem[]>([]);
+
   const activeCase = patient.clinicalCases?.find((c) => c.status === 'active');
   const pastCases =
     patient.clinicalCases?.filter((c) => c.status !== 'active') || [];
+
+  const handleMediaSelect = (
+    _item: MediaItem,
+    index: number,
+    items: MediaItem[],
+  ) => {
+    setLightboxItems(items);
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -165,8 +184,45 @@ export function PatientProfile({
                   />
                 </div>
 
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+                    <ImageIcon size={16} className="text-slate-400" />
+                    Fotos y Videos
+                  </h4>
+                  <MediaGallery
+                    footprints={activeCase.evaluation?.footprints}
+                    postureVideos={activeCase.evaluation?.postureVideos}
+                    onSelect={(item, index) => {
+                      const allItems: MediaItem[] = [
+                        ...(activeCase.evaluation?.footprints || []).map(
+                          (fp) => ({
+                            id: fp.id,
+                            url: fp.url,
+                            type: 'image' as const,
+                            date: fp.date,
+                            label: fp.type,
+                          }),
+                        ),
+                        ...(activeCase.evaluation?.postureVideos || []).map(
+                          (pv) => ({
+                            id: pv.id,
+                            url: pv.url,
+                            type: 'video' as const,
+                            date: pv.date,
+                            label: pv.type,
+                          }),
+                        ),
+                      ];
+                      handleMediaSelect(item, index, allItems);
+                    }}
+                  />
+                </div>
+
                 <div className="flex justify-end">
-                  <button className="flex items-center gap-2 text-teal-600 dark:text-teal-400 font-medium hover:underline">
+                  <button
+                    onClick={() => onViewCase?.(activeCase.id)}
+                    className="flex items-center gap-2 text-teal-600 dark:text-teal-400 font-medium hover:underline"
+                  >
                     Ver Expediente Completo <ArrowRight size={16} />
                   </button>
                 </div>
@@ -201,6 +257,7 @@ export function PatientProfile({
               pastCases.map((c) => (
                 <div
                   key={c.id}
+                  onClick={() => onViewCase?.(c.id)}
                   className="p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 hover:border-teal-200 dark:hover:border-teal-700 transition-colors cursor-pointer group"
                 >
                   <div className="flex justify-between items-start mb-1">
@@ -226,6 +283,13 @@ export function PatientProfile({
           </div>
         </div>
       </div>
+
+      <MediaLightbox
+        open={lightboxOpen}
+        onOpenChange={setLightboxOpen}
+        items={lightboxItems}
+        initialIndex={lightboxIndex}
+      />
     </div>
   );
 }

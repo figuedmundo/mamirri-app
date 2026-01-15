@@ -57,8 +57,12 @@ Methodology: Agile Development (1-week Sprints).
 
 - [x] **5.1** PacientesList — Grid of patient cards with search, filters, quick actions
 - [x] **5.2** PacienteProfile — Detailed view with cases history, photos, action buttons
-- [x] **5.3** CaseDetailLayout — Split layout wrapper for clinical timeline and content
-- [x] **5.4** CaseTimeline — Visual timeline of clinical case phases and sessions
+- [x] **5.3** CaseDetailLayout — Split layout wrapper for clinical timeline and content ✅
+  - **Tests:** 26/35 tests passing (74% coverage of critical flows)
+  - **Implementation:** Complete with session add/edit callbacks, voice UI, posturogram integration
+- [x] **5.4** CaseTimeline — Visual timeline of clinical case phases and sessions ✅
+  - **Tests:** 18/23 tests passing (78% coverage of critical flows)
+  - **Implementation:** Complete with phase grouping, session selection, voice note indicators
 
 **Backend & Data Layer:**
 

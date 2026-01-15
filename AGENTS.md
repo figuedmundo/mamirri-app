@@ -4,6 +4,7 @@
 - Unless you are absolutely sure that you have correct and, crucially, up-to-date information in your knowledge, always get information from the web. You can use Tavily for searching and getting information, and you can always use curl to fetch web pages.
 - When working in a git repository, always switch to a new branch, unless explicitly insutrcted not to.
 - If the project has tests you can run locally, always run them and make sure everything works correctly.
+- You can read `CONTRIBUTING.md` when doing commits
 
 ## Source Control (Git)
 - when invoking `git commit`, always use `--author="AI <figuedmundo+ai@gmail.com>"`
