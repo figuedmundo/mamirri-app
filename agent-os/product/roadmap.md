@@ -1,78 +1,135 @@
-# 🗺️ Optimized Roadmap (14-16 Weeks)
+# 🗺️ Mamirri Product Roadmap (30 Weeks)
 
-Estimated Total Time: 12-16 Weeks (3-4 months) for full AI version.
+Estimated Total Time: 30 Weeks (~7.5 months) for complete product.
 Methodology: Agile Development (1-week Sprints).
 
 ---
 
-## 🏁 Phase 0: Foundations & Infrastructure (Weeks 1-4)
+═══════════════════════════════════════════════════════════════════════════════
 
-**Goal:** Solid foundation, DevOps, and critical infrastructure. No business logic yet.
+## 📦 PART 1: MVP (Weeks 1-11)
 
-### Week 1: Infrastructure
+═══════════════════════════════════════════════════════════════════════════════
 
-- [x] **1.1 Docker Infrastructure:** PostgreSQL (w/ pgvector), MinIO, Redis.
-- [x] **1.2 Prisma Schema v1:** User, Patient, Session tables.
-- [x] **1.3 NestJS Structure:** Create module shells (auth, patients, sessions, media).
-- [x] **1.4 Frontend Setup:** React + Shadcn/UI basic layout.
-
-### Week 2: Auth & Storage
-
-- [x] **2.1 JWT Authentication:** Register/Login/Logout flows.
-- [x] **2.2 MinIO Integration:** Upload/Download service.
-- [x] **2.3 Frontend Auth:** Protected routes & context.
-- [x] **2.4 Basic Error Handling:** Global filters.
-
-### Week 3: DevOps
-
-- [ ] **3.1 Database Backups:** Automated backup scripts.
-- [ ] **3.2 Environment:** Secure .env management (Single source of truth).
-- [ ] **3.3 CI/CD:** Basic GitHub Actions (lint/test).
-- [ ] **3.4 Deployment:** Deploy to Ubuntu home lab.
-
-### Week 4: Testing Foundation
-
-- [ ] **4.1 Unit Tests:** Critical backend services.
-- [ ] **4.2 E2E Tests:** Auth flow verification.
-- [ ] **4.3 API Docs:** Swagger setup & refinement.
-- [ ] **4.4 Onboarding:** Developer guide & setup scripts.
-
-**🎯 Milestone 1:** "I can login and see an empty dashboard"
+**Goal:** Working app for field testing. Mother can complete consultations.
 
 ---
 
-## 🏗️ Phase 1: MVP (Weeks 5-8) - REORDERED
+## 🏁 Phase 0: Foundations & Infrastructure (Weeks 1-4) ✅ COMPLETE
 
-### Week 5: Patients (Core Data Model)
+### Week 1: Infrastructure ✅
 
-- [ ] **5.1** Backend: Patients CRUD (routes, validation, Prisma)
-- [ ] **5.2** Frontend: Patient list with search
-- [ ] **5.3** Frontend: Create/Edit patient form
-- [ ] **5.4** Frontend: Patient detail view (empty history for now)
-- [ ] **5.5** Tests: Patient CRUD unit tests
+- [x] **1.1** Docker Infrastructure: PostgreSQL (w/ pgvector), MinIO, Redis
+- [x] **1.2** Prisma Schema v1: User, Patient, Session tables
+- [x] **1.3** NestJS Structure: Module shells (auth, patients, sessions, media)
+- [x] **1.4** Frontend Setup: React + Shadcn/UI basic layout
 
-**🎯 Milestone 2:** "I can create and search patients"
+### Week 2: Auth & Storage ✅
 
-### Week 6: Clinical Sessions (The Workflow)
+- [x] **2.1** JWT Authentication: Register/Login/Logout flows
+- [x] **2.2** MinIO Integration: Upload/Download service
+- [x] **2.3** Frontend Auth: Protected routes & context
+- [x] **2.4** Basic Error Handling: Global filters
 
-- [ ] **6.1** Backend: Session schema (Draft/Finalized states)
-- [ ] **6.2** Backend: Session CRUD endpoints
-- [ ] **6.3** Frontend: "New Session" wizard (3 steps)
-- [ ] **6.4** Frontend: Session list on patient detail
-- [ ] **6.5** UX: Large buttons (>44px) for tablet
+### Week 3: DevOps ✅
 
-**🎯 Milestone 3:** "I can start a session and add text notes"
+- [x] **3.1** Database Backups: Automated backup scripts
+- [x] **3.2** Environment: Secure .env management
+- [x] **3.3** CI/CD: Basic GitHub Actions (lint/test)
+- [x] **3.4** Deployment: Deploy to Ubuntu home lab
+
+### Week 4: Testing Foundation ✅
+
+- [x] **4.1** Unit Tests: Critical backend services
+- [x] **4.2** E2E Tests: Auth flow verification
+- [x] **4.3** API Docs: Swagger setup & refinement
+- [x] **4.4** Onboarding: Developer guide & setup scripts
+
+**🎯 Milestone 1:** "I can login and see an empty dashboard" ✅ COMPLETE
+
+---
+
+## 🏗️ Phase 1: Core Features (Weeks 5-8)
+
+### Week 5: Pacientes — Core Components (Milestone 2a)
+
+**Components:**
+
+- [x] **5.1** PacientesList — Grid of patient cards with search, filters, quick actions
+- [x] **5.2** PacienteProfile — Detailed view with cases history, photos, action buttons
+- [x] **5.3** CaseDetailLayout — Split layout wrapper for clinical timeline and content ✅
+  - **Tests:** 26/35 tests passing (74% coverage of critical flows)
+  - **Implementation:** Complete with session add/edit callbacks, voice UI, posturogram integration
+- [x] **5.4** CaseTimeline — Visual timeline of clinical case phases and sessions ✅
+  - **Tests:** 18/23 tests passing (78% coverage of critical flows)
+  - **Implementation:** Complete with phase grouping, session selection, voice note indicators
+
+**Backend & Data Layer:**
+
+- [x] **5.5** Database schema: Patient, ClinicalCase, Evaluation, TreatmentSession
+- [x] **5.6** API endpoints: Patients CRUD with therapist isolation
+- [x] **5.7** API endpoints: Clinical cases CRUD
+- [x] **5.8** API endpoints: Treatment sessions CRUD
+- [x] **5.9** Validation: Pain scale (0-10), Barthel index (0-100)
+
+**Integrations:**
+
+- [x] **5.10** Wire callbacks: onView, onCreate, onEdit, onDelete
+- [x] **5.11** Wire callback: onSchedule (Google Calendar pre-fill)
+- [x] **5.12** Empty states: No patients, no active case, no search results
+- [x] **5.13** Loading states and error handling with toasts
+
+**Tests:**
+
+- [x] **5.14** Backend unit tests: Patient, ClinicalCase services
+- [x] **5.15** Backend integration tests: Patient endpoints
+
+### Week 6: Pacientes — Evaluation & Timeline (Milestone 2b)
+
+**Components:**
+
+- [ ] **6.1** EvaluacionForm — Clinical evaluation (posturograma, orthopedic tests)
+- [ ] **6.2** Cronograma — Treatment sessions timeline with phase indicators
+- [ ] **6.3** ComparacionBoard — Before/After visual comparison slider
+- [ ] **6.4** PosturogramViewer — Interactive posturogram with anatomical markers
+
+**Flows:**
+
+- [ ] **6.5** Flow 1: Create New Patient (voice placeholder for Week 7)
+- [ ] **6.6** Flow 2: Record Treatment Session (Check-in with END scale)
+- [ ] **6.7** Flow 3: Compare Posturogram (Before/After slider)
+- [ ] **6.8** Flow 4: View Patient Timeline (phases and sessions)
+
+**Integrations:**
+
+- [ ] **6.9** Wire callbacks: onSave, onPosturogramaChange, onPainScaleChange
+- [ ] **6.10** Wire callbacks: onAddSession, onEditSession, onViewSession
+- [ ] **6.11** Wire callback: onExport (comparison report)
+- [ ] **6.12** Responsive design for mobile/tablet
+
+**Tests:**
+
+- [ ] **6.13** Frontend tests: Key user flows (TDD approach)
+
+**🎯 Milestone 2:** "I can create patients, record sessions, and compare evaluations"
+
+**Full Checklist:** See `product-plan/instructions/incremental/02-pacientes.md#done-when`
+
+---
 
 ### Week 7: Media & Dictation
 
-- [ ] **7.1** Backend: Media upload endpoint (validation, S3)
+- [ ] **7.1** Backend: Media upload endpoint (validation, MinIO)
 - [ ] **7.2** Frontend: Camera capture component
 - [ ] **7.3** Frontend: Photo gallery per session
 - [ ] **7.4** Backend: Whisper integration (Groq API)
 - [ ] **7.5** Frontend: Voice recorder button + transcription
-- [ ] **7.6** Test: Dictate medical terms, verify accuracy
+- [ ] **7.6** Wire Pacientes: onVoiceDictation, onCaptureHuella, onCaptureVideo
+- [ ] **7.7** Test: Dictate medical terms, verify accuracy
 
-**🎯 Milestone 4:** "I can take photos and dictate notes"
+**🎯 Milestone 3:** "I can take photos and dictate notes"
+
+---
 
 ### Week 8: PWA Basics (Offline Skeleton)
 
@@ -81,9 +138,9 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **8.3** PWA manifest (install to home screen)
 - [ ] **8.4** Test: Works without internet (static pages only)
 
-**Note:** Full offline editing (IndexedDB sync) deferred to Phase 2.5
+**Note:** Full offline editing (IndexedDB sync) deferred to Part 4.
 
-**🎯 Milestone 5:** "App loads offline, shows cached data"
+**🎯 Milestone 4:** "App loads offline, shows cached data"
 
 ---
 
@@ -97,7 +154,7 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **9.4** Collect performance data (slow queries?)
 - [ ] **9.5** User feedback interview
 
-**🎯 Milestone 6:** "Mother used it with a real patient without asking for help"
+**🎯 Milestone 5:** "Mother used it with a real patient without asking for help"
 
 ### Week 10: Pivot & Fix Week 🔧
 
@@ -123,19 +180,38 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **11.5** Image compression (if storage is an issue)
 - [ ] **11.6** Audit logging for sensitive operations
 
-**Why now?** You know what needs securing based on real usage.
-
-**🎯 Milestone 7:** "App is production-ready (no AI yet)"
+**🎯 Milestone 6:** "App is production-ready (no AI yet)"
 
 ---
 
-## 🧠 Phase 3: The AI Brain (Weeks 12-15)
+### 🚦 MVP Gate Check (End of Week 11)
+
+| Criteria                                   | Target |
+| ------------------------------------------ | ------ |
+| Mother completes consultation without help | ✅     |
+| No data loss in 10 test sessions           | ✅     |
+| Page load time < 3 seconds on iPad         | ✅     |
+| Used for 20+ real patients                 | ✅     |
+| Zero critical security vulnerabilities     | ✅     |
+| Backup/restore tested and works            | ✅     |
+
+---
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 🧠 PART 2: AI INFRASTRUCTURE (Weeks 12-16)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+**Goal:** The AI "brain" that differentiates the product.
 
 **Pre-requisite Check:**
 
 - [ ] Do you have 3-5 reference books (PDFs) ready?
 - [ ] Are they legally yours to process?
 - [ ] Is the MVP stable enough to build on?
+
+---
 
 ### Week 12: Knowledge Base Preparation
 
@@ -161,7 +237,8 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **14.3** LLM integration: OpenAI GPT-4 or Gemini
 - [ ] **14.4** System Prompt engineering (Chain of Thought)
 - [ ] **14.5** Anonymization: Strip PII before sending to LLM
-- [ ] **14.6** Test: Query "fascitis plantar" → returns relevant book passages
+- [ ] **14.6** Translation service: EN ↔ ES for medical terms
+- [ ] **14.7** Test: Query "fascitis plantar" → returns relevant book passages
 
 ### Week 15: Vision & Full Analysis
 
@@ -172,13 +249,9 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **15.5** Feedback loop: Like/Dislike buttons
 - [ ] **15.6** Test: Complete flow with real patient data
 
-**🎯 Milestone 8:** "The AI provides a cited treatment suggestion"
+**🎯 Milestone 7:** "The AI provides a cited treatment suggestion"
 
----
-
-## 🔄 Phase 3.5: AI Refinement (Week 16) - OPTIONAL
-
-**If AI output quality is poor:**
+### Week 16: AI Refinement (Buffer)
 
 - [ ] **16.1** Prompt iteration (based on real output quality)
 - [ ] **16.2** Add more books to knowledge base
@@ -188,95 +261,418 @@ Methodology: Agile Development (1-week Sprints).
 
 ---
 
+### 🚦 AI Gate Check (End of Week 16)
+
+| Criteria                                 | Target      |
+| ---------------------------------------- | ----------- |
+| AI suggestions clinically relevant       | 70%+        |
+| Citations trace to actual book content   | ✅          |
+| Query response time                      | < 3 seconds |
+| Mother trusts AI enough to use regularly | ✅          |
+
+---
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 🏆 PART 3: COMPLETE PRODUCT (Weeks 17-30)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+**Goal:** Full professional toolset for physiotherapy practice.
+
+---
+
+## 📚 Phase 4: Biblioteca Médica (Weeks 17-18) — Milestone 8
+
+### Week 17: Search & Categories
+
+**Components:**
+
+- [ ] **17.1** BibliotecaDashboard — Main interface with search, categories, results
+- [ ] **17.2** SearchBar — Prominent input with natural language support
+- [ ] **17.3** CategoryNav — Structured navigation (Osteology, Myology, etc.)
+- [ ] **17.4** ProtocolList — List of techniques/protocols matching search
+
+**Backend:**
+
+- [ ] **17.5** Database schema: Protocol, ReferenciaBibliografica
+- [ ] **17.6** API endpoints: Protocol search with full-text + RAG
+- [ ] **17.7** Category filtering endpoint
+- [ ] **17.8** Search debouncing (300ms)
+
+**Flows:**
+
+- [ ] **17.9** Flow 1: Search for Protocol (natural language)
+- [ ] **17.10** Flow 2: Browse by Category
+
+### Week 18: Protocol Details & References
+
+**Components:**
+
+- [ ] **18.1** BibliographyPanel — Formal citations and references
+
+**Features:**
+
+- [ ] **18.2** Protocol detail view (Ficha Explicativa)
+- [ ] **18.3** Definition, justification, procedure steps
+- [ ] **18.4** EN/ES translation toggle (uses AI from Phase 3)
+- [ ] **18.5** Bibliographic references with author, year, title, source
+- [ ] **18.6** Add reference to treatment plan
+
+**Flows:**
+
+- [ ] **18.7** Flow 3: View Protocol Details with language toggle
+- [ ] **18.8** Flow 4: Add Reference to Treatment Plan
+
+**Empty States:**
+
+- [ ] **18.9** Initial welcome state
+- [ ] **18.10** No search results
+- [ ] **18.11** Empty category
+- [ ] **18.12** No bibliography
+
+**🎯 Milestone 8:** "I can search medical literature and add references to treatment plans"
+
+**Full Checklist:** See `product-plan/instructions/incremental/04-biblioteca-medica.md#done-when`
+
+---
+
+## 📊 Phase 5: Análisis (Weeks 19-22) — Milestone 9
+
+### Week 19: Footprint Analysis
+
+**Components:**
+
+- [ ] **19.1** HuellaAnalysis — Footprint viewer with pressure heatmap
+
+**Backend:**
+
+- [ ] **19.2** Database schema: Huella (footprint)
+- [ ] **19.3** Image upload with validation
+- [ ] **19.4** Arch classification logic (plano/cavo/normal)
+- [ ] **19.5** Pressure distribution analysis
+
+**Flow:**
+
+- [ ] **19.6** Flow 1: Analyze Footprint (upload, heatmap, classification)
+
+### Week 20: Posturogram
+
+**Components:**
+
+- [ ] **20.1** PosturogramaView — 4-view with anatomical point markers
+
+**Backend:**
+
+- [ ] **20.2** Database schema: Posturograma with 4 views
+- [ ] **20.3** Image upload for anterior, posterior, lateral views
+- [ ] **20.4** Anatomical point storage (head, shoulders, spine, pelvis)
+- [ ] **20.5** Deviation auto-detection (escoliosis, hiperlordosis)
+
+**Flow:**
+
+- [ ] **20.6** Flow 2: Capture Posturogram (4 views, mark points, save)
+
+### Week 21: Video Analysis
+
+**Components:**
+
+- [ ] **21.1** VideoAnalysis — Video player with slow-motion and angle detection
+
+**Backend:**
+
+- [ ] **21.2** Database schema: VideoDePostura
+- [ ] **21.3** Video upload with processing
+- [ ] **21.4** Angle detection (genuFlexo, inclinacionTronco)
+
+**Features:**
+
+- [ ] **21.5** Slow-motion playback (0.25x, 0.5x)
+- [ ] **21.6** Frame-by-frame controls
+- [ ] **21.7** Gait phase detection (heel strike, toe-off)
+- [ ] **21.8** Initial vs. Final comparison mode
+
+**Flow:**
+
+- [ ] **21.9** Flow 3: Analyze Gait Video
+
+### Week 22: Evolution Dashboard
+
+**Components:**
+
+- [ ] **22.1** AnalisisDashboard — Overview with case comparison and metrics
+- [ ] **22.2** EvolucionDashboard — Progress charts (initial vs. final)
+- [ ] **22.3** DiagnosticoComparativoCard — Improvement/decline indicators
+- [ ] **22.4** DolorChart — Line chart tracking pain levels over sessions
+- [ ] **22.5** TestsComparativosChart — Bar chart comparing functional tests
+
+**Features:**
+
+- [ ] **22.6** Pain reduction visualization (9/10 → 4/10)
+- [ ] **22.7** Functional test improvements (Schober: +3cm → +4cm)
+- [ ] **22.8** Generate comparative diagnostic report
+- [ ] **22.9** Export report
+
+**Flow:**
+
+- [ ] **22.10** Flow 4: Generate Comparative Report
+
+**Empty States:**
+
+- [ ] **22.11** No case selected
+- [ ] **22.12** No evaluation data
+- [ ] **22.13** No progress yet (single data point)
+
+**🎯 Milestone 9:** "I can analyze biomechanics and track objective progress"
+
+**Full Checklist:** See `product-plan/instructions/incremental/03-analisis.md#done-when`
+
+---
+
+## 🦶 Phase 6: Plantillas 3D CAD (Weeks 23-28) — Milestone 10
+
+### Week 23: 3D Foundation & Viewer
+
+**Components:**
+
+- [ ] **23.1** PlantillasEditor — Full-screen CAD workspace
+- [ ] **23.2** InsoleViewer3D — Interactive 3D model (Three.js / React Three Fiber)
+- [ ] **23.3** ClinicalSidePanel — Persistent right panel with diagnosis data
+
+**Infrastructure:**
+
+- [ ] **23.4** Three.js / React Three Fiber setup
+- [ ] **23.5** Base insole 3D model (GLTF/GLB)
+- [ ] **23.6** Camera controls: rotate, zoom, pan (OrbitControls)
+- [ ] **23.7** Lighting setup for medical visualization
+- [ ] **23.8** Full-screen mode (no main navigation while editing)
+
+**Backend:**
+
+- [ ] **23.9** Database schema: Plantilla, ZonaAlivio, MaterialPlanta
+- [ ] **23.10** API endpoints: Plantilla CRUD
+- [ ] **23.11** Link to clinical case diagnosis data
+
+### Week 24: Structure Editing (Sliders)
+
+**Components:**
+
+- [ ] **24.1** Toolbar — Tool switching (Slider/Brush modes)
+- [ ] **24.2** PropertiesPanel — Sliders for structural adjustments
+
+**Features:**
+
+- [ ] **24.3** Arch height slider (0-20mm) with real-time 3D update
+- [ ] **24.4** Heel wedge slider (0-10mm) with real-time 3D update
+- [ ] **24.5** Lateral wedge slider for valgo/varo correction
+- [ ] **24.6** 3D mesh deformation based on slider values
+- [ ] **24.7** Visual indicators on model (Pie Talo, Pelvic Retroversion markers)
+
+**Flows:**
+
+- [ ] **24.8** Flow 1: Import Diagnosis and Auto-Generate base model
+- [ ] **24.9** Flow 2: Edit Structure with Sliders
+
+### Week 25: Brush Tool & Relief Zones
+
+**Features:**
+
+- [ ] **25.1** Brush tool implementation (raycasting on 3D mesh)
+- [ ] **25.2** Brush sizes: Small, Medium, Large
+- [ ] **25.3** Relief levels: Soft (1), Medium (3), Firm (5)
+- [ ] **25.4** Paint relief zones on 3D model surface
+- [ ] **25.5** Visual feedback: relief zones appear in different color/texture
+- [ ] **25.6** Relief zones list in ClinicalSidePanel
+- [ ] **25.7** Undo/redo history for design changes
+
+**Flow:**
+
+- [ ] **25.8** Flow 3: Paint Relief Zones with Brush
+
+### Week 26: Materials & Layer Manager
+
+**Components:**
+
+- [ ] **26.1** LayerManager — Controls for material layers
+
+**Features:**
+
+- [ ] **26.2** Three layers: Base, Middle, Top Cover
+- [ ] **26.3** Material selection per layer (EVA_rigido, EVA_medio, EVA_suave)
+- [ ] **26.4** EVA density visualization in 3D
+- [ ] **26.5** Espesor (thickness) per layer
+- [ ] **26.6** Add/remove layers
+- [ ] **26.7** Drag-and-drop layer reordering
+
+### Week 27: Biomechanical Validation
+
+**Features:**
+
+- [ ] **27.1** Side-by-side comparison: insole design vs. posturogram findings
+- [ ] **27.2** Validation rules: arch height ↔ lumbar spine alignment
+- [ ] **27.3** Chain alignment check: foot → ankle → knee → hip → lumbar
+- [ ] **27.4** Warning indicators if biomechanical chain is misaligned
+- [ ] **27.5** Confirmation message if design is coherent
+- [ ] **27.6** "Validar" button with results modal
+
+**Flow:**
+
+- [ ] **27.7** Flow 4: Biomechanical Validation
+
+### Week 28: PDF Export & Polish
+
+**Features:**
+
+- [ ] **28.1** PDF technical spec sheet generation
+- [ ] **28.2** PDF includes: dimensions, materials, layer specs, relief zones
+- [ ] **28.3** 3D model screenshot for PDF
+- [ ] **28.4** Manufacturing instructions section
+- [ ] **28.5** Download PDF functionality
+- [ ] **28.6** "Cerrar" button returns to main navigation
+- [ ] **28.7** Auto-save on changes
+- [ ] **28.8** Performance optimization for smooth 3D
+
+**Flow:**
+
+- [ ] **28.9** Flow 5: Select Materials and Export PDF
+
+**Empty States:**
+
+- [ ] **28.10** No clinical case selected
+- [ ] **28.11** No evaluation data (warning)
+- [ ] **28.12** No layers defined (before export)
+
+**🎯 Milestone 10:** "I can design custom 3D insoles based on patient diagnosis"
+
+**Full Checklist:** See `product-plan/instructions/incremental/05-plantillas.md#done-when`
+
+---
+
+## 🔗 Phase 7: Integration & Polish (Weeks 29-30)
+
+### Week 29: Cross-Module Integration
+
+- [ ] **29.1** Pacientes → Análisis: Link evaluation to analysis tools
+- [ ] **29.2** Análisis → Plantillas: Import diagnosis to auto-generate insole
+- [ ] **29.3** Biblioteca → Pacientes: Add references to treatment plans
+- [ ] **29.4** AI → All modules: Consistent suggestion UI
+- [ ] **29.5** Navigation: Seamless flow between modules
+- [ ] **29.6** Data consistency: All modules use same patient/case data
+
+### Week 30: Final Testing & Documentation
+
+- [ ] **30.1** End-to-end testing: Complete patient journey
+- [ ] **30.2** Performance audit: All pages < 3s load
+- [ ] **30.3** Mobile/tablet responsiveness check
+- [ ] **30.4** Accessibility audit (a11y)
+- [ ] **30.5** User documentation update
+- [ ] **30.6** API documentation update
+- [ ] **30.7** Final security audit
+
+---
+
+### 🚦 Complete Product Gate Check (End of Week 30)
+
+| Criteria                                    | Target |
+| ------------------------------------------- | ------ |
+| All 4 user flows per module work end-to-end | ✅     |
+| 3D Plantillas renders smoothly (60fps)      | ✅     |
+| PDF export generates valid documents        | ✅     |
+| Cross-module data flows correctly           | ✅     |
+| Mobile responsive on all modules            | ✅     |
+| Mother uses full toolset in practice        | ✅     |
+
+---
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 🚀 PART 4: FUTURE (Post-Week 30)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+**Deferred to future releases:**
+
+- [ ] Full offline sync (IndexedDB + background sync)
+- [ ] Multi-tenancy (multiple therapists, clinics)
+- [ ] React Native mobile app
+- [ ] Stripe billing integration
+- [ ] Patient portal (patients view their own progress)
+- [ ] Appointment scheduling system
+- [ ] Integration with medical devices (podoscope hardware)
+- [ ] HIPAA/GDPR compliance audit
+- [ ] White-label solution for other clinics
+
+---
+
 ## 📊 Risk Management Strategy
 
 ### High-Risk Items (Have a Plan B)
 
-| Risk                            | Mitigation                  | Plan B                       |
-| ------------------------------- | --------------------------- | ---------------------------- |
-| **Week 9: Mother hates the UX** | Week 10 pivot buffer        | Extend MVP, delay AI         |
-| **Week 12: No books available** | Start collecting in Week 1  | Use free PubMed articles     |
-| **Week 13: pgvector too slow**  | Optimize indexes early      | Use Pinecone (cloud)         |
-| **Week 15: AI hallucinates**    | Strict citation requirement | Disable AI, manual mode only |
-| **Groq API down**               | Monitor uptime early        | Fallback to OpenAI Whisper   |
+| Risk                            | Mitigation                   | Plan B                   |
+| ------------------------------- | ---------------------------- | ------------------------ |
+| **Week 9: Mother hates UX**     | Week 10 pivot buffer         | Extend MVP, delay Part 3 |
+| **Week 12: No books available** | Start collecting in Week 1   | Use free PubMed articles |
+| **Week 13: pgvector too slow**  | Optimize indexes early       | Use Pinecone (cloud)     |
+| **Week 15: AI hallucinates**    | Strict citation requirement  | Disable AI, manual mode  |
+| **Week 23: 3D performance**     | Optimize mesh, use LOD       | Fallback to 2D editor    |
+| **Week 25: Brush raycasting**   | Use proven Three.js examples | Simplify to click-to-add |
+| **Week 28: PDF generation**     | Use proven library (jsPDF)   | Export as PNG + text     |
 
-### Low-Risk Items (Can Defer)
+### Complexity Buffers
 
-- Full offline sync (IndexedDB) → Phase 4
-- Multi-tenancy → Phase 4
-- React Native app → Phase 4
-- Stripe billing → Phase 4
-
----
-
-## 🎯 Success Criteria (Gate Checks)
-
-### After Phase 1 (Week 8):
-
-- ✅ Mother can complete a full consultation without your help
-- ✅ No data loss in 10 test sessions
-- ✅ Page load time < 3 seconds on iPad
-
-### After Phase 2 (Week 11):
-
-- ✅ Used for 20+ real patients
-- ✅ Zero security vulnerabilities in audit
-- ✅ Backup/restore tested and works
-
-### After Phase 3 (Week 15):
-
-- ✅ AI suggestions are clinically relevant 70%+ of the time
-- ✅ Citations trace back to actual book content
-- ✅ Mother trusts the AI enough to use it regularly
+| Phase             | Buffer Built-In |
+| ----------------- | --------------- |
+| Part 1 (MVP)      | Week 10         |
+| Part 2 (AI)       | Week 16         |
+| Part 3 (Complete) | Week 30         |
 
 ---
 
-## 📅 Calendar View (16 Weeks)
+## 📅 Calendar View (30 Weeks)
 
 ```
-Weeks 1-4:   Foundation (DevOps, Auth, Infrastructure)
-Weeks 5-8:   MVP Features (Patients, Sessions, Media)
-Weeks 9-11:  Validation & Hardening (Real-world testing)
-Weeks 12-15: AI Integration (RAG, Vision, Analysis)
-Week 16:     Buffer / AI Refinement
+Part 1: MVP (Weeks 1-11)
+├── Weeks 1-4:   Foundation ✅
+├── Weeks 5-6:   Pacientes (8 components, 4 flows)
+├── Week 7:      Media & Dictation
+├── Week 8:      PWA Basics
+├── Week 9:      Field Testing
+├── Week 10:     Pivot & Fix (Buffer)
+└── Week 11:     Security & Performance
+
+Part 2: AI Infrastructure (Weeks 12-16)
+├── Week 12:     Knowledge Base
+├── Week 13:     Vector Database
+├── Week 14:     AI Agent
+├── Week 15:     Vision & Analysis
+└── Week 16:     AI Refinement (Buffer)
+
+Part 3: Complete Product (Weeks 17-30)
+├── Weeks 17-18: Biblioteca Médica (5 components, 4 flows)
+├── Weeks 19-22: Análisis (8 components, 4 flows)
+├── Weeks 23-28: Plantillas 3D CAD (6 components, 5 flows)
+└── Weeks 29-30: Integration & Polish
 ```
 
-**Total Time: 16 weeks (4 months)**  
-**Buffer Time: 2 weeks built-in (Week 10, Week 16)**  
-**Realistic Completion: 4.5-5 months** (because life happens)
-
----
-
-## 🚨 When to Hit Pause
-
-**Stop and reassess if:**
-
-- Week 9 reveals the core UX is fundamentally broken
-- Week 13 shows pgvector performance is unacceptable
-- Week 15 shows AI quality is worse than manual work
-- You're consistently 2+ weeks behind schedule
-
-**Don't be afraid to:**
-
-- Skip Phase 3 entirely if MVP is enough
-- Ship MVP first, add AI in 6 months after real usage data
-- Pivot from Gemini to GPT-4 if vision quality is poor
+**Total Time: 30 weeks (7.5 months)**
+**Buffer Time: 3 weeks built-in (Week 10, 16, 30)**
+**Realistic Completion: 8 months** (because life happens)
 
 ---
 
 ## 💡 Final Advice
 
-1. **Milestone 6 (Week 9) is the most critical**  
-   If she doesn't want to use it daily, AI won't save you.
+1. **Milestone 5 (Week 9) is the most critical**
+   If she doesn't want to use it daily, the rest won't matter.
 
-2. **Don't gold-plate Phase 1**  
-   Ugly but functional beats pretty but broken.
-
-3. **The books for RAG must be acquired NOW**  
+2. **The books for RAG must be acquired NOW**
    Don't wait until Week 12 to realize you can't get them.
 
-4. **Expect Week 10 to be chaos**  
+3. **3D Plantillas is the showstopper feature**
+   Week 23-28 will define the product's premium value.
+
+4. **Expect Week 10 to be chaos**
    Real-world testing always reveals surprises.
 
-5. **Phase 3 is optional**  
-   A solid MVP without AI is better than a broken AI system.
+5. **Part 3 modules can be released incrementally**
+   Ship Biblioteca first, then Análisis, then Plantillas.

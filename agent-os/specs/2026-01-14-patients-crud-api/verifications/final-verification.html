@@ -1,0 +1,36 @@
+# Verification Report: Patients CRUD API **Spec:**
+`2026-01-14-patients-crud-api` **Date:** 2026-01-14 **Verifier:**
+implementation-verifier **Status:** ✅ Passed --- ## Executive Summary The
+Patients CRUD API has been successfully refactored to enforce strict therapist
+isolation, robust data validation using `class-validator`, and standardized
+pagination. The implementation prevents IDOR vulnerabilities by returning 404s
+for unauthorized access and ensures data integrity for clinical fields like
+`painScale`. All tests, including new focused verification tests, are passing.
+--- ## 1. Tasks Verification **Status:** ✅ All Complete ### Completed Tasks -
+[x] Task Group 1: API Refactoring and Validation - [x] 1.1 Write 2-8 focused
+tests for PatientsController and DTO validation - [x] 1.2 Update DTOs with
+Validation (CreatePatientDto, UpdatePatientDto, UpdateEvaluationDto) - [x] 1.3
+Refactor PatientsService for Type Safety (PaginatedResponseDto) - [x] 1.4
+Refactor PatientsController for Isolation and Responses - [x] 1.5 Ensure API
+layer tests pass - [x] Task Group 2: Test Review & Gap Analysis - [x] 2.1 Review
+tests from Task Group 1 - [x] 2.2 Analyze test coverage gaps for THIS feature
+only - [x] 2.3 Write up to 10 additional strategic tests maximum (Included in
+1.1 and 1.5 checks) - [x] 2.4 Run feature-specific tests only ### Incomplete or
+Issues None --- ## 2. Documentation Verification **Status:** ✅ Complete ###
+Implementation Documentation - [x] Task Group 1 Implementation:
+`apps/server/src/modules/patients/patients-api.spec.ts` (Verification Tests) -
+[x] DTO Updates: `apps/server/src/modules/patients/dto/create-patient.dto.ts`
+(Validation Rules) ### Verification Documentation - [x] Verification Report:
+`agent-os/specs/2026-01-14-patients-crud-api/verifications/final-verification.html`
+### Missing Documentation None --- ## 3. Roadmap Updates **Status:** ✅ Updated
+### Updated Roadmap Items - [x] **5.6** API endpoints: Patients CRUD with
+therapist isolation - [x] **5.9** Validation: Pain scale (0-10), Barthel index
+(0-100) ### Notes Tasks 5.6 and 5.9 in the roadmap have been addressed and
+verified. --- ## 4. Test Suite Results **Status:** ✅ All Passing ### Test
+Summary - **Total Tests:** 85 - **Passing:** 85 - **Failing:** 0 - **Errors:** 0
+### Failed Tests None - all tests passing. ### Notes - **New Tests Added**:
+`src/modules/patients/patients-api.spec.ts` covers critical isolation and
+validation scenarios. - **DTO Validation**: `CreatePatientDto` now strictly
+validates `age`, `name` length, and `birthDate`. - **Isolation**: Services now
+consistently check `therapistId` and throw `NotFoundException` (404) for
+security.

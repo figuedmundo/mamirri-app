@@ -1,0 +1,165 @@
+{
+  "_meta": {
+    "models": {
+      "CategoriaClinica": "Categorías estructurales para navegar el contenido médico (ej: Osteología, Miología, Tests).",
+      "ReferenciaBibliografica": "Fuentes originales de evidencia médica, libros o artículos científicos.",
+      "Protocolo": "Técnicas clínicas específicas, tests o ejercicios con instrucciones paso a paso.",
+      "DiagramaAnatomico": "Imágenes médicas para educación del paciente o referencia anatómica."
+    },
+    "relationships": [
+      "Cada Protocolo pertenece a una CategoriaClinica",
+      "Cada Protocolo se basa en una o más ReferenciasBibliograficas",
+      "Cada Protocolo puede tener múltiples DiagramasAnatomicos asociados"
+    ]
+  },
+  "categoriasClinicas": [
+    {
+      "id": "cat-001",
+      "nombre": "Osteología y Artrología",
+      "descripcion": "Estructura ósea y articulaciones",
+      "icon": "bone"
+    },
+    {
+      "id": "cat-002",
+      "nombre": "Miología",
+      "descripcion": "Músculos y cadenas musculares",
+      "icon": "muscle"
+    },
+    {
+      "id": "cat-003",
+      "nombre": "Test de Elasticidad",
+      "descripcion": "Evaluación de flexibilidad y retracciones",
+      "icon": "activity"
+    },
+    {
+      "id": "cat-004",
+      "nombre": "Test Funcionales",
+      "descripcion": "Pruebas de movilidad y función",
+      "icon": "move"
+    },
+    {
+      "id": "cat-005",
+      "nombre": "Protocolos de Tratamiento",
+      "descripcion": "Técnicas de intervención (McKenzie, RPG, etc.)",
+      "icon": "clipboard"
+    }
+  ],
+  "referenciasBibliograficas": [
+    {
+      "id": "ref-001",
+      "autor": "Latarjet, M. & Ruiz Liard, A.",
+      "anio": 2019,
+      "titulo": "Anatomía Humana",
+      "fuente": "Editorial Médica Panamericana",
+      "idiomaOriginal": "es",
+      "resumenEs": "Texto clásico de referencia para la anatomía descriptiva, topográfica y funcional del cuerpo humano.",
+      "textoOriginal": null
+    },
+    {
+      "id": "ref-002",
+      "autor": "McKenzie, R.A.",
+      "anio": 1981,
+      "titulo": "The Lumbar Spine: Mechanical Diagnosis and Therapy",
+      "fuente": "Spinal Publications",
+      "idiomaOriginal": "en",
+      "resumenEs": "Método de diagnóstico y terapia mecánica para el dolor lumbar, enfatizando la centralización del dolor mediante movimientos repetidos.",
+      "textoOriginal": "The centralization phenomenon describes the movement of pain from a distal to a more central location..."
+    },
+    {
+      "id": "ref-003",
+      "autor": "Kendall, F.P.",
+      "anio": 2005,
+      "titulo": "Muscles: Testing and Function, with Posture and Pain",
+      "fuente": "Lippincott Williams & Wilkins",
+      "idiomaOriginal": "en",
+      "resumenEs": "Guía definitiva para pruebas musculares manuales y evaluación postural.",
+      "textoOriginal": "Muscle testing procedures allowing for precise evaluation of strength and length..."
+    },
+    {
+      "id": "ref-004",
+      "autor": "Anderson, B.",
+      "anio": 1980,
+      "titulo": "Stretching",
+      "fuente": "Shelter Publications",
+      "idiomaOriginal": "en",
+      "resumenEs": "Fundamentos del estiramiento estático para evitar el reflejo miotático.",
+      "textoOriginal": "Static stretching involves holding a position tailored to a specific muscle group..."
+    }
+  ],
+  "protocolos": [
+    {
+      "id": "prot-001",
+      "titulo": "Posición de la Esfinge",
+      "categoriaId": "cat-005",
+      "referenciaIds": ["ref-002"],
+      "definicion": "Ejercicio de extensión pasiva en decúbito prono.",
+      "justificacion": "Indicado para rectificación lumbar y hernias discales posteriores. Busca centralizar el dolor y restaurar la lordosis fisiológica.",
+      "procedimiento": [
+        "Paciente en decúbito prono.",
+        "Apoyar los antebrazos en el suelo manteniendo los codos debajo de los hombros.",
+        "Relajar la musculatura glútea y lumbar.",
+        "Mantener la posición durante 15 segundos a 3 minutos según tolerancia."
+      ],
+      "tags": ["Lumbar", "Hernia", "Extensión", "McKenzie"]
+    },
+    {
+      "id": "prot-002",
+      "titulo": "Test de Thomas",
+      "categoriaId": "cat-003",
+      "referenciaIds": ["ref-003"],
+      "definicion": "Prueba para evaluar la flexibilidad de los flexores de cadera (Psoas e Ilíaco).",
+      "justificacion": "Diferencia entre acortamiento del iliopsoas y del recto femoral.",
+      "procedimiento": [
+        "Paciente en decúbito supino al borde de la camilla.",
+        "Flexionar una cadera y rodilla hacia el pecho para aplanar la lordosis lumbar.",
+        "Observar si la pierna opuesta se levanta de la camilla.",
+        "Si se levanta, indica acortamiento del psoas."
+      ],
+      "tags": ["Cadera", "Flexibilidad", "Psoas", "Evaluación"]
+    },
+    {
+      "id": "prot-003",
+      "titulo": "Reeducación Postural Global (RPG) - Rana al suelo",
+      "categoriaId": "cat-005",
+      "referenciaIds": ["ref-001"],
+      "definicion": "Postura de estiramiento global de la cadena anterior.",
+      "justificacion": "Eficaz para corregir hipercifosis, hombros enrollados y rectificación cervical.",
+      "procedimiento": [
+        "Paciente en decúbito supino, plantas de los pies juntas.",
+        "Brazos abiertos a 45 grados, palmas hacia arriba.",
+        "Exhalación prolongada descendiendo el tórax.",
+        "Mantener la tensión suave y constante por 15-20 minutos."
+      ],
+      "tags": ["Postura", "Cadena Anterior", "Global", "Souchard"]
+    },
+    {
+      "id": "prot-004",
+      "titulo": "Stretching Estático de Isquiotibiales",
+      "categoriaId": "cat-005",
+      "referenciaIds": ["ref-004"],
+      "definicion": "Estiramiento analítico mantenido sin rebote.",
+      "justificacion": "Mejora la flexibilidad sin activar el reflejo miotático, reduciendo riesgo de lesión.",
+      "procedimiento": [
+        "Elevar la pierna extendida hasta el punto de tensión moderada.",
+        "Mantener la posición fija durante 30 segundos.",
+        "Respirar profundamente y relajar.",
+        "No realizar movimientos balísticos."
+      ],
+      "tags": ["Isquiotibiales", "Estiramiento", "Flexibilidad"]
+    }
+  ],
+  "diagramasAnatomicos": [
+    {
+      "id": "diag-001",
+      "titulo": "Osteología de la Pelvis",
+      "url": "/placeholder/pelvis-anatomy.png",
+      "descripcion": "Vista anterior y posterior del hueso coxal y sacro."
+    },
+    {
+      "id": "diag-002",
+      "titulo": "Músculos Profundos del Dorso",
+      "url": "/placeholder/back-muscles.png",
+      "descripcion": "Multífidos, rotadores y erectores de la columna."
+    }
+  ]
+}

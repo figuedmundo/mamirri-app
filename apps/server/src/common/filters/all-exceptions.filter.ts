@@ -114,6 +114,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       ? ` Correlation ID: ${correlationId}`
       : '';
     if (httpStatus >= 500) {
+      console.error('CRITICAL EXCEPTION:', exception);
       this.logger.error(
         `Http Status: ${httpStatus} Error Message: ${message}${correlationLog}`,
         exception instanceof Error ? exception.stack : '',

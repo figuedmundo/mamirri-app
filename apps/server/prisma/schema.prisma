@@ -6,58 +6,190 @@ datasource db {
   provider = "postgresql"
 }
 
-enum SessionStatus {
-  DRAFT
-  FINALIZED
-}
-
 model User {
   id           String   @id @default(cuid())
-  email        String    @unique
+  email        String   @unique
   passwordHash String
   name         String
-  role         String     @default("THERAPIST")
-  createdAt     DateTime   @default(now())
+  role         String   @default("THERAPIST")
+  createdAt    DateTime @default(now())
 
   // Relations
-  sessions     Session[]
+  patients Patient[]
+  sessions Session[] // Keep for backward compat
+  treatmentSessions TreatmentSession[]
 
-  @@index([email])
   @@map("users")
+  @@index([email])
 }
 
 model Patient {
-  id          String    @id @default(cuid())
-  firstName   String
-  lastName    String
-  dob         DateTime
-  phone       String?
-  email       String?
+  id              String   @id @default(cuid())
+  name            String
+  age             Int
+  occupation      String
+  previousOccupation String?
+  address         String?
+  gender          String?
+  phone           String
+  email           String?
+  birthDate       DateTime
+  isActive        Boolean  @default(true)
+  deletedAt       DateTime?
+  createdAt       DateTime @default(now())
 
-  therapistId String
-  createdAt   DateTime   @default(now())
+  therapistId     String
+  therapist       User     @relation(fields: [therapistId], references: [id])
 
   // Relations
-  sessions    Session[]
-
-  @@index([firstName, lastName])
+  clinicalCases   ClinicalCase[]
+  sessions        Session[] // Legacy/Generic
+  
   @@map("patients")
+  @@index([name])
 }
 
-model Session {
-  id          String       @id @default(cuid())
+model ClinicalCase {
+  id              String   @id @default(cuid())
+  title           String
+  status          String   // 'active' | 'completed' | 'inactive'
+  startDate       DateTime
+  endDate         DateTime?
+  consultationReason String
   
+  // JSON arrays/objects for flexible fields
+  pathologicalHistory    Json? // string[]
+  pharmacologicalHistory String?
+  initialMedicalDiagnosis String?
+
+  patientId       String
+  patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  // Relations
+  evaluations         Evaluation[]
+  treatmentPlan       TreatmentPlan?
+  treatmentSessions   TreatmentSession[]
+  insoles             Insole[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("clinical_cases")
+}
+
+model Evaluation {
+  id              String   @id @default(cuid())
+  date            DateTime
+  type            String   // 'INITIAL' | 'PROGRESS' | 'FINAL'
+  
+  // JSON fields for complex nested data types
+  posturogram     Json     // Posturograma
+  orthopedicTests Json     // TestOrtopedicos
+  avdEvaluation   Json     // EvaluacionAVD
+  painScale       Json     // EscalaDolor
+  diagnosis       Json     // Diagnostico
+  voiceNotes      Json?    // VoiceNote[]
+
+  clinicalCaseId  String
+  clinicalCase    ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+
+  // Relations
+  footprints      Footprint[]
+  postureVideos   PostureVideo[]
+
+  @@map("evaluations")
+}
+
+model TreatmentPlan {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  
+  objectives      Json     // ObjetivosTratamiento
+  phases          Json     // FaseTratamiento[]
+  insoleSnapshot  Json?    // Plantilla (snapshot inside plan)
+
+  clinicalCaseId  String   @unique
+  clinicalCase    ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+
+  @@map("treatment_plans")
+}
+
+model TreatmentSession {
+  id              String   @id @default(cuid())
+  status          String   @default("DRAFT")
+  date            DateTime
+  phaseNumber     Int
+  procedures      String[] // tecnicasAplicadas
+  patientResponse String
+  finalPainLevel  Int
+  observations    String
+  deletedAt       DateTime?
+  voiceNotes      Json?    // VoiceNote[]
+
+  clinicalCaseId  String
+  clinicalCase    ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+  
+  therapistId     String
+  therapist       User         @relation(fields: [therapistId], references: [id])
+
+  createdAt       DateTime @default(now())
+
+  @@map("treatment_sessions")
+}
+
+model Footprint {
+  id              String   @id @default(cuid())
+  type            String   // 'initial' | 'final' | 'followup'
+  date            DateTime
+  url             String
+  analysis        Json?    // HuellaAnalisis
+  comparison      Json?    // HuellaComparacion
+
+  evaluationId    String
+  evaluation      Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+
+  @@map("footprints")
+}
+
+model PostureVideo {
+  id              String   @id @default(cuid())
+  type            String   // 'gait' | 'static' | 'dynamic'
+  date            DateTime
+  url             String
+  duration        Int
+  observations    String
+
+  evaluationId    String
+  evaluation      Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+
+  @@map("posture_videos")
+}
+
+model Insole {
+  id              String   @id @default(cuid())
+  type            String   // 'orthopedic-insole' | 'ankle-brace' | 'other'
+  material        String   // 'cork' | 'neoprene' | 'eva' | 'other'
+  features        Json?    // Detailed characteristics
+
+  clinicalCaseId  String
+  clinicalCase    ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+
+  @@map("insoles")
+}
+
+// Keep generic Session for now if needed by other modules, or phase out
+model Session {
+  id          String   @id @default(cuid())
+  status      String   @default("DRAFT")
+  notes       String?
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+
   patientId   String
-  patient     Patient      @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
   
   therapistId String
-  therapist   User         @relation(fields: [therapistId], references: [id], onDelete: Cascade)
-  
-  status      SessionStatus @default(DRAFT)
-  notes       String?
-  date        DateTime     @default(now())
-  createdAt   DateTime      @default(now())
+  therapist   User     @relation(fields: [therapistId], references: [id], onDelete: Cascade)
 
-  @@index([patientId, therapistId, date])
   @@map("sessions")
 }

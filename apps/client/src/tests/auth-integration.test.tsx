@@ -9,6 +9,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import Login from '../pages/Login';
+import Register from '../pages/Register';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { api } from '../lib/axios';
 
@@ -41,6 +42,66 @@ describe('Auth Integration Flows', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
+  });
+
+  it('Register Flow: User registers, updates context, and redirects', async () => {
+    const mockUser = {
+      id: '123',
+      email: 'new@example.com',
+      name: 'New User',
+      role: 'user',
+    };
+    const mockToken = 'new-user-token';
+    (api.post as any).mockResolvedValueOnce({
+      data: { user: mockUser, accessToken: mockToken },
+    });
+
+    render(
+      <AuthProvider>
+        <MemoryRouter initialEntries={['/register']}>
+          <Routes>
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </MemoryRouter>
+      </AuthProvider>,
+    );
+
+    fireEvent.change(screen.getByLabelText(/name/i), {
+      target: { value: 'New User' },
+    });
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'new@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/^password/i), {
+      target: { value: 'password123' },
+    });
+    fireEvent.change(screen.getByLabelText(/confirm password/i), {
+      target: { value: 'password123' },
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
+    });
+
+    expect(api.post).toHaveBeenCalledWith('/auth/register', {
+      name: 'New User',
+      email: 'new@example.com',
+      password: 'password123',
+      confirmPassword: 'password123',
+    });
+
+    expect(localStorage.getItem('access_token')).toBe(mockToken);
+    expect(localStorage.getItem('user_data')).toContain('New User');
+
+    expect(mockNavigate).toHaveBeenCalledWith('/');
   });
 
   it('Login Flow: User logs in, updates context/storage, and redirects', async () => {

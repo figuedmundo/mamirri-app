@@ -1,12 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StorageService } from './storage.service';
-import {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-  DeleteObjectCommand,
-  HeadObjectCommand,
-} from '@aws-sdk/client-s3';
+import { S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import {
   BadRequestException,
   NotFoundException,
@@ -14,6 +9,8 @@ import {
 } from '@nestjs/common';
 import storageConfig from '../../config/storage.config';
 
+jest.mock('@aws-sdk/client-s3');
+jest.mock('@aws-sdk/s3-request-presigner');
 jest.mock('../../config/storage.config');
 
 const validFile = {
@@ -27,12 +24,15 @@ const validFile = {
 
 describe('StorageService', () => {
   let service: StorageService;
-  let mockS3Client: jest.Mocked<S3Client>;
+  let s3ClientMock: any;
 
   beforeEach(async () => {
-    mockS3Client = {
+    s3ClientMock = {
       send: jest.fn(),
-    } as any;
+    };
+
+    (S3Client as unknown as jest.Mock).mockImplementation(() => s3ClientMock);
+    (getSignedUrl as jest.Mock).mockResolvedValue('http://signed-url.com');
 
     (storageConfig as jest.Mock).mockReturnValue({
       endpoint: 'localhost',
@@ -44,13 +44,7 @@ describe('StorageService', () => {
     });
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        StorageService,
-        {
-          provide: S3Client,
-          useValue: mockS3Client,
-        },
-      ],
+      providers: [StorageService],
     }).compile();
 
     service = module.get<StorageService>(StorageService);
@@ -62,12 +56,13 @@ describe('StorageService', () => {
 
   describe('uploadFile', () => {
     it('should upload file successfully', async () => {
-      mockS3Client.send.mockResolvedValue({ $metadata: {} });
+      s3ClientMock.send.mockResolvedValue({ $metadata: {} });
 
       const result = await service.uploadFile(validFile, 'test-path');
 
-      expect(mockS3Client.send).toHaveBeenCalled();
+      expect(s3ClientMock.send).toHaveBeenCalled();
       expect(result).toBeDefined();
+      expect(result).toContain('test-path');
     });
 
     it('should throw BadRequestException for invalid file type', async () => {
@@ -93,20 +88,16 @@ describe('StorageService', () => {
 
   describe('getFileUrl', () => {
     it('should generate presigned URL for file', async () => {
-      mockS3Client.send.mockResolvedValue({
-        $metadata: { httpStatusCode: 200 },
-      });
-
       const url = await service.getFileUrl('test-path/test.jpg', 3600);
 
-      expect(url).toBeDefined();
-      expect(url).toContain('X-Amz-SignedHeaders');
+      expect(getSignedUrl).toHaveBeenCalled();
+      expect(url).toBe('http://signed-url.com');
     });
 
     it('should throw NotFoundException if file does not exist', async () => {
       const error = new Error('NotFound');
       error.name = 'NotFound';
-      mockS3Client.send.mockRejectedValue(error);
+      (getSignedUrl as jest.Mock).mockRejectedValue(error);
 
       await expect(service.getFileUrl('nonexistent.jpg', 3600)).rejects.toThrow(
         NotFoundException,
@@ -116,17 +107,17 @@ describe('StorageService', () => {
 
   describe('deleteFile', () => {
     it('should delete file successfully', async () => {
-      mockS3Client.send.mockResolvedValue({ $metadata: {} });
+      s3ClientMock.send.mockResolvedValue({ $metadata: {} });
 
       await service.deleteFile('test-path/test.jpg');
 
-      expect(mockS3Client.send).toHaveBeenCalled();
+      expect(s3ClientMock.send).toHaveBeenCalled();
     });
 
     it('should throw NotFoundException if file does not exist', async () => {
       const error = new Error('NotFound');
       error.name = 'NotFound';
-      mockS3Client.send.mockRejectedValue(error);
+      s3ClientMock.send.mockRejectedValue(error);
 
       await expect(service.deleteFile('nonexistent.jpg')).rejects.toThrow(
         NotFoundException,
@@ -136,7 +127,7 @@ describe('StorageService', () => {
 
   describe('fileExists', () => {
     it('should return true if file exists', async () => {
-      mockS3Client.send.mockResolvedValue({
+      s3ClientMock.send.mockResolvedValue({
         $metadata: { httpStatusCode: 200 },
       });
 
@@ -148,7 +139,7 @@ describe('StorageService', () => {
     it('should return false if file does not exist', async () => {
       const error = new Error('NotFound');
       error.name = 'NotFound';
-      mockS3Client.send.mockRejectedValue(error);
+      s3ClientMock.send.mockRejectedValue(error);
 
       const exists = await service.fileExists('nonexistent.jpg');
 
@@ -158,29 +149,29 @@ describe('StorageService', () => {
 
   describe('onModuleInit', () => {
     it('should create bucket if it does not exist', async () => {
-      mockS3Client.send
+      s3ClientMock.send
         .mockRejectedValueOnce({ name: 'NotFound' })
         .mockResolvedValueOnce({ $metadata: {} })
         .mockResolvedValueOnce({ $metadata: {} });
 
       await service.onModuleInit();
 
-      expect(mockS3Client.send).toHaveBeenCalledTimes(2);
+      expect(s3ClientMock.send).toHaveBeenCalledTimes(3);
     });
 
     it('should not create bucket if it exists', async () => {
-      mockS3Client.send.mockResolvedValue({
+      s3ClientMock.send.mockResolvedValue({
         $metadata: { httpStatusCode: 200 },
       });
 
       await service.onModuleInit();
 
-      expect(mockS3Client.send).toHaveBeenCalledTimes(1);
+      expect(s3ClientMock.send).toHaveBeenCalledTimes(1);
     });
 
     it('should handle bucket creation errors', async () => {
       const error = new Error('InternalError');
-      mockS3Client.send.mockRejectedValue(error);
+      s3ClientMock.send.mockRejectedValue(error);
 
       await expect(service.onModuleInit()).rejects.toThrow(
         InternalServerErrorException,

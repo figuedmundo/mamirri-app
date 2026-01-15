@@ -21,29 +21,28 @@ describe('Prisma Schema Validation', () => {
 
   describe('User Model', () => {
     it('should have id, email, passwordHash, name, role', () => {
-      expect(schemaContent).toContain('id           String   @id');
-      expect(schemaContent).toContain('email        String    @unique');
-      expect(schemaContent).toContain('passwordHash String');
-      expect(schemaContent).toContain('name         String');
-      expect(schemaContent).toContain('role         String');
+      expect(schemaContent).toMatch(/id\s+String\s+@id/);
+      expect(schemaContent).toMatch(/email\s+String\s+@unique/);
+      expect(schemaContent).toMatch(/passwordHash\s+String/);
+      expect(schemaContent).toMatch(/name\s+String/);
+      expect(schemaContent).toMatch(/role\s+String/);
     });
   });
 
   describe('Patient Model', () => {
-    it('should have firstName, lastName, dob, therapistId', () => {
-      expect(schemaContent).toContain('firstName   String');
-      expect(schemaContent).toContain('lastName    String');
-      expect(schemaContent).toContain('dob         DateTime');
-      expect(schemaContent).toContain('therapistId String');
+    it('should have name, age, therapistId', () => {
+      expect(schemaContent).toMatch(/name\s+String/);
+      expect(schemaContent).toMatch(/age\s+Int/);
+      expect(schemaContent).toMatch(/therapistId\s+String/);
     });
   });
 
   describe('Session Model', () => {
     it('should have patientId, therapistId, status, date', () => {
-      expect(schemaContent).toContain('patientId   String');
-      expect(schemaContent).toContain('therapistId String');
-      expect(schemaContent).toContain('status      SessionStatus');
-      expect(schemaContent).toContain('date        DateTime');
+      expect(schemaContent).toMatch(/patientId\s+String/);
+      expect(schemaContent).toMatch(/therapistId\s+String/);
+      expect(schemaContent).toMatch(/status\s+String/);
+      expect(schemaContent).toMatch(/date\s+DateTime/);
     });
   });
 });

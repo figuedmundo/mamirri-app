@@ -5,9 +5,7 @@ import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-if (!process.env.DATABASE_URL) {
-  dotenv.config({ path: path.join(__dirname, '../../.env') });
-}
+dotenv.config({ path: path.join(__dirname, '../../../.env') });
 
 let connectionString = process.env.DATABASE_URL;
 if (connectionString && connectionString.includes('${')) {
@@ -28,9 +26,9 @@ async function main() {
   const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });
 
-  const email = 'physio@mamirri.com';
+  const email = 'test@test.com';
   const name = 'Default Physio';
-  const password = 'physio_password_change_me';
+  const password = 'test';
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);

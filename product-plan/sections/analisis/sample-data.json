@@ -1,0 +1,619 @@
+{
+  "_meta": {
+    "models": {
+      "evaluacion": "Una evaluación representa una sesión de diagnóstico donde se capturan datos cinético-funcionales, huellas plantares y videos de postura del paciente. Incluye posturograma, test ortopédicos, AVD, escala de dolor y diagnóstico.",
+      "huella": "Las huellas son imágenes de las plantas del pie capturadas para análisis visual de presión, tipo de arco y simetría.",
+      "posturograma": "El posturograma es una representación gráfica de la postura estática en cuatro vistas (anterior, posterior, lateral derecha e izquierda) con marcadores anatómicos y detección automática de desviaciones.",
+      "videoPostura": "Los videos de postura capturan caminatas o posiciones estáticas para análisis biomecánico con controles de velocidad y capacidad de comparación evolutiva.",
+      "testFuncional": "Tests ortopédicos que evalúan flexibilidad, movilidad y capacidad funcional del paciente (Thomas, Ely, Ober, Schober, OTT).",
+      "escalaDolor": "Registro numérico del dolor en escala de 0 a 10 en diferentes contextos (actividad, reposo, palpación).",
+      "evolucion": "Comparativa objetiva entre el estado inicial y el estado final del paciente tras el tratamiento, con tests funcionales y escalas de dolor."
+    },
+    "relationships": [
+      "Cada Evaluación pertenece a un Caso Clínico específico",
+      "Cada Evaluación tiene muchas Huellas (imágenes de huellas plantares)",
+      "Cada Evaluación tiene muchos Videos de Postura",
+      "Cada Evaluación incluye un Posturograma con marcadores",
+      "Cada Evaluación tiene muchos Tests Funcionales",
+      "Cada Evaluación tiene una Escala de Dolor con múltiples contextos",
+      "Cada Evolución muestra el cambio de Evaluación Inicial a Evaluación Final"
+    ]
+  },
+  "evaluaciones": [
+    {
+      "id": "eval-001",
+      "casoClinicoId": "caso-001",
+      "pacienteId": "pac-001",
+      "pacienteNombre": "Juan Pérez",
+      "fecha": "2025-01-05",
+      "tipoEvaluacion": "inicial",
+      "posturograma": {
+        "vistaAnterior": {
+          "cabeza": { "x": 320, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 400, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 360, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 320, "y": 520, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "izquierda": { "x": 300, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "valgo" }, "derecha": { "x": 340, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" } },
+          "pies": { "izquierdo": { "x": 250, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }, "derecho": { "x": 430, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" } }
+        },
+        "vistaPosterior": {
+          "columna": { "x": 360, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 320, "y": 520, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pies": { "izquierdo": { "x": 250, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }, "derecho": { "x": 430, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" } }
+        },
+        "vistaLateralDerecha": {
+          "cabeza": { "x": 640, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 720, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 680, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 640, "y": 520, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "x": 620, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pies": { "x": 580, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }
+        },
+        "vistaLateralIzquierda": {
+          "cabeza": { "x": 640, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 720, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 680, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 640, "y": 520, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "x": 620, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pies": { "x": 580, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }
+        },
+        "desviacionesDetectadas": []
+      },
+      "testOrtopedicos": {
+        "thomas": { "resultado": 3, "interpretacion": "Acortamiento flexores de cadera" },
+        "ely": { "resultado": 2, "interpretacion": "Retracción TFL" },
+        "ober": { "resultado": 1, "interpretacion": "Normal" },
+        "schober": { "resultado": 12, "interpretacion": "Lumbalgia mecánica" },
+        "ott": { "resultado": 45, "interpretacion": "Disminución flexibilidad" }
+      },
+      "evaluacionAVD": {
+        "barthel": {
+          "comer": 2,
+          "trasladarse": 2,
+          "aseoPersonal": 2,
+          "desplazarse": 2,
+          "escaleras": 1,
+          "vestirse": 2,
+          "total": 11,
+          "interpretacion": "Independiente leve"
+        },
+        "lawton": {
+          "preparacionComida": 2,
+          "cuidadoCasa": 2,
+          "lavadoRopa": 2,
+          "transporte": 1,
+          "medicacion": 1,
+          "total": 8,
+          "interpretacion": "Independiente con dificultad leve"
+        }
+      },
+      "escalaDolor": {
+        "actividad": 7,
+        "reposo": 3,
+        "palpacion": 8,
+        "tipo": "cronico"
+      },
+      "diagnostico": {
+        "indicadorFuncional": "Disminución de la capacidad funcional por dolor en apoyo",
+        "aspectoClinico": "Dolor en zona plantar medial, agravado por bipedestación prolongada",
+        "anatomopatologia": "Inflamación de fascia plantar con alteración de arco longitudinal interno",
+        "consecuenciasAVD": "Dificultad para mantener bipedestación por más de 2 horas"
+      },
+      "huellas": [
+        {
+          "id": "huella-001",
+          "evaluacionId": "eval-001",
+          "tipo": "inicial",
+          "fecha": "2025-01-05",
+          "lado": "derecho",
+          "url": "/images/huellas/juan-perez-001-inicial-derecho.jpg",
+          "analisis": {
+            "arco": "colapsado",
+            "presionTalon": "alta",
+            "presionAntepie": "baja",
+            "desviacion": "valgo",
+            "zonasSensibles": [
+              { "zona": "medial", "intensidad": "muy-alta", "color": "rojo" },
+              { "zona": "anteropie", "intensidad": "alta", "color": "naranja" },
+              { "zona": "talon", "intensidad": "alta", "color": "naranja-claro" }
+            ],
+            "presionMapa": {
+              "talon": 85,
+              "medio": 30,
+              "anteropie": 45,
+              "borde": 20
+            }
+          }
+        }
+      ],
+      "videosPostura": [
+        {
+          "id": "video-001",
+          "evaluacionId": "eval-001",
+          "tipo": "caminata",
+          "fecha": "2025-01-05",
+          "url": "/videos/postura/juan-perez-caminata-001.mp4",
+          "duracion": 30,
+          "fps": 30,
+          "observaciones": "Hiperpronación derecha con compensación en cadera izquierda. Pie roza las gradas al aterrizar.",
+          "analisisBiomecanico": {
+            "faseContacto": "talon",
+            "despeguePie": "lento",
+            "aterrizaje": "forzado-talonero",
+            "actitudAntalgica": "compensatoria-lumbar",
+            "genuFlexo": 15,
+            "inclinacionTronco": 8,
+            "ayudaMecanica": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "eval-002",
+      "casoClinicoId": "caso-002",
+      "pacienteId": "pac-002",
+      "pacienteNombre": "Ana García",
+      "fecha": "2024-12-10",
+      "tipoEvaluacion": "inicial",
+      "posturograma": {
+        "vistaAnterior": {
+          "cabeza": { "x": 320, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 400, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 360, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 320, "y": 520, "desviacion": "anteversion", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "izquierda": { "x": 300, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "valgo" }, "derecha": { "x": 340, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "valgo" } },
+          "pies": { "izquierdo": { "x": 250, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "plano" }, "derecho": { "x": 430, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "plano" } }
+        },
+        "vistaPosterior": {
+          "columna": { "x": 360, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 320, "y": 520, "desviacion": "anteversion", "rotacion": "normal", "lateralizacion": "normal" },
+          "pies": { "izquierdo": { "x": 250, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "plano" }, "derecho": { "x": 430, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "plano" } }
+        },
+        "vistaLateralDerecha": {
+          "cabeza": { "x": 640, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 720, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 680, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 640, "y": 520, "desviacion": "anteversion", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "x": 620, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "valgo" },
+          "pies": { "x": 580, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }
+        },
+        "vistaLateralIzquierda": {
+          "cabeza": { "x": 640, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 720, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 680, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 640, "y": 520, "desviacion": "anteversion", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "x": 620, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "valgo" },
+          "pies": { "x": 580, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }
+        },
+        "desviacionesDetectadas": [
+          { "vista": "vistaAnterior", "estructura": "pelvis", "tipo": "anteversion", "severidad": "leve" },
+          { "vista": "vistaAnterior", "estructura": "rodillas", "tipo": "valgo-bilateral", "severidad": "moderada" },
+          { "vista": "vistaAnterior", "estructura": "pies", "tipo": "plano-bilateral", "severidad": "moderada" }
+        ]
+      },
+      "testOrtopedicos": {
+        "thomas": { "resultado": 2, "interpretacion": "Retracción leve flexores" },
+        "ely": { "resultado": 1, "interpretacion": "Normal" },
+        "ober": { "resultado": 1, "interpretacion": "Normal" },
+        "schober": { "resultado": 14, "interpretacion": "Normal" },
+        "ott": { "resultado": 50, "interpretacion": "Normal" }
+      },
+      "evaluacionAVD": {
+        "barthel": {
+          "comer": 2,
+          "trasladarse": 2,
+          "aseoPersonal": 1,
+          "desplazarse": 1,
+          "escaleras": 1,
+          "vestirse": 2,
+          "total": 9,
+          "interpretacion": "Independiente con dificultad moderada"
+        },
+        "lawton": {
+          "preparacionComida": 2,
+          "cuidadoCasa": 1,
+          "lavadoRopa": 2,
+          "transporte": 0,
+          "medicacion": 1,
+          "total": 6,
+          "interpretacion": "Necesita asistencia moderada"
+        }
+      },
+      "escalaDolor": {
+        "actividad": 6,
+        "reposo": 2,
+        "palpacion": 5,
+        "tipo": "cronico"
+      },
+      "diagnostico": {
+        "indicadorFuncional": "Limitación funcional por fatiga precoz y alteración biomecánica",
+        "aspectoClinico": "Hiperpronación bilateral con colapso del arco longitudinal",
+        "anatomopatologia": "Pie plano flexible con insuficiencia del soporte longitudinal",
+        "consecuenciasAVD": "Fatiga y dolor al caminar más de 30 minutos, dificultad para actividades recreativas"
+      },
+      "huellas": [
+        {
+          "id": "huella-002",
+          "evaluacionId": "eval-002",
+          "tipo": "inicial",
+          "fecha": "2024-12-10",
+          "lado": "izquierdo",
+          "url": "/images/huellas/ana-garcia-001-inicial-izquierdo.jpg",
+          "analisis": {
+            "arco": "colapsado",
+            "presionTalon": "normal",
+            "presionAntepie": "alta",
+            "desviacion": "valgo",
+            "zonasSensibles": [
+              { "zona": "anteropie", "intensidad": "muy-alta", "color": "rojo" },
+              { "zona": "borde-externo", "intensidad": "alta", "color": "naranja" },
+              { "zona": "medio", "intensidad": "media", "color": "amarillo" }
+            ],
+            "presionMapa": {
+              "talon": 45,
+              "medio": 60,
+              "anteropie": 90,
+              "borde": 25
+            }
+          }
+        },
+        {
+          "id": "huella-003",
+          "evaluacionId": "eval-002",
+          "tipo": "inicial",
+          "fecha": "2024-12-10",
+          "lado": "derecho",
+          "url": "/images/huellas/ana-garcia-001-inicial-derecho.jpg",
+          "analisis": {
+            "arco": "colapsado",
+            "presionTalon": "normal",
+            "presionAntepie": "alta",
+            "desviacion": "valgo",
+            "zonasSensibles": [
+              { "zona": "anteropie", "intensidad": "muy-alta", "color": "rojo" },
+              { "zona": "borde-externo", "intensidad": "alta", "color": "naranja" },
+              { "zona": "medio", "intensidad": "media", "color": "amarillo" }
+            ],
+            "presionMapa": {
+              "talon": 40,
+              "medio": 65,
+              "anteropie": 85,
+              "borde": 30
+            }
+          }
+        }
+      ],
+      "videosPostura": [
+        {
+          "id": "video-002",
+          "evaluacionId": "eval-002",
+          "tipo": "caminata",
+          "fecha": "2024-12-10",
+          "url": "/videos/postura/ana-garcia-caminata-001.mp4",
+          "duracion": 45,
+          "fps": 30,
+          "observaciones": "Hiperpronación bilateral más marcada en lado izquierdo. Marcha sin ayudas mecánicas.",
+          "analisisBiomecanico": {
+            "faseContacto": "talon",
+            "despeguePie": "lento",
+            "aterrizaje": "plano",
+            "actitudAntalgica": "ninguna",
+            "genuFlexo": 5,
+            "inclinacionTronco": 2,
+            "ayudaMecanica": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "eval-003-final",
+      "casoClinicoId": "caso-003",
+      "pacienteId": "pac-004",
+      "pacienteNombre": "Elena Martínez",
+      "fecha": "2025-01-10",
+      "tipoEvaluacion": "final",
+      "evaluacionInicialId": "eval-003",
+      "posturograma": {
+        "vistaAnterior": {
+          "cabeza": { "x": 320, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 400, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 360, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 320, "y": 520, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "izquierda": { "x": 300, "y": 620, "desviacion": "normal", "rotacion": "rotacion-externa", "lateralizacion": "normal" }, "derecha": { "x": 340, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" } },
+          "pies": { "izquierdo": { "x": 250, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }, "derecho": { "x": 430, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" } }
+        },
+        "vistaPosterior": {
+          "columna": { "x": 360, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 320, "y": 520, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pies": { "izquierdo": { "x": 250, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }, "derecho": { "x": 430, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" } }
+        },
+        "vistaLateralDerecha": {
+          "cabeza": { "x": 640, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 720, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 680, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 640, "y": 520, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "x": 620, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pies": { "x": 580, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }
+        },
+        "vistaLateralIzquierda": {
+          "cabeza": { "x": 640, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 720, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 680, "y": 400, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 640, "y": 520, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "x": 620, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pies": { "x": 580, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }
+        },
+        "desviacionesDetectadas": [
+          { "vista": "vistaAnterior", "estructura": "rodillas", "tipo": "rotacion-externa-izq", "severidad": "leve", "estado": "mejorada" }
+        ]
+      },
+      "testOrtopedicos": {
+        "thomas": { "resultado": 1, "interpretacion": "Normal" },
+        "ely": { "resultado": 1, "interpretacion": "Normal" },
+        "ober": { "resultado": 1, "interpretacion": "Normal" },
+        "schober": { "resultado": 15, "interpretacion": "Normal" },
+        "ott": { "resultado": 52, "interpretacion": "Normal" }
+      },
+      "evaluacionAVD": {
+        "barthel": {
+          "comer": 2,
+          "trasladarse": 2,
+          "aseoPersonal": 2,
+          "desplazarse": 2,
+          "escaleras": 1,
+          "vestirse": 2,
+          "total": 11,
+          "interpretacion": "Independiente"
+        },
+        "lawton": {
+          "preparacionComida": 2,
+          "cuidadoCasa": 2,
+          "lavadoRopa": 2,
+          "transporte": 2,
+          "medicacion": 2,
+          "total": 10,
+          "interpretacion": "Independiente"
+        }
+      },
+      "escalaDolor": {
+        "actividad": 1,
+        "reposo": 0,
+        "palpacion": 1,
+        "tipo": "agudo"
+      },
+      "diagnostico": {
+        "indicadorFuncional": "ROM completo de tobillo sin limitaciones",
+        "aspectoClinico": "Sin edema, dolor mínimo al tacto",
+        "anatomopatologia": "Recuperación completa de esguince, sin secuelas",
+        "consecuenciasAVD": "Independiente total, retorna a actividad normal"
+      },
+      "huellas": [
+        {
+          "id": "huella-004",
+          "evaluacionId": "eval-003-final",
+          "tipo": "final",
+          "fecha": "2025-01-10",
+          "lado": "izquierdo",
+          "url": "/images/huellas/elena-martinez-001-final-izquierdo.jpg",
+          "analisis": {
+            "arco": "normal",
+            "presionTalon": "normal",
+            "presionAntepie": "normal",
+            "desviacion": "normal",
+            "zonasSensibles": [],
+            "presionMapa": {
+              "talon": 50,
+              "medio": 55,
+              "anteropie": 52,
+              "borde": 48
+            }
+          },
+          "comparacion": {
+            "diferenciaArco": 0,
+            "mejoraDolor": "Se redujo de 8/10 a 1/10",
+            "recuperacionROM": "Completa"
+          }
+        }
+      ]
+    },
+    {
+      "id": "eval-006",
+      "casoClinicoId": "caso-004",
+      "pacienteId": "pac-005",
+      "pacienteNombre": "Roberto Silva",
+      "fecha": "2024-10-15",
+      "tipoEvaluacion": "inicial",
+      "posturograma": {
+        "vistaAnterior": {
+          "cabeza": { "x": 320, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 400, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 360, "y": 400, "desviacion": "cifosis", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 320, "y": 520, "desviacion": "retroversion", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "izquierda": { "x": 300, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }, "derecha": { "x": 340, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" } },
+          "pies": { "izquierdo": { "x": 250, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }, "derecho": { "x": 430, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" } }
+        },
+        "vistaPosterior": {
+          "columna": { "x": 360, "y": 400, "desviacion": "cifosis", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 320, "y": 520, "desviacion": "retroversion", "rotacion": "normal", "lateralizacion": "normal" },
+          "pies": { "izquierdo": { "x": 250, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }, "derecho": { "x": 430, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" } }
+        },
+        "vistaLateralDerecha": {
+          "cabeza": { "x": 640, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 720, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 680, "y": 400, "desviacion": "cifosis", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 640, "y": 520, "desviacion": "retroversion", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "x": 620, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pies": { "x": 580, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }
+        },
+        "vistaLateralIzquierda": {
+          "cabeza": { "x": 640, "y": 120, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "hombros": { "x": 720, "y": 250, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "columna": { "x": 680, "y": 400, "desviacion": "cifosis", "rotacion": "normal", "lateralizacion": "normal" },
+          "pelvis": { "x": 640, "y": 520, "desviacion": "retroversion", "rotacion": "normal", "lateralizacion": "normal" },
+          "rodillas": { "x": 620, "y": 620, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" },
+          "pies": { "x": 580, "y": 780, "desviacion": "normal", "rotacion": "normal", "lateralizacion": "normal" }
+        },
+        "desviacionesDetectadas": [
+          { "vista": "vistaAnterior", "estructura": "columna", "tipo": "cifosis", "severidad": "moderada" },
+          { "vista": "vistaAnterior", "estructura": "pelvis", "tipo": "retroversion", "severidad": "leve" }
+        ]
+      },
+      "testOrtopedicos": {
+        "thomas": { "resultado": 1, "interpretacion": "Normal" },
+        "ely": { "resultado": 2, "interpretacion": "Acortamiento psoas" },
+        "ober": { "resultado": 1, "interpretacion": "Normal" },
+        "schober": { "resultado": 8, "interpretacion": "Lumbalgia mecánica severa" },
+        "ott": { "resultado": 40, "interpretacion": "Disminución marcada flexibilidad" }
+      },
+      "evaluacionAVD": {
+        "barthel": {
+          "comer": 1,
+          "trasladarse": 1,
+          "aseoPersonal": 1,
+          "desplazarse": 1,
+          "escaleras": 1,
+          "vestirse": 1,
+          "total": 6,
+          "interpretacion": "Necesita ayuda considerable"
+        },
+        "lawton": {
+          "preparacionComida": 1,
+          "cuidadoCasa": 1,
+          "lavadoRopa": 1,
+          "transporte": 0,
+          "medicacion": 2,
+          "total": 5,
+          "interpretacion": "Necesita asistencia considerable"
+        }
+      },
+      "escalaDolor": {
+        "actividad": 6,
+        "reposo": 4,
+        "palpacion": 7,
+        "tipo": "cronico"
+      },
+      "diagnostico": {
+        "indicadorFuncional": "Limitación funcional severa por rigidez lumbar",
+        "aspectoClinico": "Cifosis toracolubar, contractura paravertebral",
+        "anatomopatologia": "Artrosis facetaria lumbar L4-L5 con acortamiento psoas",
+        "consecuenciasAVD": "Dificultad para AVD básicas, rigidez matutina >30 min, imposibilidad de sentado prolongado"
+      },
+      "huellas": [],
+      "videosPostura": [
+        {
+          "id": "video-004",
+          "evaluacionId": "eval-006",
+          "tipo": "postura-estatica",
+          "fecha": "2024-10-15",
+          "url": "/videos/postura/roberto-silva-postura-001.mp4",
+          "duracion": 60,
+          "fps": 30,
+          "observaciones": "Aumento de cifosis en sedestación, compensación anterior de tronco",
+          "analisisBiomecanico": {
+            "faseContacto": "no-aplicable",
+            "despeguePie": "no-aplicable",
+            "aterrizaje": "no-aplicable",
+            "actitudAntalgica": "compensatoria-tronco",
+            "genuFlexo": 0,
+            "inclinacionTronco": 15,
+            "ayudaMecanica": true
+          }
+        }
+      ]
+    }
+  ],
+  "evoluciones": [
+    {
+      "id": "evo-001",
+      "pacienteId": "pac-001",
+      "pacienteNombre": "Juan Pérez",
+      "casoClinicoId": "caso-001",
+      "evaluacionInicialId": "eval-001",
+      "evaluacionFinalId": "eval-001-final",
+      "fechaInicio": "2025-01-05",
+      "fechaFin": "2025-01-26",
+      "testsComparativos": [
+        {
+          "test": "schober",
+          "valorInicial": 12,
+          "valorFinal": 16,
+          "unidad": "cm",
+          "mejora": "+33%",
+          "estado": "mejorado"
+        },
+        {
+          "test": "ott",
+          "valorInicial": 45,
+          "valorFinal": 53,
+          "unidad": "cm",
+          "mejora": "+18%",
+          "estado": "mejorado"
+        }
+      ],
+      "dolorComparativo": {
+        "actividad": { "valorInicial": 7, "valorFinal": 3, "mejora": "-57%" },
+        "reposo": { "valorInicial": 3, "valorFinal": 1, "mejora": "-67%" },
+        "palpacion": { "valorInicial": 8, "valorFinal": 3, "mejora": "-62%" }
+      },
+      "diagnosticoComparativo": {
+        "inicial": {
+          "indicadorFuncional": "Disminución de la capacidad funcional por dolor en apoyo",
+          "aspectoClinico": "Dolor en zona plantar medial, agravado por bipedestación prolongada",
+          "anatomopatologia": "Inflamación de fascia plantar con alteración de arco longitudinal interno"
+        },
+        "final": {
+          "indicadorFuncional": "Capacidad funcional normal, sin limitaciones en bipedestación prolongada",
+          "aspectoClinico": "Sin dolor en bipedestación, patrón de marcha mejorado",
+          "anatomopatologia": "Recuperación completa de fascia plantar, arco longitudinal dentro de rangos normales"
+        },
+        "conclusion": "Recuperación exitosa: reducción significativa de dolor (7→3), mejoría de flexibilidad lumbar (+33%), y patrón de marcha normal. Objetivos terapéuticos alcanzados en 3 semanas."
+      }
+    },
+    {
+      "id": "evo-002",
+      "pacienteId": "pac-004",
+      "pacienteNombre": "Elena Martínez",
+      "casoClinicoId": "caso-003",
+      "evaluacionInicialId": "eval-003",
+      "evaluacionFinalId": "eval-003-final",
+      "fechaInicio": "2024-11-20",
+      "fechaFin": "2025-01-10",
+      "testsComparativos": [
+        {
+          "test": "schober",
+          "valorInicial": 15,
+          "valorFinal": 15,
+          "unidad": "cm",
+          "mejora": "0%",
+          "estado": "estable"
+        },
+        {
+          "test": "ott",
+          "valorInicial": 52,
+          "valorFinal": 52,
+          "unidad": "cm",
+          "mejora": "0%",
+          "estado": "estable"
+        }
+      ],
+      "dolorComparativo": {
+        "actividad": { "valorInicial": 8, "valorFinal": 1, "mejora": "-88%" },
+        "reposo": { "valorInicial": 4, "valorFinal": 0, "mejora": "-100%" },
+        "palpacion": { "valorInicial": 9, "valorFinal": 1, "mejora": "-89%" }
+      },
+      "diagnosticoComparativo": {
+        "inicial": {
+          "indicadorFuncional": "Limitación de rango de movimiento en dorsiflexión",
+          "aspectoClinico": "Edema perimaleolar, dolor en ligamentos laterales",
+          "anatomopatologia": "Esguince de ligamento peroneo-astragalino con compromiso capsular"
+        },
+        "final": {
+          "indicadorFuncional": "ROM completo de tobillo sin limitaciones",
+          "aspectoClinico": "Sin edema, dolor mínimo al tacto",
+          "anatomopatologia": "Recuperación completa de esguince, sin secuelas"
+        },
+        "conclusion": "Recuperación completa: ROM de tobillo total (0→52cm), eliminación de edema y dolor (8→1→0). Alta terapéutica recomendada con estabilización preventiva."
+      }
+    }
+  ]
+}

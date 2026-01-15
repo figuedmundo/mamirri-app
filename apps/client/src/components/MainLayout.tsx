@@ -1,15 +1,63 @@
-import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AppShell } from './shell/AppShell';
 
-export const MainLayout: React.FC<{ children?: React.ReactNode }> = ({
-  children,
-}) => {
+interface MainLayoutProps {
+  children: React.ReactNode;
+}
+
+export function MainLayout({ children }: MainLayoutProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const navigationItems = [
+    {
+      label: 'Pacientes',
+      href: '/pacientes',
+      isActive: location.pathname === '/pacientes',
+    },
+    {
+      label: 'Análisis',
+      href: '/analisis',
+      isActive: location.pathname === '/analisis',
+    },
+    {
+      label: 'Biblioteca Médica',
+      href: '/biblioteca',
+      isActive: location.pathname === '/biblioteca',
+    },
+    {
+      label: 'Plantillas',
+      href: '/plantillas',
+      isActive: location.pathname === '/plantillas',
+    },
+    {
+      label: 'Ajustes',
+      href: '/ajustes',
+      isActive: location.pathname === '/ajustes',
+    },
+  ];
+
+  const user = {
+    name: 'Dra. Noemi Herbas',
+    avatarUrl: undefined,
+  };
+
+  const handleNavigate = (href: string) => {
+    navigate(href);
+  };
+
+  const handleLogout = () => {
+    navigate('/login');
+  };
+
   return (
-    <div className="flex h-screen w-full">
-      <aside className="w-64 bg-muted border-r">Sidebar placeholder</aside>
-      <main className="flex-1">
-        <header className="h-16 border-b">Header placeholder</header>
-        <div className="flex-1 p-4">{children}</div>
-      </main>
-    </div>
+    <AppShell
+      navigationItems={navigationItems}
+      user={user}
+      onNavigate={handleNavigate}
+      onLogout={handleLogout}
+    >
+      {children}
+    </AppShell>
   );
-};
+}

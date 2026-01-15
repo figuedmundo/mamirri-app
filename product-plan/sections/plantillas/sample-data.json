@@ -1,0 +1,82 @@
+{
+  "_meta": {
+    "models": {
+      "Plantilla": "Diseño técnico de la órtesis plantar con parámetros estructurales y materiales.",
+      "Material": "Catálogo de materiales disponibles para la fabricación (EVA, Corcho, etc.).",
+      "CasoClinico": "Contexto médico del paciente que justifica el diseño.",
+      "Evaluacion": "Datos biomecánicos y hallazgos que alimentan la sugerencia de diseño."
+    },
+    "relationships": [
+      "Cada Plantilla pertenece a un CasoClinico",
+      "El diseño se basa en los hallazgos de la Evaluacion",
+      "Una Plantilla se compone de múltiples capas, cada una con un Material asignado"
+    ]
+  },
+  "materiales": [
+    {
+      "id": "mat-001",
+      "nombre": "EVA Soft (Shore A 20)",
+      "tipo": "Amortiguación",
+      "color": "blue-200",
+      "descripcion": "Alta absorción de impacto, ideal para pie diabético o geriátrico."
+    },
+    {
+      "id": "mat-002",
+      "nombre": "EVA Rígido (Shore A 50)",
+      "tipo": "Estructura",
+      "color": "slate-400",
+      "descripcion": "Soporte estructural para corregir alineación."
+    },
+    {
+      "id": "mat-003",
+      "nombre": "Corcho Aglomerado",
+      "tipo": "Base",
+      "color": "amber-700",
+      "descripcion": "Base natural, rígida y ligera."
+    },
+    {
+      "id": "mat-004",
+      "nombre": "Piel Porcina",
+      "tipo": "Forro",
+      "color": "orange-100",
+      "descripcion": "Forro superior transpirable y duradero."
+    }
+  ],
+  "casoActual": {
+    "id": "case-001",
+    "paciente": "M.H.Z.",
+    "edad": 88,
+    "diagnostico": "Hipercifosis dorsal rígida, Osteoporosis severa, Pie Talo bilateral.",
+    "evaluacion": {
+      "id": "eval-001",
+      "hallazgos": [
+        "Retroversión pélvica marcada",
+        "Rectificación lumbar",
+        "Pie Talo (apoyo excesivo en talón)",
+        "Puntos dolorosos en metatarsos (EVA 8/10)"
+      ],
+      "posturogramaUrl": "/placeholder/posture-scan.png",
+      "huellaUrl": "/placeholder/footprint-heat.png"
+    }
+  },
+  "plantilla": {
+    "id": "plan-001",
+    "casoId": "case-001",
+    "estado": "draft",
+    "parametros": {
+      "alturaArco": 12,
+      "cuñaTalon": 5,
+      "barrametatarsal": true,
+      "elevacionTalon": 8
+    },
+    "zonasAlivio": [
+      { "x": 30, "y": 45, "radio": 15, "intensidad": 0.8, "nota": "Descarga cabeza 1er meta" },
+      { "x": 60, "y": 80, "radio": 20, "intensidad": 0.5, "nota": "Espolón calcáneo" }
+    ],
+    "capas": [
+      { "tipo": "base", "materialId": "mat-003", "espesor": 2 },
+      { "tipo": "estructura", "materialId": "mat-002", "espesor": 4 },
+      { "tipo": "forro", "materialId": "mat-004", "espesor": 1 }
+    ]
+  }
+}
