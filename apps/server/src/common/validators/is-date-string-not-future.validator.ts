@@ -3,12 +3,11 @@ import {
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  ValidationArguments,
 } from 'class-validator';
 
 @ValidatorConstraint({ async: false })
 export class IsDateStringNotFutureConstraint implements ValidatorConstraintInterface {
-  validate(dateString: any, _args: ValidationArguments) {
+  validate(dateString: any) {
     // Check if it is a string first
     if (typeof dateString !== 'string') {
       return false;
@@ -31,7 +30,7 @@ export class IsDateStringNotFutureConstraint implements ValidatorConstraintInter
     return date <= now;
   }
 
-  defaultMessage(_args: ValidationArguments) {
+  defaultMessage() {
     return 'Date of birth must not be in the future';
   }
 }

@@ -6,7 +6,6 @@ import { Prisma } from '@prisma/client';
 
 describe('AllExceptionsFilter', () => {
   let filter: AllExceptionsFilter;
-  let httpAdapterHost: HttpAdapterHost;
 
   const mockHttpAdapter = {
     getRequestUrl: jest.fn().mockReturnValue('/test-url'),
@@ -32,7 +31,6 @@ describe('AllExceptionsFilter', () => {
     }).compile();
 
     filter = module.get<AllExceptionsFilter>(AllExceptionsFilter);
-    httpAdapterHost = module.get<HttpAdapterHost>(HttpAdapterHost);
 
     // Silence logger for tests
     jest.spyOn(Logger.prototype, 'error').mockImplementation(() => {});

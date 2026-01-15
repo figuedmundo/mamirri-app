@@ -4,12 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import {
-  Patient,
-  ClinicalCase,
-  TreatmentSession,
-  Evaluation,
-} from '@prisma/client';
+import { Patient, TreatmentSession, Evaluation } from '@prisma/client';
 
 export interface CreatePatientDto {
   name: string;

@@ -1,4 +1,3 @@
-import { describe, it, expect } from '@jest/globals';
 import { AppModule } from './app.module';
 
 describe('AppModule', () => {

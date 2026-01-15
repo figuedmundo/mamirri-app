@@ -5,7 +5,6 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('PatientsService', () => {
   let service: PatientsService;
-  let prisma: PrismaService;
 
   const mockPrismaService = {
     $transaction: jest.fn((cb) => cb(mockPrismaService)),
@@ -48,8 +47,6 @@ describe('PatientsService', () => {
     }).compile();
 
     service = module.get<PatientsService>(PatientsService);
-
-    prisma = module.get<PrismaService>(PrismaService);
   });
 
   afterEach(() => {

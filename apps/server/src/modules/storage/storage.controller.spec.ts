@@ -10,6 +10,10 @@ interface File {
   mimetype: string;
   size: number;
   buffer: Buffer;
+  stream: any;
+  destination: string;
+  filename: string;
+  path: string;
 }
 
 const mockFile: File = {
@@ -19,6 +23,10 @@ const mockFile: File = {
   mimetype: 'image/jpeg',
   size: 1024 * 1024,
   buffer: Buffer.from([0xff, 0xd8, 0xff]),
+  stream: null,
+  destination: '',
+  filename: 'test.jpg',
+  path: 'test.jpg',
 };
 
 describe('StorageController', () => {
@@ -89,7 +97,10 @@ describe('StorageController', () => {
 
   describe('getFileUrl', () => {
     it('should generate presigned URL', async () => {
-      const result = await controller.getFileUrl('test.jpg', { expiry: 3600 });
+      const result = await controller.getFileUrl('test.jpg', {
+        path: 'test.jpg',
+        expiry: 3600,
+      });
 
       expect(service.getFileUrl).toHaveBeenCalledWith('test.jpg', 3600);
       expect(result).toEqual({
@@ -103,7 +114,7 @@ describe('StorageController', () => {
       );
 
       await expect(
-        controller.getFileUrl('nonexistent.jpg', {}),
+        controller.getFileUrl('nonexistent.jpg', { path: 'nonexistent.jpg' }),
       ).rejects.toThrow(NotFoundException);
     });
   });

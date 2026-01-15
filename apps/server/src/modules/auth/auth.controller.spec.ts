@@ -62,7 +62,7 @@ describe('AuthController', () => {
   });
 
   describe('login', () => {
-    it('should call authService.login and set cookie', async () => {
+    it('should call authService.login and set cookie', () => {
       const user = { id: '1', email: 'test@example.com' };
       (authService.login as jest.Mock).mockResolvedValue({
         accessToken: 'at',
@@ -71,7 +71,7 @@ describe('AuthController', () => {
       });
       const res = { cookie: jest.fn(), send: jest.fn() } as unknown as Response;
 
-      await controller.login(user, res);
+      controller.login(user, res);
 
       expect(authService.login).toHaveBeenCalledWith(user);
       expect(res.cookie).toHaveBeenCalledWith(
@@ -103,14 +103,14 @@ describe('AuthController', () => {
   });
 
   describe('logout', () => {
-    it('should clear cookie', async () => {
+    it('should clear cookie', () => {
       const user = { id: '1' };
       const res = {
         clearCookie: jest.fn(),
         send: jest.fn(),
       } as unknown as Response;
 
-      await controller.logout(user, res);
+      controller.logout(user, res);
 
       expect(authService.logout).toHaveBeenCalledWith('1');
       expect(res.clearCookie).toHaveBeenCalledWith('refresh_token');

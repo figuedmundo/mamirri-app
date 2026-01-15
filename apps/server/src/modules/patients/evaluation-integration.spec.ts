@@ -110,7 +110,6 @@ describe('Evaluation Integration (1:N Relation)', () => {
     });
 
     expect(caseWithEvals).toBeDefined();
-    // @ts-ignore
     expect(caseWithEvals?.evaluations).toHaveLength(2);
 
     await prisma.evaluation.deleteMany({

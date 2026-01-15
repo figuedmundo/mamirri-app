@@ -112,7 +112,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const correlationLog = correlationId
       ? ` Correlation ID: ${correlationId}`
       : '';
-    if (httpStatus >= 500) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+    if (httpStatus >= (HttpStatus.INTERNAL_SERVER_ERROR as number)) {
       console.error('CRITICAL EXCEPTION:', exception);
       this.logger.error(
         `Http Status: ${httpStatus} Error Message: ${message}${correlationLog}`,
