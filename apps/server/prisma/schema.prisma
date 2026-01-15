@@ -116,12 +116,14 @@ model TreatmentPlan {
 
 model TreatmentSession {
   id              String   @id @default(cuid())
+  status          String   @default("DRAFT")
   date            DateTime
   phaseNumber     Int
   procedures      String[] // tecnicasAplicadas
   patientResponse String
   finalPainLevel  Int
   observations    String
+  deletedAt       DateTime?
   voiceNotes      Json?    // VoiceNote[]
 
   clinicalCaseId  String

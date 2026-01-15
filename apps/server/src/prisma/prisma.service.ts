@@ -56,6 +56,12 @@ export class PrismaService
     const port = configService.get('POSTGRES_PORT') || '5432';
     const db = configService.get('POSTGRES_DB');
 
+    if (!user || !pass || !db) {
+      throw new Error(
+        'Database configuration missing: POSTGRES_USER, POSTGRES_PASSWORD, or POSTGRES_DB not found in environment.',
+      );
+    }
+
     return `postgresql://${user}:${pass}@${host}:${port}/${db}`;
   }
 

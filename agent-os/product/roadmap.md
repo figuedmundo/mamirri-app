@@ -64,8 +64,8 @@ Methodology: Agile Development (1-week Sprints).
 
 - [x] **5.5** Database schema: Patient, ClinicalCase, Evaluation, TreatmentSession
 - [x] **5.6** API endpoints: Patients CRUD with therapist isolation
-- [ ] **5.7** API endpoints: Clinical cases CRUD
-- [ ] **5.8** API endpoints: Treatment sessions CRUD
+- [x] **5.7** API endpoints: Clinical cases CRUD
+- [x] **5.8** API endpoints: Treatment sessions CRUD
 - [x] **5.9** Validation: Pain scale (0-10), Barthel index (0-100)
 
 **Integrations:**

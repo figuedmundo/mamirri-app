@@ -13,7 +13,7 @@ import { MediaModule } from './modules/media/media.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../../.env',
+      envFilePath: ['.env', '../../.env'],
     }),
     PrismaModule,
     AuthModule,
