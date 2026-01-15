@@ -75,8 +75,8 @@ export class AuthController {
     },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async login(@CurrentUser() user: any, @Res() res: Response) {
-    const tokens = await this.authService.login(user);
+  login(@CurrentUser() user: any, @Res() res: Response) {
+    const tokens = this.authService.login(user);
     this.setRefreshTokenCookie(res, tokens.refreshToken);
     res.send({
       accessToken: tokens.accessToken,
@@ -117,8 +117,8 @@ export class AuthController {
   @ApiOperation({ summary: 'Logout user' })
   @ApiResponse({ status: 200, description: 'User successfully logged out' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async logout(@CurrentUser() user: any, @Res() res: Response) {
-    await this.authService.logout(user.id);
+  logout(@CurrentUser() user: any, @Res() res: Response) {
+    this.authService.logout(user.id);
     res.clearCookie('refresh_token');
     res.send({ success: true });
   }

@@ -4,8 +4,7 @@ import { ClinicalCasesService } from './clinical-cases.service';
 import { CreateClinicalCaseDto } from './dto/create-clinical-case.dto';
 import { UpdateClinicalCaseDto } from './dto/update-clinical-case.dto';
 import { NotFoundException } from '@nestjs/common';
-import { validate } from 'class-validator';
-import { ClinicalCase } from '@prisma/client';
+import { type ClinicalCase } from '@prisma/client';
 
 describe('ClinicalCases API', () => {
   let controller: ClinicalCasesController;

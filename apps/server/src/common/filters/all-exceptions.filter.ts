@@ -21,11 +21,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
-    const request = ctx.getRequest();
+    const request = ctx.getRequest<Record<string, unknown>>();
 
-    const correlationId = request.headers['x-correlation-id'] as
-      | string
-      | undefined;
+    const headers = (request.headers as Record<string, unknown>) || {};
+    const correlationId = headers['x-correlation-id'] as string | undefined;
 
     let httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Internal Server Error';
@@ -40,11 +39,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
       if (typeof response === 'string') {
         message = response;
       } else if (typeof response === 'object' && response !== null) {
-        const respObj = response as any;
-        message = respObj.message || message;
-        error = respObj.error || HttpStatus[httpStatus];
+        const respObj = response as Record<string, unknown>;
+        message = (respObj.message as string) || message;
+        error = (respObj.error as string) || HttpStatus[httpStatus];
         if (Array.isArray(respObj.message)) {
-          details = respObj.message;
+          details = respObj.message as string[];
           message = 'Validation Error';
         }
       }
@@ -113,7 +112,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const correlationLog = correlationId
       ? ` Correlation ID: ${correlationId}`
       : '';
-    if (httpStatus >= 500) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+    if (httpStatus >= (HttpStatus.INTERNAL_SERVER_ERROR as number)) {
       console.error('CRITICAL EXCEPTION:', exception);
       this.logger.error(
         `Http Status: ${httpStatus} Error Message: ${message}${correlationLog}`,

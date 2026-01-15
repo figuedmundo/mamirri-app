@@ -6,7 +6,6 @@ import { Prisma } from '@prisma/client';
 
 describe('AllExceptionsFilter', () => {
   let filter: AllExceptionsFilter;
-  let httpAdapterHost: HttpAdapterHost;
 
   const mockHttpAdapter = {
     getRequestUrl: jest.fn().mockReturnValue('/test-url'),
@@ -32,7 +31,6 @@ describe('AllExceptionsFilter', () => {
     }).compile();
 
     filter = module.get<AllExceptionsFilter>(AllExceptionsFilter);
-    httpAdapterHost = module.get<HttpAdapterHost>(HttpAdapterHost);
 
     // Silence logger for tests
     jest.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
@@ -198,7 +196,7 @@ describe('AllExceptionsFilter', () => {
   it('should include correlation ID in error response body', () => {
     const correlationId = '123e4567-e89b-12d3-a456-426614174000';
     const mockRequest = { headers: { 'x-correlation-id': correlationId } };
-    (mockArgumentsHost.switchToHttp as jest.Mock).mockReturnValue({
+    mockArgumentsHost.switchToHttp.mockReturnValue({
       getResponse: jest.fn().mockReturnValue({}),
       getRequest: jest.fn().mockReturnValue(mockRequest),
     });
@@ -218,7 +216,7 @@ describe('AllExceptionsFilter', () => {
 
   it('should handle missing correlation ID in request headers', () => {
     const mockRequest = { headers: {} };
-    (mockArgumentsHost.switchToHttp as jest.Mock).mockReturnValue({
+    mockArgumentsHost.switchToHttp.mockReturnValue({
       getResponse: jest.fn().mockReturnValue({}),
       getRequest: jest.fn().mockReturnValue(mockRequest),
     });

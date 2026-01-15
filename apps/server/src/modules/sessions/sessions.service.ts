@@ -133,7 +133,7 @@ export class SessionsService {
   }
 
   async remove(id: string, therapistId: string): Promise<void> {
-    const session = await this.findOne(id, therapistId);
+    await this.findOne(id, therapistId);
 
     await this.prisma.treatmentSession.update({
       where: { id },

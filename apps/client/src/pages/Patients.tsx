@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PatientList } from '../components/patients/PatientList';
 import {
@@ -34,7 +34,7 @@ export default function Patients() {
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const loadPatients = async () => {
+  const loadPatients = useCallback(async () => {
     try {
       setLoading(true);
       const data = await patientsApi.findAll();
@@ -49,11 +49,11 @@ export default function Patients() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
-    loadPatients();
-  }, []);
+    void loadPatients();
+  }, [loadPatients]);
 
   const handleCreate = async (formData: PatientFormData) => {
     try {

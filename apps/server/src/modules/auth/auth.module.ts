@@ -13,7 +13,7 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET') || 'secretKey',
         signOptions: { expiresIn: '15m' },
       }),

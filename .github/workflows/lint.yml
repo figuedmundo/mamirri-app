@@ -16,13 +16,11 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -30,3 +28,6 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Type Check
+        run: pnpm check-types

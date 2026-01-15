@@ -10,8 +10,6 @@ jest.mock('bcrypt');
 describe('AuthService', () => {
   let service: AuthService;
   let prisma: PrismaService;
-  let jwtService: JwtService;
-  let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -45,8 +43,6 @@ describe('AuthService', () => {
 
     service = module.get<AuthService>(AuthService);
     prisma = module.get<PrismaService>(PrismaService);
-    jwtService = module.get<JwtService>(JwtService);
-    configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
@@ -83,9 +79,9 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('should return access and refresh tokens', async () => {
+    it('should return access and refresh tokens', () => {
       const user = { id: '1', email: 'test@example.com', role: 'USER' };
-      const result = await service.login(user);
+      const result = service.login(user);
       expect(result).toEqual({
         accessToken: 'token',
         refreshToken: 'token',

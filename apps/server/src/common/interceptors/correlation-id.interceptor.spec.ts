@@ -10,7 +10,7 @@ describe('CorrelationIdInterceptor', () => {
       return Promise.resolve({
         ...data,
         headers: {},
-      } as any);
+      });
     }),
   };
 
@@ -46,14 +46,14 @@ describe('CorrelationIdInterceptor', () => {
     expect(interceptor).toBeDefined();
   });
 
-  it('should generate correlation ID and attach to request', async () => {
+  it('should generate correlation ID and attach to request', () => {
     const mockRequest: any = { headers: {} };
     (mockExecutionContext.switchToHttp as jest.Mock).mockReturnValue({
       getRequest: jest.fn().mockReturnValue(mockRequest),
       getResponse: jest.fn().mockReturnValue({ setHeader: jest.fn() }),
     });
 
-    await interceptor.intercept(mockExecutionContext, mockCallHandler);
+    interceptor.intercept(mockExecutionContext, mockCallHandler);
 
     expect(mockRequest.headers).toHaveProperty('x-correlation-id');
     expect(mockRequest.headers['x-correlation-id']).toMatch(
@@ -61,14 +61,14 @@ describe('CorrelationIdInterceptor', () => {
     );
   });
 
-  it('should add correlation ID to response headers', async () => {
+  it('should add correlation ID to response headers', () => {
     const mockSetHeader = jest.fn();
     (mockExecutionContext.switchToHttp as jest.Mock).mockReturnValue({
       getRequest: jest.fn().mockReturnValue({ headers: {} }),
       getResponse: jest.fn().mockReturnValue({ setHeader: mockSetHeader }),
     });
 
-    await interceptor.intercept(mockExecutionContext, mockCallHandler);
+    interceptor.intercept(mockExecutionContext, mockCallHandler);
 
     expect(mockSetHeader).toHaveBeenCalledWith(
       'X-Correlation-ID',
@@ -78,7 +78,7 @@ describe('CorrelationIdInterceptor', () => {
     );
   });
 
-  it('should preserve same correlation ID from request to response', async () => {
+  it('should preserve same correlation ID from request to response', () => {
     const mockRequest: any = { headers: {} };
     const mockSetHeader = jest.fn();
 
@@ -87,7 +87,7 @@ describe('CorrelationIdInterceptor', () => {
       getResponse: jest.fn().mockReturnValue({ setHeader: mockSetHeader }),
     });
 
-    await interceptor.intercept(mockExecutionContext, mockCallHandler);
+    interceptor.intercept(mockExecutionContext, mockCallHandler);
 
     const requestCorrelationId = mockRequest.headers['x-correlation-id'];
     const responseCorrelationIdCall = mockSetHeader.mock.calls[0][1];
@@ -95,7 +95,7 @@ describe('CorrelationIdInterceptor', () => {
     expect(requestCorrelationId).toBe(responseCorrelationIdCall);
   });
 
-  it('should not modify request body or other headers', async () => {
+  it('should not modify request body or other headers', () => {
     const mockRequest: any = {
       headers: {
         authorization: 'Bearer token',
@@ -108,7 +108,7 @@ describe('CorrelationIdInterceptor', () => {
       getResponse: jest.fn().mockReturnValue({ setHeader: jest.fn() }),
     });
 
-    await interceptor.intercept(mockExecutionContext, mockCallHandler);
+    interceptor.intercept(mockExecutionContext, mockCallHandler);
 
     expect(mockRequest.headers.authorization).toBe('Bearer token');
     expect(mockRequest.headers['content-type']).toBe('application/json');

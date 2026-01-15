@@ -3,7 +3,6 @@ import { PatientsController } from './patients.controller';
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
-import { PatientResponseDto } from './dto/patient-response.dto';
 
 describe('PatientsController', () => {
   let controller: PatientsController;

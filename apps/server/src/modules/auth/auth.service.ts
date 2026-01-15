@@ -23,13 +23,14 @@ export class AuthService {
     });
 
     if (user && (await bcrypt.compare(pass, user.passwordHash))) {
-      const { passwordHash, ...result } = user;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { passwordHash: _hash, ...result } = user;
       return result;
     }
     return null;
   }
 
-  async login(user: any) {
+  login(user: any) {
     const payload = { email: user.email, sub: user.id, role: user.role };
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, {
@@ -69,7 +70,8 @@ export class AuthService {
       },
     });
 
-    const { passwordHash: _, ...result } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordHash: _unneeded, ...result } = user;
     return this.login(result);
   }
 
@@ -85,14 +87,16 @@ export class AuthService {
       });
       if (!user) throw new UnauthorizedException();
 
-      const { passwordHash, ...result } = user;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { passwordHash: _hash, ...result } = user;
       return this.login(result);
-    } catch (e) {
+    } catch {
       throw new UnauthorizedException();
     }
   }
 
-  async logout(userId: string) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  logout(_userId: string) {
     return true;
   }
 }

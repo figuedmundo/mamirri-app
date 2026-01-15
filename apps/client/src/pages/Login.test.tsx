@@ -7,7 +7,7 @@ const mockLogin = vi.fn();
 const mockNavigate = vi.fn();
 const mockPost = vi.fn();
 
-vi.mock('../context/AuthContext', () => ({
+vi.mock('../hooks/use-auth', () => ({
   useAuth: () => ({
     login: mockLogin,
   }),
@@ -23,7 +23,7 @@ vi.mock('react-router-dom', async () => {
 
 vi.mock('../lib/axios', () => ({
   api: {
-    post: (url: string, data: any) => mockPost(url, data),
+    post: (url: string, data: unknown) => mockPost(url, data),
   },
 }));
 

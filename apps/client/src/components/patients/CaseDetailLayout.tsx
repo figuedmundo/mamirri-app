@@ -208,7 +208,7 @@ export function CaseDetailLayout({
                                   key={i}
                                   className="flex-1 bg-slate-400 dark:bg-slate-500"
                                   style={{
-                                    height: `${20 + Math.sin(i * 0.5) * 40 + Math.random() * 30}%`,
+                                    height: `${20 + Math.sin(i * 0.5) * 40 + (i % 3) * 10}%`,
                                   }}
                                 />
                               ))}
