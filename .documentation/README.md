@@ -6,12 +6,13 @@ Welcome to the central documentation hub for **Mamirri App** (formerly PhysioCop
 
 ## 🚀 Quick Start
 
-| Section                                                              | Description                                                     |
-| -------------------------------------------------------------------- | --------------------------------------------------------------- |
-| [**Developer Setup**](onboarding/developer-setup.md)                 | **Start here!** Environment setup and local installation guide. |
-| [**Product Vision**](documentation/product/product-vision.md)        | The "why" and "what" of Mamirri App.                            |
-| [**Architecture Overview**](documentation/technical/architecture.md) | High-level system design and technology choices.                |
-| [**Deployment Guide**](onboarding/deployment-guide.md)               | Instructions for deploying to home lab environment.             |
+| Section                                                       | Description                                                     |
+| ------------------------------------------------------------- | --------------------------------------------------------------- |
+| [**Developer Setup**](onboarding/developer-setup.md)          | **Start here!** Environment setup and local installation guide. |
+| [**Product Vision**](documentation/product/product-vision.md) | The "why" and "what" of Mamirri App.                            |
+| [**Architecture Overview**](technical/architecture.md)        | High-level system design and technology choices.                |
+| [**CI/CD Pipeline**](technical/ci-cd.md)                      | GitHub Actions configuration and secrets management.            |
+| [**Deployment Guide**](onboarding/deployment-guide.md)        | Instructions for deploying to home lab environment.             |
 
 ---
 
@@ -104,6 +105,7 @@ documentation/
 │   └── decisions/                     # Architecture Decision Records (ADRs)
 ├── technical/                         # Technical specifications
 │   ├── architecture.md                # System design and architecture
+│   ├── ci-cd.md                       # CI/CD pipeline and secrets
 │   ├── database-schema.md            # Prisma models and relationships
 │   ├── api-reference.md            # API endpoint documentation
 │   ├── security.md                   # Security and privacy requirements
