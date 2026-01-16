@@ -159,4 +159,24 @@ describe('PosturogramViewer', () => {
       );
     });
   });
+
+  describe('Legacy Data Migration', () => {
+    it('should migrate legacy flat structure to nested anteriorView', () => {
+      const legacyCase = {
+        ...mockClinicalCase,
+        evaluation: {
+          ...mockClinicalCase.evaluation,
+          posturogram: {
+            head: { deviation: 'rotation', severity: 'mild' },
+            shoulders: { deviation: 'normal', severity: 'normal' },
+          },
+        },
+      } as unknown as ClinicalCase;
+
+      render(<PosturogramViewer clinicalCase={legacyCase} />);
+
+      const headMarker = screen.getByLabelText(/cabeza: rotation/i);
+      expect(headMarker).toBeInTheDocument();
+    });
+  });
 });

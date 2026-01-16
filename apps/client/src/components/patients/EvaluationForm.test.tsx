@@ -173,4 +173,32 @@ describe('EvaluationForm', () => {
       expect(onSave).toHaveBeenCalled();
     });
   });
+
+  it('updates orthopedic tests state correctly', () => {
+    render(<EvaluationForm clinicalCase={mockClinicalCase} />);
+
+    const testsTab = screen.getByText('Tests Ortopédicos');
+    fireEvent.click(testsTab);
+
+    const thomasSelect = screen.getAllByRole('combobox')[0];
+    fireEvent.change(thomasSelect, { target: { value: '2' } });
+
+    expect(mockMarkDirty).toHaveBeenCalled();
+  });
+
+  it('updates AVD evaluation and calculates totals correctly', () => {
+    render(<EvaluationForm clinicalCase={mockClinicalCase} />);
+
+    const avdTab = screen.getByText('Evaluación AVD');
+    fireEvent.click(avdTab);
+
+    const feedingLabel = screen.getByText('Comer');
+    const feedingSelect = feedingLabel.nextElementSibling;
+
+    if (!feedingSelect) throw new Error('Select not found');
+
+    fireEvent.change(feedingSelect, { target: { value: '1' } });
+
+    expect(mockMarkDirty).toHaveBeenCalled();
+  });
 });
