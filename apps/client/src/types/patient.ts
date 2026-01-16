@@ -311,6 +311,9 @@ export interface PatientProfileProps {
 
   /** Called when user wants to schedule appointment in Google Calendar */
   onSchedule?: () => void;
+
+  /** Called when patient data needs to be refreshed */
+  onRefresh?: () => void;
 }
 
 export interface EvaluationFormProps {

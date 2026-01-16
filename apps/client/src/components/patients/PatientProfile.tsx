@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import type { PatientProfileProps } from '../../types/patient';
+import type {
+  PatientProfileProps,
+  Evaluation,
+  Posturogram,
+  PainScale,
+} from '../../types/patient';
+import { patientsApi } from '../../api/patients';
+import { useToast } from '../../hooks/use-toast';
 import {
   User,
   Calendar,
@@ -25,7 +32,9 @@ export function PatientProfile({
   onCaptureVideo,
   onSchedule,
   onViewCase,
+  onRefresh,
 }: PatientProfileProps & { onViewCase?: (caseId: string) => void }) {
+  const { toast } = useToast();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [lightboxItems, setLightboxItems] = useState<MediaItem[]>([]);
@@ -33,6 +42,66 @@ export function PatientProfile({
   const activeCase = patient.clinicalCases?.find((c) => c.status === 'active');
   const pastCases =
     patient.clinicalCases?.filter((c) => c.status !== 'active') || [];
+
+  const handleSaveEvaluation = async (evaluation: Evaluation) => {
+    try {
+      await patientsApi.updateEvaluation(evaluation.id, evaluation);
+      toast({
+        title: 'Evaluación guardada',
+        description: 'La evaluación se ha actualizado correctamente.',
+      });
+      onRefresh?.();
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo guardar la evaluación.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handlePosturogramChange = async (posturogram: Posturogram) => {
+    if (!activeCase?.evaluation) return;
+    try {
+      await patientsApi.updateEvaluation(activeCase.evaluation.id, {
+        posturogram,
+      });
+      toast({
+        title: 'Posturograma actualizado',
+        description: 'Los cambios se han guardado.',
+      });
+      onRefresh?.();
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo actualizar el posturograma.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handlePainScaleChange = async (painScale: PainScale) => {
+    if (!activeCase?.evaluation) return;
+    try {
+      await patientsApi.updateEvaluation(activeCase.evaluation.id, {
+        painScale,
+      });
+      toast({
+        title: 'Escala de dolor actualizada',
+        description: 'Los cambios se han guardado.',
+      });
+      onRefresh?.();
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo actualizar la escala de dolor.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const handleMediaSelect = (
     _item: MediaItem,
@@ -139,7 +208,10 @@ export function PatientProfile({
             <ActionCard
               icon={<FileText className="text-emerald-500" />}
               label="Nueva Evaluación"
-              onClick={() => {}}
+              onClick={() =>
+                activeCase?.evaluation &&
+                handleSaveEvaluation(activeCase.evaluation)
+              }
             />
           </div>
 
@@ -171,6 +243,16 @@ export function PatientProfile({
                     label="Nivel de Dolor"
                     value={`${activeCase.evaluation?.painScale?.activity || 0}/10`}
                     sub="Escala EVA"
+                    onClick={() =>
+                      activeCase.evaluation &&
+                      handlePainScaleChange({
+                        ...activeCase.evaluation.painScale,
+                        activity: Math.min(
+                          (activeCase.evaluation.painScale.activity || 0) + 1,
+                          10,
+                        ),
+                      })
+                    }
                   />
                   <MetricCard
                     label="Sesiones"
@@ -181,6 +263,12 @@ export function PatientProfile({
                     label="Índice Barthel"
                     value={`${activeCase.evaluation?.avdEvaluation?.barthel?.total || 0}/100`}
                     sub="Funcionalidad"
+                    onClick={() =>
+                      activeCase.evaluation &&
+                      handlePosturogramChange(
+                        activeCase.evaluation.posturogram || {},
+                      )
+                    }
                   />
                 </div>
 
@@ -322,13 +410,20 @@ function MetricCard({
   label,
   value,
   sub,
+  onClick,
 }: {
   label: string;
   value: string;
   sub: string;
+  onClick?: () => void;
 }) {
   return (
-    <div className="p-4 bg-slate-50 dark:bg-slate-700/30 rounded-xl border border-slate-100 dark:border-slate-700">
+    <div
+      onClick={onClick}
+      className={`p-4 bg-slate-50 dark:bg-slate-700/30 rounded-xl border border-slate-100 dark:border-slate-700 ${
+        onClick ? 'cursor-pointer hover:border-teal-500 transition-colors' : ''
+      }`}
+    >
       <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
         {label}
       </span>

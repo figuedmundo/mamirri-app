@@ -2,25 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PosturogramViewer } from './PosturogramViewer';
-import { patientsApi } from '@/api/patients';
 import type { ClinicalCase } from '@/types/patient';
 
 // Mock dependencies
-vi.mock('@/api/patients', () => ({
-  patientsApi: {
-    updateEvaluation: vi.fn(),
-  },
-}));
-
 vi.mock('@/hooks/use-debounce', () => ({
   useDebounce: (fn: (...args: unknown[]) => unknown) => fn, // Run immediately
-}));
-
-const mockToast = vi.fn();
-vi.mock('@/hooks/use-toast', () => ({
-  useToast: () => ({
-    toast: mockToast,
-  }),
 }));
 
 vi.mock('@/components/ui/BeforeAfterSlider', () => ({
@@ -136,9 +122,15 @@ describe('PosturogramViewer', () => {
       expect(screen.getByText('Severidad')).toBeInTheDocument();
     });
 
-    it('should update deviation and call API', async () => {
+    it('should update deviation and call callback', async () => {
       const user = userEvent.setup();
-      render(<PosturogramViewer clinicalCase={mockClinicalCase} />);
+      const onPosturogramChange = vi.fn();
+      render(
+        <PosturogramViewer
+          clinicalCase={mockClinicalCase}
+          onPosturogramChange={onPosturogramChange}
+        />,
+      );
 
       const headMarker = screen.getByLabelText(/cabeza: normal/i);
       await user.click(headMarker);
@@ -154,24 +146,15 @@ describe('PosturogramViewer', () => {
       const option = await screen.findByText('Escoliosis');
       await user.click(option);
 
-      expect(patientsApi.updateEvaluation).toHaveBeenCalledTimes(1);
-      expect(patientsApi.updateEvaluation).toHaveBeenCalledWith(
-        'eval-123',
+      expect(onPosturogramChange).toHaveBeenCalledTimes(1);
+      expect(onPosturogramChange).toHaveBeenCalledWith(
         expect.objectContaining({
-          posturogram: expect.objectContaining({
-            anteriorView: expect.objectContaining({
-              head: expect.objectContaining({
-                deviation: 'scoliosis',
-                severity: 'severe', // Auto-severity check
-              }),
+          anteriorView: expect.objectContaining({
+            head: expect.objectContaining({
+              deviation: 'scoliosis',
+              severity: 'severe', // Auto-severity check
             }),
           }),
-        }),
-      );
-
-      expect(mockToast).toHaveBeenCalledWith(
-        expect.objectContaining({
-          title: 'Posturograma guardado',
         }),
       );
     });

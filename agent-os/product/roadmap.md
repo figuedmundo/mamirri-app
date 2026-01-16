@@ -97,7 +97,7 @@ Methodology: Agile Development (1-week Sprints).
   - **Tests:** 12 tests passing (PhaseProgress, PainTrendChart)
   - **Spec:** agent-os/specs/2026-01-15-cronograma/
 - [x] **6.3** ComparacionBoard — Before/After visual comparison slider
-- [ ] **6.4** PosturogramViewer — Interactive posturogram with anatomical markers
+- [x] **6.4** PosturogramViewer — Interactive posturogram with anatomical markers
 
 **Flows:**
 

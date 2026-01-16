@@ -143,6 +143,7 @@ export default function PatientDetail() {
         onCaptureVideo={handleCaptureVideo}
         onSchedule={handleSchedule}
         onViewCase={handleViewCase}
+        onRefresh={() => id && void loadPatient(id)}
       />
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>

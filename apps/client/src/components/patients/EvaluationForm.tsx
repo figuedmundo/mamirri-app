@@ -17,7 +17,6 @@ import { VoiceRecorder } from './VoiceRecorder';
 import { useDebounce } from '../../hooks/use-debounce';
 import { useUnsavedChanges } from '../../hooks/use-unsaved-changes';
 import { useToast } from '../../hooks/use-toast';
-import { patientsApi } from '../../api/patients';
 
 const ORTHOPEDIC_TESTS_CONFIG = [
   { key: 'thomas', label: 'Thomas', description: 'Flexor cadera' },
@@ -84,14 +83,14 @@ export function EvaluationForm({
   };
 
   const debouncedSavePosturogram = useDebounce(async (data: Posturogram) => {
+    if (!onPosturogramChange) return;
+
     try {
       setSaveStatus('saving');
-      await patientsApi.updateEvaluation(clinicalCase.evaluation.id, {
-        posturogram: data,
-      });
+      // Await in case the parent returns a Promise
+      await onPosturogramChange(data);
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
-      onPosturogramChange?.(data);
     } catch {
       setSaveStatus('error');
       toast({
@@ -103,14 +102,14 @@ export function EvaluationForm({
   }, 300);
 
   const debouncedSavePainScale = useDebounce(async (data: PainScale) => {
+    if (!onPainScaleChange) return;
+
     try {
       setSaveStatus('saving');
-      await patientsApi.updateEvaluation(clinicalCase.evaluation.id, {
-        painScale: data,
-      });
+      // Await in case the parent returns a Promise
+      await onPainScaleChange(data);
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
-      onPainScaleChange?.(data);
     } catch {
       setSaveStatus('error');
       toast({
@@ -242,6 +241,8 @@ export function EvaluationForm({
   };
 
   const handleSave = async () => {
+    if (!onSave) return;
+
     setIsSaving(true);
     try {
       const evaluation: Evaluation = {
@@ -257,14 +258,9 @@ export function EvaluationForm({
         postureVideos: clinicalCase.evaluation.postureVideos,
       };
 
-      await patientsApi.updateEvaluation(clinicalCase.evaluation.id, {
-        posturogram,
-        orthopedicTests,
-        avdEvaluation,
-        painScale,
-      });
+      // Await in case the parent returns a Promise
+      await onSave(evaluation);
 
-      onSave?.(evaluation);
       markClean();
       toast({
         title: 'Guardado',

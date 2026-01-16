@@ -19,9 +19,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useDebounce } from '@/hooks/use-debounce';
-import { patientsApi } from '@/api/patients';
-import { useToast } from '@/hooks/use-toast';
 import type {
   Posturogram,
   PosturalView,
@@ -94,7 +91,6 @@ export function PosturogramViewer({
   initialPosturogramUrl = '/placeholder/posture-initial.png',
   currentPosturogramUrl = '/placeholder/posture-current.png',
 }: PosturogramViewerProps) {
-  const { toast } = useToast();
   const [activePoint, setActivePoint] = React.useState<AnatomicalPoint | null>(
     null,
   );
@@ -136,26 +132,6 @@ export function PosturogramViewer({
     return current;
   });
 
-  // Debounced save function
-  const debouncedSavePosturogram = useDebounce(async (data: Posturogram) => {
-    try {
-      await patientsApi.updateEvaluation(clinicalCase.evaluation.id, {
-        posturogram: data,
-      });
-      toast({
-        title: 'Posturograma guardado',
-        description: 'Los cambios se han guardado correctamente.',
-      });
-    } catch (error) {
-      console.error('Failed to save posturogram:', error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo guardar el posturograma. Intenta de nuevo.',
-        variant: 'destructive',
-      });
-    }
-  }, 300);
-
   const handleDeviationChange = (
     point: AnatomicalPoint,
     field: 'deviation' | 'severity',
@@ -193,7 +169,6 @@ export function PosturogramViewer({
 
     setPosturogram(updatedPosturogram);
     onPosturogramChange?.(updatedPosturogram);
-    debouncedSavePosturogram(updatedPosturogram);
   };
 
   const getPointStatus = (point: AnatomicalPoint) => {

@@ -1,7 +1,16 @@
-import type { Patient, ClinicalCase } from '../../types/patient';
-import { useState } from 'react';
+import type {
+  Patient,
+  ClinicalCase,
+  Evaluation,
+  Posturogram,
+  PainScale,
+} from '../../types/patient';
+import { useState, useEffect } from 'react';
 import { CaseTimeline } from './CaseTimeline';
 import { PosturogramViewer } from './PosturogramViewer';
+import { EvaluationForm } from './EvaluationForm';
+import { useToast } from '../../hooks/use-toast';
+import { patientsApi } from '../../api/patients';
 import {
   Mic,
   Play,
@@ -10,6 +19,8 @@ import {
   Edit3,
   Calendar,
   Camera,
+  LayoutDashboard,
+  ClipboardList,
 } from 'lucide-react';
 
 interface CaseDetailLayoutProps {
@@ -27,28 +38,101 @@ export function CaseDetailLayout({
   onAddSession,
   onEditSession,
 }: CaseDetailLayoutProps) {
+  const [localCase, setLocalCase] = useState<ClinicalCase>(clinicalCase);
+  const [viewMode, setViewMode] = useState<'timeline' | 'evaluation'>(
+    'timeline',
+  );
+  const { toast } = useToast();
+
+  useEffect(() => {
+    setLocalCase(clinicalCase);
+  }, [clinicalCase]);
+
   const [activeSessionId, setActiveSessionId] = useState<string | undefined>(
-    clinicalCase.treatmentSessions[clinicalCase.treatmentSessions.length - 1]
-      ?.id,
+    localCase.treatmentSessions[localCase.treatmentSessions.length - 1]?.id,
   );
 
-  const activeSession = clinicalCase.treatmentSessions.find(
+  const activeSession = localCase.treatmentSessions.find(
     (s) => s.id === activeSessionId,
   );
 
-  const activeSessionIndex = clinicalCase.treatmentSessions.findIndex(
+  const activeSessionIndex = localCase.treatmentSessions.findIndex(
     (s) => s.id === activeSessionId,
   );
 
-  const initialFootprint = clinicalCase.evaluation?.footprints?.find(
+  const initialFootprint = localCase.evaluation?.footprints?.find(
     (f) => f.type === 'initial',
   );
-  const finalFootprint = clinicalCase.evaluation?.footprints?.find(
+  const finalFootprint = localCase.evaluation?.footprints?.find(
     (f) => f.type === 'final',
   );
 
   const hasPosturogramImages = initialFootprint?.url && finalFootprint?.url;
-  const hasSessions = clinicalCase.treatmentSessions.length > 0;
+  const hasSessions = localCase.treatmentSessions.length > 0;
+
+  const handleSaveEvaluation = async (evaluation: Evaluation) => {
+    try {
+      // Optimistic update
+      const updatedCase = { ...localCase, evaluation };
+      setLocalCase(updatedCase);
+
+      // Persist changes
+      await patientsApi.updateEvaluation(evaluation.id, evaluation);
+
+      toast({
+        title: 'Evaluación actualizada',
+        description: 'Los cambios se han guardado correctamente.',
+      });
+    } catch (error) {
+      // Revert on error (optional, but good practice)
+      setLocalCase(localCase);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'No se pudo guardar la evaluación.',
+      });
+    }
+  };
+
+  const handlePosturogramChange = async (posturogram: Posturogram) => {
+    try {
+      const updatedCase = {
+        ...localCase,
+        evaluation: { ...localCase.evaluation, posturogram },
+      };
+      setLocalCase(updatedCase);
+
+      await patientsApi.updateEvaluation(localCase.evaluation.id, {
+        posturogram,
+      });
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'No se pudo actualizar el posturograma.',
+      });
+    }
+  };
+
+  const handlePainScaleChange = async (painScale: PainScale) => {
+    try {
+      const updatedCase = {
+        ...localCase,
+        evaluation: { ...localCase.evaluation, painScale },
+      };
+      setLocalCase(updatedCase);
+
+      await patientsApi.updateEvaluation(localCase.evaluation.id, {
+        painScale,
+      });
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'No se pudo actualizar la escala de dolor.',
+      });
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-white dark:bg-slate-950 z-50 flex flex-col">
@@ -69,24 +153,49 @@ export function CaseDetailLayout({
               {patient.name}
             </h2>
             <p className="text-xs text-slate-500">
-              {clinicalCase.title} •{' '}
+              {localCase.title} •{' '}
               <span
                 className={
-                  clinicalCase.status === 'active'
+                  localCase.status === 'active'
                     ? 'text-emerald-600'
-                    : clinicalCase.status === 'completed'
+                    : localCase.status === 'completed'
                       ? 'text-blue-600'
                       : 'text-slate-400'
                 }
               >
-                {clinicalCase.status === 'active'
+                {localCase.status === 'active'
                   ? 'Activo'
-                  : clinicalCase.status === 'completed'
+                  : localCase.status === 'completed'
                     ? 'Completado'
                     : 'Inactivo'}
               </span>
             </p>
           </div>
+        </div>
+
+        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg mx-4">
+          <button
+            onClick={() => setViewMode('timeline')}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
+              viewMode === 'timeline'
+                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+            }`}
+          >
+            <LayoutDashboard size={16} />
+            <span className="hidden sm:inline">Seguimiento</span>
+          </button>
+          <button
+            onClick={() => setViewMode('evaluation')}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
+              viewMode === 'evaluation'
+                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+            }`}
+          >
+            <ClipboardList size={16} />
+            <span className="hidden sm:inline">Evaluación</span>
+          </button>
         </div>
 
         <div className="flex items-center gap-3">
@@ -107,214 +216,227 @@ export function CaseDetailLayout({
       </div>
 
       <div className="flex-1 flex overflow-hidden">
-        <CaseTimeline
-          clinicalCase={clinicalCase}
-          activeSessionId={activeSessionId}
-          onSelectSession={setActiveSessionId}
-        />
+        {viewMode === 'timeline' ? (
+          <>
+            <CaseTimeline
+              clinicalCase={localCase}
+              activeSessionId={activeSessionId}
+              onSelectSession={setActiveSessionId}
+            />
 
-        <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
-          <div className="max-w-4xl mx-auto space-y-8">
-            {!hasSessions ? (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-12 text-center">
-                <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar
-                    size={32}
-                    className="text-slate-400 dark:text-slate-500"
-                  />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-                  Sin sesiones registradas
-                </h3>
-                <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-md mx-auto">
-                  Este caso clínico aún no tiene sesiones de tratamiento. Agrega
-                  la primera sesión para comenzar a registrar la evolución del
-                  paciente.
-                </p>
-                {onAddSession && (
-                  <button
-                    onClick={onAddSession}
-                    className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-full font-medium transition-colors"
-                  >
-                    <Plus size={20} />
-                    Agregar Primera Sesión
-                  </button>
-                )}
-              </div>
-            ) : activeSession ? (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <span className="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider">
-                      Sesión {activeSessionIndex + 1} de{' '}
-                      {clinicalCase.treatmentSessions.length}
-                    </span>
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
-                      Reporte de Evolución
-                    </h1>
-                    <p className="text-sm text-slate-500 mt-1">
-                      {new Date(activeSession.date).toLocaleDateString(
-                        'es-ES',
-                        {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        },
-                      )}
+            <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
+              <div className="max-w-4xl mx-auto space-y-8">
+                {!hasSessions ? (
+                  <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-12 text-center">
+                    <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Calendar
+                        size={32}
+                        className="text-slate-400 dark:text-slate-500"
+                      />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                      Sin sesiones registradas
+                    </h3>
+                    <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-md mx-auto">
+                      Este caso clínico aún no tiene sesiones de tratamiento.
+                      Agrega la primera sesión para comenzar a registrar la
+                      evolución del paciente.
                     </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {onEditSession && (
+                    {onAddSession && (
                       <button
-                        onClick={() => onEditSession(activeSession.id)}
-                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                        aria-label="Editar sesión"
+                        onClick={onAddSession}
+                        className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-full font-medium transition-colors"
                       >
-                        <Edit3
-                          size={18}
-                          className="text-slate-500 dark:text-slate-400"
-                        />
+                        <Plus size={20} />
+                        Agregar Primera Sesión
                       </button>
                     )}
-                    <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg">
-                      <span className="text-xs font-medium text-slate-500">
-                        Dolor END
-                      </span>
-                      <span
-                        className={`text-lg font-bold ${activeSession.finalPainLevel > 5 ? 'text-rose-500' : 'text-emerald-500'}`}
-                      >
-                        {activeSession.finalPainLevel}/10
-                      </span>
-                    </div>
                   </div>
-                </div>
-
-                {activeSession.voiceNotes &&
-                  activeSession.voiceNotes.length > 0 && (
-                    <div className="mb-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-100 dark:border-slate-800">
-                      <div className="flex items-start gap-4">
-                        <button
-                          className="w-10 h-10 rounded-full bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-md hover:bg-teal-700 transition-colors"
-                          aria-label="Reproducir nota de voz"
-                        >
-                          <Play size={18} className="ml-1" />
-                        </button>
-                        <div className="flex-1">
-                          <div className="h-10 flex flex-col justify-center">
-                            <div className="w-full h-8 bg-slate-200 dark:bg-slate-700 rounded overflow-hidden flex items-end gap-0.5 px-1 pb-1 opacity-50">
-                              {[...Array(20)].map((_, i) => (
-                                <div
-                                  key={i}
-                                  className="flex-1 bg-slate-400 dark:bg-slate-500"
-                                  style={{
-                                    height: `${20 + Math.sin(i * 0.5) * 40 + (i % 3) * 10}%`,
-                                  }}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                          <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 italic">
-                            "{activeSession.voiceNotes[0].transcription}"
-                          </p>
+                ) : activeSession ? (
+                  <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                        <span className="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider">
+                          Sesión {activeSessionIndex + 1} de{' '}
+                          {localCase.treatmentSessions.length}
+                        </span>
+                        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                          Reporte de Evolución
+                        </h1>
+                        <p className="text-sm text-slate-500 mt-1">
+                          {new Date(activeSession.date).toLocaleDateString(
+                            'es-ES',
+                            {
+                              weekday: 'long',
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            },
+                          )}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        {onEditSession && (
+                          <button
+                            onClick={() => onEditSession(activeSession.id)}
+                            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                            aria-label="Editar sesión"
+                          >
+                            <Edit3
+                              size={18}
+                              className="text-slate-500 dark:text-slate-400"
+                            />
+                          </button>
+                        )}
+                        <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg">
+                          <span className="text-xs font-medium text-slate-500">
+                            Dolor END
+                          </span>
+                          <span
+                            className={`text-lg font-bold ${activeSession.finalPainLevel > 5 ? 'text-rose-500' : 'text-emerald-500'}`}
+                          >
+                            {activeSession.finalPainLevel}/10
+                          </span>
                         </div>
                       </div>
                     </div>
-                  )}
 
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                      Técnicas Aplicadas
-                    </h4>
-                    {activeSession.procedures.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {activeSession.procedures.map((tec) => (
-                          <span
-                            key={tec}
-                            className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-sm"
-                          >
-                            {tec}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-slate-400 italic">
-                        Sin técnicas registradas
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                      Respuesta del Paciente
-                    </h4>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                      {activeSession.patientResponse || (
-                        <span className="italic text-slate-400">
-                          Sin respuesta registrada
-                        </span>
+                    {activeSession.voiceNotes &&
+                      activeSession.voiceNotes.length > 0 && (
+                        <div className="mb-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-100 dark:border-slate-800">
+                          <div className="flex items-start gap-4">
+                            <button
+                              className="w-10 h-10 rounded-full bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-md hover:bg-teal-700 transition-colors"
+                              aria-label="Reproducir nota de voz"
+                            >
+                              <Play size={18} className="ml-1" />
+                            </button>
+                            <div className="flex-1">
+                              <div className="h-10 flex flex-col justify-center">
+                                <div className="w-full h-8 bg-slate-200 dark:bg-slate-700 rounded overflow-hidden flex items-end gap-0.5 px-1 pb-1 opacity-50">
+                                  {[...Array(20)].map((_, i) => (
+                                    <div
+                                      key={i}
+                                      className="flex-1 bg-slate-400 dark:bg-slate-500"
+                                      style={{
+                                        height: `${20 + Math.sin(i * 0.5) * 40 + (i % 3) * 10}%`,
+                                      }}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 italic">
+                                "{activeSession.voiceNotes[0].transcription}"
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       )}
+
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                          Técnicas Aplicadas
+                        </h4>
+                        {activeSession.procedures.length > 0 ? (
+                          <div className="flex flex-wrap gap-2">
+                            {activeSession.procedures.map((tec) => (
+                              <span
+                                key={tec}
+                                className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-sm"
+                              >
+                                {tec}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-slate-400 italic">
+                            Sin técnicas registradas
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                          Respuesta del Paciente
+                        </h4>
+                        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                          {activeSession.patientResponse || (
+                            <span className="italic text-slate-400">
+                              Sin respuesta registrada
+                            </span>
+                          )}
+                        </p>
+                      </div>
+
+                      {activeSession.observations && (
+                        <div>
+                          <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                            Observaciones
+                          </h4>
+                          <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                            {activeSession.observations}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-12 text-center">
+                    <p className="text-slate-400">
+                      Selecciona una sesión de la línea de tiempo para ver los
+                      detalles
                     </p>
                   </div>
+                )}
 
-                  {activeSession.observations && (
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                        Observaciones
-                      </h4>
-                      <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                        {activeSession.observations}
+                {hasPosturogramImages ? (
+                  <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
+                      Evolución Postural (Sagital)
+                    </h3>
+                    <div className="max-w-md mx-auto">
+                      <PosturogramViewer
+                        clinicalCase={localCase}
+                        initialPosturogramUrl={initialFootprint.url}
+                        currentPosturogramUrl={finalFootprint.url}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
+                      Evolución Postural
+                    </h3>
+                    <div className="text-center py-8">
+                      <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Camera
+                          size={32}
+                          className="text-slate-400 dark:text-slate-500"
+                        />
+                      </div>
+                      <p className="text-slate-500 dark:text-slate-400 mb-2">
+                        No hay imágenes de comparación disponibles
+                      </p>
+                      <p className="text-sm text-slate-400 dark:text-slate-500">
+                        Capture una huella inicial y final para ver la evolución
                       </p>
                     </div>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-12 text-center">
-                <p className="text-slate-400">
-                  Selecciona una sesión de la línea de tiempo para ver los
-                  detalles
-                </p>
-              </div>
-            )}
-
-            {hasPosturogramImages ? (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
-                  Evolución Postural (Sagital)
-                </h3>
-                <div className="max-w-md mx-auto">
-                  <PosturogramViewer
-                    clinicalCase={clinicalCase}
-                    initialPosturogramUrl={initialFootprint.url}
-                    currentPosturogramUrl={finalFootprint.url}
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
-                  Evolución Postural
-                </h3>
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Camera
-                      size={32}
-                      className="text-slate-400 dark:text-slate-500"
-                    />
                   </div>
-                  <p className="text-slate-500 dark:text-slate-400 mb-2">
-                    No hay imágenes de comparación disponibles
-                  </p>
-                  <p className="text-sm text-slate-400 dark:text-slate-500">
-                    Capture una huella inicial y final para ver la evolución
-                  </p>
-                </div>
+                )}
               </div>
-            )}
+            </div>
+          </>
+        ) : (
+          <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
+            <EvaluationForm
+              clinicalCase={localCase}
+              onSave={handleSaveEvaluation}
+              onPosturogramChange={handlePosturogramChange}
+              onPainScaleChange={handlePainScaleChange}
+            />
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

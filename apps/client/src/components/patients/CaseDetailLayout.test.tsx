@@ -8,6 +8,52 @@ import type {
   TreatmentSession,
   VoiceNote,
 } from '../../types/patient';
+import { patientsApi } from '../../api/patients';
+
+// Mock dependencies
+vi.mock('../../hooks/use-toast', () => ({
+  useToast: () => ({
+    toast: vi.fn(),
+  }),
+}));
+
+vi.mock('../../api/patients', () => ({
+  patientsApi: {
+    updateEvaluation: vi.fn(),
+  },
+}));
+
+// Mock EvaluationForm to simplify testing interaction
+vi.mock('./EvaluationForm', () => ({
+  EvaluationForm: ({ onSave, onPosturogramChange, onPainScaleChange }: any) => (
+    <div data-testid="evaluation-form-mock">
+      <button
+        data-testid="trigger-save"
+        onClick={() =>
+          onSave({
+            id: 'eval-001',
+            posturogram: {},
+            painScale: { activity: 5 },
+          })
+        }
+      >
+        Trigger Save
+      </button>
+      <button
+        data-testid="trigger-posturogram"
+        onClick={() => onPosturogramChange({ anteriorView: {} })}
+      >
+        Trigger Posturogram
+      </button>
+      <button
+        data-testid="trigger-pain"
+        onClick={() => onPainScaleChange({ activity: 8 })}
+      >
+        Trigger Pain
+      </button>
+    </div>
+  ),
+}));
 
 const mockPatient: Patient = {
   id: 'pac-001',
@@ -491,9 +537,37 @@ describe('CaseDetailLayout', () => {
       expect(painIndicator).toHaveClass('text-rose-500');
     });
 
-    it('should render applied procedures as tags', () => {
-      // Session 2 procedures
-      expect(screen.getByText('Terapia manual')).toBeInTheDocument();
+    it('should switch between Timeline and Evaluation views', async () => {
+      expect(screen.getByText('Línea de Tiempo')).toBeInTheDocument();
+      expect(
+        screen.queryByTestId('evaluation-form-mock'),
+      ).not.toBeInTheDocument();
+
+      const evalTab = screen.getByText('Evaluación');
+      await userEvent.click(evalTab);
+
+      expect(screen.getByTestId('evaluation-form-mock')).toBeInTheDocument();
+      expect(screen.queryByText('Línea de Tiempo')).not.toBeInTheDocument();
+
+      const timelineTab = screen.getByText('Seguimiento');
+      await userEvent.click(timelineTab);
+
+      expect(screen.getByText('Línea de Tiempo')).toBeInTheDocument();
+    });
+
+    it('should call API when saving evaluation', async () => {
+      await userEvent.click(screen.getByText('Evaluación'));
+
+      await userEvent.click(screen.getByTestId('trigger-save'));
+
+      expect(patientsApi.updateEvaluation).toHaveBeenCalledTimes(1);
+      expect(patientsApi.updateEvaluation).toHaveBeenCalledWith(
+        'eval-001',
+        expect.objectContaining({
+          id: 'eval-001',
+          painScale: { activity: 5 },
+        }),
+      );
     });
 
     it('should render patient response', () => {
@@ -780,6 +854,81 @@ describe('CaseDetailLayout', () => {
       const button = screen.getByText('Grabar Evolución');
       expect(button).toHaveClass('hidden');
       expect(button).toHaveClass('sm:inline');
+    });
+  });
+
+  describe('Evaluation Integration', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      render(
+        <CaseDetailLayout
+          patient={mockPatient}
+          clinicalCase={mockClinicalCaseWithSessions}
+          onBack={onBackMock}
+        />,
+      );
+    });
+
+    it('should switch between Timeline and Evaluation views', async () => {
+      // Default view is Timeline
+      expect(screen.getByText('Línea de Tiempo')).toBeInTheDocument();
+      expect(
+        screen.queryByTestId('evaluation-form-mock'),
+      ).not.toBeInTheDocument();
+
+      // Switch to Evaluation
+      const evalTab = screen.getByText('Evaluación');
+      await userEvent.click(evalTab);
+
+      expect(screen.getByTestId('evaluation-form-mock')).toBeInTheDocument();
+      expect(screen.queryByText('Línea de Tiempo')).not.toBeInTheDocument();
+
+      // Switch back to Timeline
+      const timelineTab = screen.getByText('Seguimiento');
+      await userEvent.click(timelineTab);
+
+      expect(screen.getByText('Línea de Tiempo')).toBeInTheDocument();
+    });
+
+    it('should call API when saving evaluation', async () => {
+      // Go to Evaluation view
+      await userEvent.click(screen.getByText('Evaluación'));
+
+      // Trigger save
+      await userEvent.click(screen.getByTestId('trigger-save'));
+
+      expect(patientsApi.updateEvaluation).toHaveBeenCalledTimes(1);
+      expect(patientsApi.updateEvaluation).toHaveBeenCalledWith(
+        'eval-001',
+        expect.objectContaining({
+          id: 'eval-001',
+          painScale: { activity: 5 },
+        }),
+      );
+    });
+
+    it('should call API when posturogram changes', async () => {
+      await userEvent.click(screen.getByText('Evaluación'));
+      await userEvent.click(screen.getByTestId('trigger-posturogram'));
+
+      expect(patientsApi.updateEvaluation).toHaveBeenCalledWith(
+        'eval-001',
+        expect.objectContaining({
+          posturogram: { anteriorView: {} },
+        }),
+      );
+    });
+
+    it('should call API when pain scale changes', async () => {
+      await userEvent.click(screen.getByText('Evaluación'));
+      await userEvent.click(screen.getByTestId('trigger-pain'));
+
+      expect(patientsApi.updateEvaluation).toHaveBeenCalledWith(
+        'eval-001',
+        expect.objectContaining({
+          painScale: { activity: 8 },
+        }),
+      );
     });
   });
 });
