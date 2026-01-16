@@ -55,9 +55,43 @@ const mapPatient = (patient: Patient): Patient => ({
       evaluation?: Evaluation;
       evaluations?: Evaluation[];
     };
+    const evaluation = (c.evaluation || rawCase.evaluations?.[0]) as Evaluation;
+
+    if (evaluation) {
+      evaluation.posturogram = evaluation.posturogram || {};
+      evaluation.orthopedicTests = evaluation.orthopedicTests || {};
+      evaluation.avdEvaluation = evaluation.avdEvaluation || {
+        barthel: {
+          total: 0,
+        } as unknown as Evaluation['avdEvaluation']['barthel'],
+        lawton: {
+          total: 0,
+        } as unknown as Evaluation['avdEvaluation']['lawton'],
+      };
+      if (!evaluation.avdEvaluation.barthel) {
+        evaluation.avdEvaluation.barthel = {
+          total: 0,
+        } as unknown as Evaluation['avdEvaluation']['barthel'];
+      }
+      if (!evaluation.avdEvaluation.lawton) {
+        evaluation.avdEvaluation.lawton = {
+          total: 0,
+        } as unknown as Evaluation['avdEvaluation']['lawton'];
+      }
+      evaluation.painScale = evaluation.painScale || {
+        activity: 0,
+        rest: 0,
+        palpation: 0,
+        type: 'chronic',
+      };
+      evaluation.diagnosis = evaluation.diagnosis || {};
+      evaluation.footprints = evaluation.footprints || [];
+      evaluation.postureVideos = evaluation.postureVideos || [];
+    }
+
     return {
       ...c,
-      evaluation: (c.evaluation || rawCase.evaluations?.[0]) as Evaluation,
+      evaluation,
     };
   }),
 });
