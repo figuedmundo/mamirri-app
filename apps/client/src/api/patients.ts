@@ -48,25 +48,39 @@ interface PaginatedResponse<T> {
   };
 }
 
+const mapPatient = (patient: Patient): Patient => ({
+  ...patient,
+  clinicalCases: patient.clinicalCases?.map((c) => {
+    const rawCase = c as unknown as {
+      evaluation?: Evaluation;
+      evaluations?: Evaluation[];
+    };
+    return {
+      ...c,
+      evaluation: (c.evaluation || rawCase.evaluations?.[0]) as Evaluation,
+    };
+  }),
+});
+
 export const patientsApi = {
   findAll: async () => {
     const response = await axios.get<PaginatedResponse<Patient>>('/patients');
-    return response.data.data;
+    return response.data.data.map(mapPatient);
   },
 
   findOne: async (id: string) => {
     const response = await axios.get<Patient>(`/patients/${id}`);
-    return response.data;
+    return mapPatient(response.data);
   },
 
   create: async (data: CreatePatientDto) => {
     const response = await axios.post<Patient>('/patients', data);
-    return response.data;
+    return mapPatient(response.data);
   },
 
   update: async (id: string, data: Partial<CreatePatientDto>) => {
     const response = await axios.patch<Patient>(`/patients/${id}`, data);
-    return response.data;
+    return mapPatient(response.data);
   },
 
   delete: async (id: string) => {
