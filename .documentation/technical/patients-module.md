@@ -2,11 +2,22 @@
 
 **Module:** Patients  
 **Phase:** Phase 1 (Core Clinical)  
-**Last Updated:** 2026-01-15
+**Last Updated:** 2026-01-16
 
 ## Overview
 
-The Patients module is the core of the clinical system, managing patient demographics, clinical cases, evaluations, and treatment sessions. It implements a hierarchical data structure to support longitudinal patient care.
+The Patients module is the core of the clinical system, managing patient demographics, clinical cases, evaluations, and treatment sessions. It implements a hierarchical data structure to support longitudinal patient care, following a expert-validated clinical flow.
+
+## Clinical Model (Doctor's Model)
+
+The module follows a 6-stage clinical treatment flow:
+
+1. **Initial Evaluation:** Baseline comprehensive assessment.
+2. **Diagnosis & Objectives:** Setting therapeutic, prophylactic, and educational goals.
+3. **Planning:** Establishing a 15-session schedule across 5 phases.
+4. **Progressive Execution:** Per-session tracking of techniques and patient response.
+5. **Final Evaluation:** Outcome measurement at the end of the intervention.
+6. **Recommendations:** Final report for the patient and other professionals.
 
 ## Data Model (Prisma)
 
@@ -17,9 +28,9 @@ The database schema has been refactored to English to comply with [ADR 008](../p
 1.  **User (Therapist):** Owns all patient data.
 2.  **Patient:** Basic demographics (name, age, occupation, phone, email, birthDate).
 3.  **ClinicalCase:** Represents a specific condition/treatment period (e.g., "Lumbar Pain 2024").
-    - **Evaluation:** Initial assessment (posturogram, pain scale, orthopedic tests).
+    - **Evaluations (1:N):** Clinical assessments (Initial, Progress, Final).
     - **TreatmentPlan:** Planned phases and objectives.
-    - **TreatmentSession:** Daily logs of visits (techniques, progress).
+    - **TreatmentSessions (1:N):** Daily logs of visits (techniques, progress).
 
 ### Key Models
 

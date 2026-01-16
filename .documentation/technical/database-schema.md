@@ -107,4 +107,4 @@ Records of individual therapy sessions linked to a Clinical Case.
 
 ---
 
-**Last Updated:** 2026-01-14
+**Last Updated:** 2026-01-16
