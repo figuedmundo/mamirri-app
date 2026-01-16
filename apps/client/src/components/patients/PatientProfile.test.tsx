@@ -98,7 +98,11 @@ const mockPatient: Patient = {
 describe('PatientProfile', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (useToast as any).mockReturnValue({ toast: mockToast });
+    vi.mocked(useToast).mockReturnValue({
+      toast: mockToast,
+      dismiss: vi.fn(),
+      toasts: [],
+    });
   });
 
   it('calls handleSaveEvaluation when "Nueva Evaluación" is clicked', async () => {
@@ -147,6 +151,60 @@ describe('PatientProfile', () => {
       expect(mockToast).toHaveBeenCalledWith(
         expect.objectContaining({ title: 'Posturograma actualizado' }),
       );
+    });
+  });
+
+  it('shows error toast when saving evaluation fails', async () => {
+    const error = new Error('Failed');
+    vi.mocked(patientsApi.updateEvaluation).mockRejectedValueOnce(error);
+
+    render(<PatientProfile patient={mockPatient} />);
+
+    const button = screen.getByText('Nueva Evaluación').closest('button');
+    fireEvent.click(button!);
+
+    await waitFor(() => {
+      expect(mockToast).toHaveBeenCalledWith({
+        title: 'Error',
+        description: 'No se pudo guardar la evaluación.',
+        variant: 'destructive',
+      });
+    });
+  });
+
+  it('shows error toast when updating pain scale fails', async () => {
+    const error = new Error('Failed');
+    vi.mocked(patientsApi.updateEvaluation).mockRejectedValueOnce(error);
+
+    render(<PatientProfile patient={mockPatient} />);
+
+    const card = screen.getByText('Nivel de Dolor').closest('div');
+    fireEvent.click(card!);
+
+    await waitFor(() => {
+      expect(mockToast).toHaveBeenCalledWith({
+        title: 'Error',
+        description: 'No se pudo actualizar la escala de dolor.',
+        variant: 'destructive',
+      });
+    });
+  });
+
+  it('shows error toast when updating posturogram fails', async () => {
+    const error = new Error('Failed');
+    vi.mocked(patientsApi.updateEvaluation).mockRejectedValueOnce(error);
+
+    render(<PatientProfile patient={mockPatient} />);
+
+    const card = screen.getByText('Índice Barthel').closest('div');
+    fireEvent.click(card!);
+
+    await waitFor(() => {
+      expect(mockToast).toHaveBeenCalledWith({
+        title: 'Error',
+        description: 'No se pudo actualizar el posturograma.',
+        variant: 'destructive',
+      });
     });
   });
 });

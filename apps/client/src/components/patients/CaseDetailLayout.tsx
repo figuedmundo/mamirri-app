@@ -83,7 +83,7 @@ export function CaseDetailLayout({
         title: 'Evaluación actualizada',
         description: 'Los cambios se han guardado correctamente.',
       });
-    } catch (error) {
+    } catch {
       // Revert on error (optional, but good practice)
       setLocalCase(localCase);
       toast({
@@ -105,7 +105,7 @@ export function CaseDetailLayout({
       await patientsApi.updateEvaluation(localCase.evaluation.id, {
         posturogram,
       });
-    } catch (error) {
+    } catch {
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -125,7 +125,7 @@ export function CaseDetailLayout({
       await patientsApi.updateEvaluation(localCase.evaluation.id, {
         painScale,
       });
-    } catch (error) {
+    } catch {
       toast({
         variant: 'destructive',
         title: 'Error',

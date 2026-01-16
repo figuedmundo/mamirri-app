@@ -2,13 +2,20 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { EvaluationForm } from './EvaluationForm';
 import type { ClinicalCase, Evaluation } from '../../types/patient';
+import type { AnatomicalPoint, PointStatus } from './body-silhouette-types';
 
 // Mock child components to simplify testing
 vi.mock('./BodySilhouette', () => ({
-  BodySilhouette: ({ onChange }: { onChange: any }) => (
+  BodySilhouette: ({
+    onChange,
+  }: {
+    onChange: (point: AnatomicalPoint, status: PointStatus) => void;
+  }) => (
     <div
       data-testid="body-silhouette"
-      onClick={() => onChange('head', { deviation: 'test', severity: 'mild' })}
+      onClick={() =>
+        onChange('head', { deviation: 'normal', severity: 'normal' })
+      }
     >
       Body Silhouette
     </div>
