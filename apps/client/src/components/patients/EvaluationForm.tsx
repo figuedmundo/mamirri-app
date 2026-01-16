@@ -39,25 +39,25 @@ export function EvaluationForm({
 }: EvaluationFormProps) {
   const activeEvaluation = getActiveEvaluation(clinicalCase);
 
-  if (!activeEvaluation) {
-    return (
-      <div className="p-8 text-center text-slate-500">
-        No hay evaluación activa.
-      </div>
-    );
-  }
-
   const [posturogram, setPosturogram] = React.useState<Posturogram>(
-    activeEvaluation.posturogram,
+    () => activeEvaluation?.posturogram || ({} as Posturogram),
   );
   const [orthopedicTests, setOrthopedicTests] = React.useState<OrthopedicTests>(
-    activeEvaluation.orthopedicTests,
+    () =>
+      activeEvaluation?.orthopedicTests || ({} as unknown as OrthopedicTests),
   );
   const [avdEvaluation, setAvdEvaluation] = React.useState<AVDEvaluation>(
-    activeEvaluation.avdEvaluation,
+    () => activeEvaluation?.avdEvaluation || ({} as unknown as AVDEvaluation),
   );
   const [painScale, setPainScale] = React.useState<PainScale>(
-    activeEvaluation.painScale,
+    () =>
+      activeEvaluation?.painScale ||
+      ({
+        activity: 0,
+        rest: 0,
+        palpation: 0,
+        type: 'chronic',
+      } as PainScale),
   );
   const [activeSection, setActiveSection] = React.useState<
     'posturogram' | 'tests' | 'avd' | 'pain'
@@ -75,6 +75,14 @@ export function EvaluationForm({
   const [bodySilhouetteValues, setBodySilhouetteValues] = React.useState(
     createDefaultPointStatus,
   );
+
+  if (!activeEvaluation) {
+    return (
+      <div className="p-8 text-center text-slate-500">
+        No hay evaluación activa.
+      </div>
+    );
+  }
 
   const handleBodySilhouetteChange = (
     point: AnatomicalPoint,

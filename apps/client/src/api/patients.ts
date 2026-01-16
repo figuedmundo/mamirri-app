@@ -95,8 +95,10 @@ const mapPatient = (patient: Patient): Patient => ({
       return evaluation;
     });
 
-    // Remove legacy evaluation property if it exists in spread
-    const { evaluation: _, ...rest } = c as any;
+    const rest = { ...c };
+    if ('evaluation' in rest) {
+      delete (rest as { evaluation?: unknown }).evaluation;
+    }
 
     return {
       ...rest,
