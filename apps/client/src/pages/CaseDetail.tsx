@@ -43,20 +43,6 @@ export default function CaseDetail() {
     navigate(`/pacientes/${id}`);
   };
 
-  const handleAddSession = () => {
-    toast({
-      title: 'Nueva Sesión',
-      description: 'Disponible próximamente',
-    });
-  };
-
-  const handleEditSession = (sessionId: string) => {
-    toast({
-      title: 'Editar Sesión',
-      description: `Editando sesión ${sessionId} - Disponible próximamente`,
-    });
-  };
-
   if (loading) {
     return (
       <div className="fixed inset-0 bg-white dark:bg-slate-950 z-50 flex items-center justify-center">
@@ -115,8 +101,6 @@ export default function CaseDetail() {
       patient={patient}
       clinicalCase={clinicalCase}
       onBack={handleBack}
-      onAddSession={handleAddSession}
-      onEditSession={handleEditSession}
     />
   );
 }

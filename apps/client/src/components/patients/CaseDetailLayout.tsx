@@ -2,11 +2,12 @@ import type {
   Patient,
   ClinicalCase,
   Evaluation,
+  TreatmentSession,
   Posturogram,
   PainScale,
 } from '../../types/patient';
 import { useState, useEffect } from 'react';
-import { CaseTimeline } from './CaseTimeline';
+import { TreatmentTimeline } from './TreatmentTimeline';
 import { PosturogramViewer } from './PosturogramViewer';
 import { EvaluationForm } from './EvaluationForm';
 import { useToast } from '../../hooks/use-toast';
@@ -15,8 +16,6 @@ import {
   Mic,
   Play,
   ArrowLeft,
-  Plus,
-  Edit3,
   Calendar,
   Camera,
   LayoutDashboard,
@@ -27,16 +26,12 @@ interface CaseDetailLayoutProps {
   patient: Patient;
   clinicalCase: ClinicalCase;
   onBack: () => void;
-  onAddSession?: () => void;
-  onEditSession?: (sessionId: string) => void;
 }
 
 export function CaseDetailLayout({
   patient,
   clinicalCase,
   onBack,
-  onAddSession,
-  onEditSession,
 }: CaseDetailLayoutProps) {
   const [localCase, setLocalCase] = useState<ClinicalCase>(clinicalCase);
   const [viewMode, setViewMode] = useState<'timeline' | 'evaluation'>(
@@ -69,6 +64,43 @@ export function CaseDetailLayout({
 
   const hasPosturogramImages = initialFootprint?.url && finalFootprint?.url;
   const hasSessions = localCase.treatmentSessions.length > 0;
+
+  const handleSessionCreated = (session: TreatmentSession) => {
+    setLocalCase((prev) => ({
+      ...prev,
+      treatmentSessions: [...prev.treatmentSessions, session],
+    }));
+    setActiveSessionId(session.id);
+  };
+
+  const handleSessionUpdated = (session: TreatmentSession) => {
+    setLocalCase((prev) => ({
+      ...prev,
+      treatmentSessions: prev.treatmentSessions.map((s) =>
+        s.id === session.id ? session : s,
+      ),
+    }));
+  };
+
+  const handleSessionDeleted = (sessionId: string) => {
+    setLocalCase((prev) => ({
+      ...prev,
+      treatmentSessions: prev.treatmentSessions.filter(
+        (s) => s.id !== sessionId,
+      ),
+    }));
+    if (activeSessionId === sessionId) {
+      // If active session was deleted, select the last available session or undefined
+      const remainingSessions = localCase.treatmentSessions.filter(
+        (s) => s.id !== sessionId,
+      );
+      setActiveSessionId(
+        remainingSessions.length > 0
+          ? remainingSessions[remainingSessions.length - 1].id
+          : undefined,
+      );
+    }
+  };
 
   const handleSaveEvaluation = async (evaluation: Evaluation) => {
     try {
@@ -199,15 +231,6 @@ export function CaseDetailLayout({
         </div>
 
         <div className="flex items-center gap-3">
-          {onAddSession && (
-            <button
-              onClick={onAddSession}
-              className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-full font-medium transition-colors"
-            >
-              <Plus size={18} />
-              <span className="hidden sm:inline">Nueva Sesión</span>
-            </button>
-          )}
           <button className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-full font-medium shadow-lg transition-transform hover:scale-105">
             <Mic size={18} />
             <span className="hidden sm:inline">Grabar Evolución</span>
@@ -218,10 +241,12 @@ export function CaseDetailLayout({
       <div className="flex-1 flex overflow-hidden">
         {viewMode === 'timeline' ? (
           <>
-            <CaseTimeline
+            <TreatmentTimeline
               clinicalCase={localCase}
-              activeSessionId={activeSessionId}
-              onSelectSession={setActiveSessionId}
+              onSessionCreated={handleSessionCreated}
+              onSessionUpdated={handleSessionUpdated}
+              onSessionDeleted={handleSessionDeleted}
+              onViewSession={setActiveSessionId}
             />
 
             <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
@@ -242,15 +267,6 @@ export function CaseDetailLayout({
                       Agrega la primera sesión para comenzar a registrar la
                       evolución del paciente.
                     </p>
-                    {onAddSession && (
-                      <button
-                        onClick={onAddSession}
-                        className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-full font-medium transition-colors"
-                      >
-                        <Plus size={20} />
-                        Agregar Primera Sesión
-                      </button>
-                    )}
                   </div>
                 ) : activeSession ? (
                   <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
@@ -276,18 +292,6 @@ export function CaseDetailLayout({
                         </p>
                       </div>
                       <div className="flex items-center gap-3">
-                        {onEditSession && (
-                          <button
-                            onClick={() => onEditSession(activeSession.id)}
-                            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                            aria-label="Editar sesión"
-                          >
-                            <Edit3
-                              size={18}
-                              className="text-slate-500 dark:text-slate-400"
-                            />
-                          </button>
-                        )}
                         <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg">
                           <span className="text-xs font-medium text-slate-500">
                             Dolor END

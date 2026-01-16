@@ -109,7 +109,7 @@ Methodology: Agile Development (1-week Sprints).
 **Integrations:**
 
 - [x] **6.9** Wire callbacks: onSave, onPosturogramaChange, onPainScaleChange
-- [ ] **6.10** Wire callbacks: onAddSession, onEditSession, onViewSession
+- [x] **6.10** Wire callbacks: onAddSession, onEditSession, onViewSession
 - [ ] **6.11** Wire callback: onExport (comparison report)
 - [ ] **6.12** Responsive design for mobile/tablet
 

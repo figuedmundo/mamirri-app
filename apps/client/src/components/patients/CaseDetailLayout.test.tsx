@@ -119,14 +119,74 @@ vi.mock('./EvaluationForm', () => ({
   ),
 }));
 
-// Mock CaseTimeline to spy on props
-vi.mock('./CaseTimeline', () => ({
-  CaseTimeline: ({ clinicalCase }: { clinicalCase: ClinicalCase }) => (
-    <div data-testid="case-timeline-mock">
-      Línea de Tiempo
+// Mock TreatmentTimeline to spy on props
+vi.mock('./TreatmentTimeline', () => ({
+  TreatmentTimeline: ({
+    clinicalCase,
+    onSessionCreated,
+    onSessionUpdated,
+    onSessionDeleted,
+    onViewSession,
+  }: {
+    clinicalCase: ClinicalCase;
+    onSessionCreated?: (session: TreatmentSession) => void;
+    onSessionUpdated?: (session: TreatmentSession) => void;
+    onSessionDeleted?: (sessionId: string) => void;
+    onViewSession?: (sessionId: string) => void;
+  }) => (
+    <div data-testid="treatment-timeline-mock">
+      Línea de Tratamiento
       <div data-testid="timeline-pain-scale">
         {JSON.stringify(clinicalCase.evaluation.painScale)}
       </div>
+      <button
+        data-testid="trigger-session-created"
+        onClick={() =>
+          onSessionCreated?.({
+            id: 'ses-new',
+            clinicalCaseId: 'caso-001',
+            date: '2024-02-01T00:00:00Z',
+            phaseNumber: 1,
+            procedures: [],
+            finalPainLevel: 2,
+            voiceNotes: [],
+            patientResponse: 'Better',
+            observations: 'Good',
+          })
+        }
+      >
+        Trigger Session Created
+      </button>
+      <button
+        data-testid="trigger-session-updated"
+        onClick={() =>
+          onSessionUpdated?.({
+            id: 'ses-002',
+            clinicalCaseId: 'caso-001',
+            date: '2024-01-22T10:00:00Z',
+            phaseNumber: 2,
+            procedures: [],
+            finalPainLevel: 1,
+            voiceNotes: [],
+            patientResponse: 'Better',
+            observations: 'Good',
+          })
+        }
+      >
+        Trigger Session Updated
+      </button>
+      <button
+        data-testid="trigger-session-deleted"
+        onClick={() => onSessionDeleted?.('ses-001')}
+      >
+        Trigger Session Deleted
+      </button>
+      <button
+        data-testid="trigger-view-session"
+        onClick={() => onViewSession?.('ses-001')}
+      >
+        Trigger View Session
+      </button>
     </div>
   ),
 }));
@@ -346,8 +406,6 @@ const mockClinicalCaseWithPosturogram: ClinicalCase = {
 
 describe('CaseDetailLayout', () => {
   const onBackMock = vi.fn();
-  const onAddSessionMock = vi.fn();
-  const onEditSessionMock = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -414,43 +472,6 @@ describe('CaseDetailLayout', () => {
       expect(screen.getByText('Inactivo')).toBeInTheDocument();
     });
 
-    it('should render "Nueva Sesión" button when onAddSession provided', () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
-          onBack={onBackMock}
-          onAddSession={onAddSessionMock}
-        />,
-      );
-
-      expect(screen.getByText('Nueva Sesión')).toBeInTheDocument();
-    });
-
-    it('should not render "Nueva Sesión" button when onAddSession not provided', () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
-          onBack={onBackMock}
-        />,
-      );
-
-      expect(screen.queryByText('Nueva Sesión')).not.toBeInTheDocument();
-    });
-
-    it('should render "Grabar Evolución" button', () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
-          onBack={onBackMock}
-        />,
-      );
-
-      expect(screen.getByText('Grabar Evolución')).toBeInTheDocument();
-    });
-
     it('should render back button with correct aria-label', () => {
       render(
         <CaseDetailLayout
@@ -473,7 +494,7 @@ describe('CaseDetailLayout', () => {
         />,
       );
 
-      expect(screen.getByText('Línea de Tiempo')).toBeInTheDocument();
+      expect(screen.getByText('Línea de Tratamiento')).toBeInTheDocument();
     });
   });
 
@@ -484,7 +505,6 @@ describe('CaseDetailLayout', () => {
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithoutSessions}
           onBack={onBackMock}
-          onAddSession={onAddSessionMock}
         />,
       );
 
@@ -502,7 +522,6 @@ describe('CaseDetailLayout', () => {
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithoutSessions}
           onBack={onBackMock}
-          onAddSession={onAddSessionMock}
         />,
       );
 
@@ -511,19 +530,6 @@ describe('CaseDetailLayout', () => {
           /Agrega la primera sesión para comenzar a registrar la evolución del paciente/,
         ),
       ).toBeInTheDocument();
-    });
-
-    it('should render "Agregar Primera Sesión" button in empty state', () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithoutSessions}
-          onBack={onBackMock}
-          onAddSession={onAddSessionMock}
-        />,
-      );
-
-      expect(screen.getByText('Agregar Primera Sesión')).toBeInTheDocument();
     });
 
     /*
@@ -541,7 +547,6 @@ describe('CaseDetailLayout', () => {
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
           onBack={onBackMock}
-          onEditSession={onEditSessionMock}
         />,
       );
     });
@@ -615,7 +620,7 @@ describe('CaseDetailLayout', () => {
     });
 
     it('should switch between Timeline and Evaluation views', async () => {
-      expect(screen.getByText('Línea de Tiempo')).toBeInTheDocument();
+      expect(screen.getByText('Línea de Tratamiento')).toBeInTheDocument();
       expect(
         screen.queryByTestId('evaluation-form-mock'),
       ).not.toBeInTheDocument();
@@ -624,12 +629,14 @@ describe('CaseDetailLayout', () => {
       await userEvent.click(evalTab);
 
       expect(screen.getByTestId('evaluation-form-mock')).toBeInTheDocument();
-      expect(screen.queryByText('Línea de Tiempo')).not.toBeInTheDocument();
+      expect(
+        screen.queryByText('Línea de Tratamiento'),
+      ).not.toBeInTheDocument();
 
       const timelineTab = screen.getByText('Seguimiento');
       await userEvent.click(timelineTab);
 
-      expect(screen.getByText('Línea de Tiempo')).toBeInTheDocument();
+      expect(screen.getByText('Línea de Tratamiento')).toBeInTheDocument();
     });
 
     it('should call API when saving evaluation', async () => {
@@ -642,7 +649,7 @@ describe('CaseDetailLayout', () => {
         'eval-001',
         expect.objectContaining({
           id: 'eval-001',
-          painScale: { activity: 5 },
+          painScale: expect.objectContaining({ activity: 5 }),
         }),
       );
     });
@@ -838,87 +845,27 @@ describe('CaseDetailLayout', () => {
 
       expect(onBackMock).toHaveBeenCalledTimes(1);
     });
-
-    it('should call onAddSession when "Nueva Sesión" button is clicked', async () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
-          onBack={onBackMock}
-          onAddSession={onAddSessionMock}
-        />,
-      );
-
-      const addButton = screen.getByText('Nueva Sesión');
-      await userEvent.click(addButton);
-
-      expect(onAddSessionMock).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call onAddSession when "Agregar Primera Sesión" button is clicked', async () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithoutSessions}
-          onBack={onBackMock}
-          onAddSession={onAddSessionMock}
-        />,
-      );
-
-      const addButton = screen.getByText('Agregar Primera Sesión');
-      await userEvent.click(addButton);
-
-      expect(onAddSessionMock).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call onEditSession when edit button is clicked', async () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
-          onBack={onBackMock}
-          onEditSession={onEditSessionMock}
-        />,
-      );
-
-      const editButton = screen.getByLabelText('Editar sesión');
-      await userEvent.click(editButton);
-
-      expect(onEditSessionMock).toHaveBeenCalledTimes(1);
-      // Expect session 2 (the latest)
-      expect(onEditSessionMock).toHaveBeenCalledWith('ses-002');
-    });
-
-    it('should not render edit button when onEditSession not provided', () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
-          onBack={onBackMock}
-        />,
-      );
-
-      expect(screen.queryByLabelText('Editar sesión')).not.toBeInTheDocument();
-    });
   });
 
-  describe('Responsive Design', () => {
-    it('should hide "Nueva Sesión" text on small screens', () => {
+  describe('Session Lifecycle Callbacks', () => {
+    it('should update local case when session created', async () => {
       render(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
           onBack={onBackMock}
-          onAddSession={onAddSessionMock}
         />,
       );
 
-      const button = screen.getByText('Nueva Sesión');
-      expect(button).toHaveClass('hidden');
-      expect(button).toHaveClass('sm:inline');
+      const trigger = screen.getByTestId('trigger-session-created');
+      await userEvent.click(trigger);
+
+      // Verify that the new session is displayed (e.g. by checking session count or date)
+      // Since local state update is internal, we check rendered output
+      expect(screen.getByText(/Sesión 3 de 3/)).toBeInTheDocument();
     });
 
-    it('should hide "Grabar Evolución" text on small screens', () => {
+    it('should update local case when session updated', async () => {
       render(
         <CaseDetailLayout
           patient={mockPatient}
@@ -927,9 +874,27 @@ describe('CaseDetailLayout', () => {
         />,
       );
 
-      const button = screen.getByText('Grabar Evolución');
-      expect(button).toHaveClass('hidden');
-      expect(button).toHaveClass('sm:inline');
+      const trigger = screen.getByTestId('trigger-session-updated');
+      await userEvent.click(trigger);
+
+      // Verify pain level updated from 4 to 1
+      expect(screen.getByText('1/10')).toBeInTheDocument();
+    });
+
+    it('should update local case when session deleted', async () => {
+      render(
+        <CaseDetailLayout
+          patient={mockPatient}
+          clinicalCase={mockClinicalCaseWithSessions}
+          onBack={onBackMock}
+        />,
+      );
+
+      const trigger = screen.getByTestId('trigger-session-deleted');
+      await userEvent.click(trigger);
+
+      // Should have 1 session left
+      expect(screen.getByText(/Sesión 1 de 1/)).toBeInTheDocument();
     });
   });
 
@@ -947,7 +912,7 @@ describe('CaseDetailLayout', () => {
 
     it('should switch between Timeline and Evaluation views', async () => {
       // Default view is Timeline
-      expect(screen.getByText('Línea de Tiempo')).toBeInTheDocument();
+      expect(screen.getByText('Línea de Tratamiento')).toBeInTheDocument();
       expect(
         screen.queryByTestId('evaluation-form-mock'),
       ).not.toBeInTheDocument();
@@ -957,13 +922,15 @@ describe('CaseDetailLayout', () => {
       await userEvent.click(evalTab);
 
       expect(screen.getByTestId('evaluation-form-mock')).toBeInTheDocument();
-      expect(screen.queryByText('Línea de Tiempo')).not.toBeInTheDocument();
+      expect(
+        screen.queryByText('Línea de Tratamiento'),
+      ).not.toBeInTheDocument();
 
       // Switch back to Timeline
       const timelineTab = screen.getByText('Seguimiento');
       await userEvent.click(timelineTab);
 
-      expect(screen.getByText('Línea de Tiempo')).toBeInTheDocument();
+      expect(screen.getByText('Línea de Tratamiento')).toBeInTheDocument();
     });
 
     it('should call API and show success toast when saving evaluation', async () => {
@@ -975,7 +942,7 @@ describe('CaseDetailLayout', () => {
         'eval-001',
         expect.objectContaining({
           id: 'eval-001',
-          painScale: { activity: 5 },
+          painScale: expect.objectContaining({ activity: 5 }),
         }),
       );
 

@@ -33,6 +33,7 @@ export interface UpdateEvaluationDto {
   avdEvaluation?: any;
   painScale?: any;
   diagnosis?: any;
+  voiceNotes?: any;
 }
 
 import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
@@ -240,9 +241,26 @@ export class PatientsService {
       throw new NotFoundException('Evaluation not found or access denied');
     }
 
+    const {
+      posturogram,
+      orthopedicTests,
+      avdEvaluation,
+      painScale,
+      diagnosis,
+      voiceNotes,
+    } = updateDto;
+
+    const data: any = {};
+    if (posturogram !== undefined) data.posturogram = posturogram;
+    if (orthopedicTests !== undefined) data.orthopedicTests = orthopedicTests;
+    if (avdEvaluation !== undefined) data.avdEvaluation = avdEvaluation;
+    if (painScale !== undefined) data.painScale = painScale;
+    if (diagnosis !== undefined) data.diagnosis = diagnosis;
+    if (voiceNotes !== undefined) data.voiceNotes = voiceNotes;
+
     return this.prisma.evaluation.update({
       where: { id: evaluationId },
-      data: updateDto,
+      data,
     });
   }
 }

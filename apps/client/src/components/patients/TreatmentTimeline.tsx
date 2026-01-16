@@ -1,11 +1,11 @@
 import * as React from 'react';
 import type { ClinicalCase, TreatmentSession } from '../../types/patient';
-import { PhaseProgress } from './cronograma/PhaseProgress';
-import { SessionCard } from './cronograma/SessionCard';
-import { PainTrendChart } from './cronograma/PainTrendChart';
-import { SessionStatsSummary } from './cronograma/SessionStatsSummary';
-import { SessionForm } from './cronograma/SessionForm';
-import type { SessionFormData } from './cronograma/session-form-schema';
+import { PhaseProgress } from './treatment-timeline/PhaseProgress';
+import { SessionCard } from './treatment-timeline/SessionCard';
+import { PainTrendChart } from './treatment-timeline/PainTrendChart';
+import { SessionStatsSummary } from './treatment-timeline/SessionStatsSummary';
+import { SessionForm } from './treatment-timeline/SessionForm';
+import type { SessionFormData } from './treatment-timeline/session-form-schema';
 import { Plus, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,7 +21,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { patientsApi } from '../../api/patients';
 
-export interface CronogramaProps {
+export interface TreatmentTimelineProps {
   clinicalCase: ClinicalCase;
   onSessionCreated?: (session: TreatmentSession) => void;
   onSessionUpdated?: (session: TreatmentSession) => void;
@@ -29,13 +29,13 @@ export interface CronogramaProps {
   onViewSession?: (sessionId: string) => void;
 }
 
-export function Cronograma({
+export function TreatmentTimeline({
   clinicalCase,
   onSessionCreated,
   onSessionUpdated,
   onSessionDeleted,
   onViewSession,
-}: CronogramaProps) {
+}: TreatmentTimelineProps) {
   const [selectedPhase, setSelectedPhase] = React.useState<number | null>(null);
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [editingSession, setEditingSession] =
