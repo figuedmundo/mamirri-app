@@ -338,7 +338,7 @@ export interface ComparisonProps {
   clinicalCase: ClinicalCase;
 
   /** Called when user wants to export comparison report */
-  onExport?: () => void;
+  onExport?: () => Promise<void> | void;
 
   /** Called when user wants to share comparison with patient */
   onShare?: () => void;

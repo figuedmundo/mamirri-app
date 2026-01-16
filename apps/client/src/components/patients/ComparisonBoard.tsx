@@ -3,6 +3,8 @@ import type { ComparisonProps } from '../../types/patient';
 
 type ViewMode = 'slider' | 'side-by-side';
 
+import { Loader2 } from 'lucide-react';
+
 export function ComparisonBoard({
   clinicalCase,
   onExport,
@@ -12,6 +14,17 @@ export function ComparisonBoard({
     'footprints' | 'posture' | 'tests'
   >('footprints');
   const [viewMode, setViewMode] = React.useState<ViewMode>('side-by-side');
+  const [isExporting, setIsExporting] = React.useState(false);
+
+  const handleExport = async () => {
+    if (!onExport) return;
+    try {
+      setIsExporting(true);
+      await onExport();
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const initialFootprint = clinicalCase.evaluation.footprints.find(
     (h) => h.type === 'initial',
@@ -58,23 +71,28 @@ export function ComparisonBoard({
             Compartir
           </button>
           <button
-            onClick={onExport}
-            className="px-4 py-2 bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600 text-white rounded-lg transition-colors flex items-center gap-2"
+            onClick={handleExport}
+            disabled={isExporting}
+            className="px-4 py-2 bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600 text-white rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 110-2.684l6.632 3.316m0 0a3 3 0 003 3h10a3 3 0 105.368 2.684a3 3 0 00-5.368a3 3 0 00-3.316m0 0a3 3 0 003 3v-1m-4.4l4 4V4"
-              />
-            </svg>
-            Exportar Informe
+            {isExporting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 110-2.684l6.632 3.316m0 0a3 3 0 003 3h10a3 3 0 105.368 2.684a3 3 0 00-5.368a3 3 0 00-3.316m0 0a3 3 0 003 3v-1m-4.4l4 4V4"
+                />
+              </svg>
+            )}
+            {isExporting ? 'Generando...' : 'Exportar Informe'}
           </button>
         </div>
 

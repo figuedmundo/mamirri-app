@@ -10,6 +10,8 @@ import { useState, useEffect } from 'react';
 import { TreatmentTimeline } from './TreatmentTimeline';
 import { PosturogramViewer } from './PosturogramViewer';
 import { EvaluationForm } from './EvaluationForm';
+import { ComparisonBoard } from './ComparisonBoard';
+import { generateComparisonReport } from '../../lib/pdf';
 import { useToast } from '../../hooks/use-toast';
 import { patientsApi } from '../../api/patients';
 import {
@@ -20,6 +22,7 @@ import {
   Camera,
   LayoutDashboard,
   ClipboardList,
+  Split,
 } from 'lucide-react';
 
 interface CaseDetailLayoutProps {
@@ -34,9 +37,9 @@ export function CaseDetailLayout({
   onBack,
 }: CaseDetailLayoutProps) {
   const [localCase, setLocalCase] = useState<ClinicalCase>(clinicalCase);
-  const [viewMode, setViewMode] = useState<'timeline' | 'evaluation'>(
-    'timeline',
-  );
+  const [viewMode, setViewMode] = useState<
+    'timeline' | 'evaluation' | 'comparison'
+  >('timeline');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -166,6 +169,23 @@ export function CaseDetailLayout({
     }
   };
 
+  const handleExportReport = async () => {
+    try {
+      await generateComparisonReport(localCase, patient);
+      toast({
+        title: 'Informe descargado',
+        description: 'El informe se ha guardado correctamente.',
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'No se pudo generar el informe.',
+      });
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-white dark:bg-slate-950 z-50 flex flex-col">
       <div className="h-16 border-b border-slate-200 dark:border-slate-800 flex items-center px-4 justify-between bg-white dark:bg-slate-900">
@@ -227,6 +247,17 @@ export function CaseDetailLayout({
           >
             <ClipboardList size={16} />
             <span className="hidden sm:inline">Evaluación</span>
+          </button>
+          <button
+            onClick={() => setViewMode('comparison')}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
+              viewMode === 'comparison'
+                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+            }`}
+          >
+            <Split size={16} />
+            <span className="hidden sm:inline">Comparar</span>
           </button>
         </div>
 
@@ -431,6 +462,13 @@ export function CaseDetailLayout({
               </div>
             </div>
           </>
+        ) : viewMode === 'comparison' ? (
+          <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
+            <ComparisonBoard
+              clinicalCase={localCase}
+              onExport={handleExportReport}
+            />
+          </div>
         ) : (
           <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
             <EvaluationForm
