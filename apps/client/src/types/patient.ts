@@ -176,6 +176,7 @@ export interface Evaluation {
   id: string;
   clinicalCaseId: string;
   date: string;
+  type: 'INITIAL' | 'PROGRESS' | 'FINAL';
   posturogram: Posturogram;
   orthopedicTests: OrthopedicTests;
   avdEvaluation: AVDEvaluation;
@@ -248,7 +249,7 @@ export interface ClinicalCase {
   pathologicalHistory?: string[];
   pharmacologicalHistory?: string;
   initialMedicalDiagnosis?: string;
-  evaluation: Evaluation;
+  evaluations: Evaluation[];
   treatmentPlan: TreatmentPlan;
   treatmentSessions: TreatmentSession[];
 }

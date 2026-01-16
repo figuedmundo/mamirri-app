@@ -5,6 +5,7 @@ import type {
   Posturogram,
   PainScale,
 } from '../../types/patient';
+import { getActiveEvaluation } from '../../lib/evaluation-utils';
 import { patientsApi } from '../../api/patients';
 import { useToast } from '../../hooks/use-toast';
 import {
@@ -40,6 +41,9 @@ export function PatientProfile({
   const [lightboxItems, setLightboxItems] = useState<MediaItem[]>([]);
 
   const activeCase = patient.clinicalCases?.find((c) => c.status === 'active');
+  const activeEvaluation = activeCase
+    ? getActiveEvaluation(activeCase)
+    : undefined;
   const pastCases =
     patient.clinicalCases?.filter((c) => c.status !== 'active') || [];
 
@@ -62,9 +66,9 @@ export function PatientProfile({
   };
 
   const handlePosturogramChange = async (posturogram: Posturogram) => {
-    if (!activeCase?.evaluation) return;
+    if (!activeEvaluation) return;
     try {
-      await patientsApi.updateEvaluation(activeCase.evaluation.id, {
+      await patientsApi.updateEvaluation(activeEvaluation.id, {
         posturogram,
       });
       toast({
@@ -83,9 +87,9 @@ export function PatientProfile({
   };
 
   const handlePainScaleChange = async (painScale: PainScale) => {
-    if (!activeCase?.evaluation) return;
+    if (!activeEvaluation) return;
     try {
-      await patientsApi.updateEvaluation(activeCase.evaluation.id, {
+      await patientsApi.updateEvaluation(activeEvaluation.id, {
         painScale,
       });
       toast({
@@ -209,8 +213,7 @@ export function PatientProfile({
               icon={<FileText className="text-emerald-500" />}
               label="Nueva Evaluación"
               onClick={() =>
-                activeCase?.evaluation &&
-                handleSaveEvaluation(activeCase.evaluation)
+                activeEvaluation && handleSaveEvaluation(activeEvaluation)
               }
             />
           </div>
@@ -241,14 +244,14 @@ export function PatientProfile({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                   <MetricCard
                     label="Nivel de Dolor"
-                    value={`${activeCase.evaluation?.painScale?.activity || 0}/10`}
+                    value={`${activeEvaluation?.painScale?.activity || 0}/10`}
                     sub="Escala EVA"
                     onClick={() =>
-                      activeCase.evaluation &&
+                      activeEvaluation &&
                       handlePainScaleChange({
-                        ...activeCase.evaluation.painScale,
+                        ...activeEvaluation.painScale,
                         activity: Math.min(
-                          (activeCase.evaluation.painScale.activity || 0) + 1,
+                          (activeEvaluation.painScale.activity || 0) + 1,
                           10,
                         ),
                       })
@@ -261,12 +264,12 @@ export function PatientProfile({
                   />
                   <MetricCard
                     label="Índice Barthel"
-                    value={`${activeCase.evaluation?.avdEvaluation?.barthel?.total || 0}/100`}
+                    value={`${activeEvaluation?.avdEvaluation?.barthel?.total || 0}/100`}
                     sub="Funcionalidad"
                     onClick={() =>
-                      activeCase.evaluation &&
+                      activeEvaluation &&
                       handlePosturogramChange(
-                        activeCase.evaluation.posturogram || {},
+                        activeEvaluation.posturogram || {},
                       )
                     }
                   />
@@ -278,20 +281,18 @@ export function PatientProfile({
                     Fotos y Videos
                   </h4>
                   <MediaGallery
-                    footprints={activeCase.evaluation?.footprints}
-                    postureVideos={activeCase.evaluation?.postureVideos}
+                    footprints={activeEvaluation?.footprints}
+                    postureVideos={activeEvaluation?.postureVideos}
                     onSelect={(item, index) => {
                       const allItems: MediaItem[] = [
-                        ...(activeCase.evaluation?.footprints || []).map(
-                          (fp) => ({
-                            id: fp.id,
-                            url: fp.url,
-                            type: 'image' as const,
-                            date: fp.date,
-                            label: fp.type,
-                          }),
-                        ),
-                        ...(activeCase.evaluation?.postureVideos || []).map(
+                        ...(activeEvaluation?.footprints || []).map((fp) => ({
+                          id: fp.id,
+                          url: fp.url,
+                          type: 'image' as const,
+                          date: fp.date,
+                          label: fp.type,
+                        })),
+                        ...(activeEvaluation?.postureVideos || []).map(
                           (pv) => ({
                             id: pv.id,
                             url: pv.url,

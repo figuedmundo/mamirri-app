@@ -29,6 +29,7 @@ import type {
   DeviationStatus,
   AnatomicalPointStatus,
 } from '@/types/patient';
+import { getActiveEvaluation } from '@/lib/evaluation-utils';
 
 export interface PosturogramViewerProps {
   clinicalCase: ClinicalCase;
@@ -97,7 +98,9 @@ export function PosturogramViewer({
 
   // Initialize state from props, handling legacy flat structure migration
   const [posturogram, setPosturogram] = React.useState<Posturogram>(() => {
-    const current = clinicalCase.evaluation.posturogram;
+    const activeEval = getActiveEvaluation(clinicalCase);
+    // Fallback to empty object if no evaluation exists (shouldn't happen in valid flow)
+    const current = activeEval?.posturogram || ({} as Posturogram);
 
     // Check if we need to migrate from legacy flat structure to nested anteriorView
     if (!current.anteriorView && (current.head || current.shoulders)) {

@@ -47,30 +47,33 @@ describe('PosturogramViewer', () => {
       objectives: { therapeutic: '', prophylactic: '', educational: '' },
       phases: [],
     },
-    evaluation: {
-      id: 'eval-123',
-      clinicalCaseId: 'case-123',
-      date: '2023-01-01',
-      posturogram: {
-        anteriorView: {
-          head: { deviation: 'normal', severity: 'normal' },
-          shoulders: { deviation: 'normal', severity: 'normal' },
-          spine: { deviation: 'normal', severity: 'normal' },
-          pelvis: { deviation: 'normal', severity: 'normal' },
-          knees: { deviation: 'normal', severity: 'normal' },
-          feet: { deviation: 'normal', severity: 'normal' },
+    evaluations: [
+      {
+        id: 'eval-123',
+        clinicalCaseId: 'case-123',
+        date: '2023-01-01',
+        type: 'INITIAL',
+        posturogram: {
+          anteriorView: {
+            head: { deviation: 'normal', severity: 'normal' },
+            shoulders: { deviation: 'normal', severity: 'normal' },
+            spine: { deviation: 'normal', severity: 'normal' },
+            pelvis: { deviation: 'normal', severity: 'normal' },
+            knees: { deviation: 'normal', severity: 'normal' },
+            feet: { deviation: 'normal', severity: 'normal' },
+          },
         },
+        orthopedicTests: {},
+        avdEvaluation: {
+          barthel: { total: 100 },
+          lawton: { total: 8 },
+        },
+        painScale: { activity: 0, rest: 0, palpation: 0, type: 'acute' },
+        diagnosis: {},
+        footprints: [],
+        postureVideos: [],
       },
-      orthopedicTests: {},
-      avdEvaluation: {
-        barthel: { total: 100 },
-        lawton: { total: 8 },
-      },
-      painScale: { activity: 0, rest: 0, palpation: 0, type: 'acute' },
-      diagnosis: {},
-      footprints: [],
-      postureVideos: [],
-    },
+    ],
   } as unknown as ClinicalCase;
 
   beforeEach(() => {
@@ -164,13 +167,15 @@ describe('PosturogramViewer', () => {
     it('should migrate legacy flat structure to nested anteriorView', () => {
       const legacyCase = {
         ...mockClinicalCase,
-        evaluation: {
-          ...mockClinicalCase.evaluation,
-          posturogram: {
-            head: { deviation: 'rotation', severity: 'mild' },
-            shoulders: { deviation: 'normal', severity: 'normal' },
+        evaluations: [
+          {
+            ...mockClinicalCase.evaluations[0],
+            posturogram: {
+              head: { deviation: 'rotation', severity: 'mild' },
+              shoulders: { deviation: 'normal', severity: 'normal' },
+            },
           },
-        },
+        ],
       } as unknown as ClinicalCase;
 
       render(<PosturogramViewer clinicalCase={legacyCase} />);

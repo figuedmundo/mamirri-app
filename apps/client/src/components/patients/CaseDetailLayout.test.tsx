@@ -47,6 +47,7 @@ vi.mock('./EvaluationForm', () => ({
             id: 'eval-001',
             clinicalCaseId: 'caso-001',
             date: '2024-01-01T00:00:00Z',
+            type: 'INITIAL',
             posturogram: {},
             orthopedicTests: {
               thomas: { result: 'normal', interpretation: 'Negative' },
@@ -137,7 +138,7 @@ vi.mock('./TreatmentTimeline', () => ({
     <div data-testid="treatment-timeline-mock">
       Línea de Tratamiento
       <div data-testid="timeline-pain-scale">
-        {JSON.stringify(clinicalCase.evaluation.painScale)}
+        {JSON.stringify(clinicalCase.evaluations?.[0]?.painScale)}
       </div>
       <button
         data-testid="trigger-session-created"
@@ -270,60 +271,63 @@ const mockClinicalCaseWithSessions: ClinicalCase = {
     ],
   },
   treatmentSessions: [mockSession1, mockSession2],
-  evaluation: {
-    id: 'eval-001',
-    clinicalCaseId: 'caso-001',
-    date: '2024-01-01T00:00:00Z',
-    posturogram: {},
-    orthopedicTests: {
-      thomas: { result: 'normal', interpretation: 'Negative' },
-      ely: { result: 'normal', interpretation: 'Negative' },
-      ober: { result: 'normal', interpretation: 'Negative' },
-      schober: { result: 'normal', interpretation: 'Negative' },
-    },
-    avdEvaluation: {
-      barthel: {
-        feeding: 5,
-        bathing: 5,
-        grooming: 5,
-        dressing: 5,
-        bowels: 5,
-        bladder: 5,
-        toiletUse: 5,
-        transfers: 5,
-        mobility: 5,
-        stairs: 5,
-        total: 50,
-        interpretation: 'Independencia moderada',
+  evaluations: [
+    {
+      id: 'eval-001',
+      clinicalCaseId: 'caso-001',
+      date: '2024-01-01T00:00:00Z',
+      type: 'INITIAL',
+      posturogram: {},
+      orthopedicTests: {
+        thomas: { result: 'normal', interpretation: 'Negative' },
+        ely: { result: 'normal', interpretation: 'Negative' },
+        ober: { result: 'normal', interpretation: 'Negative' },
+        schober: { result: 'normal', interpretation: 'Negative' },
       },
-      lawton: {
-        phoneUse: 2,
-        shopping: 2,
-        foodPreparation: 2,
-        housekeeping: 2,
-        laundry: 2,
-        transportation: 2,
-        medication: 2,
-        finances: 2,
-        total: 16,
-        interpretation: 'Independencia parcial',
+      avdEvaluation: {
+        barthel: {
+          feeding: 5,
+          bathing: 5,
+          grooming: 5,
+          dressing: 5,
+          bowels: 5,
+          bladder: 5,
+          toiletUse: 5,
+          transfers: 5,
+          mobility: 5,
+          stairs: 5,
+          total: 50,
+          interpretation: 'Independencia moderada',
+        },
+        lawton: {
+          phoneUse: 2,
+          shopping: 2,
+          foodPreparation: 2,
+          housekeeping: 2,
+          laundry: 2,
+          transportation: 2,
+          medication: 2,
+          finances: 2,
+          total: 16,
+          interpretation: 'Independencia parcial',
+        },
       },
+      painScale: {
+        activity: 4,
+        rest: 3,
+        palpation: 5,
+        type: 'chronic',
+      },
+      diagnosis: {
+        functionalIndicator: 'Dificultad para caminar largas distancias',
+        clinicalAspect: 'Hipertonía lumbar',
+        anatomopathology: 'Hipercifosis torácica',
+        avdConsequences: 'Limitación en AVDs',
+      },
+      footprints: [],
+      postureVideos: [],
     },
-    painScale: {
-      activity: 4,
-      rest: 3,
-      palpation: 5,
-      type: 'chronic',
-    },
-    diagnosis: {
-      functionalIndicator: 'Dificultad para caminar largas distancias',
-      clinicalAspect: 'Hipertonía lumbar',
-      anatomopathology: 'Hipercifosis torácica',
-      avdConsequences: 'Limitación en AVDs',
-    },
-    footprints: [],
-    postureVideos: [],
-  },
+  ],
 };
 
 const mockClinicalCaseWithoutSessions: ClinicalCase = {
@@ -333,75 +337,100 @@ const mockClinicalCaseWithoutSessions: ClinicalCase = {
 
 const mockClinicalCaseWithPosturogram: ClinicalCase = {
   ...mockClinicalCaseWithSessions,
-  evaluation: {
-    id: 'eval-002',
-    clinicalCaseId: 'caso-001',
-    date: '2024-01-01T00:00:00Z',
-    posturogram: {},
-    orthopedicTests: {
-      thomas: { result: 'normal', interpretation: 'Negative' },
-      ely: { result: 'normal', interpretation: 'Negative' },
-      ober: { result: 'normal', interpretation: 'Negative' },
-      schober: { result: 'normal', interpretation: 'Negative' },
-    },
-    avdEvaluation: {
-      barthel: {
-        feeding: 5,
-        bathing: 5,
-        grooming: 5,
-        dressing: 5,
-        bowels: 5,
-        bladder: 5,
-        toiletUse: 5,
-        transfers: 5,
-        mobility: 5,
-        stairs: 5,
-        total: 50,
-        interpretation: 'Independencia moderada',
+  evaluations: [
+    {
+      id: 'eval-002',
+      clinicalCaseId: 'caso-001',
+      date: '2024-01-01T00:00:00Z',
+      type: 'INITIAL',
+      posturogram: {},
+      orthopedicTests: {
+        thomas: { result: 'normal', interpretation: 'Negative' },
+        ely: { result: 'normal', interpretation: 'Negative' },
+        ober: { result: 'normal', interpretation: 'Negative' },
+        schober: { result: 'normal', interpretation: 'Negative' },
       },
-      lawton: {
-        phoneUse: 2,
-        shopping: 2,
-        foodPreparation: 2,
-        housekeeping: 2,
-        laundry: 2,
-        transportation: 2,
-        medication: 2,
-        finances: 2,
-        total: 16,
-        interpretation: 'Independencia parcial',
+      avdEvaluation: {
+        barthel: {
+          feeding: 5,
+          bathing: 5,
+          grooming: 5,
+          dressing: 5,
+          bowels: 5,
+          bladder: 5,
+          toiletUse: 5,
+          transfers: 5,
+          mobility: 5,
+          stairs: 5,
+          total: 50,
+          interpretation: 'Independencia moderada',
+        },
+        lawton: {
+          phoneUse: 2,
+          shopping: 2,
+          foodPreparation: 2,
+          housekeeping: 2,
+          laundry: 2,
+          transportation: 2,
+          medication: 2,
+          finances: 2,
+          total: 16,
+          interpretation: 'Independencia parcial',
+        },
       },
-    },
-    painScale: {
-      activity: 4,
-      rest: 3,
-      palpation: 5,
-      type: 'chronic',
-    },
-    diagnosis: {
-      functionalIndicator: 'Dificultad para caminar largas distancias',
-      clinicalAspect: 'Hipertonía lumbar',
-      anatomopathology: 'Hipercifosis torácica',
-      avdConsequences: 'Limitación en AVDs',
-    },
-    footprints: [
-      {
-        id: 'fp-001',
-        evaluationId: 'eval-002',
-        type: 'initial',
-        date: '2024-01-01T00:00:00Z',
-        url: 'https://example.com/posturogram-before.jpg',
+      painScale: {
+        activity: 4,
+        rest: 3,
+        palpation: 5,
+        type: 'chronic',
       },
-      {
-        id: 'fp-002',
-        evaluationId: 'eval-002',
-        type: 'final',
-        date: '2024-04-01T00:00:00Z',
-        url: 'https://example.com/posturogram-after.jpg',
+      diagnosis: {
+        functionalIndicator: 'Dificultad para caminar largas distancias',
+        clinicalAspect: 'Hipertonía lumbar',
+        anatomopathology: 'Hipercifosis torácica',
+        avdConsequences: 'Limitación en AVDs',
       },
-    ],
-    postureVideos: [],
-  },
+      footprints: [
+        {
+          id: 'fp-001',
+          evaluationId: 'eval-002',
+          type: 'initial',
+          date: '2024-01-01T00:00:00Z',
+          url: 'https://example.com/posturogram-before.jpg',
+        },
+      ],
+      postureVideos: [],
+    },
+    {
+      id: 'eval-003',
+      clinicalCaseId: 'caso-001',
+      date: '2024-04-01T00:00:00Z',
+      type: 'FINAL',
+      posturogram: {},
+      orthopedicTests: {
+        thomas: { result: 'normal', interpretation: 'Negative' },
+        ely: { result: 'normal', interpretation: 'Negative' },
+        ober: { result: 'normal', interpretation: 'Negative' },
+        schober: { result: 'normal', interpretation: 'Negative' },
+      },
+      avdEvaluation: {
+        barthel: { total: 100 } as any,
+        lawton: { total: 8 } as any,
+      },
+      painScale: { activity: 0, rest: 0, palpation: 0, type: 'chronic' },
+      diagnosis: {} as any,
+      footprints: [
+        {
+          id: 'fp-002',
+          evaluationId: 'eval-003',
+          type: 'final',
+          date: '2024-04-01T00:00:00Z',
+          url: 'https://example.com/posturogram-after.jpg',
+        },
+      ],
+      postureVideos: [],
+    },
+  ],
 };
 
 describe('CaseDetailLayout', () => {

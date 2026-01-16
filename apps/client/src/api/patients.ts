@@ -55,43 +55,52 @@ const mapPatient = (patient: Patient): Patient => ({
       evaluation?: Evaluation;
       evaluations?: Evaluation[];
     };
-    const evaluation = (c.evaluation || rawCase.evaluations?.[0]) as Evaluation;
 
-    if (evaluation) {
-      evaluation.posturogram = evaluation.posturogram || {};
-      evaluation.orthopedicTests = evaluation.orthopedicTests || {};
-      evaluation.avdEvaluation = evaluation.avdEvaluation || {
-        barthel: {
-          total: 0,
-        } as unknown as Evaluation['avdEvaluation']['barthel'],
-        lawton: {
-          total: 0,
-        } as unknown as Evaluation['avdEvaluation']['lawton'],
-      };
-      if (!evaluation.avdEvaluation.barthel) {
-        evaluation.avdEvaluation.barthel = {
-          total: 0,
-        } as unknown as Evaluation['avdEvaluation']['barthel'];
+    // Normalize to array
+    let evaluations =
+      rawCase.evaluations || (rawCase.evaluation ? [rawCase.evaluation] : []);
+
+    evaluations = evaluations.map((evaluation) => {
+      if (evaluation) {
+        evaluation.posturogram = evaluation.posturogram || {};
+        evaluation.orthopedicTests = evaluation.orthopedicTests || {};
+        evaluation.avdEvaluation = evaluation.avdEvaluation || {
+          barthel: {
+            total: 0,
+          } as unknown as Evaluation['avdEvaluation']['barthel'],
+          lawton: {
+            total: 0,
+          } as unknown as Evaluation['avdEvaluation']['lawton'],
+        };
+        if (!evaluation.avdEvaluation.barthel) {
+          evaluation.avdEvaluation.barthel = {
+            total: 0,
+          } as unknown as Evaluation['avdEvaluation']['barthel'];
+        }
+        if (!evaluation.avdEvaluation.lawton) {
+          evaluation.avdEvaluation.lawton = {
+            total: 0,
+          } as unknown as Evaluation['avdEvaluation']['lawton'];
+        }
+        evaluation.painScale = evaluation.painScale || {
+          activity: 0,
+          rest: 0,
+          palpation: 0,
+          type: 'chronic',
+        };
+        evaluation.diagnosis = evaluation.diagnosis || {};
+        evaluation.footprints = evaluation.footprints || [];
+        evaluation.postureVideos = evaluation.postureVideos || [];
       }
-      if (!evaluation.avdEvaluation.lawton) {
-        evaluation.avdEvaluation.lawton = {
-          total: 0,
-        } as unknown as Evaluation['avdEvaluation']['lawton'];
-      }
-      evaluation.painScale = evaluation.painScale || {
-        activity: 0,
-        rest: 0,
-        palpation: 0,
-        type: 'chronic',
-      };
-      evaluation.diagnosis = evaluation.diagnosis || {};
-      evaluation.footprints = evaluation.footprints || [];
-      evaluation.postureVideos = evaluation.postureVideos || [];
-    }
+      return evaluation;
+    });
+
+    // Remove legacy evaluation property if it exists in spread
+    const { evaluation: _, ...rest } = c as any;
 
     return {
-      ...c,
-      evaluation,
+      ...rest,
+      evaluations,
     };
   }),
 });

@@ -1,4 +1,5 @@
 import type { PatientListProps, Patient } from '../../types/patient';
+import { getActiveEvaluation } from '../../lib/evaluation-utils';
 import {
   Search,
   Plus,
@@ -152,7 +153,10 @@ export function PatientList({
             const activeCase = patient.clinicalCases?.find(
               (c) => c.status === 'active',
             );
-            const painLevel = activeCase?.evaluation?.painScale?.activity || 0;
+            const activeEvaluation = activeCase
+              ? getActiveEvaluation(activeCase)
+              : undefined;
+            const painLevel = activeEvaluation?.painScale?.activity || 0;
             const lastSession =
               activeCase?.treatmentSessions?.[
                 activeCase.treatmentSessions.length - 1

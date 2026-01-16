@@ -18,6 +18,8 @@ import { useDebounce } from '../../hooks/use-debounce';
 import { useUnsavedChanges } from '../../hooks/use-unsaved-changes';
 import { useToast } from '../../hooks/use-toast';
 
+import { getActiveEvaluation } from '../../lib/evaluation-utils';
+
 const ORTHOPEDIC_TESTS_CONFIG = [
   { key: 'thomas', label: 'Thomas', description: 'Flexor cadera' },
   { key: 'ely', label: 'Ely', description: 'Recto femoral' },
@@ -35,17 +37,27 @@ export function EvaluationForm({
   onPosturogramChange,
   onPainScaleChange,
 }: EvaluationFormProps) {
+  const activeEvaluation = getActiveEvaluation(clinicalCase);
+
+  if (!activeEvaluation) {
+    return (
+      <div className="p-8 text-center text-slate-500">
+        No hay evaluación activa.
+      </div>
+    );
+  }
+
   const [posturogram, setPosturogram] = React.useState<Posturogram>(
-    clinicalCase.evaluation.posturogram,
+    activeEvaluation.posturogram,
   );
   const [orthopedicTests, setOrthopedicTests] = React.useState<OrthopedicTests>(
-    clinicalCase.evaluation.orthopedicTests,
+    activeEvaluation.orthopedicTests,
   );
   const [avdEvaluation, setAvdEvaluation] = React.useState<AVDEvaluation>(
-    clinicalCase.evaluation.avdEvaluation,
+    activeEvaluation.avdEvaluation,
   );
   const [painScale, setPainScale] = React.useState<PainScale>(
-    clinicalCase.evaluation.painScale,
+    activeEvaluation.painScale,
   );
   const [activeSection, setActiveSection] = React.useState<
     'posturogram' | 'tests' | 'avd' | 'pain'
@@ -245,17 +257,20 @@ export function EvaluationForm({
 
     setIsSaving(true);
     try {
+      if (!activeEvaluation) return;
+
       const evaluation: Evaluation = {
-        id: clinicalCase.evaluation.id,
+        id: activeEvaluation.id,
         clinicalCaseId: clinicalCase.id,
-        date: clinicalCase.evaluation.date,
+        date: activeEvaluation.date,
+        type: activeEvaluation.type,
         posturogram,
         orthopedicTests,
         avdEvaluation,
         painScale,
-        diagnosis: clinicalCase.evaluation.diagnosis,
-        footprints: clinicalCase.evaluation.footprints,
-        postureVideos: clinicalCase.evaluation.postureVideos,
+        diagnosis: activeEvaluation.diagnosis,
+        footprints: activeEvaluation.footprints,
+        postureVideos: activeEvaluation.postureVideos,
       };
 
       // Await in case the parent returns a Promise
@@ -278,10 +293,11 @@ export function EvaluationForm({
   };
 
   const handleCancel = () => {
-    setPosturogram(clinicalCase.evaluation.posturogram);
-    setOrthopedicTests(clinicalCase.evaluation.orthopedicTests);
-    setAvdEvaluation(clinicalCase.evaluation.avdEvaluation);
-    setPainScale(clinicalCase.evaluation.painScale);
+    if (!activeEvaluation) return;
+    setPosturogram(activeEvaluation.posturogram);
+    setOrthopedicTests(activeEvaluation.orthopedicTests);
+    setAvdEvaluation(activeEvaluation.avdEvaluation);
+    setPainScale(activeEvaluation.painScale);
     setAudioBlob(null);
     markClean();
   };

@@ -48,6 +48,7 @@ const mockEvaluation: Evaluation = {
   id: 'eval-1',
   clinicalCaseId: 'case-1',
   date: '2023-01-01',
+  type: 'INITIAL',
   posturogram: {
     head: { deviation: 'normal', severity: 'normal' },
     shoulders: { deviation: 'normal', severity: 'normal' },
@@ -109,7 +110,7 @@ const mockClinicalCase: ClinicalCase = {
   status: 'active',
   startDate: '2023-01-01',
   consultationReason: 'Test',
-  evaluation: mockEvaluation,
+  evaluations: [mockEvaluation],
   treatmentPlan: {
     id: 'plan-1',
     clinicalCaseId: 'case-1',

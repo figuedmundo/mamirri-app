@@ -65,70 +65,73 @@ describe('generateComparisonReport', () => {
     status: 'active',
     startDate: '2026-01-15',
     consultationReason: 'Pain in feet',
-    evaluation: {
-      id: 'e1',
-      clinicalCaseId: 'c1',
-      date: '2026-01-15',
-      posturogram: {},
-      orthopedicTests: {
-        schober: { result: 13, interpretation: 'Normal' },
-        thomas: { result: 'Negative', interpretation: 'Normal' },
-        ely: { result: 'Negative', interpretation: 'Normal' },
-        ober: { result: 'Negative', interpretation: 'Normal' },
+    evaluations: [
+      {
+        id: 'e1',
+        clinicalCaseId: 'c1',
+        date: '2026-01-15',
+        type: 'INITIAL',
+        posturogram: {},
+        orthopedicTests: {
+          schober: { result: 13, interpretation: 'Normal' },
+          thomas: { result: 'Negative', interpretation: 'Normal' },
+          ely: { result: 'Negative', interpretation: 'Normal' },
+          ober: { result: 'Negative', interpretation: 'Normal' },
+        },
+        avdEvaluation: {
+          barthel: {
+            total: 90,
+            interpretation: 'Independent',
+            feeding: 10,
+            bathing: 5,
+            grooming: 5,
+            dressing: 10,
+            bowels: 10,
+            bladder: 10,
+            toiletUse: 10,
+            transfers: 15,
+            mobility: 15,
+            stairs: 10,
+          },
+          lawton: {
+            total: 8,
+            interpretation: 'Independent',
+            phoneUse: 1,
+            shopping: 1,
+            foodPreparation: 1,
+            housekeeping: 1,
+            laundry: 1,
+            transportation: 1,
+            medication: 1,
+            finances: 1,
+          },
+        },
+        painScale: { activity: 8, rest: 3, palpation: 5, type: 'chronic' },
+        diagnosis: {
+          functionalIndicator: '',
+          clinicalAspect: '',
+          anatomopathology: '',
+          avdConsequences: '',
+        },
+        footprints: [
+          {
+            id: 'f1',
+            evaluationId: 'e1',
+            type: 'initial',
+            date: '2026-01-15',
+            url: 'http://img/1.jpg',
+          },
+          {
+            id: 'f2',
+            evaluationId: 'e1',
+            type: 'final',
+            date: '2026-03-15',
+            url: 'http://img/2.jpg',
+          },
+        ],
+        postureVideos: [],
       },
-      avdEvaluation: {
-        barthel: {
-          total: 90,
-          interpretation: 'Independent',
-          feeding: 10,
-          bathing: 5,
-          grooming: 5,
-          dressing: 10,
-          bowels: 10,
-          bladder: 10,
-          toiletUse: 10,
-          transfers: 15,
-          mobility: 15,
-          stairs: 10,
-        },
-        lawton: {
-          total: 8,
-          interpretation: 'Independent',
-          phoneUse: 1,
-          shopping: 1,
-          foodPreparation: 1,
-          housekeeping: 1,
-          laundry: 1,
-          transportation: 1,
-          medication: 1,
-          finances: 1,
-        },
-      },
-      painScale: { activity: 8, rest: 3, palpation: 5, type: 'chronic' },
-      diagnosis: {
-        functionalIndicator: '',
-        clinicalAspect: '',
-        anatomopathology: '',
-        avdConsequences: '',
-      },
-      footprints: [
-        {
-          id: 'f1',
-          evaluationId: 'e1',
-          type: 'initial',
-          date: '2026-01-15',
-          url: 'http://img/1.jpg',
-        },
-        {
-          id: 'f2',
-          evaluationId: 'e1',
-          type: 'final',
-          date: '2026-03-15',
-          url: 'http://img/2.jpg',
-        },
-      ],
-      postureVideos: [],
-    },
+    ],
     treatmentPlan: {
       id: 'tp1',
       clinicalCaseId: 'c1',
@@ -163,11 +166,13 @@ describe('generateComparisonReport', () => {
   it('should handle missing footprint images gracefully', async () => {
     const caseWithoutImages = {
       ...mockCase,
-      evaluation: {
-        ...mockCase.evaluation,
-        footprints: [],
-      },
-    };
+      evaluations: [
+        {
+          ...mockCase.evaluations[0],
+          footprints: [],
+        },
+      ],
+    } as unknown as ClinicalCase;
     await expect(
       generateComparisonReport(caseWithoutImages, mockPatient),
     ).resolves.not.toThrow();

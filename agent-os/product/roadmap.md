@@ -67,6 +67,8 @@ Methodology: Agile Development (1-week Sprints).
 **Backend & Data Layer:**
 
 - [x] **5.5** Database schema: Patient, ClinicalCase, Evaluation, TreatmentSession
+  - **Note:** Prisma schema supports 1:N Evaluations per ClinicalCase (INITIAL, PROGRESS, FINAL)
+  - **Note:** Evaluation.type field exists in DB, frontend alignment needed (see 6.14)
 - [x] **5.6** API endpoints: Patients CRUD with therapist isolation
 - [x] **5.7** API endpoints: Clinical cases CRUD
 - [x] **5.8** API endpoints: Treatment sessions CRUD
@@ -106,6 +108,37 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **6.7** Flow 3: Compare Posturogram (Before/After slider)
 - [ ] **6.8** Flow 4: View Patient Timeline (phases and sessions)
 
+**Clinical Model Alignment (Doctor's Requirements):**
+
+> Based on expert input: Treatment follows a 6-stage flow with 2 formal evaluations (Initial + Final) and per-session evolution tracking across 5 phases / 15 sessions.
+
+- [x] **6.14** Evaluation 1:N Migration — Frontend types `evaluation` → `evaluations[]`
+  - **Spec:** agent-os/specs/2026-01-16-evaluation-1n-migration/
+  - **Scope:** Update ClinicalCase type, add utility functions, update 9 components
+  - **Estimate:** 2 hours
+- [ ] **6.15** Add `type` field to Evaluation UI — Selector for INITIAL / FINAL
+  - EvaluacionForm should prompt user to select evaluation type when creating
+  - Display evaluation type badge in CaseDetailLayout header
+- [ ] **6.16** Update ComparisonBoard — Derive Initial vs Final from evaluations array
+  - Use `getInitialEvaluation()` and `getFinalEvaluation()` utility functions
+  - Show empty state if Final evaluation doesn't exist yet
+- [ ] **6.17** Treatment Plan Objectives UI — Display therapeutic/prophylactic/educational goals
+  - Add objectives section to CaseDetailLayout (Stage 2 of clinical flow)
+  - Wire to `TreatmentPlan.objectives` from backend
+- [ ] **6.18** 5-Phase Progress Visualization — Update phase model from 4 to 5 phases
+  - Phase 1: Initial (mobilizations, pain relief)
+  - Phase 2: Early-Intermediate (begin stretching)
+  - Phase 3: Intermediate (flexibility gains)
+  - Phase 4: Late-Intermediate (therapeutic exercises)
+  - Phase 5: Advanced (functional strengthening)
+
+**Future (Post-MVP):**
+
+- [ ] **6.19** Case Recommendations Entity — Treatment closure with suggestions
+  - Data model: `CaseRecommendations` (patientRecommendations, professionalRecommendations, continuationStrategy)
+  - UI: Recommendations section in case completion flow
+  - **Deferred to:** Week 10 or Part 3
+
 **Integrations:**
 
 - [x] **6.9** Wire callbacks: onSave, onPosturogramaChange, onPainScaleChange
@@ -116,6 +149,7 @@ Methodology: Agile Development (1-week Sprints).
 **Tests:**
 
 - [ ] **6.13** Frontend tests: Key user flows (TDD approach)
+- [ ] **6.20** Evaluation utility functions unit tests
 
 **🎯 Milestone 2:** "I can create patients, record sessions, and compare evaluations"
 

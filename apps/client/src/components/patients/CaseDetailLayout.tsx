@@ -7,6 +7,11 @@ import type {
   PainScale,
 } from '../../types/patient';
 import { useState, useEffect } from 'react';
+import {
+  getInitialEvaluation,
+  getFinalEvaluation,
+  getActiveEvaluation,
+} from '../../lib/evaluation-utils';
 import { TreatmentTimeline } from './TreatmentTimeline';
 import { PosturogramViewer } from './PosturogramViewer';
 import { EvaluationForm } from './EvaluationForm';
@@ -58,12 +63,13 @@ export function CaseDetailLayout({
     (s) => s.id === activeSessionId,
   );
 
-  const initialFootprint = localCase.evaluation?.footprints?.find(
+  const initialEval = getInitialEvaluation(localCase);
+  const finalEval = getFinalEvaluation(localCase);
+
+  const initialFootprint = initialEval?.footprints?.find(
     (f) => f.type === 'initial',
   );
-  const finalFootprint = localCase.evaluation?.footprints?.find(
-    (f) => f.type === 'final',
-  );
+  const finalFootprint = finalEval?.footprints?.find((f) => f.type === 'final');
 
   const hasPosturogramImages = initialFootprint?.url && finalFootprint?.url;
   const hasSessions = localCase.treatmentSessions.length > 0;
@@ -108,7 +114,15 @@ export function CaseDetailLayout({
   const handleSaveEvaluation = async (evaluation: Evaluation) => {
     try {
       // Optimistic update
-      const updatedCase = { ...localCase, evaluation };
+      const updatedEvaluations = localCase.evaluations.map((e) =>
+        e.id === evaluation.id ? evaluation : e,
+      );
+      // If new, add it
+      if (!localCase.evaluations.find((e) => e.id === evaluation.id)) {
+        updatedEvaluations.push(evaluation);
+      }
+
+      const updatedCase = { ...localCase, evaluations: updatedEvaluations };
       setLocalCase(updatedCase);
 
       // Persist changes
@@ -130,14 +144,22 @@ export function CaseDetailLayout({
   };
 
   const handlePosturogramChange = async (posturogram: Posturogram) => {
+    const activeEval = getActiveEvaluation(localCase);
+    if (!activeEval) return;
+
     try {
+      const updatedEval = { ...activeEval, posturogram };
+      const updatedEvaluations = localCase.evaluations.map((e) =>
+        e.id === updatedEval.id ? updatedEval : e,
+      );
+
       const updatedCase = {
         ...localCase,
-        evaluation: { ...localCase.evaluation, posturogram },
+        evaluations: updatedEvaluations,
       };
       setLocalCase(updatedCase);
 
-      await patientsApi.updateEvaluation(localCase.evaluation.id, {
+      await patientsApi.updateEvaluation(activeEval.id, {
         posturogram,
       });
     } catch {
@@ -150,14 +172,22 @@ export function CaseDetailLayout({
   };
 
   const handlePainScaleChange = async (painScale: PainScale) => {
+    const activeEval = getActiveEvaluation(localCase);
+    if (!activeEval) return;
+
     try {
+      const updatedEval = { ...activeEval, painScale };
+      const updatedEvaluations = localCase.evaluations.map((e) =>
+        e.id === updatedEval.id ? updatedEval : e,
+      );
+
       const updatedCase = {
         ...localCase,
-        evaluation: { ...localCase.evaluation, painScale },
+        evaluations: updatedEvaluations,
       };
       setLocalCase(updatedCase);
 
-      await patientsApi.updateEvaluation(localCase.evaluation.id, {
+      await patientsApi.updateEvaluation(activeEval.id, {
         painScale,
       });
     } catch {

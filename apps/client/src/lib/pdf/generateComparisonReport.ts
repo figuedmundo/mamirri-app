@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf';
 import type { ClinicalCase, Patient } from '@/types/patient';
 import { fetchImageAsBase64 } from './fetchImageAsBase64';
+import { getInitialEvaluation, getFinalEvaluation } from '../evaluation-utils';
 
 export const generateComparisonReport = async (
   clinicalCase: ClinicalCase,
@@ -93,10 +94,13 @@ export const generateComparisonReport = async (
   const addVisualComparison = async () => {
     addSectionTitle('Comparativa Visual (Huellas)');
 
-    const initialFootprint = clinicalCase.evaluation.footprints.find(
+    const initialEval = getInitialEvaluation(clinicalCase);
+    const finalEval = getFinalEvaluation(clinicalCase);
+
+    const initialFootprint = initialEval?.footprints.find(
       (f) => f.type === 'initial',
     );
-    const finalFootprint = clinicalCase.evaluation.footprints.find(
+    const finalFootprint = finalEval?.footprints.find(
       (f) => f.type === 'final',
     );
 
@@ -175,22 +179,22 @@ export const generateComparisonReport = async (
   const addMetricsTable = () => {
     addSectionTitle('Métricas Clínicas');
 
-    const initialPain = clinicalCase.evaluation.painScale.activity;
+    const initialEval = getInitialEvaluation(clinicalCase);
+    const initialPain = initialEval?.painScale.activity || 0;
     const finalSession =
       clinicalCase.treatmentSessions[clinicalCase.treatmentSessions.length - 1];
     const finalPain = finalSession ? finalSession.finalPainLevel : '-';
     const painChange =
       typeof finalPain === 'number' ? finalPain - initialPain : '-';
 
-    const initialBarthel = clinicalCase.evaluation.avdEvaluation.barthel.total;
+    const initialBarthel = initialEval?.avdEvaluation.barthel.total || 0;
     const finalBarthel =
       clinicalCase.treatmentSessions.length > 0
         ? Math.min(100, initialBarthel + 5)
         : initialBarthel;
     const barthelChange = finalBarthel - initialBarthel;
 
-    const schoberResult =
-      clinicalCase.evaluation.orthopedicTests.schober.result;
+    const schoberResult = initialEval?.orthopedicTests.schober.result || '-';
 
     const metrics = [
       {
