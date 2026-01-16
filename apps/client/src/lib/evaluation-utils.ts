@@ -1,4 +1,5 @@
 import type { ClinicalCase, Evaluation } from '../types/patient';
+import { EvaluationType } from '../types/patient';
 
 /**
  * Get the initial evaluation from a clinical case.
@@ -49,4 +50,35 @@ export function getActiveEvaluation(
   return (
     getLatestEvaluation(clinicalCase) || getInitialEvaluation(clinicalCase)
   );
+}
+
+export function canCreateEvaluationOfType(
+  clinicalCase: ClinicalCase,
+  type: EvaluationType,
+): { canCreate: boolean; message?: string } {
+  const existingEvals = clinicalCase.evaluations || [];
+
+  if (
+    type === EvaluationType.INITIAL &&
+    existingEvals.some((e) => e.type === EvaluationType.INITIAL)
+  ) {
+    return {
+      canCreate: false,
+      message:
+        'Ya existe una Evaluación Inicial. Si necesitas modificarla, usa la opción "Editar".',
+    };
+  }
+
+  if (
+    type === EvaluationType.FINAL &&
+    existingEvals.some((e) => e.type === EvaluationType.FINAL)
+  ) {
+    return {
+      canCreate: false,
+      message:
+        'Ya existe una Evaluación Final. Si necesitas modificarla, usa la opción "Editar".',
+    };
+  }
+
+  return { canCreate: true };
 }

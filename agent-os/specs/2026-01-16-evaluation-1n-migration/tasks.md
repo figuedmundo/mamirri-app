@@ -52,11 +52,11 @@
 
 ## Done When
 
-- [ ] TypeScript build passes with no errors related to `evaluation`
-- [ ] All existing tests pass
-- [ ] New utility function tests pass
-- [ ] Manual verification shows:
-  - Patient list displays pain levels correctly
-  - Evaluation form loads and saves correctly
-  - Comparison board compares Initial vs Final
-  - PDF export generates correctly
+- [x] TypeScript build passes with no errors related to `evaluation`
+- [x] All existing tests pass
+- [x] New utility function tests pass
+- [x] Manual verification shows:
+  - [x] Patient list displays pain levels correctly
+  - [x] Evaluation form loads and saves correctly
+  - [x] Comparison board compares Initial vs Final
+  - [x] PDF export generates correctly

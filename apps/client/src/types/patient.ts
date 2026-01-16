@@ -172,11 +172,33 @@ export interface PostureVideo {
   observations: string;
 }
 
+/**
+ * Evaluation type enum for type safety
+ */
+export enum EvaluationType {
+  INITIAL = 'INITIAL',
+  PROGRESS = 'PROGRESS',
+  FINAL = 'FINAL',
+}
+
+export type EvaluationTypeValue =
+  | EvaluationType.INITIAL
+  | EvaluationType.PROGRESS
+  | EvaluationType.FINAL;
+
+/**
+ * Evaluation type options available in UI (PROGRESS is reserved for future use)
+ */
+export const EVALUATION_TYPE_OPTIONS = [
+  { value: EvaluationType.INITIAL, label: 'Evaluación Inicial', icon: '🟢' },
+  { value: EvaluationType.FINAL, label: 'Evaluación Final', icon: '🔵' },
+] as const;
+
 export interface Evaluation {
   id: string;
   clinicalCaseId: string;
   date: string;
-  type: 'INITIAL' | 'PROGRESS' | 'FINAL';
+  type: EvaluationTypeValue;
   posturogram: Posturogram;
   orthopedicTests: OrthopedicTests;
   avdEvaluation: AVDEvaluation;
@@ -321,7 +343,7 @@ export interface EvaluationFormProps {
   /** The clinical case being evaluated */
   clinicalCase: ClinicalCase;
 
-  /** Called when user wants to save the evaluation */
+  /** Called when user wants to save evaluation */
   onSave?: (evaluation: Evaluation) => void;
 
   /** Called when user starts voice dictation */
@@ -332,6 +354,9 @@ export interface EvaluationFormProps {
 
   /** Called when user updates pain scale */
   onPainScaleChange?: (painScale: PainScale) => void;
+
+  /** Evaluation type being edited (for new evaluations, this is auto-defaulted) */
+  evaluationType?: EvaluationTypeValue;
 }
 
 export interface ComparisonProps {

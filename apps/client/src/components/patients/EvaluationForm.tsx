@@ -7,6 +7,7 @@ import type {
   PainScale,
   Evaluation,
 } from '../../types/patient';
+import { EvaluationType, EVALUATION_TYPE_OPTIONS } from '../../types/patient';
 import { BodySilhouette } from './BodySilhouette';
 import {
   type AnatomicalPoint,
@@ -18,7 +19,11 @@ import { useDebounce } from '../../hooks/use-debounce';
 import { useUnsavedChanges } from '../../hooks/use-unsaved-changes';
 import { useToast } from '../../hooks/use-toast';
 
-import { getActiveEvaluation } from '../../lib/evaluation-utils';
+import {
+  getInitialEvaluation,
+  getFinalEvaluation,
+  getActiveEvaluation,
+} from '../../lib/evaluation-utils';
 
 const ORTHOPEDIC_TESTS_CONFIG = [
   { key: 'thomas', label: 'Thomas', description: 'Flexor cadera' },
@@ -38,6 +43,14 @@ export function EvaluationForm({
   onPainScaleChange,
 }: EvaluationFormProps) {
   const activeEvaluation = getActiveEvaluation(clinicalCase);
+
+  const hasInitialEvaluation = !!getInitialEvaluation(clinicalCase);
+  const hasFinalEvaluation = !!getFinalEvaluation(clinicalCase);
+
+  const [evaluationType, setEvaluationType] = React.useState<EvaluationType>(
+    activeEvaluation?.type || EvaluationType.INITIAL,
+  );
+  const [hasStartedDataEntry, setHasStartedDataEntry] = React.useState(false);
 
   const [posturogram, setPosturogram] = React.useState<Posturogram>(
     () => activeEvaluation?.posturogram || ({} as Posturogram),
@@ -76,32 +89,6 @@ export function EvaluationForm({
     createDefaultPointStatus,
   );
 
-  if (!activeEvaluation) {
-    return (
-      <div className="p-8 text-center text-slate-500">
-        No hay evaluación activa.
-      </div>
-    );
-  }
-
-  const handleBodySilhouetteChange = (
-    point: AnatomicalPoint,
-    status: PointStatus,
-  ) => {
-    setBodySilhouetteValues((prev) => ({
-      ...prev,
-      [point]: status,
-    }));
-
-    const updated = {
-      ...posturogram,
-      [point]: status.deviation,
-    };
-    setPosturogram(updated);
-    markDirty();
-    debouncedSavePosturogram(updated);
-  };
-
   const debouncedSavePosturogram = useDebounce(async (data: Posturogram) => {
     if (!onPosturogramChange) return;
 
@@ -139,6 +126,46 @@ export function EvaluationForm({
       });
     }
   }, 300);
+
+  const handleTypeChange = (newType: EvaluationType) => {
+    if (hasStartedDataEntry) {
+      toast({
+        variant: 'destructive',
+        title: 'No se puede cambiar el tipo',
+        description:
+          'Ya has comenzado a llenar el formulario. Crea una nueva evaluación.',
+      });
+      return;
+    }
+    setEvaluationType(newType);
+  };
+
+  if (!activeEvaluation) {
+    return (
+      <div className="p-8 text-center text-slate-500">
+        No hay evaluación activa.
+      </div>
+    );
+  }
+
+  const handleBodySilhouetteChange = (
+    point: AnatomicalPoint,
+    status: PointStatus,
+  ) => {
+    setBodySilhouetteValues((prev) => ({
+      ...prev,
+      [point]: status,
+    }));
+
+    const updated = {
+      ...posturogram,
+      [point]: status.deviation,
+    };
+    setPosturogram(updated);
+    markDirty();
+    setHasStartedDataEntry(true);
+    debouncedSavePosturogram(updated);
+  };
 
   const handlePosturogramChange = (
     part: keyof Posturogram,
@@ -312,10 +339,77 @@ export function EvaluationForm({
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
+      <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
+        <div className="mb-4">
+          <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+            Tipo de Evaluación
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            {EVALUATION_TYPE_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => handleTypeChange(option.value)}
+                disabled={hasStartedDataEntry}
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  evaluationType === option.value
+                    ? `${
+                        option.value === EvaluationType.INITIAL
+                          ? 'bg-emerald-100 border-emerald-500 text-emerald-900 dark:bg-emerald-900/30 dark:border-emerald-500 dark:text-emerald-100'
+                          : 'bg-blue-100 border-blue-500 text-blue-900 dark:bg-blue-900/30 dark:border-blue-500 dark:text-blue-100'
+                      }`
+                    : 'bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{option.icon}</span>
+                  <span className="font-medium">{option.label}</span>
+                </div>
+                {evaluationType === option.value && (
+                  <div className="absolute top-2 right-2">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+          {hasFinalEvaluation && (
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+              Sugerido: INICIAL (ya existe Evaluación Final)
+            </p>
+          )}
+          {hasInitialEvaluation && !hasFinalEvaluation && (
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+              Sugerido: FINAL (ya existe Evaluación Inicial)
+            </p>
+          )}
+        </div>
+      </div>
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
             Evaluación Cinético-Funcional
+            <span
+              className={`ml-3 px-3 py-1 text-sm rounded-lg ${
+                activeEvaluation.type === 'INITIAL'
+                  ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300'
+                  : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+              }`}
+            >
+              {activeEvaluation.type === 'INITIAL' ? 'INICIAL' : 'FINAL'}
+            </span>
           </h1>
           <p className="text-slate-600 dark:text-slate-400 mt-1">
             {clinicalCase.title}

@@ -15,7 +15,7 @@ export const fetchImageAsBase64 = async (
       };
       reader.readAsDataURL(blob);
     });
-  } catch (error) {
+  } catch {
     return null;
   }
 };

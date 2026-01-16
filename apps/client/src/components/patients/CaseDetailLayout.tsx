@@ -51,6 +51,8 @@ export function CaseDetailLayout({
     setLocalCase(clinicalCase);
   }, [clinicalCase]);
 
+  const activeEvalType = getActiveEvaluation(localCase)?.type;
+
   const [activeSessionId, setActiveSessionId] = useState<string | undefined>(
     localCase.treatmentSessions[localCase.treatmentSessions.length - 1]?.id,
   );
@@ -277,6 +279,17 @@ export function CaseDetailLayout({
           >
             <ClipboardList size={16} />
             <span className="hidden sm:inline">Evaluación</span>
+            {activeEvalType && (
+              <span
+                className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
+                  activeEvalType === 'INITIAL'
+                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300'
+                    : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                }`}
+              >
+                {activeEvalType === 'INITIAL' ? 'INICIAL' : 'FINAL'}
+              </span>
+            )}
           </button>
           <button
             onClick={() => setViewMode('comparison')}

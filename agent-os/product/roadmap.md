@@ -116,10 +116,10 @@ Methodology: Agile Development (1-week Sprints).
   - **Spec:** agent-os/specs/2026-01-16-evaluation-1n-migration/
   - **Scope:** Update ClinicalCase type, add utility functions, update 9 components
   - **Estimate:** 2 hours
-- [ ] **6.15** Add `type` field to Evaluation UI — Selector for INITIAL / FINAL
+- [x] **6.15** Add `type` field to Evaluation UI — Selector for INITIAL / FINAL
   - EvaluacionForm should prompt user to select evaluation type when creating
   - Display evaluation type badge in CaseDetailLayout header
-- [ ] **6.16** Update ComparisonBoard — Derive Initial vs Final from evaluations array
+- [x] **6.16** Update ComparisonBoard — Derive Initial vs Final from evaluations array
   - Use `getInitialEvaluation()` and `getFinalEvaluation()` utility functions
   - Show empty state if Final evaluation doesn't exist yet
 - [ ] **6.17** Treatment Plan Objectives UI — Display therapeutic/prophylactic/educational goals
