@@ -154,7 +154,7 @@ export function CaseDetailLayout({
                     </h1>
                     <p className="text-sm text-slate-500 mt-1">
                       {new Date(activeSession.date).toLocaleDateString(
-                        undefined,
+                        'es-ES',
                         {
                           weekday: 'long',
                           year: 'numeric',
@@ -286,10 +286,9 @@ export function CaseDetailLayout({
                 </h3>
                 <div className="max-w-md mx-auto">
                   <PosturogramViewer
-                    imageBefore={initialFootprint.url}
-                    imageAfter={finalFootprint.url}
-                    labelBefore="Inicial"
-                    labelAfter="Final"
+                    clinicalCase={clinicalCase}
+                    initialPosturogramUrl={initialFootprint.url}
+                    currentPosturogramUrl={finalFootprint.url}
                   />
                 </div>
               </div>

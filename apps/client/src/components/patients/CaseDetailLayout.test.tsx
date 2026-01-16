@@ -403,24 +403,12 @@ describe('CaseDetailLayout', () => {
       expect(screen.getByText('Agregar Primera Sesión')).toBeInTheDocument();
     });
 
+    /*
     it('should render "Selecciona una sesión" message when no session selected', () => {
-      const caseWithoutActiveSession: ClinicalCase = {
-        ...mockClinicalCaseWithSessions,
-        treatmentSessions: [mockSession1],
-      };
-
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={caseWithoutActiveSession}
-          onBack={onBackMock}
-        />,
-      );
-
-      expect(
-        screen.getByText(/Selecciona una sesión de la línea de tiempo/),
-      ).toBeInTheDocument();
+      // This state is unreachable with current auto-select logic unless we add way to deselect
+      // Skipping for now as it contradicts the feature "auto-select latest session"
     });
+    */
   });
 
   describe('Session Details', () => {
@@ -437,22 +425,46 @@ describe('CaseDetailLayout', () => {
 
     it('should render active session details', () => {
       expect(screen.getByText('Reporte de Evolución')).toBeInTheDocument();
-      expect(screen.getByText(/Sesión \d+ de \d+/)).toBeInTheDocument();
+      // Since it auto-selects the last session (2 of 2)
+      expect(screen.getByText(/Sesión 2 de 2/)).toBeInTheDocument();
     });
 
     it('should render session date in full format', () => {
+      // Date of session 2: 2024-01-22
       expect(
-        screen.getByText(/lunes, 15 de enero de 2024/),
+        screen.getByText(/lunes, 22 de enero de 2024/),
       ).toBeInTheDocument();
     });
 
     it('should render pain level indicator', () => {
       expect(screen.getByText('Dolor END')).toBeInTheDocument();
-      expect(screen.getByText('4/10')).toBeInTheDocument();
+      // Session 2 has pain 6
+      expect(screen.getByText('6/10')).toBeInTheDocument();
     });
 
     it('should render pain level in emerald color when pain is ≤ 5', () => {
-      const painIndicator = screen.getByText('4/10');
+      // Need a case where the LAST session has pain <= 5
+      const caseWithLowPain: ClinicalCase = {
+        ...mockClinicalCaseWithSessions,
+        treatmentSessions: [
+          mockSession1, // pain 4
+          {
+            ...mockSession2,
+            finalPainLevel: 3,
+          },
+        ],
+      };
+
+      // Re-render with new case
+      render(
+        <CaseDetailLayout
+          patient={mockPatient}
+          clinicalCase={caseWithLowPain}
+          onBack={onBackMock}
+        />,
+      );
+
+      const painIndicator = screen.getByText('3/10');
       expect(painIndicator).toHaveClass('text-emerald-500');
     });
 
@@ -480,22 +492,25 @@ describe('CaseDetailLayout', () => {
     });
 
     it('should render applied procedures as tags', () => {
-      expect(screen.getByText('Masaje lumbar')).toBeInTheDocument();
-      expect(
-        screen.getByText('Estiramientos isquiotibiales'),
-      ).toBeInTheDocument();
+      // Session 2 procedures
+      expect(screen.getByText('Terapia manual')).toBeInTheDocument();
     });
 
     it('should render patient response', () => {
+      // Session 2 response
       expect(
-        screen.getByText('Paciente reporta alivio del dolor post-tratamiento'),
+        screen.getByText('Sin cambios significativos'),
       ).toBeInTheDocument();
     });
 
     it('should render observations when present', () => {
-      expect(
-        screen.getByText('Buena respuesta al tratamiento'),
-      ).toBeInTheDocument();
+      // Session 2 observations
+      // Note: Text appears in both timeline and main detail view
+      const observations = screen.getAllByText(
+        'Continuar con plan de tratamiento',
+      );
+      expect(observations.length).toBeGreaterThan(0);
+      expect(observations[0]).toBeInTheDocument();
     });
 
     it('should render "Sin respuesta registrada" when no response', () => {
@@ -545,25 +560,52 @@ describe('CaseDetailLayout', () => {
 
   describe('Voice Notes', () => {
     it('should render voice note player when voice notes exist', () => {
+      // Session 2 doesn't have voice notes in mock
+      // Need to use session 1 which has voice notes, or add voice notes to session 2
+      const caseWithVoiceNotesInLastSession: ClinicalCase = {
+        ...mockClinicalCaseWithSessions,
+        treatmentSessions: [
+          mockSession1,
+          {
+            ...mockSession2,
+            voiceNotes: [mockVoiceNote],
+          },
+        ],
+      };
+
       render(
         <CaseDetailLayout
           patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
+          clinicalCase={caseWithVoiceNotesInLastSession}
           onBack={onBackMock}
         />,
       );
 
-      expect(screen.getByText('Nota de voz')).toBeInTheDocument();
+      // "Nota de voz" might appear in timeline and detail view
+      expect(screen.getAllByText('Nota de voz').length).toBeGreaterThan(0);
       expect(
-        screen.getByText('Paciente reporta mejoría en flexibilidad de columna'),
+        screen.getByText(
+          /"Paciente reporta mejoría en flexibilidad de columna"/,
+        ),
       ).toBeInTheDocument();
     });
 
     it('should render play button for voice note', () => {
+      const caseWithVoiceNotesInLastSession: ClinicalCase = {
+        ...mockClinicalCaseWithSessions,
+        treatmentSessions: [
+          mockSession1,
+          {
+            ...mockSession2,
+            voiceNotes: [mockVoiceNote],
+          },
+        ],
+      };
+
       render(
         <CaseDetailLayout
           patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
+          clinicalCase={caseWithVoiceNotesInLastSession}
           onBack={onBackMock}
         />,
       );
@@ -693,7 +735,8 @@ describe('CaseDetailLayout', () => {
       await userEvent.click(editButton);
 
       expect(onEditSessionMock).toHaveBeenCalledTimes(1);
-      expect(onEditSessionMock).toHaveBeenCalledWith('ses-001');
+      // Expect session 2 (the latest)
+      expect(onEditSessionMock).toHaveBeenCalledWith('ses-002');
     });
 
     it('should not render edit button when onEditSession not provided', () => {

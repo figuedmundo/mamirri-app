@@ -371,6 +371,18 @@ export function EvaluationForm({
             <div className="grid grid-cols-2 gap-4">
               {(Object.keys(posturogram) as (keyof Posturogram)[]).map(
                 (part) => {
+                  // Skip nested view objects to prevent crash in legacy renderer
+                  if (
+                    [
+                      'anteriorView',
+                      'posteriorView',
+                      'lateralView',
+                      'gait',
+                    ].includes(part)
+                  ) {
+                    return null;
+                  }
+
                   const partValue = posturogram[part];
                   if (typeof partValue !== 'object' || partValue === null)
                     return null;

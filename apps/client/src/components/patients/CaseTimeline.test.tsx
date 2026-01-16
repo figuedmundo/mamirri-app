@@ -280,7 +280,7 @@ describe('CaseTimeline', () => {
         />,
       );
 
-      const activeSession = screen.getByText(/Sesión.*001/);
+      const activeSession = screen.getByText(/Sesión.*001/).closest('button');
       expect(activeSession).toHaveClass('border-teal-500');
     });
 
@@ -293,7 +293,7 @@ describe('CaseTimeline', () => {
         />,
       );
 
-      const activeSession = screen.getByText(/Sesión.*001/);
+      const activeSession = screen.getByText(/Sesión.*001/).closest('button');
       expect(activeSession).toHaveClass('ring-1');
       expect(activeSession).toHaveClass('ring-teal-500');
     });
@@ -307,7 +307,7 @@ describe('CaseTimeline', () => {
         />,
       );
 
-      const activeSession = screen.getByText(/Sesión.*001/);
+      const activeSession = screen.getByText(/Sesión.*001/).closest('button');
       expect(activeSession).toHaveClass('shadow-sm');
     });
 
@@ -320,7 +320,7 @@ describe('CaseTimeline', () => {
         />,
       );
 
-      const inactiveSession = screen.getByText(/Sesión.*002/);
+      const inactiveSession = screen.getByText(/Sesión.*002/).closest('button');
       expect(inactiveSession).not.toHaveClass('border-teal-500');
       expect(inactiveSession).not.toHaveClass('ring-teal-500');
     });

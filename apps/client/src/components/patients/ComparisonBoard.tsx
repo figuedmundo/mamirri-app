@@ -1,11 +1,5 @@
 import React from 'react';
-import { Split } from 'lucide-react';
-import type {
-  ComparisonProps,
-  Footprint,
-  PostureVideo,
-} from '../../types/patient';
-import { BeforeAfterSlider } from '../ui/BeforeAfterSlider';
+import type { ComparisonProps } from '../../types/patient';
 
 type ViewMode = 'slider' | 'side-by-side';
 
@@ -14,7 +8,9 @@ export function ComparisonBoard({
   onExport,
   onShare,
 }: ComparisonProps) {
-  const [activeTab, setActiveTab] = React.useState<'footprints' | 'posture' | 'tests'>('footprints');
+  const [activeTab, setActiveTab] = React.useState<
+    'footprints' | 'posture' | 'tests'
+  >('footprints');
   const [viewMode, setViewMode] = React.useState<ViewMode>('side-by-side');
 
   const initialFootprint = clinicalCase.evaluation.footprints.find(
@@ -23,12 +19,6 @@ export function ComparisonBoard({
   const finalFootprint = clinicalCase.evaluation.footprints.find(
     (h) => h.type === 'final',
   );
-
-  const initialVideo = clinicalCase.evaluation.postureVideos[0];
-  const finalVideo =
-    clinicalCase.evaluation.postureVideos[
-      clinicalCase.evaluation.postureVideos.length - 1
-    ];
 
   const toggleMode = () => {
     const newMode: ViewMode = viewMode === 'slider' ? 'side-by-side' : 'slider';
@@ -88,7 +78,10 @@ export function ComparisonBoard({
           </button>
         </div>
 
-        <button onClick={toggleMode} className="px-4 py-2 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center gap-2">
+        <button
+          onClick={toggleMode}
+          className="px-4 py-2 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center gap-2"
+        >
           <svg
             className="w-4 h-4"
             fill="none"
@@ -97,22 +90,22 @@ export function ComparisonBoard({
           >
             <path
               strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 17a3 3 0 003 3h10a3 3 0 110-2.684l6.632 3.316m0 0a3 3 0 00-5.368a3 3 0 00-3.316m0 0a3 3 0 00-3.316m0 0 105.368 2.684a3 3 0 00-3.316m0 0a3 3 0 00-3.316m0 0 00-3.316m0 0 0 003 3v-1m-4 4l4 4V4"
-              />
-            </svg>
-            {viewMode === 'slider' ? (
-              <span className="text-xs text-teal-600 dark:text-teal-400 font-medium">
-                Slider
-              </span>
-            ) : (
-              <span className="text-xs text-teal-600 dark:text-teal-400 font-medium">
-                Side by Side
-              </span>
-            )}
-          </button>
-        </div>
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8 17a3 3 0 003 3h10a3 3 0 110-2.684l6.632 3.316m0 0a3 3 0 00-5.368a3 3 0 00-3.316m0 0a3 3 0 00-3.316m0 0 105.368 2.684a3 3 0 00-3.316m0 0 0 003 3v-1m-4 4l4 4V4"
+            />
+          </svg>
+          {viewMode === 'slider' ? (
+            <span className="text-xs text-teal-600 dark:text-teal-400 font-medium">
+              Slider
+            </span>
+          ) : (
+            <span className="text-xs text-teal-600 dark:text-teal-400 font-medium">
+              Side by Side
+            </span>
+          )}
+        </button>
+      </div>
 
       <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700">
         {[
@@ -153,33 +146,52 @@ export function ComparisonBoard({
 
               <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center bg-slate-50 dark:bg-slate-900/50">
                 {initialFootprint ? (
-                  <img src={initialFootprint.url} alt="Huella antes" className="w-full h-full object-cover" />
+                  <img
+                    src={initialFootprint.url}
+                    alt="Huella antes"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <span className="text-slate-400">No disponible</span>
                 )}
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 border border-2 border-teal-500/20 dark:border-teal-500/30 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center bg-teal-50/10 dark:bg-teal-900/10">
-              <span className="text-sm font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wider">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wider">
                   DESPUÉS
-              </span>
-              <span className="text-xs font-medium text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/20 px-2 py-1 rounded">
+                </span>
+                <span className="text-xs font-medium text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/20 px-2 py-1 rounded">
                   {finalFootprint?.date
                     ? new Date(finalFootprint.date).toLocaleDateString()
                     : 'Pendiente'}
                 </span>
               </div>
-              <span className="absolute top-4 right-4 bg-black/60 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">
-                {finalFootprint?.comparison ? (
-                  <div className="bg-teal-50 dark:bg-teal-900/10 rounded-full text-xs font-medium text-teal-700 dark:text-teal-300">
+
+              <div className="bg-white dark:bg-slate-800 border border-2 border-teal-500/20 dark:border-teal-500/30 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center bg-teal-50/10 dark:bg-teal-900/10 relative">
+                {finalFootprint?.url ? (
+                  <img
+                    src={finalFootprint.url}
+                    alt="Huella después"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-teal-600/50 dark:text-teal-400/50 font-medium">
+                    Pendiente
+                  </span>
+                )}
+
+                {finalFootprint?.comparison && (
+                  <div className="absolute bottom-4 right-4 bg-teal-50 dark:bg-teal-900/10 rounded-full text-xs font-medium text-teal-700 dark:text-teal-300 px-2 py-1 border border-teal-200 dark:border-teal-800 shadow-sm backdrop-blur-sm">
                     Mejora de arco: {finalFootprint.comparison.archDifference}mm
                   </div>
-                ) : null}
-              </span>
+                )}
+              </div>
             </div>
           </div>
         )}
       </div>
-    );
+    </div>
+  );
 }

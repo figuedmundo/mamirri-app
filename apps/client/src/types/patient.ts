@@ -11,30 +11,62 @@ export interface VoiceNote {
   durationSeconds: number;
 }
 
+export type AnatomicalPoint =
+  | 'head'
+  | 'shoulders'
+  | 'spine'
+  | 'pelvis'
+  | 'knees'
+  | 'feet';
+export type DeviationSeverity = 'normal' | 'mild' | 'severe';
+export type DeviationType =
+  | 'normal'
+  | 'scoliosis'
+  | 'lordosis'
+  | 'kyphosis'
+  | 'rotation'
+  | 'lateralization'
+  | 'valgus'
+  | 'varus'
+  | 'anteversion'
+  | 'retroversion'
+  | 'external-rotation-left'
+  | 'external-rotation-right'
+  | 'lateralization-left'
+  | 'lateralization-right'
+  | string;
+
+export interface AnatomicalPointStatus {
+  deviation: DeviationType;
+  severity: DeviationSeverity;
+}
+
 export interface Posturogram {
   anteriorView?: PosturalView;
   posteriorView?: PosturalView;
   lateralView?: PosturalView;
   gait?: string;
   // Legacy fields mapped to new structure
-  head?: DeviationStatus | string;
-  shoulders?: DeviationStatus | string;
-  spine?: DeviationStatus | string;
-  pelvis?: DeviationStatus | string;
-  knees?: DeviationStatus | string;
-  feet?: DeviationStatus | string;
+  head?: DeviationStatus | string | AnatomicalPointStatus;
+  shoulders?: DeviationStatus | string | AnatomicalPointStatus;
+  spine?: DeviationStatus | string | AnatomicalPointStatus;
+  pelvis?: DeviationStatus | string | AnatomicalPointStatus;
+  knees?: DeviationStatus | string | AnatomicalPointStatus;
+  feet?: DeviationStatus | string | AnatomicalPointStatus;
 }
 
 export interface PosturalView {
-  head?: string;
-  shoulders?: string;
-  talesTriangle?: string;
-  iliacSpine?: string;
-  cervicalSpine?: string;
-  dorsalSpine?: string;
-  lumbarSpine?: string;
-  knees?: string;
-  feet?: string;
+  head?: AnatomicalPointStatus;
+  shoulders?: AnatomicalPointStatus;
+  spine?: AnatomicalPointStatus;
+  pelvis?: AnatomicalPointStatus;
+  knees?: AnatomicalPointStatus;
+  feet?: AnatomicalPointStatus;
+  talesTriangle?: AnatomicalPointStatus;
+  iliacSpine?: AnatomicalPointStatus;
+  cervicalSpine?: AnatomicalPointStatus;
+  dorsalSpine?: AnatomicalPointStatus;
+  lumbarSpine?: AnatomicalPointStatus;
 }
 
 export interface DeviationStatus {

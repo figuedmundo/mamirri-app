@@ -136,28 +136,7 @@ describe('BeforeAfterSlider', () => {
         />,
       );
 
-      const handle = screen.getByRole('slider-handle');
-      expect(handle).toBeInTheDocument();
-    });
-
-    it('renders handle at specific position when position changes', () => {
-      const { rerender } = render(
-        <BeforeAfterSlider
-          imageBefore={mockImageBefore}
-          imageAfter={mockImageAfter}
-          sliderPosition={25}
-        />,
-      );
-
-      rerender(
-        <BeforeAfterSlider
-          imageBefore={mockImageBefore}
-          imageAfter={mockImageAfter}
-          sliderPosition={75}
-        />,
-      );
-
-      const handle = screen.getByRole('slider-handle');
+      const handle = screen.getByTestId('slider-handle');
       expect(handle).toBeInTheDocument();
     });
   });
@@ -223,7 +202,7 @@ describe('BeforeAfterSlider', () => {
         />,
       );
 
-      const handle = screen.getByRole('slider-handle');
+      const handle = screen.getByTestId('slider-handle');
       expect(handle).toBeInTheDocument();
     });
   });

@@ -64,7 +64,7 @@ describe('AuthController', () => {
   describe('login', () => {
     it('should call authService.login and set cookie', () => {
       const user = { id: '1', email: 'test@example.com' };
-      (authService.login as jest.Mock).mockResolvedValue({
+      (authService.login as jest.Mock).mockReturnValue({
         accessToken: 'at',
         refreshToken: 'rt',
         user: user,
