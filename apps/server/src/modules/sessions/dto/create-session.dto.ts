@@ -1,13 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
-  IsUUID,
   IsInt,
   IsArray,
-  IsDateString,
+  IsDate,
   Min,
   Max,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateSessionDto {
@@ -15,7 +16,7 @@ export class CreateSessionDto {
     description: 'ID of the clinical case this session belongs to',
     example: 'clm1234567890',
   })
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   clinicalCaseId: string;
 
@@ -23,9 +24,10 @@ export class CreateSessionDto {
     description: 'Date of the session',
     example: '2023-01-15T10:00:00Z',
   })
-  @IsDateString()
+  @Type(() => Date)
+  @IsDate()
   @IsNotEmpty()
-  date: string;
+  date: Date;
 
   @ApiProperty({
     description: 'Phase number of the treatment',
@@ -67,8 +69,9 @@ export class CreateSessionDto {
   @ApiProperty({
     description: 'Therapist observations',
     example: 'Improved range of motion',
+    required: false,
   })
   @IsString()
-  @IsNotEmpty()
-  observations: string;
+  @IsOptional()
+  observations?: string;
 }

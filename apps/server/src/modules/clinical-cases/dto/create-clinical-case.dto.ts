@@ -13,7 +13,7 @@ export class CreateClinicalCaseDto {
     description: 'ID of the patient this case belongs to',
     example: 'clm1234567890',
   })
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   patientId: string;
 

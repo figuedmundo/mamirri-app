@@ -91,3 +91,114 @@ test('record treatment session flow', async ({ page }) => {
 
   await casePage.waitForToast(/Sesión creada/i);
 });
+
+test('update treatment session flow', async ({ page }) => {
+  const casePage = new CasePage(page);
+
+  await casePage.mockAuth();
+
+  const patientId = '1';
+  const caseId = 'case-1';
+  const sessionId = 'session-1';
+
+  await page.route(`**/api/v1/patients/${patientId}`, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        id: patientId,
+        firstName: 'Juan',
+        lastName: 'Perez',
+        clinicalCases: [
+          {
+            id: caseId,
+            title: 'Dolor Lumbar',
+            status: 'active',
+            treatmentSessions: [
+              {
+                id: sessionId,
+                date: new Date().toISOString(),
+                phaseNumber: 1,
+                procedures: ['Masaje'],
+                patientResponse: 'Initial response',
+                finalPainLevel: 3,
+                observations: 'Initial observations',
+              },
+            ],
+            treatmentPlan: {
+              phases: [{ id: 1, number: 1, name: 'Fase 1' }],
+            },
+          },
+        ],
+      }),
+    });
+  });
+
+  await page.route(`**/api/v1/sessions/${sessionId}`, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        id: sessionId,
+        patientResponse: 'Updated response',
+      }),
+    });
+  });
+
+  await casePage.gotoDetail(patientId, caseId);
+  await casePage.editSession({ response: 'Updated response' });
+
+  await casePage.waitForToast(/Sesión actualizada/i);
+});
+
+test('delete treatment session flow', async ({ page }) => {
+  const casePage = new CasePage(page);
+
+  await casePage.mockAuth();
+
+  const patientId = '1';
+  const caseId = 'case-1';
+  const sessionId = 'session-1';
+
+  await page.route(`**/api/v1/patients/${patientId}`, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        id: patientId,
+        firstName: 'Juan',
+        lastName: 'Perez',
+        clinicalCases: [
+          {
+            id: caseId,
+            title: 'Dolor Lumbar',
+            status: 'active',
+            treatmentSessions: [
+              {
+                id: sessionId,
+                date: new Date().toISOString(),
+                phaseNumber: 1,
+                procedures: ['Masaje'],
+                patientResponse: 'Initial response',
+                finalPainLevel: 3,
+                observations: 'Initial observations',
+              },
+            ],
+            treatmentPlan: {
+              phases: [{ id: 1, number: 1, name: 'Fase 1' }],
+            },
+          },
+        ],
+      }),
+    });
+  });
+
+  await page.route(`**/api/v1/sessions/${sessionId}`, async (route) => {
+    await route.fulfill({ status: 204 });
+  });
+
+  await casePage.gotoDetail(patientId, caseId);
+  await casePage.deleteSession();
+
+  await casePage.waitForToast(/Sesión eliminada/i);
+});

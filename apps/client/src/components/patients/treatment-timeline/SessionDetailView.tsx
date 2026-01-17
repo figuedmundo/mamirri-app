@@ -38,6 +38,10 @@ export function SessionDetailView({
 
   const hasPosturogramImages = initialFootprint?.url && finalFootprint?.url;
 
+  const activeSessionIndex = [...treatmentSessions]
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .findIndex((s) => s.id === activeSessionId);
+
   return (
     <div className="flex-1 flex overflow-hidden">
       <TimelineSidebar
@@ -49,7 +53,7 @@ export function SessionDetailView({
       <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
         <div className="max-w-4xl mx-auto space-y-8">
           {activeSession ? (
-            <SessionReport session={activeSession} />
+            <SessionReport session={activeSession} index={activeSessionIndex} />
           ) : (
             <div className="text-center py-20">
               <p className="text-slate-400">
@@ -78,13 +82,19 @@ export function SessionDetailView({
   );
 }
 
-function SessionReport({ session }: { session: TreatmentSession }) {
+function SessionReport({
+  session,
+  index,
+}: {
+  session: TreatmentSession;
+  index: number;
+}) {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
       <div className="flex justify-between items-start mb-6">
         <div>
           <span className="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider">
-            Sesion {session.id.split('-').pop()?.toUpperCase() || session.id}
+            Sesion {String(index + 1).padStart(3, '0')}
           </span>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
             Reporte de Evolucion

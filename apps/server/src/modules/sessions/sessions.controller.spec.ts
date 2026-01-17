@@ -35,7 +35,7 @@ describe('SessionsController', () => {
     it('should create a session', async () => {
       const dto: CreateSessionDto = {
         clinicalCaseId: 'case-1',
-        date: new Date().toISOString(),
+        date: new Date(),
         phaseNumber: 1,
         procedures: ['Proc'],
         patientResponse: 'Resp',

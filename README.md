@@ -101,6 +101,9 @@ pnpm dev
 - `pnpm dev`: Start all applications in watch mode.
 - `pnpm lint`: Lint all packages.
 - `pnpm format`: Format code with Prettier.
+- `pnpm test`: Run unit tests for all packages.
+- `pnpm test:e2e`: Run Playwright E2E tests (critical user flows).
+- `pnpm test:e2e:ui`: Run E2E tests in interactive UI mode (for debugging).
 
 ## DevOps & Deployment
 

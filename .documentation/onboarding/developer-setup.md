@@ -70,9 +70,11 @@ pnpm dev
 
 ## 4. Running Tests
 
-We use **Jest** for unit tests and **React Testing Library** for frontend tests.
+We use multiple testing strategies to ensure code quality and application stability.
 
 ### Unit Tests
+
+We use **Vitest** for unit tests and **React Testing Library** for component testing.
 
 Run unit tests for all packages:
 
@@ -80,18 +82,99 @@ Run unit tests for all packages:
 pnpm test
 ```
 
-Run tests for server only:
+Run tests for specific packages:
 
 ```bash
+pnpm --filter client test
 pnpm --filter server test
 ```
 
 ### E2E Tests
 
-Run end-to-end integration tests:
+We use **Playwright** for end-to-end testing. E2E tests verify critical user flows by simulating real user interactions with the application.
+
+#### Running E2E Tests
+
+Run all E2E tests:
 
 ```bash
 pnpm test:e2e
+```
+
+Run E2E tests with interactive UI mode (for debugging):
+
+```bash
+pnpm test:e2e:ui
+```
+
+Run specific E2E test file:
+
+```bash
+pnpm --filter client exec playwright test tests/e2e/create-patient.spec.ts
+```
+
+#### E2E Test Architecture
+
+Our E2E tests follow the Page Object Model (POM) pattern for maintainability:
+
+- **Page Objects**: `apps/client/tests/e2e/pages/`
+  - `BasePage.ts`: Common functionality (navigation, auth mocking, toast verification)
+  - `PatientPage.ts`: Patient management page interactions
+  - `CasePage.ts`: Clinical case and session recording interactions
+
+- **Test Suites**: `apps/client/tests/e2e/`
+  - `smoke.spec.ts`: Basic application load verification
+  - `create-patient.spec.ts`: Patient creation flow
+  - `record-session.spec.ts`: Treatment session recording flow
+
+#### E2E Test Coverage
+
+Current E2E tests cover:
+
+✅ **Smoke Tests**
+
+- Application loads correctly
+- Page title verification
+
+✅ **Critical User Flows**
+
+- Patient creation with form validation
+- Clinical case session recording
+- Authentication mocking for test isolation
+
+#### Writing E2E Tests
+
+When adding new E2E tests:
+
+1. **Follow Page Object Model**: Create/reuse page objects in `tests/e2e/pages/`
+2. **Use Proper Selectors**: Prefer `getByRole()` and `getByLabel()` over CSS selectors
+3. **Mock API Responses**: Isolate tests by mocking backend responses
+4. **Test Critical Paths**: Focus on user-facing features, not implementation details
+
+Example test structure:
+
+```typescript
+import { test, expect } from '@playwright/test';
+import { PatientPage } from './pages/PatientPage';
+
+test('create patient flow', async ({ page }) => {
+  const patientPage = new PatientPage(page);
+
+  // Mock API responses
+  await page.route('**/api/v1/auth/me', async (route) => {
+    await route.fulfill({ status: 200, body: JSON.stringify({ id: 1 }) });
+  });
+
+  // Setup auth
+  await patientPage.mockAuth();
+
+  // Execute flow
+  await patientPage.gotoList();
+  await patientPage.createPatient({ name: 'Juan Perez', age: '45' });
+
+  // Verify outcome
+  await patientPage.waitForToast(/Paciente creado/i);
+});
 ```
 
 ### Test Coverage

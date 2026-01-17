@@ -113,9 +113,15 @@ export class SessionsService {
       throw new BadRequestException('Cannot update a completed session');
     }
 
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      clinicalCaseId,
+      ...data
+    } = updateSessionDto;
+
     return this.prisma.treatmentSession.update({
       where: { id },
-      data: updateSessionDto,
+      data,
     });
   }
 

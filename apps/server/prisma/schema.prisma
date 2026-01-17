@@ -122,7 +122,7 @@ model TreatmentSession {
   procedures      String[] // tecnicasAplicadas
   patientResponse String
   finalPainLevel  Int
-  observations    String
+  observations    String?
   deletedAt       DateTime?
   voiceNotes      Json?    // VoiceNote[]
 

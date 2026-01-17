@@ -153,14 +153,14 @@ export const patientsApi = {
 
   updateSession: async (sessionId: string, data: UpdateTreatmentSessionDto) => {
     const response = await axios.patch<TreatmentSession>(
-      `/patients/sessions/${sessionId}`,
+      `/sessions/${sessionId}`,
       data,
     );
     return response.data;
   },
 
   deleteSession: async (sessionId: string) => {
-    await axios.delete(`/patients/sessions/${sessionId}`);
+    await axios.delete(`/sessions/${sessionId}`);
   },
 
   updateEvaluation: async (id: string, data: UpdateEvaluationDto) => {
