@@ -1,4 +1,8 @@
-import type { ClinicalCase, Evaluation } from '../types/patient';
+import type {
+  ClinicalCase,
+  Evaluation,
+  EvaluationTypeValue,
+} from '../types/patient';
 import { EvaluationType } from '../types/patient';
 
 /**
@@ -54,7 +58,7 @@ export function getActiveEvaluation(
 
 export function canCreateEvaluationOfType(
   clinicalCase: ClinicalCase,
-  type: EvaluationType,
+  type: EvaluationTypeValue,
 ): { canCreate: boolean; message?: string } {
   const existingEvals = clinicalCase.evaluations || [];
 

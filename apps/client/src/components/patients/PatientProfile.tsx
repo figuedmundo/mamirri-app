@@ -1,29 +1,23 @@
-import { useState } from 'react';
 import type {
   PatientProfileProps,
+  ClinicalCase,
   Evaluation,
-  Posturogram,
-  PainScale,
 } from '../../types/patient';
 import { getActiveEvaluation } from '../../lib/evaluation-utils';
-import { patientsApi } from '../../api/patients';
-import { useToast } from '../../hooks/use-toast';
 import {
   User,
   Calendar,
   Phone,
-  Briefcase,
-  Activity,
-  FileText,
-  ArrowRight,
-  Video,
-  Footprints,
+  Mail,
   Mic,
+  Camera,
+  Video,
   Edit2,
-  ImageIcon,
 } from 'lucide-react';
-import { MediaGallery, type MediaItem } from './MediaGallery';
-import { MediaLightbox } from '../ui/media-lightbox';
+import { PainScaleDisplay } from './PainScaleDisplay';
+import { DiagnosisSection } from './DiagnosisSection';
+import { TreatmentPhaseCard } from './TreatmentPhaseCard';
+import { SessionsFooter } from './SessionsFooter';
 
 export function PatientProfile({
   patient,
@@ -33,88 +27,30 @@ export function PatientProfile({
   onCaptureVideo,
   onSchedule,
   onViewCase,
-  onRefresh,
 }: PatientProfileProps & { onViewCase?: (caseId: string) => void }) {
-  const { toast } = useToast();
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState(0);
-  const [lightboxItems, setLightboxItems] = useState<MediaItem[]>([]);
-
   const activeCase = patient.clinicalCases?.find((c) => c.status === 'active');
   const activeEvaluation = activeCase
     ? getActiveEvaluation(activeCase)
     : undefined;
-  const pastCases =
-    patient.clinicalCases?.filter((c) => c.status !== 'active') || [];
 
-  const handleSaveEvaluation = async (evaluation: Evaluation) => {
-    try {
-      await patientsApi.updateEvaluation(evaluation.id, evaluation);
-      toast({
-        title: 'Evaluación guardada',
-        description: 'La evaluación se ha actualizado correctamente.',
-      });
-      onRefresh?.();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo guardar la evaluación.',
-        variant: 'destructive',
-      });
-    }
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
   };
 
-  const handlePosturogramChange = async (posturogram: Posturogram) => {
-    if (!activeEvaluation) return;
-    try {
-      await patientsApi.updateEvaluation(activeEvaluation.id, {
-        posturogram,
-      });
-      toast({
-        title: 'Posturograma actualizado',
-        description: 'Los cambios se han guardado.',
-      });
-      onRefresh?.();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo actualizar el posturograma.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handlePainScaleChange = async (painScale: PainScale) => {
-    if (!activeEvaluation) return;
-    try {
-      await patientsApi.updateEvaluation(activeEvaluation.id, {
-        painScale,
-      });
-      toast({
-        title: 'Escala de dolor actualizada',
-        description: 'Los cambios se han guardado.',
-      });
-      onRefresh?.();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo actualizar la escala de dolor.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleMediaSelect = (
-    _item: MediaItem,
-    index: number,
-    items: MediaItem[],
-  ) => {
-    setLightboxItems(items);
-    setLightboxIndex(index);
-    setLightboxOpen(true);
+  const getAge = (birthDateString: string, age?: number) => {
+    if (age) return age;
+    const birthDate = new Date(birthDateString);
+    const today = new Date();
+    const calculatedAge = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    return monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      ? calculatedAge - 1
+      : calculatedAge;
   };
 
   const getStatusColor = (status: string) => {
@@ -130,308 +66,284 @@ export function PatientProfile({
     }
   };
 
-  const getAge = (birthDateString: string, age?: number) => {
-    if (age) return age;
-    const birthDate = new Date(birthDateString);
-    const today = new Date();
-    const calculatedAge = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    return monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDate.getDate())
-      ? calculatedAge - 1
-      : calculatedAge;
-  };
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Header / Profile Card */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
-        <div className="flex items-center gap-5">
-          <div className="w-20 h-20 bg-teal-100 dark:bg-teal-900/30 rounded-full flex items-center justify-center text-teal-600 dark:text-teal-400">
-            <User size={32} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
-              {patient.name}
-            </h1>
-            <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-500 dark:text-slate-400">
-              <span className="flex items-center gap-1.5">
-                <Calendar size={14} />
-                {getAge(patient.birthDate, patient.age)} años
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Briefcase size={14} />
-                {patient.occupation}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Phone size={14} />
-                {patient.phone}
-              </span>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Patient Header Card */}
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+          {/* Status Color Bar */}
+          <div
+            className={`h-2 ${patient.isActive ? 'bg-teal-500' : 'bg-stone-400'}`}
+          />
 
-        <div className="flex gap-3 w-full md:w-auto">
-          <button
-            onClick={onSchedule}
-            className="flex-1 md:flex-none items-center justify-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors"
-          >
-            <Calendar size={18} />
-            <span className="hidden sm:inline">Agendar Cita</span>
-          </button>
-          <button
-            onClick={onEdit}
-            className="flex-1 md:flex-none items-center justify-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl shadow-md shadow-teal-600/20 transition-colors"
-          >
-            <Edit2 size={18} />
-            <span>Editar Perfil</span>
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Active Case & Actions */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Quick Actions Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <ActionCard
-              icon={<Mic className="text-rose-500" />}
-              label="Dictar Notas"
-              onClick={onVoiceDictation}
-            />
-            <ActionCard
-              icon={<Footprints className="text-amber-500" />}
-              label="Capturar Huella"
-              onClick={onCaptureFootprint}
-            />
-            <ActionCard
-              icon={<Video className="text-sky-500" />}
-              label="Video Postura"
-              onClick={onCaptureVideo}
-            />
-            <ActionCard
-              icon={<FileText className="text-emerald-500" />}
-              label="Nueva Evaluación"
-              onClick={() =>
-                activeEvaluation && handleSaveEvaluation(activeEvaluation)
-              }
-            />
-          </div>
-
-          {/* Active Clinical Case */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Activity className="text-teal-500" size={20} />
-                Caso Activo
-              </h2>
-              {activeCase && (
-                <span className="px-3 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-full text-xs font-medium">
-                  En Tratamiento
-                </span>
-              )}
-            </div>
-
-            {activeCase ? (
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-2">
-                  {activeCase.title}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-400 mb-6">
-                  {activeCase.consultationReason}
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  <MetricCard
-                    label="Nivel de Dolor"
-                    value={`${activeEvaluation?.painScale?.activity || 0}/10`}
-                    sub="Escala EVA"
-                    onClick={() =>
-                      activeEvaluation &&
-                      handlePainScaleChange({
-                        ...activeEvaluation.painScale,
-                        activity: Math.min(
-                          (activeEvaluation.painScale.activity || 0) + 1,
-                          10,
-                        ),
-                      })
-                    }
-                  />
-                  <MetricCard
-                    label="Sesiones"
-                    value={`${activeCase.treatmentSessions?.length || 0}/15`}
-                    sub="Completadas"
-                  />
-                  <MetricCard
-                    label="Índice Barthel"
-                    value={`${activeEvaluation?.avdEvaluation?.barthel?.total || 0}/100`}
-                    sub="Funcionalidad"
-                    onClick={() =>
-                      activeEvaluation &&
-                      handlePosturogramChange(
-                        activeEvaluation.posturogram || {},
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-                    <ImageIcon size={16} className="text-slate-400" />
-                    Fotos y Videos
-                  </h4>
-                  <MediaGallery
-                    footprints={activeEvaluation?.footprints}
-                    postureVideos={activeEvaluation?.postureVideos}
-                    onSelect={(item, index) => {
-                      const allItems: MediaItem[] = [
-                        ...(activeEvaluation?.footprints || []).map((fp) => ({
-                          id: fp.id,
-                          url: fp.url,
-                          type: 'image' as const,
-                          date: fp.date,
-                          label: fp.type,
-                        })),
-                        ...(activeEvaluation?.postureVideos || []).map(
-                          (pv) => ({
-                            id: pv.id,
-                            url: pv.url,
-                            type: 'video' as const,
-                            date: pv.date,
-                            label: pv.type,
-                          }),
-                        ),
-                      ];
-                      handleMediaSelect(item, index, allItems);
-                    }}
-                  />
-                </div>
-
-                <div className="flex justify-end">
-                  <button
-                    onClick={() => onViewCase?.(activeCase.id)}
-                    className="flex items-center gap-2 text-teal-600 dark:text-teal-400 font-medium hover:underline"
+          <div className="p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+              {/* Patient Info */}
+              <div className="flex-1">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100">
+                    {patient.name}
+                  </h1>
+                  <div
+                    className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
+                      patient.isActive
+                        ? 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300'
+                        : 'bg-stone-100 text-stone-800 dark:bg-stone-800 dark:text-stone-300'
+                    }`}
                   >
-                    Ver Expediente Completo <ArrowRight size={16} />
-                  </button>
+                    {patient.isActive ? 'Activo' : 'Inactivo'}
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="p-12 text-center">
-                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400">
-                  <FileText size={24} />
-                </div>
-                <h3 className="text-slate-900 dark:text-white font-medium">
-                  No hay caso activo
-                </h3>
-                <p className="text-slate-500 text-sm mb-4">
-                  Este paciente no tiene un tratamiento en curso.
-                </p>
-                <button className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors text-sm font-medium">
-                  Crear Nuevo Caso
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
 
-        {/* Right Column: History */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 h-fit">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
-            Historial Clínico
-          </h2>
-
-          <div className="space-y-4">
-            {pastCases.length > 0 ? (
-              pastCases.map((c) => (
-                <div
-                  key={c.id}
-                  onClick={() => onViewCase?.(c.id)}
-                  className="p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 hover:border-teal-200 dark:hover:border-teal-700 transition-colors cursor-pointer group"
-                >
-                  <div className="flex justify-between items-start mb-1">
-                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                      {new Date(c.startDate).toLocaleDateString()}
+                {/* Info Grid */}
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                    <User className="w-4 h-4" />
+                    <span>{getAge(patient.birthDate, patient.age)} años</span>
+                    <span className="text-slate-400 dark:text-slate-500">
+                      •
                     </span>
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded ${getStatusColor(c.status)}`}
-                    >
-                      {c.status}
+                    <span>{patient.occupation}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                    <Phone className="w-4 h-4" />
+                    <span>{patient.phone}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                    <Mail className="w-4 h-4" />
+                    <span className="truncate">
+                      {patient.email || 'Sin email'}
                     </span>
                   </div>
-                  <h4 className="font-medium text-slate-800 dark:text-slate-200 group-hover:text-teal-600 transition-colors">
-                    {c.title}
-                  </h4>
+
+                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                    <Calendar className="w-4 h-4" />
+                    <span>Nacido: {formatDate(patient.birthDate)}</span>
+                  </div>
                 </div>
-              ))
-            ) : (
-              <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
-                No hay casos anteriores.
-              </p>
-            )}
+
+                <p className="mt-4 text-xs text-slate-500 dark:text-slate-500">
+                  Expediente creado el {formatDate(patient.createdAt)}
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-row sm:flex-col gap-2">
+                {onVoiceDictation && (
+                  <button
+                    onClick={onVoiceDictation}
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-medium transition-colors text-sm"
+                  >
+                    <Mic className="w-4 h-4" />
+                    <span>Dictar nota</span>
+                  </button>
+                )}
+
+                <div className="flex gap-2">
+                  {onCaptureFootprint && (
+                    <button
+                      onClick={onCaptureFootprint}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium transition-colors text-sm"
+                    >
+                      <Camera className="w-4 h-4" />
+                      <span>Huella</span>
+                    </button>
+                  )}
+
+                  {onCaptureVideo && (
+                    <button
+                      onClick={onCaptureVideo}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium transition-colors text-sm"
+                    >
+                      <Video className="w-4 h-4" />
+                      <span>Video</span>
+                    </button>
+                  )}
+                </div>
+
+                {onSchedule && (
+                  <button
+                    onClick={onSchedule}
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border-2 border-sky-500 text-sky-600 dark:text-sky-400 rounded-lg font-medium hover:bg-sky-50 dark:hover:bg-slate-700 transition-colors text-sm"
+                  >
+                    <Calendar className="w-4 h-4" />
+                    <span>Agendar</span>
+                  </button>
+                )}
+
+                {onEdit && (
+                  <button
+                    onClick={onEdit}
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg font-medium transition-colors text-sm"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                    <span>Editar</span>
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <MediaLightbox
-        open={lightboxOpen}
-        onOpenChange={setLightboxOpen}
-        items={lightboxItems}
-        initialIndex={lightboxIndex}
-      />
+        {/* Clinical Cases Section */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">
+            Casos Clínicos
+          </h2>
+
+          {!activeCase ? (
+            <EmptyState />
+          ) : (
+            <ClinicalCaseCard
+              clinicalCase={activeCase}
+              evaluation={activeEvaluation}
+              onViewCase={onViewCase}
+              getStatusColor={getStatusColor}
+              formatDate={formatDate}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
 
-function ActionCard({
-  icon,
-  label,
-  onClick,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  onClick?: () => void;
-}) {
+function EmptyState() {
   return (
-    <button
-      onClick={onClick}
-      className="flex flex-col items-center justify-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-teal-500 dark:hover:border-teal-500 hover:shadow-md transition-all gap-3 h-32"
-    >
-      <div className="p-3 rounded-full bg-slate-50 dark:bg-slate-700 group-hover:bg-white transition-colors">
-        {icon}
-      </div>
-      <span className="text-sm font-medium text-slate-700 dark:text-slate-300 text-center leading-tight">
-        {label}
-      </span>
-    </button>
+    <div className="bg-white dark:bg-slate-900 rounded-xl p-12 text-center border border-slate-200 dark:border-slate-800">
+      <svg
+        className="mx-auto h-16 w-16 text-slate-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
+      </svg>
+      <h3 className="mt-4 text-lg font-medium text-slate-900 dark:text-slate-100">
+        Sin casos clínicos
+      </h3>
+      <p className="mt-2 text-slate-600 dark:text-slate-400">
+        Este paciente aún no tiene casos clínicos registrados.
+      </p>
+    </div>
   );
 }
 
-function MetricCard({
-  label,
-  value,
-  sub,
-  onClick,
-}: {
-  label: string;
-  value: string;
-  sub: string;
-  onClick?: () => void;
-}) {
+interface ClinicalCaseCardProps {
+  clinicalCase: ClinicalCase;
+  evaluation?: Evaluation;
+  onViewCase?: (caseId: string) => void;
+  getStatusColor: (status: string) => string;
+  formatDate: (date: string) => string;
+}
+
+function ClinicalCaseCard({
+  clinicalCase,
+  evaluation,
+  onViewCase,
+  getStatusColor,
+  formatDate,
+}: ClinicalCaseCardProps) {
   return (
     <div
-      onClick={onClick}
-      className={`p-4 bg-slate-50 dark:bg-slate-700/30 rounded-xl border border-slate-100 dark:border-slate-700 ${
-        onClick ? 'cursor-pointer hover:border-teal-500 transition-colors' : ''
-      }`}
+      className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+      onClick={() => onViewCase?.(clinicalCase.id)}
     >
-      <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
-        {label}
-      </span>
-      <div className="text-2xl font-bold text-slate-900 dark:text-white mb-0.5">
-        {value}
+      {/* Case Header */}
+      <div className="p-6 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 flex-wrap">
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                {clinicalCase.title}
+              </h3>
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${getStatusColor(clinicalCase.status)}`}
+              >
+                {clinicalCase.status === 'active'
+                  ? 'Activo'
+                  : clinicalCase.status === 'completed'
+                    ? 'Completado'
+                    : 'Inactivo'}
+              </span>
+            </div>
+            <p className="mt-2 text-slate-600 dark:text-slate-400 line-clamp-2">
+              {clinicalCase.consultationReason}
+            </p>
+          </div>
+          <div className="text-sm text-slate-500 dark:text-slate-500 sm:text-right">
+            <p>Inicio: {formatDate(clinicalCase.startDate)}</p>
+            {clinicalCase.endDate && (
+              <p>Fin: {formatDate(clinicalCase.endDate)}</p>
+            )}
+          </div>
+        </div>
       </div>
-      <span className="text-xs text-slate-400 dark:text-slate-500">{sub}</span>
+
+      {/* Case Content */}
+      <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Diagnosis Section */}
+        {evaluation?.diagnosis && (
+          <div className="md:col-span-2 lg:col-span-2">
+            <DiagnosisSection diagnosis={evaluation.diagnosis} />
+          </div>
+        )}
+
+        {/* Pain Scale Section */}
+        {evaluation?.painScale && (
+          <div>
+            <PainScaleDisplay painScale={evaluation.painScale} />
+          </div>
+        )}
+
+        {/* Objectives Section */}
+        {clinicalCase.treatmentPlan?.objectives?.therapeutic && (
+          <div>
+            <h4 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
+              Objetivos
+            </h4>
+            <div className="text-sm">
+              <span className="text-slate-600 dark:text-slate-400">
+                Terapéutico:
+              </span>
+              <p className="text-slate-900 dark:text-slate-100 mt-0.5">
+                {clinicalCase.treatmentPlan.objectives.therapeutic}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Treatment Phases Section */}
+        {clinicalCase.treatmentPlan?.phases &&
+          clinicalCase.treatmentPlan.phases.length > 0 && (
+            <div className="md:col-span-2">
+              <h4 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
+                Fases del Tratamiento
+              </h4>
+              <div className="space-y-2">
+                {clinicalCase.treatmentPlan.phases.map((phase) => (
+                  <TreatmentPhaseCard key={phase.number} phase={phase} />
+                ))}
+              </div>
+            </div>
+          )}
+      </div>
+
+      {/* Sessions Footer */}
+      {clinicalCase.treatmentSessions &&
+        clinicalCase.treatmentSessions.length > 0 && (
+          <SessionsFooter
+            sessions={clinicalCase.treatmentSessions}
+            formatDate={formatDate}
+          />
+        )}
     </div>
   );
 }

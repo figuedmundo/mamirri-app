@@ -172,19 +172,14 @@ export interface PostureVideo {
   observations: string;
 }
 
-/**
- * Evaluation type enum for type safety
- */
-export enum EvaluationType {
-  INITIAL = 'INITIAL',
-  PROGRESS = 'PROGRESS',
-  FINAL = 'FINAL',
-}
+export const EvaluationType = {
+  INITIAL: 'INITIAL',
+  PROGRESS: 'PROGRESS',
+  FINAL: 'FINAL',
+} as const;
 
 export type EvaluationTypeValue =
-  | EvaluationType.INITIAL
-  | EvaluationType.PROGRESS
-  | EvaluationType.FINAL;
+  (typeof EvaluationType)[keyof typeof EvaluationType];
 
 /**
  * Evaluation type options available in UI (PROGRESS is reserved for future use)

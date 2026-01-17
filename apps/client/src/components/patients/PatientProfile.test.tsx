@@ -1,44 +1,41 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import { PatientProfile } from './PatientProfile';
-import { patientsApi } from '../../api/patients';
-import { useToast } from '../../hooks/use-toast';
-import type { Patient } from '../../types/patient';
+import type { Patient, TreatmentPhase } from '../../types/patient';
 
-vi.mock('../../api/patients', () => ({
-  patientsApi: {
-    updateEvaluation: vi.fn(),
+const mockPhases: TreatmentPhase[] = [
+  {
+    number: 1,
+    name: 'Movilizacion',
+    durationWeeks: 3,
+    objectives: 'Reducir contracturas',
+    techniques: ['Masaje', 'Estiramientos', 'Crioterapia'],
   },
-}));
-
-vi.mock('../../hooks/use-toast', () => ({
-  useToast: vi.fn(),
-}));
-
-const mockToast = vi.fn();
+];
 
 const mockPatient: Patient = {
   id: 'p1',
   name: 'Juan Perez',
   age: 30,
-  occupation: 'Dev',
-  phone: '123456',
-  birthDate: '1990-01-01',
+  occupation: 'Desarrollador',
+  phone: '+34 600 123 456',
+  email: 'juan@example.com',
+  birthDate: '1994-05-15',
   isActive: true,
-  createdAt: '2023-01-01',
+  createdAt: '2025-01-01',
   clinicalCases: [
     {
       id: 'c1',
       patientId: 'p1',
-      title: 'Back Pain',
+      title: 'Dolor Lumbar Cronico',
       status: 'active',
-      startDate: '2023-01-01',
-      consultationReason: 'Pain',
+      startDate: '2025-01-10',
+      consultationReason: 'Dolor en zona lumbar persistente',
       evaluations: [
         {
           id: 'e1',
           clinicalCaseId: 'c1',
-          date: '2023-01-01',
+          date: '2025-01-10',
           type: 'INITIAL',
           posturogram: {},
           orthopedicTests: {
@@ -49,7 +46,7 @@ const mockPatient: Patient = {
           },
           avdEvaluation: {
             barthel: {
-              total: 100,
+              total: 90,
               feeding: 10,
               bathing: 5,
               grooming: 5,
@@ -58,9 +55,9 @@ const mockPatient: Patient = {
               bladder: 10,
               toiletUse: 10,
               transfers: 15,
-              mobility: 15,
-              stairs: 10,
-              interpretation: 'Independent',
+              mobility: 10,
+              stairs: 5,
+              interpretation: 'Dependencia leve',
             },
             lawton: {
               total: 8,
@@ -72,15 +69,15 @@ const mockPatient: Patient = {
               transportation: 1,
               medication: 1,
               finances: 1,
-              interpretation: 'Independent',
+              interpretation: 'Independiente',
             },
           },
-          painScale: { activity: 5, rest: 2, palpation: 3, type: 'acute' },
+          painScale: { activity: 7, rest: 4, palpation: 6, type: 'chronic' },
           diagnosis: {
-            functionalIndicator: '',
-            clinicalAspect: '',
-            anatomopathology: '',
-            avdConsequences: '',
+            functionalIndicator: 'Limitacion funcional moderada',
+            clinicalAspect: 'Dolor cronico lumbar',
+            anatomopathology: 'Artrosis lumbar',
+            avdConsequences: 'Dificultad para agacharse',
           },
           footprints: [],
           postureVideos: [],
@@ -89,125 +86,140 @@ const mockPatient: Patient = {
       treatmentPlan: {
         id: 'tp1',
         clinicalCaseId: 'c1',
-        createdAt: '2023-01-01',
-        objectives: { therapeutic: '', prophylactic: '', educational: '' },
-        phases: [],
+        createdAt: '2025-01-10',
+        objectives: {
+          therapeutic: 'Reducir dolor de 7/10 a 4/10',
+          prophylactic: 'Prevenir recaidas',
+          educational: 'Higiene postural',
+        },
+        phases: mockPhases,
       },
-      treatmentSessions: [],
+      treatmentSessions: [
+        {
+          id: 's1',
+          clinicalCaseId: 'c1',
+          date: '2025-01-15',
+          phaseNumber: 1,
+          procedures: ['Masaje'],
+          patientResponse: 'Buena',
+          finalPainLevel: 6,
+          observations: 'Mejoria leve',
+        },
+      ],
     },
   ],
 };
 
 describe('PatientProfile', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(useToast).mockReturnValue({
-      toast: mockToast,
-      dismiss: vi.fn(),
-      toasts: [],
-    });
-  });
-
-  it('calls handleSaveEvaluation when "Nueva Evaluación" is clicked', async () => {
+  it('renders patient name and status badge', () => {
     render(<PatientProfile patient={mockPatient} />);
 
-    const button = screen.getByText('Nueva Evaluación').closest('button');
-    fireEvent.click(button!);
-
-    await waitFor(() => {
-      expect(patientsApi.updateEvaluation).toHaveBeenCalledWith(
-        'e1',
-        expect.objectContaining({ id: 'e1' }),
-      );
-      expect(mockToast).toHaveBeenCalledWith(
-        expect.objectContaining({ title: 'Evaluación guardada' }),
-      );
-    });
+    expect(screen.getByText('Juan Perez')).toBeInTheDocument();
+    expect(screen.getAllByText('Activo').length).toBeGreaterThanOrEqual(1);
   });
 
-  it('calls handlePainScaleChange when Pain MetricCard is clicked', async () => {
+  it('renders patient info grid with all fields', () => {
     render(<PatientProfile patient={mockPatient} />);
 
-    const card = screen.getByText('Nivel de Dolor').closest('div');
-    fireEvent.click(card!);
-
-    await waitFor(() => {
-      expect(patientsApi.updateEvaluation).toHaveBeenCalledWith('e1', {
-        painScale: expect.objectContaining({ activity: 6 }),
-      });
-      expect(mockToast).toHaveBeenCalledWith(
-        expect.objectContaining({ title: 'Escala de dolor actualizada' }),
-      );
-    });
+    expect(screen.getByText('30 años')).toBeInTheDocument();
+    expect(screen.getByText('Desarrollador')).toBeInTheDocument();
+    expect(screen.getByText('+34 600 123 456')).toBeInTheDocument();
+    expect(screen.getByText('juan@example.com')).toBeInTheDocument();
+    expect(screen.getByText(/Nacido:/)).toBeInTheDocument();
+    expect(screen.getByText(/Expediente creado/)).toBeInTheDocument();
   });
 
-  it('calls handlePosturogramChange when Barthel MetricCard is clicked', async () => {
-    render(<PatientProfile patient={mockPatient} />);
+  it('renders action buttons and triggers callbacks', () => {
+    const onVoiceDictation = vi.fn();
+    const onCaptureFootprint = vi.fn();
+    const onCaptureVideo = vi.fn();
+    const onSchedule = vi.fn();
+    const onEdit = vi.fn();
 
-    const card = screen.getByText('Índice Barthel').closest('div');
-    fireEvent.click(card!);
+    render(
+      <PatientProfile
+        patient={mockPatient}
+        onVoiceDictation={onVoiceDictation}
+        onCaptureFootprint={onCaptureFootprint}
+        onCaptureVideo={onCaptureVideo}
+        onSchedule={onSchedule}
+        onEdit={onEdit}
+      />,
+    );
 
-    await waitFor(() => {
-      expect(patientsApi.updateEvaluation).toHaveBeenCalledWith('e1', {
-        posturogram: {},
-      });
-      expect(mockToast).toHaveBeenCalledWith(
-        expect.objectContaining({ title: 'Posturograma actualizado' }),
-      );
-    });
+    fireEvent.click(screen.getByText('Dictar nota'));
+    expect(onVoiceDictation).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByText('Huella'));
+    expect(onCaptureFootprint).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByText('Video'));
+    expect(onCaptureVideo).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByText('Agendar'));
+    expect(onSchedule).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByText('Editar'));
+    expect(onEdit).toHaveBeenCalled();
   });
 
-  it('shows error toast when saving evaluation fails', async () => {
-    const error = new Error('Failed');
-    vi.mocked(patientsApi.updateEvaluation).mockRejectedValueOnce(error);
-
+  it('renders clinical case card with title and status', () => {
     render(<PatientProfile patient={mockPatient} />);
 
-    const button = screen.getByText('Nueva Evaluación').closest('button');
-    fireEvent.click(button!);
-
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith({
-        title: 'Error',
-        description: 'No se pudo guardar la evaluación.',
-        variant: 'destructive',
-      });
-    });
+    expect(screen.getByText('Casos Clínicos')).toBeInTheDocument();
+    expect(screen.getByText('Dolor Lumbar Cronico')).toBeInTheDocument();
+    expect(
+      screen.getByText('Dolor en zona lumbar persistente'),
+    ).toBeInTheDocument();
   });
 
-  it('shows error toast when updating pain scale fails', async () => {
-    const error = new Error('Failed');
-    vi.mocked(patientsApi.updateEvaluation).mockRejectedValueOnce(error);
-
+  it('renders pain scale with 3 progress bars', () => {
     render(<PatientProfile patient={mockPatient} />);
 
-    const card = screen.getByText('Nivel de Dolor').closest('div');
-    fireEvent.click(card!);
-
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith({
-        title: 'Error',
-        description: 'No se pudo actualizar la escala de dolor.',
-        variant: 'destructive',
-      });
-    });
+    expect(screen.getByText('Escala de Dolor')).toBeInTheDocument();
+    expect(screen.getByText('Actividad')).toBeInTheDocument();
+    expect(screen.getByText('7/10')).toBeInTheDocument();
+    expect(screen.getByText('Reposo')).toBeInTheDocument();
+    expect(screen.getByText('4/10')).toBeInTheDocument();
+    expect(screen.getByText('Palpación')).toBeInTheDocument();
+    expect(screen.getByText('6/10')).toBeInTheDocument();
+    expect(screen.getByText(/Crónico/)).toBeInTheDocument();
   });
 
-  it('shows error toast when updating posturogram fails', async () => {
-    const error = new Error('Failed');
-    vi.mocked(patientsApi.updateEvaluation).mockRejectedValueOnce(error);
-
+  it('renders treatment phases with technique chips', () => {
     render(<PatientProfile patient={mockPatient} />);
 
-    const card = screen.getByText('Índice Barthel').closest('div');
-    fireEvent.click(card!);
+    expect(screen.getByText('Fases del Tratamiento')).toBeInTheDocument();
+    expect(screen.getByText('Movilizacion')).toBeInTheDocument();
+    expect(screen.getByText('3 sem')).toBeInTheDocument();
+    expect(screen.getByText('Masaje')).toBeInTheDocument();
+    expect(screen.getByText('Estiramientos')).toBeInTheDocument();
+    expect(screen.getByText('Crioterapia')).toBeInTheDocument();
+  });
 
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith({
-        title: 'Error',
-        description: 'No se pudo actualizar el posturograma.',
-        variant: 'destructive',
-      });
-    });
+  it('renders sessions footer with count', () => {
+    render(<PatientProfile patient={mockPatient} />);
+
+    expect(screen.getByText('Sesiones registradas')).toBeInTheDocument();
+    expect(screen.getByText('Última sesión:')).toBeInTheDocument();
+  });
+
+  it('renders empty state when no clinical cases', () => {
+    const patientWithoutCases = { ...mockPatient, clinicalCases: [] };
+    render(<PatientProfile patient={patientWithoutCases} />);
+
+    expect(screen.getByText('Sin casos clínicos')).toBeInTheDocument();
+  });
+
+  it('calls onViewCase when clicking on case card', () => {
+    const onViewCase = vi.fn();
+    render(<PatientProfile patient={mockPatient} onViewCase={onViewCase} />);
+
+    const caseCard = screen
+      .getByText('Dolor Lumbar Cronico')
+      .closest('div[class*="cursor-pointer"]');
+    fireEvent.click(caseCard!);
+
+    expect(onViewCase).toHaveBeenCalledWith('c1');
   });
 });

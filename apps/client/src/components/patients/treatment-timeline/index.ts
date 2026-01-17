@@ -3,6 +3,8 @@ export { SessionCard } from './SessionCard';
 export { PainTrendChart } from './PainTrendChart';
 export { SessionStatsSummary } from './SessionStatsSummary';
 export { SessionForm } from './SessionForm';
+export { TimelineSidebar } from './TimelineSidebar';
+export { SessionDetailView } from './SessionDetailView';
 export {
   sessionFormSchema,
   type SessionFormData,

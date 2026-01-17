@@ -7,7 +7,11 @@ import type {
   PainScale,
   Evaluation,
 } from '../../types/patient';
-import { EvaluationType, EVALUATION_TYPE_OPTIONS } from '../../types/patient';
+import {
+  EvaluationType,
+  EVALUATION_TYPE_OPTIONS,
+  type EvaluationTypeValue,
+} from '../../types/patient';
 import { BodySilhouette } from './BodySilhouette';
 import {
   type AnatomicalPoint,
@@ -47,9 +51,10 @@ export function EvaluationForm({
   const hasInitialEvaluation = !!getInitialEvaluation(clinicalCase);
   const hasFinalEvaluation = !!getFinalEvaluation(clinicalCase);
 
-  const [evaluationType, setEvaluationType] = React.useState<EvaluationType>(
-    activeEvaluation?.type || EvaluationType.INITIAL,
-  );
+  const [evaluationType, setEvaluationType] =
+    React.useState<EvaluationTypeValue>(
+      activeEvaluation?.type || EvaluationType.INITIAL,
+    );
   const [hasStartedDataEntry, setHasStartedDataEntry] = React.useState(false);
 
   const [posturogram, setPosturogram] = React.useState<Posturogram>(
@@ -127,7 +132,7 @@ export function EvaluationForm({
     }
   }, 300);
 
-  const handleTypeChange = (newType: EvaluationType) => {
+  const handleTypeChange = (newType: EvaluationTypeValue) => {
     if (hasStartedDataEntry) {
       toast({
         variant: 'destructive',

@@ -26,7 +26,7 @@ export interface TreatmentTimelineProps {
   onSessionCreated?: (session: TreatmentSession) => void;
   onSessionUpdated?: (session: TreatmentSession) => void;
   onSessionDeleted?: (sessionId: string) => void;
-  onViewSession?: (sessionId: string) => void;
+  onSelectSession?: (sessionId: string) => void;
 }
 
 export function TreatmentTimeline({
@@ -34,7 +34,7 @@ export function TreatmentTimeline({
   onSessionCreated,
   onSessionUpdated,
   onSessionDeleted,
-  onViewSession,
+  onSelectSession,
 }: TreatmentTimelineProps) {
   const [selectedPhase, setSelectedPhase] = React.useState<number | null>(null);
   const [isFormOpen, setIsFormOpen] = React.useState(false);
@@ -196,7 +196,7 @@ export function TreatmentTimeline({
               <div className="absolute -left-[41px] top-4 w-5 h-5 rounded-full border-4 border-white dark:border-slate-900 bg-teal-500 shadow-sm" />
               <SessionCard
                 session={session}
-                onView={onViewSession}
+                onView={onSelectSession}
                 onEdit={handleEditSession}
                 onDelete={handleDeleteSession}
               />
