@@ -114,11 +114,7 @@ describe('TreatmentPlansService', () => {
         objectives: { ...existingPlan.objectives, ...updateDto },
       });
 
-      const result = await service.updateObjectives(
-        mockPlanId,
-        updateDto,
-        mockTherapistId,
-      );
+      await service.updateObjectives(mockPlanId, updateDto, mockTherapistId);
 
       expect(mockPrismaService.treatmentPlan.update).toHaveBeenCalledWith({
         where: { id: mockPlanId },
