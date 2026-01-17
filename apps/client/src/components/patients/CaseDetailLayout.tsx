@@ -5,6 +5,7 @@ import type {
   TreatmentSession,
   Posturogram,
   PainScale,
+  TreatmentObjectives,
 } from '../../types/patient';
 import { useState, useEffect } from 'react';
 import { getActiveEvaluation } from '../../lib/evaluation-utils';
@@ -12,6 +13,7 @@ import { TreatmentTimeline } from './TreatmentTimeline';
 import { SessionDetailView } from './treatment-timeline/SessionDetailView';
 import { EvaluationForm } from './EvaluationForm';
 import { ComparisonBoard } from './ComparisonBoard';
+import { ObjectivesView } from './ObjectivesView';
 import { generateComparisonReport } from '../../lib/pdf';
 import { useToast } from '../../hooks/use-toast';
 import { patientsApi } from '../../api/patients';
@@ -21,9 +23,15 @@ import {
   LayoutDashboard,
   ClipboardList,
   Split,
+  Target,
 } from 'lucide-react';
 
-type ViewMode = 'timeline' | 'session-detail' | 'evaluation' | 'comparison';
+type ViewMode =
+  | 'timeline'
+  | 'session-detail'
+  | 'evaluation'
+  | 'objectives'
+  | 'comparison';
 
 interface CaseDetailLayoutProps {
   patient: Patient;
@@ -192,6 +200,28 @@ export function CaseDetailLayout({
     }
   };
 
+  const handleObjectivesChange = async (objectives: TreatmentObjectives) => {
+    const previousCase = localCase;
+    try {
+      const updatedCase = {
+        ...localCase,
+        treatmentPlan: {
+          ...localCase.treatmentPlan,
+          objectives,
+        },
+      };
+      setLocalCase(updatedCase);
+
+      await patientsApi.updateTreatmentPlanObjectives(
+        localCase.treatmentPlan.id,
+        objectives,
+      );
+    } catch {
+      setLocalCase(previousCase);
+      throw new Error('Failed to save objectives');
+    }
+  };
+
   const handleBackFromDetail = () => {
     setViewMode('timeline');
   };
@@ -279,6 +309,17 @@ export function CaseDetailLayout({
             )}
           </button>
           <button
+            onClick={() => setViewMode('objectives')}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
+              viewMode === 'objectives'
+                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+            }`}
+          >
+            <Target size={16} />
+            <span className="hidden sm:inline">Objetivos</span>
+          </button>
+          <button
             onClick={() => setViewMode('comparison')}
             className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
               viewMode === 'comparison'
@@ -316,6 +357,13 @@ export function CaseDetailLayout({
             activeSessionId={activeSessionId}
             onSelectSession={setActiveSessionId}
           />
+        ) : viewMode === 'objectives' ? (
+          <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
+            <ObjectivesView
+              clinicalCase={localCase}
+              onObjectivesChange={handleObjectivesChange}
+            />
+          </div>
         ) : viewMode === 'comparison' ? (
           <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
             <ComparisonBoard

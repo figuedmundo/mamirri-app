@@ -24,24 +24,38 @@ const mockClinicalCase: ClinicalCase = {
     phases: [
       {
         number: 1,
-        name: 'Movilizacion y Descarga',
+        name: 'Inicial',
         durationWeeks: 3,
-        techniques: ['Masaje'],
-        objectives: 'Alivio inicial',
+        techniques: ['Movilizaciones'],
+        objectives: 'Alivio del dolor',
       },
       {
         number: 2,
-        name: 'Fortalecimiento',
-        durationWeeks: 4,
-        techniques: ['Ejercicios'],
-        objectives: 'Fortalecer musculatura',
+        name: 'Temprana Intermedia',
+        durationWeeks: 3,
+        techniques: ['Estiramientos suaves'],
+        objectives: 'Iniciar estiramientos',
       },
       {
         number: 3,
-        name: 'Ejercicios Funcionales',
-        durationWeeks: 6,
-        techniques: ['Funcional'],
-        objectives: 'Retorno a actividades',
+        name: 'Intermedia',
+        durationWeeks: 3,
+        techniques: ['Estiramientos progresivos'],
+        objectives: 'Ganancia de flexibilidad',
+      },
+      {
+        number: 4,
+        name: 'Tardía Intermedia',
+        durationWeeks: 3,
+        techniques: ['Ejercicios terapéuticos'],
+        objectives: 'Fortalecimiento muscular',
+      },
+      {
+        number: 5,
+        name: 'Avanzada',
+        durationWeeks: 3,
+        techniques: ['Fortalecimiento funcional'],
+        objectives: 'Preparación para alta',
       },
     ],
   },
@@ -167,13 +181,11 @@ describe('TimelineSidebar', () => {
       />,
     );
 
-    expect(
-      screen.getByText(/Fase 1: Movilizacion y Descarga/),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/Fase 2: Fortalecimiento/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Fase 3: Ejercicios Funcionales/),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Fase 1: Inicial/)).toBeInTheDocument();
+    expect(screen.getByText(/Fase 2: Temprana Intermedia/)).toBeInTheDocument();
+    expect(screen.getByText(/Fase 3: Intermedia/)).toBeInTheDocument();
+    expect(screen.getByText(/Fase 4: Tardía Intermedia/)).toBeInTheDocument();
+    expect(screen.getByText(/Fase 5: Avanzada/)).toBeInTheDocument();
   });
 
   it('should display phase duration', () => {
@@ -184,9 +196,7 @@ describe('TimelineSidebar', () => {
       />,
     );
 
-    expect(screen.getByText('3 semanas')).toBeInTheDocument();
-    expect(screen.getByText('4 semanas')).toBeInTheDocument();
-    expect(screen.getByText('6 semanas')).toBeInTheDocument();
+    expect(screen.getAllByText('3 semanas').length).toBe(5);
   });
 
   it('should group sessions under correct phases', () => {

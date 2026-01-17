@@ -74,7 +74,66 @@ export class PatientsService {
               treatmentPlan: {
                 create: {
                   objectives: {},
-                  phases: [],
+                  phases: [
+                    {
+                      number: 1,
+                      name: 'Inicial',
+                      durationWeeks: 3,
+                      techniques: [
+                        'Movilizaciones',
+                        'Crioterapia',
+                        'Masaje descontracturante',
+                      ],
+                      objectives:
+                        'Alivio del dolor y reducción de contracturas',
+                    },
+                    {
+                      number: 2,
+                      name: 'Temprana Intermedia',
+                      durationWeeks: 3,
+                      techniques: [
+                        'Estiramientos suaves',
+                        'Movilidad articular',
+                        'Termoterapia',
+                      ],
+                      objectives: 'Iniciar estiramientos y mejorar movilidad',
+                    },
+                    {
+                      number: 3,
+                      name: 'Intermedia',
+                      durationWeeks: 3,
+                      techniques: [
+                        'Estiramientos progresivos',
+                        'Fortalecimiento isométrico',
+                        'Propiocepción',
+                      ],
+                      objectives: 'Ganancia de flexibilidad y estabilidad',
+                    },
+                    {
+                      number: 4,
+                      name: 'Tardía Intermedia',
+                      durationWeeks: 3,
+                      techniques: [
+                        'Ejercicios terapéuticos',
+                        'Fortalecimiento isotónico',
+                        'Trabajo funcional',
+                      ],
+                      objectives:
+                        'Fortalecimiento muscular y ejercicios terapéuticos',
+                    },
+                    {
+                      number: 5,
+                      name: 'Avanzada',
+                      durationWeeks: 3,
+                      techniques: [
+                        'Fortalecimiento funcional',
+                        'Ejercicios pliométricos',
+                        'Retorno a actividades',
+                      ],
+                      objectives:
+                        'Fortalecimiento funcional y preparación para alta',
+                    },
+                  ],
                 },
               },
             },

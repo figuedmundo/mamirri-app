@@ -122,10 +122,10 @@ Methodology: Agile Development (1-week Sprints).
 - [x] **6.16** Update ComparisonBoard — Derive Initial vs Final from evaluations array
   - Use `getInitialEvaluation()` and `getFinalEvaluation()` utility functions
   - Show empty state if Final evaluation doesn't exist yet
-- [ ] **6.17** Treatment Plan Objectives UI — Display therapeutic/prophylactic/educational goals
+- [x] **6.17** Treatment Plan Objectives UI — Display therapeutic/prophylactic/educational goals
   - Add objectives section to CaseDetailLayout (Stage 2 of clinical flow)
   - Wire to `TreatmentPlan.objectives` from backend
-- [ ] **6.18** 5-Phase Progress Visualization — Update phase model from 4 to 5 phases
+- [x] **6.18** 5-Phase Progress Visualization — Update phase model from 4 to 5 phases
   - Phase 1: Initial (mobilizations, pain relief)
   - Phase 2: Early-Intermediate (begin stretching)
   - Phase 3: Intermediate (flexibility gains)

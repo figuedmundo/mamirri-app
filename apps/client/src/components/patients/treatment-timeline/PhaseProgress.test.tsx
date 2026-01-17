@@ -7,24 +7,38 @@ import type { TreatmentPhase, TreatmentSession } from '../../../types/patient';
 const mockPhases: TreatmentPhase[] = [
   {
     number: 1,
-    name: 'Alivio',
-    durationWeeks: 4,
-    techniques: ['Masaje'],
-    objectives: 'Reducir dolor',
+    name: 'Inicial',
+    durationWeeks: 3,
+    techniques: ['Movilizaciones', 'Crioterapia'],
+    objectives: 'Alivio del dolor',
   },
   {
     number: 2,
-    name: 'Movilización',
-    durationWeeks: 4,
-    techniques: ['Estiramientos'],
-    objectives: 'Mejorar ROM',
+    name: 'Temprana Intermedia',
+    durationWeeks: 3,
+    techniques: ['Estiramientos suaves'],
+    objectives: 'Iniciar estiramientos',
   },
   {
     number: 3,
-    name: 'Fortalecimiento',
-    durationWeeks: 4,
-    techniques: ['Ejercicios'],
-    objectives: 'Fortalecer',
+    name: 'Intermedia',
+    durationWeeks: 3,
+    techniques: ['Estiramientos progresivos'],
+    objectives: 'Ganancia de flexibilidad',
+  },
+  {
+    number: 4,
+    name: 'Tardía Intermedia',
+    durationWeeks: 3,
+    techniques: ['Ejercicios terapéuticos'],
+    objectives: 'Fortalecimiento muscular',
+  },
+  {
+    number: 5,
+    name: 'Avanzada',
+    durationWeeks: 3,
+    techniques: ['Fortalecimiento funcional'],
+    objectives: 'Preparación para alta',
   },
 ];
 
@@ -75,9 +89,11 @@ describe('PhaseProgress', () => {
       />,
     );
 
-    expect(screen.getByText('Alivio')).toBeInTheDocument();
-    expect(screen.getByText('Movilización')).toBeInTheDocument();
-    expect(screen.getByText('Fortalecimiento')).toBeInTheDocument();
+    expect(screen.getByText('Inicial')).toBeInTheDocument();
+    expect(screen.getByText('Temprana Intermedia')).toBeInTheDocument();
+    expect(screen.getByText('Intermedia')).toBeInTheDocument();
+    expect(screen.getByText('Tardía Intermedia')).toBeInTheDocument();
+    expect(screen.getByText('Avanzada')).toBeInTheDocument();
   });
 
   it('should show session count per phase', () => {
@@ -93,7 +109,7 @@ describe('PhaseProgress', () => {
 
     expect(screen.getByText('2 sesiones')).toBeInTheDocument();
     expect(screen.getByText('1 sesión')).toBeInTheDocument();
-    expect(screen.getByText('0 sesiones')).toBeInTheDocument();
+    expect(screen.getAllByText('0 sesiones').length).toBe(3);
   });
 
   it('should call onPhaseClick when phase is clicked', async () => {

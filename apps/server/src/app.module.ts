@@ -8,6 +8,7 @@ import { PatientsModule } from './modules/patients/patients.module';
 import { ClinicalCasesModule } from './modules/clinical-cases/clinical-cases.module';
 import { SessionsModule } from './modules/sessions/sessions.module';
 import { MediaModule } from './modules/media/media.module';
+import { TreatmentPlansModule } from './modules/treatment-plans/treatment-plans.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { MediaModule } from './modules/media/media.module';
     ClinicalCasesModule,
     SessionsModule,
     MediaModule,
+    TreatmentPlansModule,
   ],
   controllers: [AppController],
   providers: [AppService],

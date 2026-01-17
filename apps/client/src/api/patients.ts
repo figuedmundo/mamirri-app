@@ -1,5 +1,10 @@
 import axios from '../lib/axios';
-import type { Patient, Evaluation, TreatmentSession } from '../types/patient';
+import type {
+  Patient,
+  Evaluation,
+  TreatmentSession,
+  TreatmentPlan,
+} from '../types/patient';
 
 export interface CreatePatientDto {
   name: string;
@@ -37,6 +42,12 @@ export interface UpdateEvaluationDto {
   avdEvaluation?: Partial<Evaluation['avdEvaluation']>;
   painScale?: Partial<Evaluation['painScale']>;
   diagnosis?: Partial<Evaluation['diagnosis']>;
+}
+
+export interface UpdateTreatmentPlanObjectivesDto {
+  therapeutic?: string;
+  prophylactic?: string;
+  educational?: string;
 }
 
 interface PaginatedResponse<T> {
@@ -155,6 +166,17 @@ export const patientsApi = {
   updateEvaluation: async (id: string, data: UpdateEvaluationDto) => {
     const response = await axios.patch<Evaluation>(
       `/patients/evaluations/${id}`,
+      data,
+    );
+    return response.data;
+  },
+
+  updateTreatmentPlanObjectives: async (
+    planId: string,
+    data: UpdateTreatmentPlanObjectivesDto,
+  ): Promise<TreatmentPlan> => {
+    const response = await axios.patch<TreatmentPlan>(
+      `/treatment-plans/${planId}/objectives`,
       data,
     );
     return response.data;

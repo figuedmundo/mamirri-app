@@ -6,10 +6,38 @@ import type { Patient, TreatmentPhase } from '../../types/patient';
 const mockPhases: TreatmentPhase[] = [
   {
     number: 1,
-    name: 'Movilizacion',
+    name: 'Inicial',
     durationWeeks: 3,
-    objectives: 'Reducir contracturas',
-    techniques: ['Masaje', 'Estiramientos', 'Crioterapia'],
+    objectives: 'Alivio del dolor',
+    techniques: ['Movilizaciones', 'Crioterapia'],
+  },
+  {
+    number: 2,
+    name: 'Temprana Intermedia',
+    durationWeeks: 3,
+    objectives: 'Iniciar estiramientos',
+    techniques: ['Estiramientos suaves'],
+  },
+  {
+    number: 3,
+    name: 'Intermedia',
+    durationWeeks: 3,
+    objectives: 'Ganancia de flexibilidad',
+    techniques: ['Estiramientos progresivos'],
+  },
+  {
+    number: 4,
+    name: 'Tardía Intermedia',
+    durationWeeks: 3,
+    objectives: 'Fortalecimiento muscular',
+    techniques: ['Ejercicios terapéuticos'],
+  },
+  {
+    number: 5,
+    name: 'Avanzada',
+    durationWeeks: 3,
+    objectives: 'Preparación para alta',
+    techniques: ['Fortalecimiento funcional'],
   },
 ];
 
@@ -190,10 +218,9 @@ describe('PatientProfile', () => {
     render(<PatientProfile patient={mockPatient} />);
 
     expect(screen.getByText('Fases del Tratamiento')).toBeInTheDocument();
-    expect(screen.getByText('Movilizacion')).toBeInTheDocument();
-    expect(screen.getByText('3 sem')).toBeInTheDocument();
-    expect(screen.getByText('Masaje')).toBeInTheDocument();
-    expect(screen.getByText('Estiramientos')).toBeInTheDocument();
+    expect(screen.getByText('Inicial')).toBeInTheDocument();
+    expect(screen.getAllByText('3 sem').length).toBeGreaterThan(0);
+    expect(screen.getByText('Movilizaciones')).toBeInTheDocument();
     expect(screen.getByText('Crioterapia')).toBeInTheDocument();
   });
 

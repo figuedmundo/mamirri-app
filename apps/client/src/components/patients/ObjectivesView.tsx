@@ -1,0 +1,177 @@
+import { useState, useEffect } from 'react';
+import type { ClinicalCase, TreatmentObjectives } from '../../types/patient';
+import { ObjectiveCard } from './objectives/ObjectiveCard';
+import { useDebounce } from '../../hooks/use-debounce';
+import { useToast } from '../../hooks/use-toast';
+import { Target, Loader2, Check, AlertCircle } from 'lucide-react';
+
+interface ObjectivesViewProps {
+  clinicalCase: ClinicalCase;
+  onObjectivesChange: (objectives: TreatmentObjectives) => Promise<void>;
+}
+
+type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+
+export function ObjectivesView({
+  clinicalCase,
+  onObjectivesChange,
+}: ObjectivesViewProps) {
+  const { toast } = useToast();
+  const objectives = clinicalCase.treatmentPlan?.objectives || {
+    therapeutic: '',
+    prophylactic: '',
+    educational: '',
+  };
+
+  const [localObjectives, setLocalObjectives] =
+    useState<TreatmentObjectives>(objectives);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+
+  useEffect(() => {
+    setLocalObjectives(
+      clinicalCase.treatmentPlan?.objectives || {
+        therapeutic: '',
+        prophylactic: '',
+        educational: '',
+      },
+    );
+  }, [clinicalCase.treatmentPlan?.objectives]);
+
+  const debouncedSave = useDebounce(
+    async (newObjectives: TreatmentObjectives) => {
+      try {
+        setSaveStatus('saving');
+        await onObjectivesChange(newObjectives);
+        setSaveStatus('saved');
+        setTimeout(() => setSaveStatus('idle'), 2000);
+      } catch {
+        setSaveStatus('error');
+        toast({
+          title: 'Error al guardar',
+          description:
+            'No se pudieron guardar los objetivos. Intenta de nuevo.',
+          variant: 'destructive',
+        });
+      }
+    },
+    300,
+  );
+
+  const handleObjectiveChange = (
+    type: keyof TreatmentObjectives,
+    value: string,
+  ) => {
+    const newObjectives = { ...localObjectives, [type]: value };
+    setLocalObjectives(newObjectives);
+    debouncedSave(newObjectives);
+  };
+
+  const isEmpty =
+    !localObjectives.therapeutic &&
+    !localObjectives.prophylactic &&
+    !localObjectives.educational;
+
+  if (isEmpty && saveStatus === 'idle') {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="text-center py-12 px-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 mb-4">
+            <Target className="w-8 h-8 text-slate-400" />
+          </div>
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+            Define los objetivos del tratamiento
+          </h3>
+          <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
+            Establece las metas terapéuticas, profilácticas y educativas para
+            este caso clínico.
+          </p>
+          <button
+            onClick={() =>
+              handleObjectiveChange('therapeutic', localObjectives.therapeutic)
+            }
+            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors"
+          >
+            <Target className="w-4 h-4" />
+            Comenzar a definir objetivos
+          </button>
+        </div>
+
+        <div className="mt-8 grid gap-4">
+          <ObjectiveCard
+            type="therapeutic"
+            value={localObjectives.therapeutic}
+            onChange={(v) => handleObjectiveChange('therapeutic', v)}
+          />
+          <ObjectiveCard
+            type="prophylactic"
+            value={localObjectives.prophylactic}
+            onChange={(v) => handleObjectiveChange('prophylactic', v)}
+          />
+          <ObjectiveCard
+            type="educational"
+            value={localObjectives.educational}
+            onChange={(v) => handleObjectiveChange('educational', v)}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800">
+            <Target className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+              Objetivos del Tratamiento
+            </h2>
+            <p className="text-sm text-slate-500">
+              Define las metas para este caso clínico
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {saveStatus === 'saving' && (
+            <div className="flex items-center gap-1.5 text-sm text-slate-500">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Guardando...</span>
+            </div>
+          )}
+          {saveStatus === 'saved' && (
+            <div className="flex items-center gap-1.5 text-sm text-emerald-600">
+              <Check className="w-4 h-4" />
+              <span>Guardado</span>
+            </div>
+          )}
+          {saveStatus === 'error' && (
+            <div className="flex items-center gap-1.5 text-sm text-red-600">
+              <AlertCircle className="w-4 h-4" />
+              <span>Error</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="grid gap-4">
+        <ObjectiveCard
+          type="therapeutic"
+          value={localObjectives.therapeutic}
+          onChange={(v) => handleObjectiveChange('therapeutic', v)}
+        />
+        <ObjectiveCard
+          type="prophylactic"
+          value={localObjectives.prophylactic}
+          onChange={(v) => handleObjectiveChange('prophylactic', v)}
+        />
+        <ObjectiveCard
+          type="educational"
+          value={localObjectives.educational}
+          onChange={(v) => handleObjectiveChange('educational', v)}
+        />
+      </div>
+    </div>
+  );
+}
