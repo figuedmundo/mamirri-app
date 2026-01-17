@@ -226,3 +226,7 @@ Evaluation (1) ──> (*) PostureVideo
 | `INITIAL`  | Baseline measurement           | Case creation     |
 | `PROGRESS` | Mid-treatment check (optional) | During treatment  |
 | `FINAL`    | Outcome measurement            | After 15 sessions |
+
+---
+
+**Last Updated:** 2026-01-17

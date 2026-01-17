@@ -1,6 +1,6 @@
 # API Reference
 
-**Last Updated:** 2026-01-15
+**Last Updated:** 2026-01-17
 
 All endpoints require authentication via Bearer token (JWT) unless otherwise noted.
 
@@ -294,6 +294,24 @@ Update an evaluation.
   }
   ```
 - **Response:** `200 OK` - Updated evaluation object
+
+---
+
+## Treatment Plans
+
+### PATCH /api/v1/treatment-plans/:id/objectives
+
+Update treatment plan objectives.
+
+- **Body:**
+  ```json
+  {
+    "therapeutic": "Reducir dolor en fase aguda",
+    "prophylactic": "Prevenir recidivas mediante higiene postural",
+    "educational": "Instruir en ejercicios de movilidad"
+  }
+  ```
+- **Response:** `200 OK` - Updated TreatmentPlan object
 
 ---
 

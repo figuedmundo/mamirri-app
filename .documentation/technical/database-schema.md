@@ -105,6 +105,22 @@ Records of individual therapy sessions linked to a Clinical Case.
 
 - `sessions_patientId_therapistId_date_idx`: Optimized for history retrieval.
 
+## Treatment Plans (`treatment_plans`)
+
+Defines the strategy and goals for a Clinical Case.
+
+| Field            | Type     | Description                                      |
+| ---------------- | -------- | ------------------------------------------------ |
+| `id`             | `String` | Unique identifier (CUID)                         |
+| `objectives`     | `Json`   | Therapeutic, prophylactic, and educational goals |
+| `phases`         | `Json`   | Array of `TreatmentPhase` objects (5 phases)     |
+| `insoleSnapshot` | `Json?`  | Optional snapshot of insole configuration        |
+| `clinicalCaseId` | `String` | Foreign key to `ClinicalCase` (Unique)           |
+
+**Relations:**
+
+- **One-to-One** with `ClinicalCase`.
+
 ---
 
-**Last Updated:** 2026-01-16
+**Last Updated:** 2026-01-17
