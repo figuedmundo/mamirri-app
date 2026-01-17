@@ -44,7 +44,7 @@ vi.mock('../../hooks/use-toast', () => ({
 }));
 
 vi.mock('../../hooks/use-debounce', () => ({
-  useDebounce: (fn: Function) => fn,
+  useDebounce: <T,>(fn: T): T => fn,
 }));
 
 describe('ObjectivesView', () => {

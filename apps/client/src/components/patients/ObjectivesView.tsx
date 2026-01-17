@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { ClinicalCase, TreatmentObjectives } from '../../types/patient';
 import { ObjectiveCard } from './objectives/ObjectiveCard';
 import { useDebounce } from '../../hooks/use-debounce';
@@ -27,7 +27,11 @@ export function ObjectivesView({
     useState<TreatmentObjectives>(objectives);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
 
-  useEffect(() => {
+  const [prevPropObjectives, setPrevPropObjectives] = useState<
+    TreatmentObjectives | undefined
+  >(clinicalCase.treatmentPlan?.objectives);
+
+  if (clinicalCase.treatmentPlan?.objectives !== prevPropObjectives) {
     setLocalObjectives(
       clinicalCase.treatmentPlan?.objectives || {
         therapeutic: '',
@@ -35,7 +39,8 @@ export function ObjectivesView({
         educational: '',
       },
     );
-  }, [clinicalCase.treatmentPlan?.objectives]);
+    setPrevPropObjectives(clinicalCase.treatmentPlan?.objectives);
+  }
 
   const debouncedSave = useDebounce(
     async (newObjectives: TreatmentObjectives) => {
