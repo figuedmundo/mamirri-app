@@ -45,7 +45,7 @@ export function ComparisonBoard({
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
             Comparativa de Evolución
@@ -55,10 +55,10 @@ export function ComparisonBoard({
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={onShare}
-            className="px-4 py-2 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center gap-2"
+            className="px-4 py-2 sm:py-2.5 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center gap-2"
           >
             <svg
               className="w-4 h-4"
@@ -73,12 +73,12 @@ export function ComparisonBoard({
                 d="M8 17a3 3 0 003 3h10a3 3 0 110-2.684a3 3 0 110-2.684l6.632 3.316m0 0a3 3 0 00-5.368a3 3 0 105.368 2.684a3 3 0 00-5.368a3 3 0 00-3.316m0 0a3 3 0 105.368 2.684z"
               />
             </svg>
-            Compartir
+            <span className="hidden sm:inline">Compartir</span>
           </button>
           <button
             onClick={handleExport}
             disabled={isExporting}
-            className="px-4 py-2 bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600 text-white rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 sm:py-2.5 bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600 text-white rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0"
           >
             {isExporting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -97,40 +97,43 @@ export function ComparisonBoard({
                 />
               </svg>
             )}
-            {isExporting ? 'Generando...' : 'Exportar Informe'}
+            {isExporting ? (
+              'Generando...'
+            ) : (
+              <span className="hidden sm:inline">Exportar Informe</span>
+            )}
+          </button>
+          <button
+            onClick={toggleMode}
+            className="px-4 py-2 sm:py-2.5 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center gap-2 min-h-[44px] sm:min-h-0"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 17a3 3 0 003 3h10a3 3 0 110-2.684l6.632 3.316m0 0a3 3 0 00-5.368a3 3 0 00-3.316m0 0a3 3 0 00-3.316m0 0 105.368 2.684a3 3 0 00-3.316m0 0 0 003 3v-1m-4 4l4 4V4"
+              />
+            </svg>
+            {viewMode === 'slider' ? (
+              <span className="text-xs text-teal-600 dark:text-teal-400 font-medium">
+                Slider
+              </span>
+            ) : (
+              <span className="text-xs text-teal-600 dark:text-teal-400 font-medium">
+                Side by Side
+              </span>
+            )}
           </button>
         </div>
-
-        <button
-          onClick={toggleMode}
-          className="px-4 py-2 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center gap-2"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 17a3 3 0 003 3h10a3 3 0 110-2.684l6.632 3.316m0 0a3 3 0 00-5.368a3 3 0 00-3.316m0 0a3 3 0 00-3.316m0 0 105.368 2.684a3 3 0 00-3.316m0 0 0 003 3v-1m-4 4l4 4V4"
-            />
-          </svg>
-          {viewMode === 'slider' ? (
-            <span className="text-xs text-teal-600 dark:text-teal-400 font-medium">
-              Slider
-            </span>
-          ) : (
-            <span className="text-xs text-teal-600 dark:text-teal-400 font-medium">
-              Side by Side
-            </span>
-          )}
-        </button>
       </div>
 
-      <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700">
+      <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700 overflow-x-auto scrollbar-hide">
         {[
           { id: 'footprints', label: 'Huellas Plantares' },
           { id: 'posture', label: 'Análisis Postural' },

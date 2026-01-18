@@ -349,14 +349,14 @@ export function EvaluationForm({
           <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
             Tipo de Evaluación
           </h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {EVALUATION_TYPE_OPTIONS.map((option) => (
               <button
                 key={option.value}
                 type="button"
                 onClick={() => handleTypeChange(option.value)}
                 disabled={hasStartedDataEntry}
-                className={`p-4 rounded-lg border-2 transition-all ${
+                className={`p-4 sm:p-5 rounded-lg border-2 transition-all ${
                   evaluationType === option.value
                     ? `${
                         option.value === EvaluationType.INITIAL
@@ -364,7 +364,7 @@ export function EvaluationForm({
                           : 'bg-blue-100 border-blue-500 text-blue-900 dark:bg-blue-900/30 dark:border-blue-500 dark:text-blue-100'
                       }`
                     : 'bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'
-                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                } disabled:opacity-50 disabled:cursor-not-allowed min-h-[56px]`}
               >
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">{option.icon}</span>
@@ -444,7 +444,7 @@ export function EvaluationForm({
         </div>
       )}
 
-      <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700 overflow-x-auto">
+      <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700 overflow-x-auto scrollbar-hide">
         {[
           { id: 'posturogram', label: 'Posturograma' },
           { id: 'tests', label: 'Tests Ortopédicos' },
@@ -458,7 +458,7 @@ export function EvaluationForm({
                 section.id as 'posturogram' | 'tests' | 'avd' | 'pain',
               )
             }
-            className={`px-4 py-3 font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${
+            className={`px-4 sm:px-6 py-3 sm:py-4 font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${
               activeSection === section.id
                 ? 'border-teal-500 text-teal-700 dark:text-teal-400'
                 : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
@@ -487,7 +487,7 @@ export function EvaluationForm({
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {(Object.keys(posturogram) as (keyof Posturogram)[]).map(
                 (part) => {
                   // Skip nested view objects to prevent crash in legacy renderer
@@ -531,7 +531,7 @@ export function EvaluationForm({
                                   e.target.value,
                                 )
                               }
-                              className="w-full px-2 py-1 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                              className="w-full px-2 py-2 sm:py-1 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                             >
                               <option value="normal">Normal</option>
                               <option value="anteversion">Anteversión</option>
@@ -626,7 +626,7 @@ export function EvaluationForm({
                         }
                         rows={2}
                         placeholder="Observaciones..."
-                        className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none text-sm"
+                        className="w-full px-3 py-2 sm:py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none text-sm"
                       />
                     </div>
                   </div>
@@ -866,14 +866,14 @@ export function EvaluationForm({
         <button
           onClick={handleCancel}
           disabled={!isDirty}
-          className="px-6 py-3 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-3 sm:py-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancelar
         </button>
         <button
           onClick={handleSave}
           disabled={isSaving || !isDirty}
-          className="px-6 py-3 bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-3 sm:py-4 bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSaving ? (
             <>

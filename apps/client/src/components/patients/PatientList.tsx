@@ -252,14 +252,14 @@ export function PatientList({
                   )}
                 </div>
 
-                <div className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 px-5 py-3 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 px-5 py-3 flex justify-between items-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onSchedule?.(patient.id);
                     }}
-                    className="p-2 text-slate-400 hover:text-teal-600 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors"
-                    title="Agendar cita"
+                    className="p-2 sm:p-2 min-h-[44px] min-w-[44px] text-slate-400 hover:text-teal-600 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center justify-center"
+                    aria-label="Agendar cita"
                   >
                     <Calendar size={16} />
                   </button>
@@ -269,8 +269,8 @@ export function PatientList({
                         e.stopPropagation();
                         onEdit?.(patient.id);
                       }}
-                      className="p-2 text-slate-400 hover:text-teal-600 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors"
-                      title="Editar"
+                      className="p-2 sm:p-2 min-h-[44px] min-w-[44px] text-slate-400 hover:text-teal-600 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center justify-center"
+                      aria-label="Editar paciente"
                     >
                       <Edit2 size={16} />
                     </button>
@@ -279,8 +279,8 @@ export function PatientList({
                         e.stopPropagation();
                         onDelete?.(patient.id);
                       }}
-                      className="p-2 text-slate-400 hover:text-rose-500 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors"
-                      title="Eliminar"
+                      className="p-2 sm:p-2 min-h-[44px] min-w-[44px] text-slate-400 hover:text-rose-500 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center justify-center"
+                      aria-label="Eliminar paciente"
                     >
                       <Trash2 size={16} />
                     </button>

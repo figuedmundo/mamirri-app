@@ -1,5 +1,4 @@
 import type { ClinicalCase, TreatmentSession } from '../../../types/patient';
-import { TimelineSidebar } from './TimelineSidebar';
 import { PosturogramViewer } from '../PosturogramViewer';
 import { Play } from 'lucide-react';
 import {
@@ -22,7 +21,7 @@ function getPainColor(level: number) {
 export function SessionDetailView({
   clinicalCase,
   activeSessionId,
-  onSelectSession,
+  onSelectSession: _onSelectSession,
 }: SessionDetailViewProps) {
   const { treatmentSessions } = clinicalCase;
 
@@ -43,40 +42,32 @@ export function SessionDetailView({
     .findIndex((s) => s.id === activeSessionId);
 
   return (
-    <div className="flex-1 flex overflow-hidden">
-      <TimelineSidebar
-        clinicalCase={clinicalCase}
-        activeSessionId={activeSessionId}
-        onSelectSession={onSelectSession}
-      />
+    <div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-slate-50/50 dark:bg-slate-950/50">
+      <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
+        {activeSession ? (
+          <SessionReport session={activeSession} index={activeSessionIndex} />
+        ) : (
+          <div className="text-center py-20">
+            <p className="text-slate-400">
+              Selecciona una sesion para ver los detalles
+            </p>
+          </div>
+        )}
 
-      <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
-        <div className="max-w-4xl mx-auto space-y-8">
-          {activeSession ? (
-            <SessionReport session={activeSession} index={activeSessionIndex} />
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-slate-400">
-                Selecciona una sesion para ver los detalles
-              </p>
+        {hasPosturogramImages && (
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
+              Evolucion Postural (Sagital)
+            </h3>
+            <div className="max-w-md mx-auto">
+              <PosturogramViewer
+                clinicalCase={clinicalCase}
+                initialPosturogramUrl={initialFootprint.url}
+                currentPosturogramUrl={finalFootprint.url}
+              />
             </div>
-          )}
-
-          {hasPosturogramImages && (
-            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
-                Evolucion Postural (Sagital)
-              </h3>
-              <div className="max-w-md mx-auto">
-                <PosturogramViewer
-                  clinicalCase={clinicalCase}
-                  initialPosturogramUrl={initialFootprint.url}
-                  currentPosturogramUrl={finalFootprint.url}
-                />
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

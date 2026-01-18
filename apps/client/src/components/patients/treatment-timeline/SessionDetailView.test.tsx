@@ -1,9 +1,22 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { SessionDetailView } from './SessionDetailView';
 import type { ClinicalCase } from '../../../types/patient';
 import { EvaluationType } from '../../../types/patient';
+
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: query === '(min-width: 1024px)',
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
 
 vi.mock('./TimelineSidebar', () => ({
   TimelineSidebar: ({
@@ -244,30 +257,6 @@ describe('SessionDetailView', () => {
     mockOnSelectSession.mockClear();
   });
 
-  it('should render the timeline sidebar', () => {
-    render(
-      <SessionDetailView
-        clinicalCase={mockClinicalCase}
-        activeSessionId="ses-001"
-        onSelectSession={mockOnSelectSession}
-      />,
-    );
-
-    expect(screen.getByTestId('timeline-sidebar-mock')).toBeInTheDocument();
-  });
-
-  it('should pass activeSessionId to sidebar', () => {
-    render(
-      <SessionDetailView
-        clinicalCase={mockClinicalCase}
-        activeSessionId="ses-001"
-        onSelectSession={mockOnSelectSession}
-      />,
-    );
-
-    expect(screen.getByText('Active: ses-001')).toBeInTheDocument();
-  });
-
   it('should display session report when session is selected', () => {
     render(
       <SessionDetailView
@@ -372,21 +361,6 @@ describe('SessionDetailView', () => {
     );
 
     expect(screen.getByTestId('posturogram-viewer-mock')).toBeInTheDocument();
-  });
-
-  it('should call onSelectSession from sidebar', async () => {
-    const user = userEvent.setup();
-    render(
-      <SessionDetailView
-        clinicalCase={mockClinicalCase}
-        activeSessionId="ses-001"
-        onSelectSession={mockOnSelectSession}
-      />,
-    );
-
-    await user.click(screen.getByText('Select Session 2'));
-
-    expect(mockOnSelectSession).toHaveBeenCalledWith('ses-002');
   });
 
   it('should format session date correctly', () => {

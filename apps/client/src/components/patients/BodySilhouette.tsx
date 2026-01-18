@@ -181,7 +181,7 @@ export function BodySilhouette({
               <circle
                 cx={100}
                 cy={point.cy}
-                r={isActive ? 18 : 14}
+                r={isActive ? 24 : 20}
                 className={cn(
                   'cursor-pointer transition-all duration-150',
                   getSeverityColor(status.severity),
@@ -229,11 +229,12 @@ export function BodySilhouette({
               key={option.value}
               onClick={() => handleDeviationSelect(option.value)}
               className={cn(
-                'w-full text-left px-3 py-2 rounded-md text-sm transition-colors',
+                'w-full text-left px-3 py-3 sm:py-2 rounded-md text-sm transition-colors',
                 'hover:bg-slate-100 dark:hover:bg-slate-700',
                 'focus:outline-none focus:ring-2 focus:ring-teal-500',
                 values[activePoint].deviation === option.value &&
                   'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300',
+                'min-h-[44px]',
               )}
               role="option"
               aria-selected={values[activePoint].deviation === option.value}

@@ -14,7 +14,6 @@ import type {
 import { EvaluationType } from '../../types/patient';
 import { patientsApi } from '../../api/patients';
 
-// Mock dependencies
 const mockToast = vi.fn();
 
 vi.mock('../../hooks/use-toast', () => ({
@@ -29,7 +28,37 @@ vi.mock('../../api/patients', () => ({
   },
 }));
 
-// Mock EvaluationForm to simplify testing interaction
+vi.mock('../../hooks/use-breakpoint', () => ({
+  useBreakpointFlags: () => ({
+    isPhone: false,
+    isTablet: false,
+    isDesktop: false,
+    isTabletUp: false,
+    isDesktopUp: false,
+  }),
+}));
+
+vi.mock('./ResponsiveCaseTimeline', () => ({
+  ResponsiveCaseTimeline: ({
+    clinicalCase,
+    onSelectSession,
+  }: {
+    clinicalCase: ClinicalCase;
+    activeSessionId?: string;
+    onSelectSession: (id: string) => void;
+  }) => (
+    <div data-testid="responsive-case-timeline-mock">
+      <span>{clinicalCase.title}</span>
+      <button
+        data-testid="trigger-select-from-sidebar"
+        onClick={() => onSelectSession('ses-001')}
+      >
+        Select Session From Sidebar
+      </button>
+    </div>
+  ),
+}));
+
 vi.mock('./EvaluationForm', () => ({
   EvaluationForm: ({
     onSave,
@@ -395,8 +424,9 @@ describe('CaseDetailLayout', () => {
       );
 
       expect(screen.getByText('María García')).toBeInTheDocument();
-      // Use regex for partial match as text is split by children
-      expect(screen.getByText(/Dolor Lumbar Crónico/)).toBeInTheDocument();
+      // Case title appears in header and in ResponsiveCaseTimeline mock
+      const caseTitleElements = screen.getAllByText(/Dolor Lumbar Crónico/);
+      expect(caseTitleElements.length).toBeGreaterThanOrEqual(1);
     });
 
     it('should render case status badge', () => {
@@ -458,7 +488,7 @@ describe('CaseDetailLayout', () => {
       expect(backButton).toBeInTheDocument();
     });
 
-    it('should render timeline component', () => {
+    it('should render session detail view on mobile when in timeline mode', () => {
       render(
         <CaseDetailLayout
           patient={mockPatient}
@@ -467,12 +497,14 @@ describe('CaseDetailLayout', () => {
         />,
       );
 
-      expect(screen.getByText('Linea de Tratamiento')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('session-detail-view-mock'),
+      ).toBeInTheDocument();
     });
   });
 
   describe('Empty States', () => {
-    it('should render timeline component even when no sessions exist', () => {
+    it('should render session detail view even when no sessions exist', () => {
       render(
         <CaseDetailLayout
           patient={mockPatient}
@@ -481,9 +513,9 @@ describe('CaseDetailLayout', () => {
         />,
       );
 
-      // Empty state is now handled by TreatmentTimeline component itself
-      // CaseDetailLayout just renders the timeline
-      expect(screen.getByTestId('treatment-timeline-mock')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('session-detail-view-mock'),
+      ).toBeInTheDocument();
     });
   });
 
@@ -498,8 +530,10 @@ describe('CaseDetailLayout', () => {
       );
     });
 
-    it('should switch between Timeline and Evaluation views', async () => {
-      expect(screen.getByText('Linea de Tratamiento')).toBeInTheDocument();
+    it('should switch between Seguimiento and Evaluation views', async () => {
+      expect(
+        screen.getByTestId('session-detail-view-mock'),
+      ).toBeInTheDocument();
       expect(
         screen.queryByTestId('evaluation-form-mock'),
       ).not.toBeInTheDocument();
@@ -509,13 +543,15 @@ describe('CaseDetailLayout', () => {
 
       expect(screen.getByTestId('evaluation-form-mock')).toBeInTheDocument();
       expect(
-        screen.queryByText('Linea de Tratamiento'),
+        screen.queryByTestId('session-detail-view-mock'),
       ).not.toBeInTheDocument();
 
       const timelineTab = screen.getByText('Seguimiento');
       await userEvent.click(timelineTab);
 
-      expect(screen.getByText('Linea de Tratamiento')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('session-detail-view-mock'),
+      ).toBeInTheDocument();
     });
 
     it('should call API when saving evaluation', async () => {
@@ -551,53 +587,6 @@ describe('CaseDetailLayout', () => {
     });
   });
 
-  describe('Session Lifecycle Callbacks', () => {
-    it('should update local case state when session created', async () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
-          onBack={onBackMock}
-        />,
-      );
-
-      const trigger = screen.getByTestId('trigger-session-created');
-      await userEvent.click(trigger);
-
-      expect(screen.getByTestId('treatment-timeline-mock')).toBeInTheDocument();
-    });
-
-    it('should update local case state when session updated', async () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
-          onBack={onBackMock}
-        />,
-      );
-
-      const trigger = screen.getByTestId('trigger-session-updated');
-      await userEvent.click(trigger);
-
-      expect(screen.getByTestId('treatment-timeline-mock')).toBeInTheDocument();
-    });
-
-    it('should update local case state when session deleted', async () => {
-      render(
-        <CaseDetailLayout
-          patient={mockPatient}
-          clinicalCase={mockClinicalCaseWithSessions}
-          onBack={onBackMock}
-        />,
-      );
-
-      const trigger = screen.getByTestId('trigger-session-deleted');
-      await userEvent.click(trigger);
-
-      expect(screen.getByTestId('treatment-timeline-mock')).toBeInTheDocument();
-    });
-  });
-
   describe('Evaluation Integration', () => {
     beforeEach(() => {
       vi.clearAllMocks();
@@ -610,27 +599,28 @@ describe('CaseDetailLayout', () => {
       );
     });
 
-    it('should switch between Timeline and Evaluation views', async () => {
-      // Default view is Timeline
-      expect(screen.getByText('Linea de Tratamiento')).toBeInTheDocument();
+    it('should switch between Seguimiento and Evaluation views', async () => {
+      expect(
+        screen.getByTestId('session-detail-view-mock'),
+      ).toBeInTheDocument();
       expect(
         screen.queryByTestId('evaluation-form-mock'),
       ).not.toBeInTheDocument();
 
-      // Switch to Evaluation
       const evalTab = screen.getByText('Evaluacion');
       await userEvent.click(evalTab);
 
       expect(screen.getByTestId('evaluation-form-mock')).toBeInTheDocument();
       expect(
-        screen.queryByText('Linea de Tratamiento'),
+        screen.queryByTestId('session-detail-view-mock'),
       ).not.toBeInTheDocument();
 
-      // Switch back to Timeline
       const timelineTab = screen.getByText('Seguimiento');
       await userEvent.click(timelineTab);
 
-      expect(screen.getByText('Linea de Tratamiento')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('session-detail-view-mock'),
+      ).toBeInTheDocument();
     });
 
     it('should call API and show success toast when saving evaluation', async () => {
@@ -688,18 +678,6 @@ describe('CaseDetailLayout', () => {
       });
     });
 
-    it('should update clinicalCase and pass to children when pain scale changes', async () => {
-      await userEvent.click(screen.getByText('Evaluacion'));
-      await userEvent.click(screen.getByTestId('trigger-pain'));
-
-      const timelineTab = screen.getByText('Seguimiento');
-      await userEvent.click(timelineTab);
-
-      expect(screen.getByTestId('timeline-pain-scale')).toHaveTextContent(
-        '"activity":8',
-      );
-    });
-
     it('should call API and show error toast when pain scale update fails', async () => {
       const error = new Error('Failed to update pain scale');
       vi.mocked(patientsApi.updateEvaluation).mockRejectedValueOnce(error);
@@ -730,8 +708,8 @@ describe('CaseDetailLayout', () => {
       );
     });
 
-    it('should switch to session detail view when session is selected', async () => {
-      await userEvent.click(screen.getByTestId('trigger-select-session'));
+    it('should switch to session detail view when session is selected from sidebar', async () => {
+      await userEvent.click(screen.getByTestId('trigger-select-from-sidebar'));
 
       expect(
         screen.getByTestId('session-detail-view-mock'),
@@ -739,15 +717,15 @@ describe('CaseDetailLayout', () => {
     });
 
     it('should pass active session id to session detail view', async () => {
-      await userEvent.click(screen.getByTestId('trigger-select-session'));
+      await userEvent.click(screen.getByTestId('trigger-select-from-sidebar'));
 
       expect(screen.getByTestId('active-session-id')).toHaveTextContent(
         'ses-001',
       );
     });
 
-    it('should return to timeline view when back is clicked from session detail', async () => {
-      await userEvent.click(screen.getByTestId('trigger-select-session'));
+    it('should return to session detail view when back is clicked (stays on Seguimiento)', async () => {
+      await userEvent.click(screen.getByTestId('trigger-select-from-sidebar'));
       expect(
         screen.getByTestId('session-detail-view-mock'),
       ).toBeInTheDocument();
@@ -755,11 +733,13 @@ describe('CaseDetailLayout', () => {
       const backButton = screen.getByLabelText('Volver al cronograma');
       await userEvent.click(backButton);
 
-      expect(screen.getByTestId('treatment-timeline-mock')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('session-detail-view-mock'),
+      ).toBeInTheDocument();
     });
 
     it('should keep Seguimiento tab active in session detail view', async () => {
-      await userEvent.click(screen.getByTestId('trigger-select-session'));
+      await userEvent.click(screen.getByTestId('trigger-select-from-sidebar'));
 
       const seguimientoTab = screen.getByText('Seguimiento').closest('button');
       expect(seguimientoTab).toHaveClass('bg-white');
