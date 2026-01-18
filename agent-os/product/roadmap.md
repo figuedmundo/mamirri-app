@@ -146,7 +146,7 @@ Methodology: Agile Development (1-week Sprints).
 - [x] **6.11** Wire callback: onExport (comparison report)
 - [ ] **6.12** Responsive design for mobile/tablet
 - [x] **6.13** Frontend tests: Key user flows (TDD approach)
-- [ ] **6.20** Evaluation utility functions unit tests
+- [x] **6.20** Evaluation utility functions unit tests
 
 **🎯 Milestone 2:** "I can create patients, record sessions, and compare evaluations"
 

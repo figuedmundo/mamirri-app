@@ -4,11 +4,13 @@ import {
   getFinalEvaluation,
   getLatestEvaluation,
   getActiveEvaluation,
+  canCreateEvaluationOfType,
 } from './evaluation-utils';
 import type { ClinicalCase, Evaluation } from '../types/patient';
+import { EvaluationType } from '../types/patient';
 
 describe('evaluation-utils', () => {
-  const createCase = (evaluations: Evaluation[]): ClinicalCase =>
+  const createCase = (evaluations: Evaluation[] | undefined): ClinicalCase =>
     ({
       id: 'case-1',
       evaluations,
@@ -46,6 +48,11 @@ describe('evaluation-utils', () => {
       const clinicalCase = createCase([]);
       expect(getInitialEvaluation(clinicalCase)).toBeUndefined();
     });
+
+    it('returns undefined for undefined evaluations', () => {
+      const clinicalCase = createCase(undefined);
+      expect(getInitialEvaluation(clinicalCase)).toBeUndefined();
+    });
   });
 
   describe('getFinalEvaluation', () => {
@@ -61,6 +68,16 @@ describe('evaluation-utils', () => {
       const initial = createEvaluation('1', 'INITIAL', '2024-01-01');
       const clinicalCase = createCase([initial]);
 
+      expect(getFinalEvaluation(clinicalCase)).toBeUndefined();
+    });
+
+    it('returns undefined for empty evaluations', () => {
+      const clinicalCase = createCase([]);
+      expect(getFinalEvaluation(clinicalCase)).toBeUndefined();
+    });
+
+    it('returns undefined for undefined evaluations', () => {
+      const clinicalCase = createCase(undefined);
       expect(getFinalEvaluation(clinicalCase)).toBeUndefined();
     });
   });
@@ -79,6 +96,15 @@ describe('evaluation-utils', () => {
     it('returns undefined for empty evaluations', () => {
       const clinicalCase = createCase([]);
       expect(getLatestEvaluation(clinicalCase)).toBeUndefined();
+    });
+
+    it('returns stable sort result for identical dates', () => {
+      const eval1 = createEvaluation('1', 'PROGRESS', '2024-01-01');
+      const eval2 = createEvaluation('2', 'PROGRESS', '2024-01-01');
+
+      const clinicalCase = createCase([eval1, eval2]);
+
+      expect(getLatestEvaluation(clinicalCase)).toBe(eval1);
     });
   });
 
@@ -103,6 +129,61 @@ describe('evaluation-utils', () => {
     it('returns undefined for empty evaluations', () => {
       const clinicalCase = createCase([]);
       expect(getActiveEvaluation(clinicalCase)).toBeUndefined();
+    });
+
+    it('handles single item fallback explicitly', () => {
+      const singleEval = createEvaluation('1', 'PROGRESS', '2024-01-01');
+      const clinicalCase = createCase([singleEval]);
+      expect(getActiveEvaluation(clinicalCase)).toBe(singleEval);
+    });
+  });
+
+  describe('canCreateEvaluationOfType', () => {
+    it('returns true when no evaluations exist', () => {
+      const clinicalCase = createCase([]);
+      expect(
+        canCreateEvaluationOfType(clinicalCase, EvaluationType.INITIAL),
+      ).toEqual({ canCreate: true });
+    });
+
+    it('returns true when evaluations is undefined', () => {
+      const clinicalCase = createCase(undefined);
+      expect(
+        canCreateEvaluationOfType(clinicalCase, EvaluationType.INITIAL),
+      ).toEqual({ canCreate: true });
+    });
+
+    it('returns false + message when duplicate INITIAL blocked', () => {
+      const initial = createEvaluation('1', 'INITIAL', '2024-01-01');
+      const clinicalCase = createCase([initial]);
+      const result = canCreateEvaluationOfType(
+        clinicalCase,
+        EvaluationType.INITIAL,
+      );
+      expect(result.canCreate).toBe(false);
+      expect(result.message).toContain('Ya existe una Evaluación Inicial');
+    });
+
+    it('returns false + message when duplicate FINAL blocked', () => {
+      const final = createEvaluation('1', 'FINAL', '2024-01-01');
+      const clinicalCase = createCase([final]);
+      const result = canCreateEvaluationOfType(
+        clinicalCase,
+        EvaluationType.FINAL,
+      );
+      expect(result.canCreate).toBe(false);
+      expect(result.message).toContain('Ya existe una Evaluación Final');
+    });
+
+    it('returns true for PROGRESS regardless of existing evaluations', () => {
+      const initial = createEvaluation('1', 'INITIAL', '2024-01-01');
+      const final = createEvaluation('2', 'FINAL', '2024-02-01');
+      const progress = createEvaluation('3', 'PROGRESS', '2024-01-15');
+      const clinicalCase = createCase([initial, final, progress]);
+
+      expect(
+        canCreateEvaluationOfType(clinicalCase, EvaluationType.PROGRESS),
+      ).toEqual({ canCreate: true });
     });
   });
 });
