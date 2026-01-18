@@ -81,7 +81,66 @@ describe('StorageService', () => {
       const largeFile = { ...validFile, size: 11 * 1024 * 1024 };
 
       await expect(service.uploadFile(largeFile, 'test.jpg')).rejects.toThrow(
-        BadRequestException,
+        /File size exceeds limit of 10MB/,
+      );
+    });
+
+    it('should upload video file successfully with correct magic numbers', async () => {
+      s3ClientMock.send.mockResolvedValue({ $metadata: {} });
+      const videoFile = {
+        ...validFile,
+        mimetype: 'video/mp4',
+        originalname: 'test.mp4',
+        size: 50 * 1024 * 1024,
+        // ftyp box signature: bytes 4-7 = 'ftyp'
+        buffer: Buffer.from([0x00, 0x00, 0x00, 0x20, 0x66, 0x74, 0x79, 0x70]),
+      };
+
+      const result = await service.uploadFile(videoFile, 'test-path');
+
+      expect(s3ClientMock.send).toHaveBeenCalled();
+      expect(result).toBeDefined();
+    });
+
+    it('should throw BadRequestException for video file too large', async () => {
+      const largeVideo = {
+        ...validFile,
+        mimetype: 'video/mp4',
+        originalname: 'test.mp4',
+        size: 101 * 1024 * 1024, // 101 MB
+        buffer: Buffer.from([0x00, 0x00, 0x00, 0x20, 0x66, 0x74, 0x79, 0x70]),
+      };
+
+      await expect(service.uploadFile(largeVideo, 'test.mp4')).rejects.toThrow(
+        /File size exceeds limit of 100MB/,
+      );
+    });
+
+    it('should allow audio file up to 25MB', async () => {
+      s3ClientMock.send.mockResolvedValue({ $metadata: {} });
+      const audioFile = {
+        ...validFile,
+        mimetype: 'audio/mpeg',
+        originalname: 'test.mp3',
+        size: 24 * 1024 * 1024, // 24 MB
+        buffer: Buffer.from([0xff, 0xfb]),
+      };
+
+      await service.uploadFile(audioFile, 'test-path');
+      expect(s3ClientMock.send).toHaveBeenCalled();
+    });
+
+    it('should reject audio file larger than 25MB', async () => {
+      const largeAudio = {
+        ...validFile,
+        mimetype: 'audio/mpeg',
+        originalname: 'test.mp3',
+        size: 26 * 1024 * 1024, // 26 MB
+        buffer: Buffer.from([0xff, 0xfb]),
+      };
+
+      await expect(service.uploadFile(largeAudio, 'test.mp3')).rejects.toThrow(
+        /File size exceeds limit of 25MB/,
       );
     });
   });

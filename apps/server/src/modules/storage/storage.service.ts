@@ -34,9 +34,22 @@ const ALLOWED_MIMETYPES = [
   'audio/wav',
   'audio/mpeg',
   'audio/mp4',
+  'video/mp4',
+  'video/webm',
+  'video/quicktime',
 ];
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const SIZE_LIMITS: Record<string, number> = {
+  'image/jpeg': 10 * 1024 * 1024,
+  'image/png': 10 * 1024 * 1024,
+  'image/webp': 10 * 1024 * 1024,
+  'audio/wav': 25 * 1024 * 1024,
+  'audio/mpeg': 25 * 1024 * 1024,
+  'audio/mp4': 25 * 1024 * 1024,
+  'video/mp4': 100 * 1024 * 1024,
+  'video/webm': 100 * 1024 * 1024,
+  'video/quicktime': 100 * 1024 * 1024,
+};
 
 const MAGIC_NUMBERS: Record<string, number[]> = {
   'image/jpeg': [0xff, 0xd8, 0xff],
@@ -45,6 +58,9 @@ const MAGIC_NUMBERS: Record<string, number[]> = {
   'audio/wav': [0x52, 0x49, 0x46, 0x46],
   'audio/mpeg': [0xff, 0xfb],
   'audio/mp4': [0x00, 0x00, 0x00],
+  'video/mp4': [0x00, 0x00, 0x00], // ftyp box (checked specially)
+  'video/webm': [0x1a, 0x45, 0xdf, 0xa3],
+  'video/quicktime': [0x00, 0x00, 0x00], // ftyp or moov (checked specially)
 };
 
 @Injectable()
@@ -172,9 +188,12 @@ export class StorageService implements OnModuleInit {
   }
 
   private validateFile(file: File) {
-    if (file.size > MAX_FILE_SIZE) {
+    const limit = SIZE_LIMITS[file.mimetype] || 10 * 1024 * 1024;
+    if (file.size > limit) {
       this.logger.warn(`File too large: ${file.size} bytes`);
-      throw new BadRequestException('File size exceeds 10MB limit');
+      throw new BadRequestException(
+        `File size exceeds limit of ${limit / 1024 / 1024}MB`,
+      );
     }
 
     if (!ALLOWED_MIMETYPES.includes(file.mimetype)) {
@@ -186,6 +205,31 @@ export class StorageService implements OnModuleInit {
   }
 
   private validateMagicNumbers(file: File) {
+    // Special handling for MP4/QuickTime (check for ftyp or moov)
+    if (file.mimetype === 'video/mp4' || file.mimetype === 'video/quicktime') {
+      const buffer = file.buffer;
+      if (buffer.length < 8) return; // Too short
+
+      // Check for 'ftyp' at offset 4
+      const isFtyp =
+        buffer[4] === 0x66 &&
+        buffer[5] === 0x74 &&
+        buffer[6] === 0x79 &&
+        buffer[7] === 0x70;
+      // Check for 'moov' at offset 4 (less common but valid)
+      const isMoov =
+        buffer[4] === 0x6d &&
+        buffer[5] === 0x6f &&
+        buffer[6] === 0x6f &&
+        buffer[7] === 0x76;
+
+      if (!isFtyp && !isMoov) {
+        this.logger.warn(`Invalid MP4/MOV signature for: ${file.mimetype}`);
+        throw new BadRequestException('Invalid file type');
+      }
+      return;
+    }
+
     const expectedMagic = MAGIC_NUMBERS[file.mimetype];
     if (!expectedMagic) {
       return;
