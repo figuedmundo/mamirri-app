@@ -1,5 +1,5 @@
 import type { TreatmentSession } from '../../../types/patient';
-import { FileText, Pencil, Trash2 } from 'lucide-react';
+import { Camera, FileText, Pencil, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SessionCardProps {
@@ -142,6 +142,13 @@ export function SessionCard({
           <FileText className="w-3 h-3" />
           {session.voiceNotes.length} nota
           {session.voiceNotes.length > 1 ? 's' : ''} de voz
+        </div>
+      )}
+
+      {session.photos && session.photos.length > 0 && (
+        <div className="mt-2 flex items-center gap-1 text-[10px] text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/20 px-2 py-0.5 rounded w-fit">
+          <Camera className="w-3 h-3" />
+          {session.photos.length} foto{session.photos.length > 1 ? 's' : ''}
         </div>
       )}
     </div>

@@ -1,5 +1,5 @@
 import axios from '../lib/axios';
-import type { Footprint, PostureVideo } from '../types/patient';
+import type { Footprint, PostureVideo, SessionPhoto } from '../types/patient';
 
 export const mediaApi = {
   uploadPatientPhoto: async (patientId: string, file: Blob): Promise<void> => {
@@ -55,5 +55,42 @@ export const mediaApi = {
       },
     );
     return response.data;
+  },
+
+  uploadSessionPhoto: async (
+    sessionId: string,
+    file: Blob,
+    caption?: string,
+  ): Promise<SessionPhoto> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (caption) {
+      formData.append('caption', caption);
+    }
+
+    const response = await axios.post<SessionPhoto>(
+      `/media/sessions/${sessionId}/photos`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+    return response.data;
+  },
+
+  getSessionPhotos: async (sessionId: string): Promise<SessionPhoto[]> => {
+    const response = await axios.get<SessionPhoto[]>(
+      `/media/sessions/${sessionId}/photos`,
+    );
+    return response.data;
+  },
+
+  deleteSessionPhoto: async (
+    sessionId: string,
+    photoId: string,
+  ): Promise<void> => {
+    await axios.delete(`/media/sessions/${sessionId}/photos/${photoId}`);
   },
 };

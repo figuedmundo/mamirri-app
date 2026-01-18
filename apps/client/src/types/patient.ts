@@ -11,6 +11,15 @@ export interface VoiceNote {
   durationSeconds: number;
 }
 
+export interface SessionPhoto {
+  id: string;
+  sessionId: string;
+  url: string;
+  caption?: string;
+  capturedAt: string;
+  createdAt: string;
+}
+
 export type AnatomicalPoint =
   | 'head'
   | 'shoulders'
@@ -274,6 +283,7 @@ export interface TreatmentSession {
   finalPainLevel: number;
   observations: string;
   voiceNotes?: VoiceNote[];
+  photos?: SessionPhoto[];
 }
 
 export interface ClinicalCase {

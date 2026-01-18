@@ -8,13 +8,17 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { X, Plus, Loader2 } from 'lucide-react';
+import { X, Plus, Loader2, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SessionPhotoCapture } from './SessionPhotoCapture';
 
 interface SessionFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: SessionFormData) => Promise<void>;
+  onSubmit: (
+    data: SessionFormData,
+    photos?: Array<{ blob: Blob; caption?: string }>,
+  ) => Promise<void>;
   phases: TreatmentPhase[];
   initialData?: TreatmentSession;
   isLoading?: boolean;
@@ -58,7 +62,40 @@ export function SessionForm({
   const [procedureInput, setProcedureInput] = React.useState('');
   const [showSuggestions, setShowSuggestions] = React.useState(false);
 
+  const [pendingPhotos, setPendingPhotos] = React.useState<
+    Array<{
+      blob: Blob;
+      caption?: string;
+      previewUrl: string;
+    }>
+  >([]);
+  const [showCameraCapture, setShowCameraCapture] = React.useState(false);
+
+  const photosRef = React.useRef(pendingPhotos);
+  photosRef.current = pendingPhotos;
+
+  const handlePhotoCapture = (blob: Blob, caption?: string) => {
+    const previewUrl = URL.createObjectURL(blob);
+    setPendingPhotos((prev) => [...prev, { blob, caption, previewUrl }]);
+    setShowCameraCapture(false);
+  };
+
+  const removePhoto = (index: number) => {
+    setPendingPhotos((prev) => {
+      const photo = prev[index];
+      URL.revokeObjectURL(photo.previewUrl);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
   React.useEffect(() => {
+    return () => {
+      photosRef.current.forEach((p) => URL.revokeObjectURL(p.previewUrl));
+    };
+  }, []);
+
+  React.useEffect(() => {
+    setPendingPhotos([]);
     if (isOpen && initialData) {
       setFormData({
         date: initialData.date.split('T')[0],
@@ -145,7 +182,10 @@ export function SessionForm({
       return;
     }
 
-    await onSubmit(result.data);
+    await onSubmit(
+      result.data,
+      pendingPhotos.map((p) => ({ blob: p.blob, caption: p.caption })),
+    );
   };
 
   return (
@@ -354,6 +394,57 @@ export function SessionForm({
               className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Fotos de la Sesion
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {pendingPhotos.map((photo, idx) => (
+                <div
+                  key={idx}
+                  className="relative aspect-square rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800"
+                >
+                  <img
+                    src={photo.previewUrl}
+                    alt={photo.caption || `Foto ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removePhoto(idx)}
+                    className="absolute top-1 right-1 p-1 bg-black/50 hover:bg-black/70 rounded-full text-white"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                  {photo.caption && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1">
+                      <p className="text-xs text-white truncate">
+                        {photo.caption}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setShowCameraCapture(true)}
+                className="aspect-square rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-teal-500 dark:hover:border-teal-500 flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+              >
+                <Camera className="w-6 h-6" />
+                <span className="text-xs">Capturar</span>
+              </button>
+            </div>
+          </div>
+
+          {showCameraCapture && (
+            <div className="fixed inset-0 z-50 bg-black">
+              <SessionPhotoCapture
+                onSave={handlePhotoCapture}
+                onCancel={() => setShowCameraCapture(false)}
+              />
+            </div>
+          )}
 
           <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
             <Button type="button" variant="outline" onClick={onClose}>

@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MediaController } from './media.controller';
 import { MediaService } from './media.service';
+import { SessionPhotoService } from './services/session-photo.service';
 import { CanActivate } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { FootprintType } from './dto/upload-footprint.dto';
@@ -9,12 +10,19 @@ import { PostureVideoType } from './dto/upload-posture-video.dto';
 describe('MediaController', () => {
   let controller: MediaController;
   let service: MediaService;
+  let sessionPhotoService: SessionPhotoService;
 
   const mockMediaService = {
     uploadPatientPhoto: jest.fn(),
     uploadFootprint: jest.fn(),
     uploadPostureVideo: jest.fn(),
     uploadVoiceNote: jest.fn(),
+  };
+
+  const mockSessionPhotoService = {
+    uploadPhoto: jest.fn(),
+    getPhotos: jest.fn(),
+    deletePhoto: jest.fn(),
   };
 
   const mockUser = { userId: 'therapist-1' };
@@ -40,6 +48,10 @@ describe('MediaController', () => {
           provide: MediaService,
           useValue: mockMediaService,
         },
+        {
+          provide: SessionPhotoService,
+          useValue: mockSessionPhotoService,
+        },
       ],
     })
       .overrideGuard(JwtAuthGuard)
@@ -48,6 +60,7 @@ describe('MediaController', () => {
 
     controller = module.get<MediaController>(MediaController);
     service = module.get<MediaService>(MediaService);
+    sessionPhotoService = module.get<SessionPhotoService>(SessionPhotoService);
   });
 
   it('should be defined', () => {
@@ -174,6 +187,59 @@ describe('MediaController', () => {
         'therapist-1',
       );
       expect(response).toEqual(result);
+    });
+  });
+
+  describe('Session Photos', () => {
+    const sessionId = 'session-1';
+
+    it('should upload session photo', async () => {
+      const dto = { caption: 'Test photo' };
+      const result = {
+        id: 'photo-1',
+        url: 'http://url',
+        sessionId: 'session-1',
+        storageKey: 'key',
+        caption: 'Test photo',
+        capturedAt: new Date(),
+        createdAt: new Date(),
+      };
+      mockSessionPhotoService.uploadPhoto.mockResolvedValue(result);
+
+      const response = await controller.uploadSessionPhoto(
+        sessionId,
+        dto,
+        mockFile,
+        mockUser,
+      );
+
+      expect(sessionPhotoService.uploadPhoto).toHaveBeenCalledWith(
+        sessionId,
+        mockFile,
+        mockUser.userId,
+        dto.caption,
+      );
+      expect(response).toEqual(result);
+    });
+
+    it('should list session photos', async () => {
+      mockSessionPhotoService.getPhotos.mockResolvedValue([]);
+      await controller.getSessionPhotos(sessionId, mockUser);
+      expect(sessionPhotoService.getPhotos).toHaveBeenCalledWith(
+        sessionId,
+        mockUser.userId,
+      );
+    });
+
+    it('should delete session photo', async () => {
+      const photoId = 'photo-1';
+      mockSessionPhotoService.deletePhoto.mockResolvedValue(undefined);
+      await controller.deleteSessionPhoto(sessionId, photoId, mockUser);
+      expect(sessionPhotoService.deletePhoto).toHaveBeenCalledWith(
+        sessionId,
+        photoId,
+        mockUser.userId,
+      );
     });
   });
 });

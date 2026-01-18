@@ -1,11 +1,17 @@
+import * as React from 'react';
 import type { ClinicalCase, TreatmentSession } from '../../../types/patient';
 import { TimelineSidebar } from './TimelineSidebar';
 import { PosturogramViewer } from '../PosturogramViewer';
+import { SessionPhotoGallery } from './SessionPhotoGallery';
+import { SessionPhotoCapture } from './SessionPhotoCapture';
 import { Play } from 'lucide-react';
 import {
   getInitialEvaluation,
   getFinalEvaluation,
 } from '../../../lib/evaluation-utils';
+import { photoQueue, type PendingPhoto, isOnline } from '@/lib/photo-queue';
+import { mediaApi } from '../../../api/media';
+import { useToast } from '@/hooks/use-toast';
 
 interface SessionDetailViewProps {
   clinicalCase: ClinicalCase;
@@ -42,8 +48,49 @@ export function SessionDetailView({
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .findIndex((s) => s.id === activeSessionId);
 
+  const [pendingPhotos, setPendingPhotos] = React.useState<PendingPhoto[]>([]);
+  const [showCamera, setShowCamera] = React.useState(false);
+  const { toast } = useToast();
+
+  React.useEffect(() => {
+    if (activeSessionId) {
+      photoQueue.getBySession(activeSessionId).then(setPendingPhotos);
+    } else {
+      setPendingPhotos([]);
+    }
+  }, [activeSessionId]);
+
+  const handlePhotoCapture = async (blob: Blob, caption?: string) => {
+    if (!activeSessionId) return;
+
+    if (isOnline()) {
+      try {
+        await mediaApi.uploadSessionPhoto(activeSessionId, blob, caption);
+        toast({
+          title: 'Foto subida',
+          description: 'La foto se ha guardado correctamente.',
+        });
+      } catch (error) {
+        toast({
+          title: 'Error al subir',
+          description: 'No se pudo subir la foto. Intenta de nuevo.',
+          variant: 'destructive',
+        });
+      }
+    } else {
+      await photoQueue.add(activeSessionId, blob, caption);
+      const updatedPending = await photoQueue.getBySession(activeSessionId);
+      setPendingPhotos(updatedPending);
+      toast({
+        title: 'Sin conexión',
+        description: 'Foto guardada en cola. Se subirá cuando tengas internet.',
+      });
+    }
+    setShowCamera(false);
+  };
+
   return (
-    <div className="flex-1 flex overflow-hidden">
+    <div className="flex-1 flex overflow-hidden relative">
       <TimelineSidebar
         clinicalCase={clinicalCase}
         activeSessionId={activeSessionId}
@@ -53,7 +100,12 @@ export function SessionDetailView({
       <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 dark:bg-slate-950/50">
         <div className="max-w-4xl mx-auto space-y-8">
           {activeSession ? (
-            <SessionReport session={activeSession} index={activeSessionIndex} />
+            <SessionReport
+              session={activeSession}
+              index={activeSessionIndex}
+              pendingPhotos={pendingPhotos}
+              onAddPhoto={() => setShowCamera(true)}
+            />
           ) : (
             <div className="text-center py-20">
               <p className="text-slate-400">
@@ -78,6 +130,15 @@ export function SessionDetailView({
           )}
         </div>
       </div>
+
+      {showCamera && (
+        <div className="absolute inset-0 z-50 bg-black">
+          <SessionPhotoCapture
+            onSave={handlePhotoCapture}
+            onCancel={() => setShowCamera(false)}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -85,9 +146,13 @@ export function SessionDetailView({
 function SessionReport({
   session,
   index,
+  pendingPhotos = [],
+  onAddPhoto,
 }: {
   session: TreatmentSession;
   index: number;
+  pendingPhotos?: PendingPhoto[];
+  onAddPhoto: () => void;
 }) {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
@@ -195,6 +260,17 @@ function SessionReport({
             </p>
           </div>
         )}
+
+        <div>
+          <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
+            Fotos de la Sesion
+          </h4>
+          <SessionPhotoGallery
+            photos={session.photos || []}
+            pendingPhotos={pendingPhotos}
+            onAdd={onAddPhoto}
+          />
+        </div>
       </div>
     </div>
   );

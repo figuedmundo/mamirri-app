@@ -1,12 +1,15 @@
 import {
   Controller,
   Post,
+  Get,
+  Delete,
   UseGuards,
   UseInterceptors,
   UploadedFile,
   Param,
   Body,
   HttpStatus,
+  HttpCode,
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
@@ -19,20 +22,26 @@ import {
   ApiResponse,
   ApiConsumes,
   ApiBody,
+  ApiParam,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTherapist } from '../patients/decorators/current-therapist.decorator';
 import { MediaService } from './media.service';
+import { SessionPhotoService } from './services/session-photo.service';
 import { UploadFootprintDto } from './dto/upload-footprint.dto';
 import { UploadPostureVideoDto } from './dto/upload-posture-video.dto';
 import { UploadVoiceNoteDto } from './dto/upload-voice-note.dto';
+import { UploadSessionPhotoDto } from './dto/upload-session-photo.dto';
 
 @ApiTags('media')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('media')
 export class MediaController {
-  constructor(private readonly mediaService: MediaService) {}
+  constructor(
+    private readonly mediaService: MediaService,
+    private readonly sessionPhotoService: SessionPhotoService,
+  ) {}
 
   @Post('patients/:patientId/photos')
   @UseInterceptors(FileInterceptor('file'))
@@ -211,5 +220,105 @@ export class MediaController {
       dto.durationSeconds,
       user.userId,
     );
+  }
+
+  // ============================================================================
+  // Session Photos
+  // ============================================================================
+
+  @Post('sessions/:sessionId/photos')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Upload a photo for a treatment session' })
+  @ApiConsumes('multipart/form-data')
+  @ApiParam({ name: 'sessionId', description: 'Treatment session ID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Photo file (JPEG/PNG)',
+        },
+        caption: {
+          type: 'string',
+          maxLength: 140,
+          description: 'Optional caption for the photo',
+        },
+      },
+      required: ['file'],
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Photo uploaded successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Session not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Access denied - session belongs to another therapist',
+  })
+  async uploadSessionPhoto(
+    @Param('sessionId') sessionId: string,
+    @Body() dto: UploadSessionPhotoDto,
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentTherapist() user: any,
+  ) {
+    return this.sessionPhotoService.uploadPhoto(
+      sessionId,
+      file,
+      user.userId,
+      dto.caption,
+    );
+  }
+
+  @Get('sessions/:sessionId/photos')
+  @ApiOperation({ summary: 'List all photos for a treatment session' })
+  @ApiParam({ name: 'sessionId', description: 'Treatment session ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'List of session photos with signed URLs',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Session not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Access denied - session belongs to another therapist',
+  })
+  async getSessionPhotos(
+    @Param('sessionId') sessionId: string,
+    @CurrentTherapist() user: any,
+  ) {
+    return this.sessionPhotoService.getPhotos(sessionId, user.userId);
+  }
+
+  @Delete('sessions/:sessionId/photos/:photoId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a photo from a treatment session' })
+  @ApiParam({ name: 'sessionId', description: 'Treatment session ID' })
+  @ApiParam({ name: 'photoId', description: 'Photo ID to delete' })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Photo deleted successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Session or photo not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Access denied - session belongs to another therapist',
+  })
+  async deleteSessionPhoto(
+    @Param('sessionId') sessionId: string,
+    @Param('photoId') photoId: string,
+    @CurrentTherapist() user: any,
+  ) {
+    await this.sessionPhotoService.deletePhoto(sessionId, photoId, user.userId);
   }
 }
