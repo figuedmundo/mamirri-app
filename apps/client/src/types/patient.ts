@@ -172,6 +172,27 @@ export interface PostureVideo {
   observations: string;
 }
 
+export interface PhotoMetadata {
+  width: number;
+  height: number;
+  timestamp: Date;
+  facingMode: 'user' | 'environment';
+  overlayType: string;
+}
+
+export type CameraCaptureState =
+  | 'idle'
+  | 'requesting'
+  | 'previewing'
+  | 'captured'
+  | 'error';
+
+export type PostureView =
+  | 'posture-anterior'
+  | 'posture-posterior'
+  | 'posture-lateral-left'
+  | 'posture-lateral-right';
+
 export const EvaluationType = {
   INITIAL: 'INITIAL',
   PROGRESS: 'PROGRESS',
@@ -377,4 +398,21 @@ export interface TimelineProps {
 
   /** Called when user wants to edit a session */
   onEditSession?: (id: string) => void;
+}
+
+export interface CameraCaptureProps {
+  /** Called when user confirms a captured photo */
+  onCapture: (blob: Blob, metadata: PhotoMetadata) => void;
+
+  /** Called when user cancels/closes the camera */
+  onCancel?: () => void;
+
+  /** Overlay guide to show over camera preview */
+  overlayType?: PostureView | 'footprint' | 'none';
+
+  /** Initial camera facing mode */
+  defaultFacingMode?: 'user' | 'environment';
+
+  /** Additional CSS classes */
+  className?: string;
 }

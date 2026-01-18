@@ -22,6 +22,11 @@ import { VoiceRecorder } from './VoiceRecorder';
 import { useDebounce } from '../../hooks/use-debounce';
 import { useUnsavedChanges } from '../../hooks/use-unsaved-changes';
 import { useToast } from '../../hooks/use-toast';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Camera } from 'lucide-react';
+import { CameraCapture } from './CameraCapture';
+import { mediaApi } from '../../api/media';
 
 import {
   getInitialEvaluation,
@@ -81,6 +86,7 @@ export function EvaluationForm({
     'posturogram' | 'tests' | 'avd' | 'pain'
   >('posturogram');
 
+  const [isCameraOpen, setIsCameraOpen] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const [saveStatus, setSaveStatus] = React.useState<
     'idle' | 'saving' | 'saved' | 'error'
@@ -342,6 +348,32 @@ export function EvaluationForm({
     markClean();
   };
 
+  const handleCameraCapture = async (blob: Blob) => {
+    if (!activeEvaluation) return;
+
+    try {
+      // Upload as footprint/clinical photo
+      // Defaulting to 'initial' or 'final' based on evaluation type
+      const photoType = activeEvaluation.type === 'FINAL' ? 'final' : 'initial';
+
+      await mediaApi.uploadFootprint(activeEvaluation.id, blob, photoType);
+
+      toast({
+        title: 'Foto guardada',
+        description: 'La imagen se ha subido correctamente.',
+      });
+
+      setIsCameraOpen(false);
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: 'Error al subir',
+        description: 'No se pudo guardar la foto. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-6 mb-6">
@@ -479,12 +511,28 @@ export function EvaluationForm({
           </p>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center gap-6">
               <BodySilhouette
                 values={bodySilhouetteValues}
                 onChange={handleBodySilhouetteChange}
                 className="max-w-[250px]"
               />
+
+              <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    <Camera className="w-4 h-4" />
+                    Capturar Postura
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 sm:max-h-[80vh] flex flex-col">
+                  <CameraCapture
+                    onCapture={handleCameraCapture}
+                    onCancel={() => setIsCameraOpen(false)}
+                    overlayType="posture-anterior"
+                  />
+                </DialogContent>
+              </Dialog>
             </div>
 
             <div className="grid grid-cols-2 gap-4">

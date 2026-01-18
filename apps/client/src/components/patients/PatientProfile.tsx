@@ -1,3 +1,4 @@
+import React from 'react';
 import type {
   PatientProfileProps,
   ClinicalCase,
@@ -18,6 +19,10 @@ import { PainScaleDisplay } from './PainScaleDisplay';
 import { DiagnosisSection } from './DiagnosisSection';
 import { TreatmentPhaseCard } from './TreatmentPhaseCard';
 import { SessionsFooter } from './SessionsFooter';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { CameraCapture } from './CameraCapture';
+import { mediaApi } from '../../api/media';
+import { useToast } from '../../hooks/use-toast';
 
 export function PatientProfile({
   patient,
@@ -32,6 +37,39 @@ export function PatientProfile({
   const activeEvaluation = activeCase
     ? getActiveEvaluation(activeCase)
     : undefined;
+
+  const [isCameraOpen, setIsCameraOpen] = React.useState(false);
+  const { toast } = useToast();
+
+  const handleHuellaCapture = async (blob: Blob) => {
+    if (!activeEvaluation) {
+      toast({
+        title: 'No hay evaluación activa',
+        description: 'Se necesita una evaluación activa para guardar huellas.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      await mediaApi.uploadFootprint(activeEvaluation.id, blob, 'initial');
+
+      toast({
+        title: 'Huella guardada',
+        description: 'La imagen se ha subido correctamente.',
+      });
+
+      setIsCameraOpen(false);
+      onCaptureFootprint?.();
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: 'Error al subir',
+        description: 'No se pudo guardar la huella. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
@@ -142,15 +180,23 @@ export function PatientProfile({
                 )}
 
                 <div className="flex gap-2">
-                  {onCaptureFootprint && (
-                    <button
-                      onClick={onCaptureFootprint}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium transition-colors text-sm"
-                    >
-                      <Camera className="w-4 h-4" />
-                      <span>Huella</span>
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setIsCameraOpen(true)}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium transition-colors text-sm"
+                  >
+                    <Camera className="w-4 h-4" />
+                    <span>Huella</span>
+                  </button>
+
+                  <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                    <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 sm:max-h-[80vh] flex flex-col">
+                      <CameraCapture
+                        onCapture={handleHuellaCapture}
+                        onCancel={() => setIsCameraOpen(false)}
+                        overlayType="none"
+                      />
+                    </DialogContent>
+                  </Dialog>
 
                   {onCaptureVideo && (
                     <button

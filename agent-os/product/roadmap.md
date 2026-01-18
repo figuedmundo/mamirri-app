@@ -157,7 +157,7 @@ Methodology: Agile Development (1-week Sprints).
 ### Week 7: Media & Dictation
 
 - [x] **7.1** Backend: Media upload endpoint (validation, MinIO)
-- [ ] **7.2** Frontend: Camera capture component
+- [x] **7.2** Frontend: Camera capture component
 - [ ] **7.3** Frontend: Photo gallery per session
 - [ ] **7.4** Backend: Whisper integration (Groq API)
 - [ ] **7.5** Frontend: Voice recorder button + transcription
