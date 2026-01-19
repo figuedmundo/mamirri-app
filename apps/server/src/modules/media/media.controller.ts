@@ -10,9 +10,6 @@ import {
   Body,
   HttpStatus,
   HttpCode,
-  ParseFilePipe,
-  MaxFileSizeValidator,
-  FileTypeValidator,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {

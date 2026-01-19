@@ -43,7 +43,7 @@ describe('CameraCapture', () => {
       drawImage: vi.fn(),
       translate: vi.fn(),
       scale: vi.fn(),
-    })) as any;
+    })) as unknown as HTMLCanvasElement['getContext'];
   });
 
   afterEach(() => {
@@ -80,7 +80,9 @@ describe('CameraCapture', () => {
 
       const error = new Error('Permiso denegado');
       error.name = 'NotAllowedError';
-      (navigator.mediaDevices.getUserMedia as any).mockRejectedValueOnce(error);
+      vi.mocked(navigator.mediaDevices.getUserMedia).mockRejectedValueOnce(
+        error,
+      );
 
       render(
         <CameraCapture onCapture={mockOnCapture} onCancel={mockOnCancel} />,

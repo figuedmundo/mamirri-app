@@ -161,6 +161,28 @@ export class StorageService implements OnModuleInit {
     }
   }
 
+  async getFile(path: string): Promise<Buffer> {
+    const command = new GetObjectCommand({
+      Bucket: storageConfig().bucket,
+      Key: path,
+    });
+
+    try {
+      const response = await this.client.send(command);
+      if (!response.Body) {
+        throw new InternalServerErrorException('Empty file body');
+      }
+      const byteArray = await response.Body.transformToByteArray();
+      return Buffer.from(byteArray);
+    } catch (error) {
+      if (this.isNotFoundError(error)) {
+        throw new NotFoundException('File not found');
+      }
+      this.logger.error(`Failed to get file: ${path}`, error);
+      throw new InternalServerErrorException('Failed to get file');
+    }
+  }
+
   async getFileUrl(path: string, expiry: number = 3600): Promise<string> {
     const command = new GetObjectCommand({
       Bucket: storageConfig().bucket,

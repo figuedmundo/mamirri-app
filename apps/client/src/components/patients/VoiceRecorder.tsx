@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
 export interface VoiceRecorderProps {
-  onRecordingComplete: (audioBlob: Blob) => void;
+  onRecordingComplete: (audioBlob: Blob, duration: number) => void;
   onCancel?: () => void;
   className?: string;
 }
@@ -106,7 +106,7 @@ export function VoiceRecorder({
 
   const handleConfirm = () => {
     if (audioBlob) {
-      onRecordingComplete(audioBlob);
+      onRecordingComplete(audioBlob, duration);
       setTranscriptionPlaceholder('Transcripcion pendiente...');
       setState('confirming');
     }

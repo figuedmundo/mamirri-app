@@ -119,6 +119,7 @@ export function TreatmentTimeline({
   const handleFormSubmit = async (
     data: SessionFormData,
     photos?: Array<{ blob: Blob; caption?: string }>,
+    voiceNote?: { blob: Blob; duration: number },
   ) => {
     setIsSubmitting(true);
     try {
@@ -184,6 +185,24 @@ export function TreatmentTimeline({
               description:
                 'Las fotos se subirán cuando vuelvas a tener internet.',
               variant: 'default',
+            });
+          }
+        }
+
+        if (voiceNote) {
+          try {
+            await mediaApi.uploadSessionVoiceNote(
+              newSession.id,
+              voiceNote.blob,
+              voiceNote.duration,
+            );
+          } catch (error) {
+            console.error('Failed to upload voice note:', error);
+            toast({
+              title: 'Advertencia',
+              description:
+                'La sesión se creó, pero la nota de voz no se pudo subir. Intenta agregarla editando la sesión.',
+              variant: 'destructive',
             });
           }
         }

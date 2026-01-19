@@ -70,7 +70,7 @@ export function SessionDetailView({
           title: 'Foto subida',
           description: 'La foto se ha guardado correctamente.',
         });
-      } catch (error) {
+      } catch {
         toast({
           title: 'Error al subir',
           description: 'No se pudo subir la foto. Intenta de nuevo.',

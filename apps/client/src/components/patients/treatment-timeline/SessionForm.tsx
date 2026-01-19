@@ -11,6 +11,11 @@ import { Button } from '@/components/ui/button';
 import { X, Plus, Loader2, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SessionPhotoCapture } from './SessionPhotoCapture';
+import { VoiceRecorder } from '../VoiceRecorder';
+import { TranscriptionDisplay } from '../TranscriptionDisplay';
+import { useTranscriptionPolling } from '@/hooks/use-transcription-polling';
+import { useToast } from '@/hooks/use-toast';
+import { mediaApi } from '@/api/media';
 
 interface SessionFormProps {
   isOpen: boolean;
@@ -18,6 +23,7 @@ interface SessionFormProps {
   onSubmit: (
     data: SessionFormData,
     photos?: Array<{ blob: Blob; caption?: string }>,
+    voiceNote?: { blob: Blob; duration: number },
   ) => Promise<void>;
   phases: TreatmentPhase[];
   initialData?: TreatmentSession;
@@ -71,8 +77,33 @@ export function SessionForm({
   >([]);
   const [showCameraCapture, setShowCameraCapture] = React.useState(false);
 
+  const { toast } = useToast();
+  const [voiceNoteId, setVoiceNoteId] = React.useState<string | null>(null);
+  const [pendingVoiceNote, setPendingVoiceNote] = React.useState<{
+    blob: Blob;
+    duration: number;
+  } | null>(null);
+  const [uploadStatus, setUploadStatus] = React.useState<
+    'idle' | 'uploading' | 'success' | 'error'
+  >('idle');
+
+  const {
+    transcription,
+    status: transcriptionStatus,
+    error: transcriptionError,
+    retry: retryTranscription,
+  } = useTranscriptionPolling({
+    voiceNoteId,
+    entityType: 'sessions',
+    entityId: initialData?.id || '',
+    enabled: !!voiceNoteId,
+  });
+
   const photosRef = React.useRef(pendingPhotos);
-  photosRef.current = pendingPhotos;
+
+  React.useEffect(() => {
+    photosRef.current = pendingPhotos;
+  }, [pendingPhotos]);
 
   const handlePhotoCapture = (blob: Blob, caption?: string) => {
     const previewUrl = URL.createObjectURL(blob);
@@ -167,6 +198,32 @@ export function SessionForm({
       !formData.procedures.includes(p),
   );
 
+  const handleVoiceRecordingComplete = async (blob: Blob, duration: number) => {
+    setPendingVoiceNote({ blob, duration });
+
+    if (isEditing && initialData) {
+      setUploadStatus('uploading');
+      try {
+        const note = await mediaApi.uploadSessionVoiceNote(
+          initialData.id,
+          blob,
+          duration,
+        );
+        setVoiceNoteId(note.id);
+        setUploadStatus('success');
+      } catch (e) {
+        setUploadStatus('error');
+        toast({
+          title: 'Error',
+          description: 'No se pudo subir la nota de voz',
+          variant: 'destructive',
+        });
+      }
+    } else {
+      setUploadStatus('success');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -185,6 +242,7 @@ export function SessionForm({
     await onSubmit(
       result.data,
       pendingPhotos.map((p) => ({ blob: p.blob, caption: p.caption })),
+      pendingVoiceNote || undefined,
     );
   };
 
@@ -393,6 +451,56 @@ export function SessionForm({
               placeholder="Notas adicionales..."
               className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Nota de Voz
+            </label>
+            {!pendingVoiceNote && !voiceNoteId && (
+              <VoiceRecorder
+                onRecordingComplete={handleVoiceRecordingComplete}
+                className="w-full"
+              />
+            )}
+            {(pendingVoiceNote || voiceNoteId) && (
+              <TranscriptionDisplay
+                status={
+                  !isEditing
+                    ? 'completed'
+                    : uploadStatus === 'uploading'
+                      ? 'uploading'
+                      : uploadStatus === 'error'
+                        ? 'failed'
+                        : transcriptionStatus === 'idle' ||
+                            transcriptionStatus === 'processing'
+                          ? 'pending'
+                          : transcriptionStatus
+                }
+                transcription={
+                  !isEditing
+                    ? 'La transcripción estará disponible después de guardar la sesión.'
+                    : (transcription ?? undefined)
+                }
+                audioUrl={
+                  pendingVoiceNote
+                    ? URL.createObjectURL(pendingVoiceNote.blob)
+                    : undefined
+                }
+                error={
+                  (transcriptionError ?? undefined) ||
+                  (uploadStatus === 'error'
+                    ? 'Error al subir audio'
+                    : undefined)
+                }
+                onRetry={retryTranscription}
+                onRerecord={() => {
+                  setVoiceNoteId(null);
+                  setPendingVoiceNote(null);
+                  setUploadStatus('idle');
+                }}
+              />
+            )}
           </div>
 
           <div>

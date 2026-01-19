@@ -3,7 +3,6 @@ import { CameraCapture } from '@/components/patients/CameraCapture';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Repeat, Save } from 'lucide-react';
-import type { PhotoMetadata } from '@/types/patient';
 
 interface SessionPhotoCaptureProps {
   onSave: (blob: Blob, caption?: string) => void;
@@ -18,7 +17,7 @@ export function SessionPhotoCapture({
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [caption, setCaption] = React.useState('');
 
-  const handleCapture = (blob: Blob, _metadata: PhotoMetadata) => {
+  const handleCapture = (blob: Blob) => {
     setCapturedBlob(blob);
     const url = URL.createObjectURL(blob);
     setPreviewUrl(url);

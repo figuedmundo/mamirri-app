@@ -8,14 +8,9 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { StorageService } from '../storage/storage.service';
 import { FootprintType } from './dto/upload-footprint.dto';
 import { PostureVideoType } from './dto/upload-posture-video.dto';
-import {
-  Patient,
-  Footprint,
-  PostureVideo,
-  Evaluation,
-  TreatmentSession,
-  ClinicalCase,
-} from '@prisma/client';
+import { Footprint, PostureVideo } from '@prisma/client';
+
+import { TranscriptionService } from '../transcription/transcription.service';
 
 // Define File interface locally since it's not exported from StorageService
 interface File {
@@ -27,6 +22,16 @@ interface File {
   buffer: Buffer;
 }
 
+export interface VoiceNote {
+  audioUrl: string;
+  transcription: string | null;
+  transcriptionStatus: 'pending' | 'processing' | 'completed' | 'failed';
+  transcriptionError?: string;
+  durationSeconds: number;
+  retryCount: number;
+  createdAt: Date;
+}
+
 @Injectable()
 export class MediaService {
   private readonly logger = new Logger(MediaService.name);
@@ -34,6 +39,7 @@ export class MediaService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
+    private readonly transcriptionService: TranscriptionService,
   ) {}
 
   async uploadPatientPhoto(
@@ -118,10 +124,20 @@ export class MediaService {
     const storagePath = await this.storage.uploadFile(file, path);
     const signedUrl = await this.storage.getFileUrl(storagePath);
 
-    const voiceNote = {
+    const transcriptionResult = await this.transcriptionService.transcribe(
+      file.buffer,
+      file.originalname,
+    );
+
+    const voiceNote: VoiceNote = {
       audioUrl: storagePath,
-      transcription: null,
+      transcription: transcriptionResult.text || null,
+      transcriptionStatus:
+        transcriptionResult.status === 'completed' ? 'completed' : 'pending',
+      transcriptionError: transcriptionResult.error,
       durationSeconds,
+      retryCount: 0,
+      createdAt: new Date(),
     };
 
     if (entityType === 'evaluation') {

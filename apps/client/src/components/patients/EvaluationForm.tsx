@@ -19,6 +19,8 @@ import {
   createDefaultPointStatus,
 } from './body-silhouette-types';
 import { VoiceRecorder } from './VoiceRecorder';
+import { TranscriptionDisplay } from './TranscriptionDisplay';
+import { useTranscriptionPolling } from '../../hooks/use-transcription-polling';
 import { useDebounce } from '../../hooks/use-debounce';
 import { useUnsavedChanges } from '../../hooks/use-unsaved-changes';
 import { useToast } from '../../hooks/use-toast';
@@ -92,6 +94,22 @@ export function EvaluationForm({
     'idle' | 'saving' | 'saved' | 'error'
   >('idle');
   const [audioBlob, setAudioBlob] = React.useState<Blob | null>(null);
+  const [voiceNoteId, setVoiceNoteId] = React.useState<string | null>(null);
+  const [uploadStatus, setUploadStatus] = React.useState<
+    'idle' | 'uploading' | 'success' | 'error'
+  >('idle');
+
+  const {
+    transcription,
+    status: transcriptionStatus,
+    error: transcriptionError,
+    retry: retryTranscription,
+  } = useTranscriptionPolling({
+    voiceNoteId,
+    entityType: 'evaluations',
+    entityId: activeEvaluation?.id || '',
+    enabled: !!voiceNoteId,
+  });
 
   const { isDirty, markDirty, markClean } = useUnsavedChanges();
   const { toast } = useToast();
@@ -293,9 +311,30 @@ export function EvaluationForm({
     debouncedSavePainScale(updated);
   };
 
-  const handleRecordingComplete = (blob: Blob) => {
+  const handleRecordingComplete = async (blob: Blob, duration: number) => {
+    if (!activeEvaluation) return;
+
     setAudioBlob(blob);
-    markDirty();
+    setUploadStatus('uploading');
+
+    try {
+      const voiceNote = await mediaApi.uploadEvaluationVoiceNote(
+        activeEvaluation.id,
+        blob,
+        duration,
+      );
+      setVoiceNoteId(voiceNote.id);
+      setUploadStatus('success');
+      markDirty();
+    } catch (error) {
+      console.error('Voice upload error:', error);
+      setUploadStatus('error');
+      toast({
+        title: 'Error al subir nota de voz',
+        description: 'No se pudo guardar el audio. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleSave = async () => {
@@ -471,9 +510,30 @@ export function EvaluationForm({
       </div>
 
       {audioBlob && (
-        <div className="bg-teal-50 dark:bg-teal-900/20 rounded-lg p-3 text-sm text-teal-700 dark:text-teal-300">
-          Nota de voz grabada. La transcripción estará disponible próximamente.
-        </div>
+        <TranscriptionDisplay
+          status={
+            uploadStatus === 'uploading'
+              ? 'uploading'
+              : uploadStatus === 'error'
+                ? 'failed'
+                : transcriptionStatus === 'idle' ||
+                    transcriptionStatus === 'processing'
+                  ? 'pending'
+                  : transcriptionStatus
+          }
+          transcription={transcription ?? undefined}
+          audioUrl={audioBlob ? URL.createObjectURL(audioBlob) : undefined}
+          error={
+            (transcriptionError ?? undefined) ||
+            (uploadStatus === 'error' ? 'Error al subir audio' : undefined)
+          }
+          onRetry={retryTranscription}
+          onRerecord={() => {
+            setAudioBlob(null);
+            setVoiceNoteId(null);
+            setUploadStatus('idle');
+          }}
+        />
       )}
 
       <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700 overflow-x-auto">

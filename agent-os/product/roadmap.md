@@ -159,8 +159,8 @@ Methodology: Agile Development (1-week Sprints).
 - [x] **7.1** Backend: Media upload endpoint (validation, MinIO)
 - [x] **7.2** Frontend: Camera capture component
 - [x] **7.3** Frontend: Photo gallery per session
-- [ ] **7.4** Backend: Whisper integration (Groq API)
-- [ ] **7.5** Frontend: Voice recorder button + transcription
+- [x] **7.4** Backend: Whisper integration (Groq API)
+- [x] **7.5** Frontend: Voice recorder button + transcription
 - [ ] **7.6** Wire Pacientes: onVoiceDictation, onCaptureHuella, onCaptureVideo
 - [ ] **7.7** Test: Dictate medical terms, verify accuracy
 

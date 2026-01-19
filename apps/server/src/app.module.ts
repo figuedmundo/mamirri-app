@@ -9,6 +9,7 @@ import { ClinicalCasesModule } from './modules/clinical-cases/clinical-cases.mod
 import { SessionsModule } from './modules/sessions/sessions.module';
 import { MediaModule } from './modules/media/media.module';
 import { TreatmentPlansModule } from './modules/treatment-plans/treatment-plans.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TreatmentPlansModule } from './modules/treatment-plans/treatment-plans.
       isGlobal: true,
       envFilePath: ['.env', '../../.env'],
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     AuthModule,
     PatientsModule,

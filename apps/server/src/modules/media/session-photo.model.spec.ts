@@ -94,7 +94,9 @@ describe('SessionPhoto Model Integration', () => {
       if (sessionId) {
         try {
           await prisma.treatmentSession.delete({ where: { id: sessionId } });
-        } catch {}
+        } catch {
+          void 0;
+        }
       }
       if (clinicalCaseId) {
         await prisma.clinicalCase.delete({ where: { id: clinicalCaseId } });
