@@ -9,7 +9,7 @@ function calculateWER(reference: string, hypothesis: string): number {
   const normalize = (text: string) =>
     text
       .toLowerCase()
-      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, '')
       .replace(/\s{2,}/g, ' ')
       .trim();
 
@@ -51,16 +51,6 @@ function checkMedicalTerms(
   const accuracy =
     ((requiredTerms.length - missing.length) / requiredTerms.length) * 100;
   return { missing, accuracy };
-}
-
-// Critical error detection (simple substitution check)
-// This is a basic check - for advanced critical error detection,
-// we'd need a map of dangerous substitutions (e.g. "hipotensión" vs "hipertensión")
-// For now, we assume any missing term might be a critical error if it changes meaning.
-function detectCriticalErrors(missingTerms: string[]): string[] {
-  // In this context, any missing medical term from the curated list is potentially critical
-  // because the prompt was specifically designed to catch them.
-  return missingTerms;
 }
 
 // Skip tests if API key is not present

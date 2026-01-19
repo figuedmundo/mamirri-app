@@ -14,9 +14,12 @@ import { SessionDetailView } from './treatment-timeline/SessionDetailView';
 import { EvaluationForm } from './EvaluationForm';
 import { ComparisonBoard } from './ComparisonBoard';
 import { ObjectivesView } from './ObjectivesView';
+import { VoiceRecorder } from './VoiceRecorder';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { generateComparisonReport } from '../../lib/pdf';
 import { useToast } from '../../hooks/use-toast';
 import { patientsApi } from '../../api/patients';
+import { mediaApi } from '../../api/media';
 import {
   Mic,
   ArrowLeft,
@@ -46,6 +49,7 @@ export function CaseDetailLayout({
 }: CaseDetailLayoutProps) {
   const [localCase, setLocalCase] = useState<ClinicalCase>(clinicalCase);
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
+  const [isRecordingOpen, setIsRecordingOpen] = useState(false);
   const { toast } = useToast();
 
   const [activeSessionId, setActiveSessionId] = useState<string | undefined>(
@@ -56,7 +60,8 @@ export function CaseDetailLayout({
     setLocalCase(clinicalCase);
   }, [clinicalCase]);
 
-  const activeEvalType = getActiveEvaluation(localCase)?.type;
+  const activeEval = getActiveEvaluation(localCase);
+  const activeEvalType = activeEval?.type;
 
   const handleSessionCreated = (session: TreatmentSession) => {
     setLocalCase((prev) => ({
@@ -222,6 +227,52 @@ export function CaseDetailLayout({
     }
   };
 
+  const handleRecordingComplete = async (blob: Blob, duration: number) => {
+    if (!activeEval) {
+      toast({
+        title: 'Error',
+        description: 'No hay una evaluación activa para asociar la nota.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: 'Subiendo nota de voz...',
+        description: 'Asociando a la evolución actual.',
+      });
+
+      const note = await mediaApi.uploadEvaluationVoiceNote(
+        activeEval.id,
+        blob,
+        duration,
+      );
+
+      setLocalCase((prev) => ({
+        ...prev,
+        evaluations: prev.evaluations.map((e) =>
+          e.id === activeEval.id
+            ? { ...e, voiceNotes: [...(e.voiceNotes || []), note] }
+            : e,
+        ),
+      }));
+
+      setIsRecordingOpen(false);
+      toast({
+        title: 'Éxito',
+        description: 'Nota de voz guardada correctamente.',
+      });
+    } catch (error) {
+      console.error('Recording upload error:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo guardar la nota de voz.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const handleBackFromDetail = () => {
     setViewMode('timeline');
   };
@@ -333,11 +384,25 @@ export function CaseDetailLayout({
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-full font-medium shadow-lg transition-transform hover:scale-105">
+          <button
+            onClick={() => setIsRecordingOpen(true)}
+            className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-full font-medium shadow-lg transition-transform hover:scale-105"
+          >
             <Mic size={18} />
             <span className="hidden sm:inline">Grabar Evolucion</span>
           </button>
         </div>
+
+        <Dialog open={isRecordingOpen} onOpenChange={setIsRecordingOpen}>
+          <DialogContent className="sm:max-w-[400px]">
+            <div className="py-4">
+              <h3 className="text-lg font-semibold mb-4 text-center">
+                Grabar Nota de Evolución
+              </h3>
+              <VoiceRecorder onRecordingComplete={handleRecordingComplete} />
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="flex-1 flex overflow-hidden">

@@ -6,9 +6,18 @@ import {
   type PatientFormData,
 } from '../components/patients/PatientForm';
 import { patientsApi } from '../api/patients';
-import type { Patient } from '../types/patient';
+import { mediaApi } from '../api/media';
+import type { Patient, VideoMetadata } from '../types/patient';
 import { useToast } from '../hooks/use-toast';
-import { Dialog, DialogContent } from '../components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '../components/ui/dialog';
+import { VoiceRecorder } from '../components/patients/VoiceRecorder';
+import { VideoRecorder } from '../components/patients/VideoRecorder';
+import { getActiveEvaluation } from '../lib/evaluation-utils';
 
 export default function PatientDetail() {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +26,8 @@ export default function PatientDetail() {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isVoiceDialogOpen, setIsVoiceDialogOpen] = useState(false);
+  const [isVideoDialogOpen, setIsVideoDialogOpen] = useState(false);
 
   const loadPatient = useCallback(
     async (patientId: string) => {
@@ -45,6 +56,9 @@ export default function PatientDetail() {
     }
   }, [id, loadPatient]);
 
+  const activeCase = patient?.clinicalCases?.find((c) => c.status === 'active');
+  const activeEval = activeCase ? getActiveEvaluation(activeCase) : undefined;
+
   const handleEdit = () => {
     setIsEditOpen(true);
   };
@@ -72,24 +86,93 @@ export default function PatientDetail() {
   };
 
   const handleVoiceDictation = () => {
-    toast({
-      title: 'Dictado por Voz',
-      description: 'Disponible próximamente',
-    });
+    if (!activeEval) {
+      toast({
+        title: 'Atención',
+        description: 'Se necesita un caso clínico activo para grabar notas.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setIsVoiceDialogOpen(true);
+  };
+
+  const handleVoiceRecordingComplete = async (blob: Blob, duration: number) => {
+    if (!activeEval) return;
+
+    try {
+      toast({
+        title: 'Subiendo nota de voz...',
+        description: 'Guardando en la evaluación activa.',
+      });
+
+      await mediaApi.uploadEvaluationVoiceNote(activeEval.id, blob, duration);
+
+      toast({
+        title: 'Éxito',
+        description: 'Nota de voz guardada correctamente.',
+      });
+      setIsVoiceDialogOpen(false);
+      if (id) void loadPatient(id);
+    } catch (error) {
+      console.error('Voice upload error:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo guardar la nota de voz.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleCaptureFootprint = () => {
-    toast({
-      title: 'Capturar Huella',
-      description: 'Disponible próximamente',
-    });
+    // This is already handled by PatientProfile opening CameraCapture
   };
 
   const handleCaptureVideo = () => {
-    toast({
-      title: 'Video Postura',
-      description: 'Disponible próximamente',
-    });
+    if (!activeEval) {
+      toast({
+        title: 'Atención',
+        description: 'Se necesita un caso clínico activo para grabar videos.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setIsVideoDialogOpen(true);
+  };
+
+  const handleVideoRecordingComplete = async (
+    blob: Blob,
+    metadata: VideoMetadata,
+  ) => {
+    if (!activeEval) return;
+
+    try {
+      toast({
+        title: 'Subiendo video...',
+        description: 'Guardando en la evaluación activa.',
+      });
+
+      await mediaApi.uploadPostureVideo(
+        activeEval.id,
+        blob,
+        (metadata.type || 'static') as 'gait' | 'static' | 'dynamic',
+        metadata.durationSeconds,
+      );
+
+      toast({
+        title: 'Éxito',
+        description: 'Video guardado correctamente.',
+      });
+      setIsVideoDialogOpen(false);
+      if (id) void loadPatient(id);
+    } catch (error) {
+      console.error('Video upload error:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo guardar el video.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleSchedule = () => {
@@ -154,6 +237,33 @@ export default function PatientDetail() {
             onSubmit={handleEditSubmit}
             onCancel={() => setIsEditOpen(false)}
           />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isVoiceDialogOpen} onOpenChange={setIsVoiceDialogOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              Grabar Nota de Voz
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <VoiceRecorder onRecordingComplete={handleVoiceRecordingComplete} />
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isVideoDialogOpen} onOpenChange={setIsVideoDialogOpen}>
+        <DialogContent className="sm:max-w-[500px] h-[80vh] flex flex-col p-0 overflow-hidden">
+          <DialogHeader className="p-4 border-b">
+            <DialogTitle>Grabar Video de Postura</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-hidden">
+            <VideoRecorder
+              onCapture={handleVideoRecordingComplete}
+              onCancel={() => setIsVideoDialogOpen(false)}
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </div>

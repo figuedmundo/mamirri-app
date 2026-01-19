@@ -92,7 +92,7 @@ export const mediaApi = {
   ): Promise<VoiceNote> => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('duration', durationSeconds.toString());
+    formData.append('durationSeconds', durationSeconds.toString());
 
     const response = await axios.post<VoiceNote>(
       `/media/evaluations/${evaluationId}/voice-notes`,
@@ -113,7 +113,7 @@ export const mediaApi = {
   ): Promise<VoiceNote> => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('duration', durationSeconds.toString());
+    formData.append('durationSeconds', durationSeconds.toString());
 
     const response = await axios.post<VoiceNote>(
       `/media/sessions/${sessionId}/voice-notes`,
