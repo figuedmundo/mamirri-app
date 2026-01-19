@@ -36,6 +36,7 @@ describe('VideoRecorder', () => {
         // Trigger onstop when stop is called to simulate recording end
         if (this.onstop) this.onstop();
       };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       constructor(_stream: unknown, _options: unknown) {}
     } as unknown as typeof MediaRecorder;
 

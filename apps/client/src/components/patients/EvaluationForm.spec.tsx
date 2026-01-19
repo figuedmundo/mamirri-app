@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EvaluationForm } from './EvaluationForm';
 import { vi, describe, it, expect } from 'vitest';
-import { ClinicalCase } from '../../types/patient';
+import type { ClinicalCase } from '../../types/patient';
 
 // Mock dependencies
 vi.mock('../../api/media', () => ({
@@ -39,7 +39,11 @@ vi.mock('./CameraCapture', () => ({
 }));
 
 vi.mock('./CameraCapture', () => ({
-  CameraCapture: ({ onCapture }: any) => (
+  CameraCapture: ({
+    onCapture,
+  }: {
+    onCapture: (blob: Blob, metadata: Record<string, unknown>) => void;
+  }) => (
     <div data-testid="camera-capture">
       <button onClick={() => onCapture(new Blob(), {})}>Capture Photo</button>
     </div>

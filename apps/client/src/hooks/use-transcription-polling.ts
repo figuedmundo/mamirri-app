@@ -26,102 +26,81 @@ export function useTranscriptionPolling({
   const [status, setStatus] =
     useState<UseTranscriptionPollingResult['status']>('idle');
   const [error, setError] = useState<string | null>(null);
-  const [isPolling, setIsPolling] = useState(false);
   const [attempts, setAttempts] = useState(0);
+  const [prevVoiceNoteId, setPrevVoiceNoteId] = useState(voiceNoteId);
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  if (voiceNoteId !== prevVoiceNoteId) {
+    setPrevVoiceNoteId(voiceNoteId);
+    setStatus('idle');
+    setTranscription(null);
+    setError(null);
+    setAttempts(0);
+  }
+
+  const isPolling =
+    enabled && !!voiceNoteId && status !== 'completed' && status !== 'failed';
+
   const mountedRef = useRef(true);
 
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
     };
   }, []);
 
-  const stopPolling = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-    if (mountedRef.current) {
-      setIsPolling(false);
-    }
-  }, []);
+  useEffect(() => {
+    if (!isPolling) return;
 
-  const poll = useCallback(async () => {
-    if (!voiceNoteId || !mountedRef.current) return;
-
-    try {
-      const result = await mediaApi.getVoiceNoteStatus(
-        entityType,
-        entityId,
-        voiceNoteId,
-      );
-
+    const poll = async () => {
       if (!mountedRef.current) return;
 
-      setTranscription(result.transcription || null);
-      setStatus(result.transcriptionStatus);
-
-      if (result.transcriptionStatus === 'completed') {
-        stopPolling();
-      } else if (result.transcriptionStatus === 'failed') {
-        setError(result.transcriptionError || 'Transcription failed');
-        stopPolling();
+      if (attempts >= 10) {
+        setStatus('failed');
+        setError('Max attempts reached');
+        return;
       }
-    } catch {
-      if (!mountedRef.current) return;
-    }
-  }, [entityType, entityId, voiceNoteId, stopPolling]);
+
+      try {
+        const result = await mediaApi.getVoiceNoteStatus(
+          entityType,
+          entityId,
+          voiceNoteId!,
+        );
+
+        if (!mountedRef.current) return;
+
+        if (result.transcriptionStatus === 'completed') {
+          setTranscription(result.transcription || null);
+          setStatus('completed');
+        } else if (result.transcriptionStatus === 'failed') {
+          setStatus('failed');
+          setError(result.transcriptionError || 'Transcription failed');
+        } else {
+          setTranscription(result.transcription || null);
+          setStatus(result.transcriptionStatus);
+          setAttempts((prev) => prev + 1);
+        }
+      } catch {
+        if (mountedRef.current) {
+          setAttempts((prev) => prev + 1);
+        }
+      }
+    };
+
+    const delay = attempts === 0 ? 0 : 3000;
+    const timeoutId = setTimeout(poll, delay);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [isPolling, attempts, entityType, entityId, voiceNoteId]);
 
   const retry = useCallback(() => {
     setAttempts(0);
     setError(null);
     setStatus('pending');
-    setIsPolling(true);
   }, []);
-
-  useEffect(() => {
-    if (!enabled || !voiceNoteId) {
-      stopPolling();
-      return;
-    }
-
-    if (isPolling) {
-      if (attempts >= 10) {
-        setError('Max attempts reached');
-        setStatus('failed');
-        stopPolling();
-        return;
-      }
-
-      const executePoll = async () => {
-        await poll();
-        if (mountedRef.current) {
-          setAttempts((prev) => prev + 1);
-        }
-      };
-
-      const delay = attempts === 0 ? 0 : 3000;
-
-      timeoutRef.current = setTimeout(executePoll, delay);
-
-      return () => {
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      };
-    }
-  }, [isPolling, attempts, poll, enabled, voiceNoteId, stopPolling]);
-
-  useEffect(() => {
-    if (enabled && voiceNoteId && status === 'idle' && !isPolling) {
-      setIsPolling(true);
-      setStatus('pending');
-    }
-  }, [enabled, voiceNoteId, status, isPolling]);
 
   return {
     transcription,
