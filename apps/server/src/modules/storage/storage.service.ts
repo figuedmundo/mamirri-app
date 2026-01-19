@@ -14,6 +14,7 @@ import {
   HeadObjectCommand,
   CreateBucketCommand,
   PutBucketPolicyCommand,
+  HeadBucketCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import storageConfig from '../../config/storage.config';
@@ -70,6 +71,14 @@ export class StorageService implements OnModuleInit {
 
   constructor() {
     const config = storageConfig();
+    this.logger.log(
+      `Initializing S3 Client with endpoint: ${config.endpoint}:${config.port}`,
+    );
+    this.logger.log(`Using bucket: ${config.bucket}`);
+    this.logger.log(
+      `Access Key (first 3 chars): ${config.accessKey.substring(0, 3)}***`,
+    );
+
     this.client = new S3Client({
       endpoint: `http${config.useSSL ? 's' : ''}://${config.endpoint}:${config.port}`,
       credentials: {
@@ -84,17 +93,37 @@ export class StorageService implements OnModuleInit {
   async onModuleInit() {
     try {
       const bucket = storageConfig().bucket;
+      // Skip bucket creation/check if using ephemeral credentials or restricted access
+      // Just try to use it or check if it exists but don't fail hard if we can't inspect it.
+      // However, for development with MinIO we expect to own the instance.
+
       const exists = await this.bucketExists(bucket);
 
       if (!exists) {
         this.logger.log(`Bucket ${bucket} does not exist, creating...`);
-        await this.createBucket(bucket);
+        try {
+          await this.createBucket(bucket);
+        } catch (error: any) {
+          // If creation fails but we suspect it might already exist or we lack permissions
+          if (
+            error.Code === 'BucketAlreadyOwnedByYou' ||
+            error.Code === 'BucketAlreadyExists'
+          ) {
+            this.logger.log(`Bucket ${bucket} already exists (caught error)`);
+          } else {
+            this.logger.warn(
+              `Could not create bucket: ${error.message}. This might be due to permissions or it already exists.`,
+            );
+            // Don't throw, let application start. Uploads might fail later if it truly doesn't exist.
+          }
+        }
       } else {
         this.logger.log(`Bucket ${bucket} already exists`);
       }
     } catch (error) {
       this.logger.error('Failed to initialize storage bucket', error);
-      throw new InternalServerErrorException('Storage initialization failed');
+      // Don't kill the app if storage is optional or transiently unavailable
+      // throw new InternalServerErrorException('Storage initialization failed');
     }
   }
 
@@ -262,16 +291,20 @@ export class StorageService implements OnModuleInit {
   }
 
   private async bucketExists(bucket: string): Promise<boolean> {
-    const command = new HeadObjectCommand({
+    const command = new HeadBucketCommand({
       Bucket: bucket,
-      Key: 'check',
     });
 
     try {
       await this.client.send(command);
       return true;
-    } catch (error) {
-      if (this.isNotFoundError(error) || this.isNoSuchBucketError(error)) {
+    } catch (error: any) {
+      if (
+        this.isNotFoundError(error) ||
+        this.isNoSuchBucketError(error) ||
+        error.$metadata?.httpStatusCode === 404 ||
+        error.$metadata?.httpStatusCode === 403 // MinIO returns 403 for non-existent buckets with default policy
+      ) {
         return false;
       }
       throw error;

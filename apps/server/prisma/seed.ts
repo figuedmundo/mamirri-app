@@ -26,29 +26,39 @@ async function main() {
   const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });
 
-  const email = 'test@test.com';
-  const name = 'Default Physio';
-  const password = 'test';
-
-  const salt = await bcrypt.genSalt();
-  const passwordHash = await bcrypt.hash(password, salt);
+  const users = [
+    {
+      email: 'test@test.com',
+      name: 'Default Physio',
+      password: 'test',
+      role: 'THERAPIST',
+    },
+    {
+      email: 'test@example.com',
+      name: 'Example User',
+      password: 'password123',
+      role: 'USER',
+    },
+  ];
 
   console.log('Seeding database...');
 
-  const user = await prisma.user.upsert({
-    where: { email },
-    update: {
-      passwordHash,
-    },
-    create: {
-      email,
-      name,
-      passwordHash,
-      role: 'THERAPIST',
-    },
-  });
+  for (const userData of users) {
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(userData.password, salt);
 
-  console.log(`User created/found: ${user.email}`);
+    const user = await prisma.user.upsert({
+      where: { email: userData.email },
+      update: { passwordHash },
+      create: {
+        email: userData.email,
+        name: userData.name,
+        passwordHash,
+        role: userData.role as any,
+      },
+    });
+    console.log(`User created/found: ${user.email}`);
+  }
   await prisma.$disconnect();
   await pool.end();
 }

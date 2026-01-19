@@ -1,7 +1,19 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { PatientProfile } from './PatientProfile';
 import type { Patient, TreatmentPhase } from '../../types/patient';
+
+vi.mock('../../api/media', () => ({
+  mediaApi: {
+    uploadFootprint: vi.fn().mockResolvedValue({}),
+  },
+}));
+
+vi.mock('./CameraCapture', () => ({
+  CameraCapture: ({ onCapture }: { onCapture: (blob: Blob) => void }) => (
+    <button onClick={() => onCapture(new Blob())}>Mock Capture</button>
+  ),
+}));
 
 const mockPhases: TreatmentPhase[] = [
   {
@@ -157,7 +169,7 @@ describe('PatientProfile', () => {
     expect(screen.getByText(/Expediente creado/)).toBeInTheDocument();
   });
 
-  it('renders action buttons and triggers callbacks', () => {
+  it('renders action buttons and triggers callbacks', async () => {
     const onVoiceDictation = vi.fn();
     const onCaptureFootprint = vi.fn();
     const onCaptureVideo = vi.fn();
@@ -179,7 +191,12 @@ describe('PatientProfile', () => {
     expect(onVoiceDictation).toHaveBeenCalled();
 
     fireEvent.click(screen.getByText('Huella'));
-    expect(onCaptureFootprint).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByText('Mock Capture'));
+
+    await waitFor(() => {
+      expect(onCaptureFootprint).toHaveBeenCalled();
+    });
 
     fireEvent.click(screen.getByText('Video'));
     expect(onCaptureVideo).toHaveBeenCalled();
