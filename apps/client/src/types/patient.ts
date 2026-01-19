@@ -9,6 +9,8 @@ export interface VoiceNote {
   audioUrl: string;
   transcription: string;
   durationSeconds: number;
+  transcriptionStatus: 'pending' | 'processing' | 'completed' | 'failed';
+  transcriptionError?: string;
 }
 
 export interface SessionPhoto {

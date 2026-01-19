@@ -1,5 +1,10 @@
 import axios from '../lib/axios';
-import type { Footprint, PostureVideo, SessionPhoto } from '../types/patient';
+import type {
+  Footprint,
+  PostureVideo,
+  SessionPhoto,
+  VoiceNote,
+} from '../types/patient';
 
 export const mediaApi = {
   uploadPatientPhoto: async (patientId: string, file: Blob): Promise<void> => {
@@ -76,6 +81,59 @@ export const mediaApi = {
           'Content-Type': 'multipart/form-data',
         },
       },
+    );
+    return response.data;
+  },
+
+  uploadEvaluationVoiceNote: async (
+    evaluationId: string,
+    file: Blob,
+    durationSeconds: number,
+  ): Promise<VoiceNote> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('duration', durationSeconds.toString());
+
+    const response = await axios.post<VoiceNote>(
+      `/media/evaluations/${evaluationId}/voice-notes`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+    return response.data;
+  },
+
+  uploadSessionVoiceNote: async (
+    sessionId: string,
+    file: Blob,
+    durationSeconds: number,
+  ): Promise<VoiceNote> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('duration', durationSeconds.toString());
+
+    const response = await axios.post<VoiceNote>(
+      `/media/sessions/${sessionId}/voice-notes`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+    return response.data;
+  },
+
+  getVoiceNoteStatus: async (
+    entityType: 'evaluations' | 'sessions',
+    entityId: string,
+    voiceNoteId: string,
+  ): Promise<VoiceNote> => {
+    const response = await axios.get<VoiceNote>(
+      `/media/${entityType}/${entityId}/voice-notes/${voiceNoteId}`,
     );
     return response.data;
   },
