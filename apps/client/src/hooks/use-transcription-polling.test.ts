@@ -1,5 +1,13 @@
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  type Mock,
+} from 'vitest';
 import { useTranscriptionPolling } from './use-transcription-polling';
 import { mediaApi } from '../api/media';
 
@@ -27,7 +35,7 @@ describe('useTranscriptionPolling', () => {
   });
 
   it('should start polling when enabled and id provided', async () => {
-    (mediaApi.getVoiceNoteStatus as any).mockResolvedValue({
+    (mediaApi.getVoiceNoteStatus as unknown as Mock).mockResolvedValue({
       transcriptionStatus: 'pending',
       transcription: null,
     });
@@ -50,7 +58,7 @@ describe('useTranscriptionPolling', () => {
   });
 
   it('should continue polling every 3 seconds', async () => {
-    (mediaApi.getVoiceNoteStatus as any).mockResolvedValue({
+    (mediaApi.getVoiceNoteStatus as unknown as Mock).mockResolvedValue({
       transcriptionStatus: 'pending',
       transcription: null,
     });
@@ -71,7 +79,7 @@ describe('useTranscriptionPolling', () => {
   });
 
   it('should stop polling when completed', async () => {
-    (mediaApi.getVoiceNoteStatus as any)
+    (mediaApi.getVoiceNoteStatus as unknown as Mock)
       .mockResolvedValueOnce({
         transcriptionStatus: 'pending',
         transcription: null,
@@ -97,7 +105,7 @@ describe('useTranscriptionPolling', () => {
   });
 
   it('should stop polling when failed', async () => {
-    (mediaApi.getVoiceNoteStatus as any).mockResolvedValue({
+    (mediaApi.getVoiceNoteStatus as unknown as Mock).mockResolvedValue({
       transcriptionStatus: 'failed',
       transcriptionError: 'Some error',
     });
@@ -114,7 +122,7 @@ describe('useTranscriptionPolling', () => {
   });
 
   it('should retry max 10 times then fail', async () => {
-    (mediaApi.getVoiceNoteStatus as any).mockResolvedValue({
+    (mediaApi.getVoiceNoteStatus as unknown as Mock).mockResolvedValue({
       transcriptionStatus: 'pending',
       transcription: null,
     });
@@ -138,7 +146,7 @@ describe('useTranscriptionPolling', () => {
   });
 
   it('should reset attempts and start polling on retry', async () => {
-    (mediaApi.getVoiceNoteStatus as any).mockResolvedValue({
+    (mediaApi.getVoiceNoteStatus as unknown as Mock).mockResolvedValue({
       transcriptionStatus: 'failed',
       transcriptionError: 'Original error',
     });
@@ -152,7 +160,7 @@ describe('useTranscriptionPolling', () => {
     expect(result.current.status).toBe('failed');
     expect(result.current.isPolling).toBe(false);
 
-    (mediaApi.getVoiceNoteStatus as any).mockResolvedValue({
+    (mediaApi.getVoiceNoteStatus as unknown as Mock).mockResolvedValue({
       transcriptionStatus: 'completed',
       transcription: 'Retried success',
     });

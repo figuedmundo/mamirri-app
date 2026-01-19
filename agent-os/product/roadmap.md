@@ -161,7 +161,7 @@ Methodology: Agile Development (1-week Sprints).
 - [x] **7.3** Frontend: Photo gallery per session
 - [x] **7.4** Backend: Whisper integration (Groq API)
 - [x] **7.5** Frontend: Voice recorder button + transcription
-- [ ] **7.6** Wire Pacientes: onVoiceDictation, onCaptureHuella, onCaptureVideo
+- [x] **7.6** Wire Pacientes: onVoiceDictation, onCaptureHuella, onCaptureVideo
 - [ ] **7.7** Test: Dictate medical terms, verify accuracy
 
 **🎯 Milestone 3:** "I can take photos and dictate notes"

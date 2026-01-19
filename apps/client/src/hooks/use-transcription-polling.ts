@@ -73,7 +73,7 @@ export function useTranscriptionPolling({
         setError(result.transcriptionError || 'Transcription failed');
         stopPolling();
       }
-    } catch (err) {
+    } catch {
       if (!mountedRef.current) return;
     }
   }, [entityType, entityId, voiceNoteId, stopPolling]);

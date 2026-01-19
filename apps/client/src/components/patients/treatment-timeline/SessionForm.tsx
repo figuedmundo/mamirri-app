@@ -211,7 +211,7 @@ export function SessionForm({
         );
         setVoiceNoteId(note.id);
         setUploadStatus('success');
-      } catch (e) {
+      } catch {
         setUploadStatus('error');
         toast({
           title: 'Error',

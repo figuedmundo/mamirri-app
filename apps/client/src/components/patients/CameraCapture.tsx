@@ -217,7 +217,26 @@ export function CameraCapture({
   }
 
   const isPostureOverlay =
-    overlayType.startsWith('posture') || activeOverlay.startsWith('posture');
+    (overlayType as string).startsWith('posture') ||
+    (activeOverlay as string).startsWith('posture');
+
+  const isFootprintOverlay =
+    (overlayType as string).startsWith('footprint') ||
+    (activeOverlay as string).startsWith('footprint');
+
+  const overlayOptions = isPostureOverlay
+    ? [
+        { id: 'posture-anterior', label: 'Ant.' },
+        { id: 'posture-posterior', label: 'Post.' },
+        { id: 'posture-lateral-left', label: 'Izq.' },
+        { id: 'posture-lateral-right', label: 'Der.' },
+      ]
+    : isFootprintOverlay
+      ? [
+          { id: 'footprint-left', label: 'Izquierdo' },
+          { id: 'footprint-right', label: 'Derecho' },
+        ]
+      : [];
 
   return (
     <div
@@ -246,11 +265,9 @@ export function CameraCapture({
           />
         )}
 
-        {state === 'previewing' &&
-          isPostureOverlay &&
-          (activeOverlay as string).startsWith('posture') && (
-            <PostureOverlay view={activeOverlay as PostureView} />
-          )}
+        {state === 'previewing' && (isPostureOverlay || isFootprintOverlay) && (
+          <PostureOverlay view={activeOverlay as PostureView} />
+        )}
 
         <canvas ref={canvasRef} className="hidden" />
       </div>
@@ -269,15 +286,10 @@ export function CameraCapture({
         )}
       </div>
 
-      {isPostureOverlay && state === 'previewing' && (
+      {(isPostureOverlay || isFootprintOverlay) && state === 'previewing' && (
         <div className="absolute top-4 left-4 right-16 flex justify-center">
           <div className="flex bg-black/50 rounded-lg p-1 gap-1 overflow-x-auto max-w-full no-scrollbar">
-            {[
-              { id: 'posture-anterior', label: 'Ant.' },
-              { id: 'posture-posterior', label: 'Post.' },
-              { id: 'posture-lateral-left', label: 'Izq.' },
-              { id: 'posture-lateral-right', label: 'Der.' },
-            ].map((view) => (
+            {overlayOptions.map((view) => (
               <button
                 key={view.id}
                 onClick={() => handleOverlayChange(view.id as PostureView)}

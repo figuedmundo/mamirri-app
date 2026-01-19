@@ -16,6 +16,12 @@ export function PostureOverlay({ view, className }: PostureOverlayProps) {
         return 'M100 30 C110 30 115 40 115 55 C115 70 110 80 100 80 C90 80 85 70 85 55 C85 40 90 30 100 30 M100 85 L100 200 M100 120 L110 170 L115 200 M100 200 L110 350 L120 420 M100 200 L90 350 L80 420';
       case 'posture-lateral-right':
         return 'M100 30 C110 30 115 40 115 55 C115 70 110 80 100 80 C90 80 85 70 85 55 C85 40 90 30 100 30 M100 85 L100 200 M100 120 L90 170 L85 200 M100 200 L90 350 L80 420 M100 200 L110 350 L120 420';
+      case 'footprint-left':
+        // Left foot (plantar view): Big toe on right side
+        return 'M110 70 C130 70 140 90 140 120 L135 300 C135 360 110 390 100 390 C90 390 65 360 65 300 L70 150 C70 100 80 70 110 70 M130 75 C135 75 140 80 140 90';
+      case 'footprint-right':
+        // Right foot (plantar view): Big toe on left side
+        return 'M90 70 C70 70 60 90 60 120 L65 300 C65 360 90 390 100 390 C110 390 135 360 135 300 L130 150 C130 100 120 70 90 70 M70 75 C65 75 60 80 60 90';
       default:
         return '';
     }

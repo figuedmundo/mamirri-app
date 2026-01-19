@@ -191,6 +191,15 @@ export interface PhotoMetadata {
   overlayType: string;
 }
 
+export interface VideoMetadata {
+  durationSeconds: number;
+  facingMode: 'user' | 'environment';
+  width: number;
+  height: number;
+  timestamp: Date;
+  type?: 'gait' | 'static' | 'dynamic';
+}
+
 export type CameraCaptureState =
   | 'idle'
   | 'requesting'
@@ -198,11 +207,20 @@ export type CameraCaptureState =
   | 'captured'
   | 'error';
 
+export type VideoRecorderState =
+  | 'idle'
+  | 'requesting'
+  | 'recording'
+  | 'preview'
+  | 'confirm';
+
 export type PostureView =
   | 'posture-anterior'
   | 'posture-posterior'
   | 'posture-lateral-left'
-  | 'posture-lateral-right';
+  | 'posture-lateral-right'
+  | 'footprint-left'
+  | 'footprint-right';
 
 export const EvaluationType = {
   INITIAL: 'INITIAL',
@@ -420,10 +438,24 @@ export interface CameraCaptureProps {
   onCancel?: () => void;
 
   /** Overlay guide to show over camera preview */
-  overlayType?: PostureView | 'footprint' | 'none';
+  overlayType?: PostureView | 'none';
 
   /** Initial camera facing mode */
   defaultFacingMode?: 'user' | 'environment';
+
+  /** Additional CSS classes */
+  className?: string;
+}
+
+export interface VideoRecorderProps {
+  /** Called when user confirms a captured video */
+  onCapture: (blob: Blob, metadata: VideoMetadata) => void;
+
+  /** Called when user cancels/closes the recorder */
+  onCancel?: () => void;
+
+  /** Maximum recording duration in seconds (default: 30) */
+  maxDuration?: number;
 
   /** Additional CSS classes */
   className?: string;
