@@ -21,6 +21,7 @@ import { TreatmentPhaseCard } from './TreatmentPhaseCard';
 import { SessionsFooter } from './SessionsFooter';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { CameraCapture } from './CameraCapture';
+import { VideoRecorder } from './VideoRecorder';
 import { mediaApi } from '../../api/media';
 import { useToast } from '../../hooks/use-toast';
 
@@ -39,6 +40,7 @@ export function PatientProfile({
     : undefined;
 
   const [isCameraOpen, setIsCameraOpen] = React.useState(false);
+  const [isVideoOpen, setIsVideoOpen] = React.useState(false);
   const { toast } = useToast();
 
   const handleHuellaCapture = async (blob: Blob) => {
@@ -66,6 +68,44 @@ export function PatientProfile({
       toast({
         title: 'Error al subir',
         description: 'No se pudo guardar la huella. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleVideoCapture = async (
+    blob: Blob,
+    metadata: { durationSeconds: number },
+  ) => {
+    if (!activeEvaluation) {
+      toast({
+        title: 'No hay evaluación activa',
+        description: 'Se necesita una evaluación activa para guardar videos.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      await mediaApi.uploadPostureVideo(
+        activeEvaluation.id,
+        blob,
+        'gait',
+        metadata.durationSeconds,
+      );
+
+      toast({
+        title: 'Video guardado',
+        description: 'El video se ha subido correctamente.',
+      });
+
+      setIsVideoOpen(false);
+      onCaptureVideo?.();
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: 'Error al subir',
+        description: 'No se pudo guardar el video. Intenta de nuevo.',
         variant: 'destructive',
       });
     }
@@ -202,13 +242,27 @@ export function PatientProfile({
                   </Dialog>
 
                   {onCaptureVideo && (
-                    <button
-                      onClick={onCaptureVideo}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium transition-colors text-sm"
-                    >
-                      <Video className="w-4 h-4" />
-                      <span>Video</span>
-                    </button>
+                    <>
+                      <button
+                        onClick={() => setIsVideoOpen(true)}
+                        className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium transition-colors text-sm"
+                      >
+                        <Video className="w-4 h-4" />
+                        <span>Video</span>
+                      </button>
+
+                      <Dialog open={isVideoOpen} onOpenChange={setIsVideoOpen}>
+                        <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 sm:max-h-[80vh] flex flex-col">
+                          <DialogTitle className="sr-only">
+                            Capturar Video de Marcha
+                          </DialogTitle>
+                          <VideoRecorder
+                            onCapture={handleVideoCapture}
+                            onCancel={() => setIsVideoOpen(false)}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    </>
                   )}
                 </div>
 

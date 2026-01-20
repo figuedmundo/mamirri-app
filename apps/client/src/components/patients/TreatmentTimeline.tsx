@@ -207,11 +207,14 @@ export function TreatmentTimeline({
           }
         }
 
-        toast({
-          title: 'Sin conexión',
-          description: 'Las fotos se subirán cuando vuelvas a tener internet.',
-          variant: 'default',
-        });
+        if (photos && photos.length > 0 && !isOnline()) {
+          toast({
+            title: 'Sin conexión',
+            description:
+              'Las fotos se subirán cuando vuelvas a tener internet.',
+            variant: 'default',
+          });
+        }
         onSessionCreated?.(newSession);
       }
       setIsFormOpen(false);

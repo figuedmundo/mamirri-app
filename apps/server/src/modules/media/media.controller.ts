@@ -10,6 +10,7 @@ import {
   Body,
   HttpStatus,
   HttpCode,
+  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -64,6 +65,9 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.mediaService.uploadPatientPhoto(patientId, file, user.userId);
   }
 
@@ -96,6 +100,9 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.mediaService.uploadFootprint(
       evaluationId,
       file,
@@ -136,6 +143,9 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.mediaService.uploadPostureVideo(
       evaluationId,
       file,
@@ -173,6 +183,9 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.mediaService.uploadVoiceNote(
       'evaluation',
       evaluationId,
@@ -210,6 +223,9 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.mediaService.uploadVoiceNote(
       'session',
       sessionId,
@@ -302,6 +318,9 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.sessionPhotoService.uploadPhoto(
       sessionId,
       file,

@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Groq from 'groq-sdk';
-import { Readable } from 'stream';
 import { TranscriptionResultDto } from './dto/transcription-result.dto';
 import { PHYSIO_TRANSCRIPTION_PROMPT } from './constants/prompts';
 import { withRetry } from './utils/retry';
@@ -24,7 +23,7 @@ export class TranscriptionService {
 
     this.model = config.model || 'whisper-large-v3';
     this.language = config.language || 'es';
-    this.timeout = config.timeout || 5000;
+    this.timeout = config.timeout || 60000;
     this.maxRetries = config.maxRetries || 5;
   }
 
@@ -33,13 +32,14 @@ export class TranscriptionService {
     filename: string,
   ): Promise<TranscriptionResultDto> {
     try {
-      const audioStream = Readable.from(audioBuffer);
-      (audioStream as any).path = filename;
+      const file = await Groq.toFile(audioBuffer, filename, {
+        type: 'audio/mpeg',
+      });
 
       const transcriptionPromise = withRetry(
         async () => {
           return await this.groq.audio.transcriptions.create({
-            file: audioStream as any,
+            file,
             model: this.model,
             language: this.language,
             prompt: PHYSIO_TRANSCRIPTION_PROMPT,
@@ -58,7 +58,19 @@ export class TranscriptionService {
         retryCount: 0,
       };
     } catch (error: any) {
-      this.logger.error(`Transcription failed: ${error.message}`, error.stack);
+      const isTimeout = error.message.includes('timed out');
+      this.logger.error(
+        `Transcription failed${isTimeout ? ' (Timeout)' : ''}: ${error.message}`,
+        error.stack,
+      );
+
+      if (error.response?.data) {
+        this.logger.error(
+          `Groq API Error Details: ${JSON.stringify(error.response.data)}`,
+        );
+      } else if (error.cause) {
+        this.logger.error(`Error Cause: ${error.cause.message}`);
+      }
 
       return {
         text: '',
