@@ -35,6 +35,7 @@ Comprehensive documentation is available in the [`.documentation/`](.documentati
 - **[Database Schema](.documentation/technical/database-schema.md)**: Data models and PostgreSQL structure.
 - **[API Reference](.documentation/technical/api-reference.md)**: REST API endpoints and payload examples.
 - **[Security & Privacy](.documentation/technical/security.md)**: Data encryption and anonymization requirements.
+- **[Logging System](.documentation/technical/logging-system.md)**: Structured logging, sanitization, and observability.
 - **[Frontend Auth](.documentation/technical/frontend-authentication.md)**: Implementation details for JWT and protected routes.
 
 ### 🇪🇸 Original Project Proposal (ES)
@@ -109,6 +110,7 @@ documentation/
 │   ├── database-schema.md            # Prisma models and relationships
 │   ├── api-reference.md            # API endpoint documentation
 │   ├── security.md                   # Security and privacy requirements
+│   ├── logging-system.md              # Logging, sanitization, and observability
 │   └── frontend-authentication.md      # Frontend auth implementation
 └── onboarding/                         # Getting started guides
     ├── developer-setup.md            # New developer environment setup

@@ -9,6 +9,7 @@ PhysioCopilot uses a modular monolith architecture built with:
 - **Database:** PostgreSQL (with pgvector extension)
 - **Storage:** MinIO (S3-compatible)
 - **Cache:** Redis
+- **Logging:** Structured JSON (NestJS + React)
 
 ## Infrastructure Orchestration
 

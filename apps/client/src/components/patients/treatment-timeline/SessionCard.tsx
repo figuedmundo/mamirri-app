@@ -43,7 +43,10 @@ export function SessionCard({
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-3">
-          <div className="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-md text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+          <div
+            data-testid="session-date-badge"
+            className="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-md text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600"
+          >
             {new Date(session.date).toLocaleDateString('es-ES', {
               weekday: 'short',
               day: 'numeric',

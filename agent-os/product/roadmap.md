@@ -162,7 +162,7 @@ Methodology: Agile Development (1-week Sprints).
 - [x] **7.4** Backend: Whisper integration (Groq API)
 - [x] **7.5** Frontend: Voice recorder button + transcription
 - [x] **7.6** Wire Pacientes: onVoiceDictation, onCaptureHuella, onCaptureVideo
-- [ ] **7.7** Make a list of all buttons that record auidio and video, and wire their states and methods
+- [x] **7.7** Make a list of all buttons that record auidio and video, and wire their states and methods
 - [ ] **7.8** Test: Dictate medical terms, verify accuracy
 
 **🎯 Milestone 3:** "I can take photos and dictate notes"
@@ -211,12 +211,12 @@ Methodology: Agile Development (1-week Sprints).
 
 ### Week 11: Security & Performance (Post-Validation)
 
-- [ ] **11.1** Input sanitization (based on real attack vectors)
+- [x] **11.1** Input sanitization (based on real attack vectors)
 - [ ] **11.2** File upload security (malware scan if needed)
 - [ ] **11.3** Rate limiting (if API abuse detected)
 - [ ] **11.4** Database indexing (based on slow query logs)
 - [ ] **11.5** Image compression (if storage is an issue)
-- [ ] **11.6** Audit logging for sensitive operations
+- [x] **11.6** Audit logging for sensitive operations
 
 **🎯 Milestone 6:** "App is production-ready (no AI yet)"
 

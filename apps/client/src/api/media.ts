@@ -11,11 +11,7 @@ export const mediaApi = {
     const formData = new FormData();
     formData.append('file', file);
 
-    await axios.post(`/media/patients/${patientId}/photos`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    await axios.post(`/media/patients/${patientId}/photos`, formData);
   },
 
   uploadFootprint: async (
@@ -30,11 +26,6 @@ export const mediaApi = {
     const response = await axios.post<Footprint>(
       `/media/evaluations/${evaluationId}/footprints`,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
     );
     return response.data;
   },
@@ -53,11 +44,6 @@ export const mediaApi = {
     const response = await axios.post<PostureVideo>(
       `/media/evaluations/${evaluationId}/posture-videos`,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
     );
     return response.data;
   },
@@ -76,11 +62,6 @@ export const mediaApi = {
     const response = await axios.post<SessionPhoto>(
       `/media/sessions/${sessionId}/photos`,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
     );
     return response.data;
   },
@@ -91,17 +72,12 @@ export const mediaApi = {
     durationSeconds: number,
   ): Promise<VoiceNote> => {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', file, 'recording.webm');
     formData.append('durationSeconds', durationSeconds.toString());
 
     const response = await axios.post<VoiceNote>(
       `/media/evaluations/${evaluationId}/voice-notes`,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
     );
     return response.data;
   },
@@ -112,17 +88,12 @@ export const mediaApi = {
     durationSeconds: number,
   ): Promise<VoiceNote> => {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', file, 'recording.webm');
     formData.append('durationSeconds', durationSeconds.toString());
 
     const response = await axios.post<VoiceNote>(
       `/media/sessions/${sessionId}/voice-notes`,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
     );
     return response.data;
   },

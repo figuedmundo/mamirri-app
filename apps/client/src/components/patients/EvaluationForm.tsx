@@ -28,7 +28,12 @@ import { useTranscriptionPolling } from '../../hooks/use-transcription-polling';
 import { useDebounce } from '../../hooks/use-debounce';
 import { useUnsavedChanges } from '../../hooks/use-unsaved-changes';
 import { useToast } from '../../hooks/use-toast';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Camera } from 'lucide-react';
 import { CameraCapture } from './CameraCapture';
@@ -670,6 +675,9 @@ export function EvaluationForm({
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 sm:max-h-[80vh] flex flex-col">
+                  <DialogTitle className="sr-only">
+                    Capturar Postura
+                  </DialogTitle>
                   <CameraCapture
                     onCapture={handleCameraCapture}
                     onCancel={() => setIsCameraOpen(false)}
@@ -1119,6 +1127,9 @@ export function EvaluationForm({
               onOpenChange={setIsFootprintCameraOpen}
             >
               <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 sm:max-h-[80vh] flex flex-col">
+                <DialogTitle className="sr-only">
+                  Capturar Huella Plantar
+                </DialogTitle>
                 <CameraCapture
                   onCapture={handleFootprintCaptureConfirm}
                   onCancel={() => setIsFootprintCameraOpen(false)}

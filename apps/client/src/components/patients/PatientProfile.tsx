@@ -19,7 +19,7 @@ import { PainScaleDisplay } from './PainScaleDisplay';
 import { DiagnosisSection } from './DiagnosisSection';
 import { TreatmentPhaseCard } from './TreatmentPhaseCard';
 import { SessionsFooter } from './SessionsFooter';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { CameraCapture } from './CameraCapture';
 import { mediaApi } from '../../api/media';
 import { useToast } from '../../hooks/use-toast';
@@ -190,6 +190,9 @@ export function PatientProfile({
 
                   <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
                     <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 sm:max-h-[80vh] flex flex-col">
+                      <DialogTitle className="sr-only">
+                        Capturar Huella
+                      </DialogTitle>
                       <CameraCapture
                         onCapture={handleHuellaCapture}
                         onCancel={() => setIsCameraOpen(false)}

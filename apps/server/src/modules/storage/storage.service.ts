@@ -33,6 +33,7 @@ const ALLOWED_MIMETYPES = [
   'image/png',
   'image/webp',
   'audio/wav',
+  'audio/webm',
   'audio/mpeg',
   'audio/mp4',
   'video/mp4',
@@ -45,6 +46,7 @@ const SIZE_LIMITS: Record<string, number> = {
   'image/png': 10 * 1024 * 1024,
   'image/webp': 10 * 1024 * 1024,
   'audio/wav': 25 * 1024 * 1024,
+  'audio/webm': 25 * 1024 * 1024,
   'audio/mpeg': 25 * 1024 * 1024,
   'audio/mp4': 25 * 1024 * 1024,
   'video/mp4': 100 * 1024 * 1024,
@@ -57,6 +59,7 @@ const MAGIC_NUMBERS: Record<string, number[]> = {
   'image/png': [0x89, 0x50, 0x4e, 0x47],
   'image/webp': [0x52, 0x49, 0x46, 0x46],
   'audio/wav': [0x52, 0x49, 0x46, 0x46],
+  'audio/webm': [0x1a, 0x45, 0xdf, 0xa3],
   'audio/mpeg': [0xff, 0xfb],
   'audio/mp4': [0x00, 0x00, 0x00],
   'video/mp4': [0x00, 0x00, 0x00], // ftyp box (checked specially)
@@ -239,25 +242,33 @@ export class StorageService implements OnModuleInit {
   }
 
   private validateFile(file: File) {
-    const limit = SIZE_LIMITS[file.mimetype] || 10 * 1024 * 1024;
+    this.logger.log(
+      `Validating file: ${file.originalname}, type: ${file.mimetype}, size: ${file.size}`,
+    );
+
+    const baseMimeType = file.mimetype.split(';')[0].trim();
+    const limit = SIZE_LIMITS[baseMimeType] || 10 * 1024 * 1024;
+
     if (file.size > limit) {
-      this.logger.warn(`File too large: ${file.size} bytes`);
+      this.logger.warn(`File too large: ${file.size} bytes (limit: ${limit})`);
       throw new BadRequestException(
         `File size exceeds limit of ${limit / 1024 / 1024}MB`,
       );
     }
 
-    if (!ALLOWED_MIMETYPES.includes(file.mimetype)) {
-      this.logger.warn(`Invalid file type: ${file.mimetype}`);
-      throw new BadRequestException('Invalid file type');
+    if (!ALLOWED_MIMETYPES.includes(baseMimeType)) {
+      this.logger.warn(
+        `Invalid file type: ${file.mimetype} (base: ${baseMimeType})`,
+      );
+      throw new BadRequestException(`Invalid file type: ${file.mimetype}`);
     }
 
-    this.validateMagicNumbers(file);
+    this.validateMagicNumbers(file, baseMimeType);
   }
 
-  private validateMagicNumbers(file: File) {
+  private validateMagicNumbers(file: File, baseMimeType: string) {
     // Special handling for MP4/QuickTime (check for ftyp or moov)
-    if (file.mimetype === 'video/mp4' || file.mimetype === 'video/quicktime') {
+    if (baseMimeType === 'video/mp4' || baseMimeType === 'video/quicktime') {
       const buffer = file.buffer;
       if (buffer.length < 8) return; // Too short
 
@@ -281,7 +292,7 @@ export class StorageService implements OnModuleInit {
       return;
     }
 
-    const expectedMagic = MAGIC_NUMBERS[file.mimetype];
+    const expectedMagic = MAGIC_NUMBERS[baseMimeType];
     if (!expectedMagic) {
       return;
     }
@@ -292,7 +303,9 @@ export class StorageService implements OnModuleInit {
     );
 
     if (!matches) {
-      this.logger.warn(`Magic number mismatch for: ${file.mimetype}`);
+      this.logger.warn(
+        `Magic number mismatch for: ${file.mimetype} (expected: ${expectedMagic.join(',')}, actual: ${actualMagic.join(',')})`,
+      );
       throw new BadRequestException('Invalid file type');
     }
   }

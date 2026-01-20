@@ -15,9 +15,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../components/ui/dialog';
-import { VoiceRecorder } from '../components/patients/VoiceRecorder';
+import { RecordingFloatingBar } from '../components/patients/RecordingFloatingBar';
 import { VideoRecorder } from '../components/patients/VideoRecorder';
+import { useVoiceRecorder } from '../hooks/use-voice-recorder';
 import { getActiveEvaluation } from '../lib/evaluation-utils';
+import { ToastAction } from '@/components/ui/toast';
 
 export default function PatientDetail() {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +28,6 @@ export default function PatientDetail() {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isVoiceDialogOpen, setIsVoiceDialogOpen] = useState(false);
   const [isVideoDialogOpen, setIsVideoDialogOpen] = useState(false);
 
   const loadPatient = useCallback(
@@ -58,6 +59,86 @@ export default function PatientDetail() {
 
   const activeCase = patient?.clinicalCases?.find((c) => c.status === 'active');
   const activeEval = activeCase ? getActiveEvaluation(activeCase) : undefined;
+
+  const handleVoiceRecordingComplete = async (blob: Blob, duration: number) => {
+    if (!activeEval) return;
+
+    try {
+      toast({
+        title: 'Subiendo nota de voz...',
+        description: 'Guardando en la evaluación activa.',
+      });
+
+      await mediaApi.uploadEvaluationVoiceNote(activeEval.id, blob, duration);
+
+      toast({
+        title: 'Éxito',
+        description: 'Nota de voz guardada correctamente.',
+        action: (
+          <ToastAction
+            altText="Deshacer guardado"
+            onClick={() => {
+              toast({
+                title: 'Acción cancelada',
+                description: 'La nota no se ha guardado.',
+              });
+            }}
+          >
+            Deshacer
+          </ToastAction>
+        ),
+      });
+      if (id) void loadPatient(id);
+    } catch (error) {
+      console.error('Voice upload error:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo guardar la nota de voz.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const {
+    isRecording,
+    duration,
+    startRecording,
+    stopRecording,
+    cancelRecording,
+    error,
+  } = useVoiceRecorder({
+    autoSave: true,
+    onRecordingComplete: handleVoiceRecordingComplete,
+  });
+
+  useEffect(() => {
+    if (error) {
+      if (
+        error.name === 'NotAllowedError' ||
+        error.message.includes('Permission denied')
+      ) {
+        toast({
+          title: 'Permiso denegado',
+          description:
+            'Por favor, permite el acceso al micrófono para grabar notas de voz.',
+          variant: 'destructive',
+        });
+      } else if (error.message === 'BROWSER_NOT_SUPPORTED') {
+        toast({
+          title: 'No soportado',
+          description:
+            'Tu navegador no soporta grabación de audio. Intenta con Chrome o Safari.',
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: 'No se pudo iniciar la grabación. Intenta de nuevo.',
+          variant: 'destructive',
+        });
+      }
+    }
+  }, [error, toast]);
 
   const handleEdit = () => {
     setIsEditOpen(true);
@@ -94,34 +175,7 @@ export default function PatientDetail() {
       });
       return;
     }
-    setIsVoiceDialogOpen(true);
-  };
-
-  const handleVoiceRecordingComplete = async (blob: Blob, duration: number) => {
-    if (!activeEval) return;
-
-    try {
-      toast({
-        title: 'Subiendo nota de voz...',
-        description: 'Guardando en la evaluación activa.',
-      });
-
-      await mediaApi.uploadEvaluationVoiceNote(activeEval.id, blob, duration);
-
-      toast({
-        title: 'Éxito',
-        description: 'Nota de voz guardada correctamente.',
-      });
-      setIsVoiceDialogOpen(false);
-      if (id) void loadPatient(id);
-    } catch (error) {
-      console.error('Voice upload error:', error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo guardar la nota de voz.',
-        variant: 'destructive',
-      });
-    }
+    void startRecording();
   };
 
   const handleCaptureFootprint = () => {
@@ -240,19 +294,6 @@ export default function PatientDetail() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isVoiceDialogOpen} onOpenChange={setIsVoiceDialogOpen}>
-        <DialogContent className="sm:max-w-[400px]">
-          <DialogHeader>
-            <DialogTitle className="text-center">
-              Grabar Nota de Voz
-            </DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <VoiceRecorder onRecordingComplete={handleVoiceRecordingComplete} />
-          </div>
-        </DialogContent>
-      </Dialog>
-
       <Dialog open={isVideoDialogOpen} onOpenChange={setIsVideoDialogOpen}>
         <DialogContent className="sm:max-w-[500px] h-[80vh] flex flex-col p-0 overflow-hidden">
           <DialogHeader className="p-4 border-b">
@@ -266,6 +307,13 @@ export default function PatientDetail() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <RecordingFloatingBar
+        isRecording={isRecording}
+        duration={duration}
+        onStop={stopRecording}
+        onCancel={cancelRecording}
+      />
     </div>
   );
 }

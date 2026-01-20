@@ -156,8 +156,11 @@ export function VideoRecorder({
 
   const handleConfirm = () => {
     if (videoBlob) {
+      // Ensure duration is at least 1 second to satisfy backend validation
+      const recordedDuration = Math.max(1, maxDuration - duration);
+
       const metadata = {
-        durationSeconds: maxDuration - duration,
+        durationSeconds: recordedDuration,
         facingMode,
         width: 0,
         height: 0,

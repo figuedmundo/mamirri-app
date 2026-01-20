@@ -15,7 +15,17 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          args: [
+            '--use-fake-ui-for-media-stream',
+            '--use-fake-device-for-media-stream',
+            '--use-file-for-fake-audio-capture=tests/e2e/fixtures/sample-physio-note.wav',
+          ],
+        },
+        permissions: ['microphone'],
+      },
     },
   ],
 

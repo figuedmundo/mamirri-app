@@ -219,6 +219,44 @@ export class MediaController {
     );
   }
 
+  @Get('evaluations/:evaluationId/voice-notes/:voiceNoteId')
+  @ApiOperation({ summary: 'Get evaluation voice note status' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Voice note status retrieved successfully',
+  })
+  async getEvaluationVoiceNoteStatus(
+    @Param('evaluationId') evaluationId: string,
+    @Param('voiceNoteId') voiceNoteId: string,
+    @CurrentTherapist() user: any,
+  ) {
+    return this.mediaService.getVoiceNoteStatus(
+      'evaluation',
+      evaluationId,
+      voiceNoteId,
+      user.userId,
+    );
+  }
+
+  @Get('sessions/:sessionId/voice-notes/:voiceNoteId')
+  @ApiOperation({ summary: 'Get session voice note status' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Voice note status retrieved successfully',
+  })
+  async getSessionVoiceNoteStatus(
+    @Param('sessionId') sessionId: string,
+    @Param('voiceNoteId') voiceNoteId: string,
+    @CurrentTherapist() user: any,
+  ) {
+    return this.mediaService.getVoiceNoteStatus(
+      'session',
+      sessionId,
+      voiceNoteId,
+      user.userId,
+    );
+  }
+
   // ============================================================================
   // Session Photos
   // ============================================================================
