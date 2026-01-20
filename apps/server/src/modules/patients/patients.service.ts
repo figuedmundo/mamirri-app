@@ -38,9 +38,14 @@ export interface UpdateEvaluationDto {
 
 import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
 
+import { StorageService } from '../storage/storage.service';
+
 @Injectable()
 export class PatientsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private storageService: StorageService,
+  ) {}
 
   async create(
     createPatientDto: CreatePatientDto,
@@ -181,8 +186,17 @@ export class PatientsService {
         include: {
           clinicalCases: {
             include: {
-              treatmentSessions: true,
-              evaluations: true,
+              treatmentSessions: {
+                include: {
+                  photos: true,
+                },
+              },
+              evaluations: {
+                include: {
+                  footprints: true,
+                  postureVideos: true,
+                },
+              },
             },
           },
         },
@@ -192,8 +206,13 @@ export class PatientsService {
       }),
     ]);
 
+    // Hydrate media URLs
+    const hydratedPatients = await Promise.all(
+      patients.map((patient) => this.hydratePatientMedia(patient)),
+    );
+
     return {
-      data: patients,
+      data: hydratedPatients,
       meta: {
         total,
         page,
@@ -208,9 +227,17 @@ export class PatientsService {
       include: {
         clinicalCases: {
           include: {
-            evaluations: true,
+            evaluations: {
+              include: {
+                footprints: true,
+                postureVideos: true,
+              },
+            },
             treatmentPlan: true,
             treatmentSessions: {
+              include: {
+                photos: true,
+              },
               orderBy: { date: 'desc' },
             },
             insoles: true,
@@ -221,6 +248,107 @@ export class PatientsService {
 
     if (!patient) {
       throw new NotFoundException(`Patient with ID ${id} not found`);
+    }
+
+    return this.hydratePatientMedia(patient);
+  }
+
+  private async hydratePatientMedia(patient: any): Promise<any> {
+    if (!patient.clinicalCases) return patient;
+
+    for (const clinicalCase of patient.clinicalCases) {
+      // Hydrate Evaluations
+      if (clinicalCase.evaluations) {
+        for (const evaluation of clinicalCase.evaluations) {
+          // Voice Notes
+          if (
+            evaluation.voiceNotes &&
+            Array.isArray(evaluation.voiceNotes) &&
+            evaluation.voiceNotes.length > 0
+          ) {
+            evaluation.voiceNotes = await Promise.all(
+              evaluation.voiceNotes.map(async (note: any) => {
+                if (note.audioUrl && !note.audioUrl.startsWith('http')) {
+                  try {
+                    note.audioUrl = await this.storageService.getFileUrl(
+                      note.audioUrl,
+                    );
+                  } catch (e) {
+                    // Keep original if signing fails
+                  }
+                }
+                return note;
+              }),
+            );
+          }
+
+          // Footprints
+          if (evaluation.footprints) {
+            for (const footprint of evaluation.footprints) {
+              if (footprint.url && !footprint.url.startsWith('http')) {
+                try {
+                  footprint.url = await this.storageService.getFileUrl(
+                    footprint.url,
+                  );
+                } catch (e) {}
+              }
+            }
+          }
+
+          // Posture Videos
+          if (evaluation.postureVideos) {
+            for (const video of evaluation.postureVideos) {
+              if (video.url && !video.url.startsWith('http')) {
+                try {
+                  video.url = await this.storageService.getFileUrl(video.url);
+                } catch (e) {}
+              }
+            }
+          }
+        }
+      }
+
+      // Hydrate Sessions
+      if (clinicalCase.treatmentSessions) {
+        for (const session of clinicalCase.treatmentSessions) {
+          // Voice Notes
+          if (
+            session.voiceNotes &&
+            Array.isArray(session.voiceNotes) &&
+            session.voiceNotes.length > 0
+          ) {
+            session.voiceNotes = await Promise.all(
+              session.voiceNotes.map(async (note: any) => {
+                if (note.audioUrl && !note.audioUrl.startsWith('http')) {
+                  try {
+                    note.audioUrl = await this.storageService.getFileUrl(
+                      note.audioUrl,
+                    );
+                  } catch (e) {}
+                }
+                return note;
+              }),
+            );
+          }
+
+          // Session Photos
+          if (session.photos) {
+            for (const photo of session.photos) {
+              // SessionPhoto uses storageKey, client expects url
+              const key = (photo as any).storageKey;
+              if (key) {
+                try {
+                  (photo as any).url =
+                    await this.storageService.getFileUrl(key);
+                } catch (e) {
+                  // Fallback if signing fails
+                  (photo as any).url = key;
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     return patient;

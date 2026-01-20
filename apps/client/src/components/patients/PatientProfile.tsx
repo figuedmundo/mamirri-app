@@ -24,6 +24,7 @@ import { CameraCapture } from './CameraCapture';
 import { VideoRecorder } from './VideoRecorder';
 import { mediaApi } from '../../api/media';
 import { useToast } from '../../hooks/use-toast';
+import { VoiceNotesSection } from './VoiceNotesSection';
 
 export function PatientProfile({
   patient,
@@ -308,6 +309,17 @@ export function PatientProfile({
             />
           )}
         </div>
+
+        {/* Voice Notes Section */}
+        {activeEvaluation?.voiceNotes &&
+          activeEvaluation.voiceNotes.length > 0 && (
+            <div className="mt-8">
+              <VoiceNotesSection
+                voiceNotes={activeEvaluation.voiceNotes}
+                title="Notas de Voz de la Evaluación"
+              />
+            </div>
+          )}
       </div>
     </div>
   );
