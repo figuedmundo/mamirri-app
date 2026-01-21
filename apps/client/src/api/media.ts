@@ -18,10 +18,12 @@ export const mediaApi = {
     evaluationId: string,
     file: Blob,
     type: 'initial' | 'final' | 'followup',
+    side: 'left' | 'right' | 'unknown' = 'unknown',
   ): Promise<Footprint> => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('type', type);
+    formData.append('side', side);
 
     const response = await axios.post<Footprint>(
       `/media/evaluations/${evaluationId}/footprints`,

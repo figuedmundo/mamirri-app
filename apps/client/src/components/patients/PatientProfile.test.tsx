@@ -6,12 +6,40 @@ import type { Patient, TreatmentPhase } from '../../types/patient';
 vi.mock('../../api/media', () => ({
   mediaApi: {
     uploadFootprint: vi.fn().mockResolvedValue({}),
+    uploadPostureVideo: vi.fn().mockResolvedValue({}),
   },
 }));
 
 vi.mock('./CameraCapture', () => ({
-  CameraCapture: ({ onCapture }: { onCapture: (blob: Blob) => void }) => (
-    <button onClick={() => onCapture(new Blob())}>Mock Capture</button>
+  CameraCapture: ({
+    onCapture,
+  }: {
+    onCapture: (blob: Blob, meta: any) => void;
+  }) => (
+    <button
+      onClick={() =>
+        onCapture(new Blob(), {
+          overlayType: 'footprint-left',
+          width: 100,
+          height: 100,
+          timestamp: Date.now(),
+        })
+      }
+    >
+      Mock Capture
+    </button>
+  ),
+}));
+
+vi.mock('./VideoRecorder', () => ({
+  VideoRecorder: ({
+    onCapture,
+  }: {
+    onCapture: (blob: Blob, meta: any) => void;
+  }) => (
+    <button onClick={() => onCapture(new Blob(), { durationSeconds: 10 })}>
+      Mock Video Capture
+    </button>
   ),
 }));
 
@@ -199,7 +227,10 @@ describe('PatientProfile', () => {
     });
 
     fireEvent.click(screen.getByText('Video'));
-    expect(onCaptureVideo).toHaveBeenCalled();
+    fireEvent.click(screen.getByText('Mock Video Capture'));
+    await waitFor(() => {
+      expect(onCaptureVideo).toHaveBeenCalled();
+    });
 
     fireEvent.click(screen.getByText('Agendar'));
     expect(onSchedule).toHaveBeenCalled();

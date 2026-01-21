@@ -477,6 +477,7 @@ export function EvaluationForm({
         activeEvaluation.id,
         blob,
         photoType,
+        footprintSide,
       );
 
       setFootprints((prev) => [...prev, footprint]);

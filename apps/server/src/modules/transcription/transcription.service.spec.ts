@@ -4,13 +4,18 @@ import { TranscriptionService } from './transcription.service';
 import Groq from 'groq-sdk';
 
 jest.mock('groq-sdk', () => {
-  return jest.fn().mockImplementation(() => ({
+  const mGroq = jest.fn().mockImplementation(() => ({
     audio: {
       transcriptions: {
         create: jest.fn(),
       },
     },
   }));
+  (mGroq as any).toFile = jest.fn().mockResolvedValue('mock-file');
+  return {
+    __esModule: true,
+    default: mGroq,
+  };
 });
 
 describe('TranscriptionService', () => {

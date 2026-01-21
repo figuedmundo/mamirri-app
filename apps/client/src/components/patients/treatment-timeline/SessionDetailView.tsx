@@ -42,8 +42,6 @@ export function SessionDetailView({
   );
   const finalFootprint = finalEval?.footprints?.find((f) => f.type === 'final');
 
-  const hasPosturogramImages = initialFootprint?.url && finalFootprint?.url;
-
   const activeSessionIndex = [...treatmentSessions]
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .findIndex((s) => s.id === activeSessionId);
@@ -114,20 +112,18 @@ export function SessionDetailView({
             </div>
           )}
 
-          {hasPosturogramImages && (
-            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
-                Evolucion Postural (Sagital)
-              </h3>
-              <div className="max-w-md mx-auto">
-                <PosturogramViewer
-                  clinicalCase={clinicalCase}
-                  initialPosturogramUrl={initialFootprint.url}
-                  currentPosturogramUrl={finalFootprint.url}
-                />
-              </div>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
+              Evolucion Postural (Sagital)
+            </h3>
+            <div className="max-w-md mx-auto">
+              <PosturogramViewer
+                clinicalCase={clinicalCase}
+                initialPosturogramUrl={initialFootprint?.url}
+                currentPosturogramUrl={finalFootprint?.url}
+              />
             </div>
-          )}
+          </div>
         </div>
       </div>
 

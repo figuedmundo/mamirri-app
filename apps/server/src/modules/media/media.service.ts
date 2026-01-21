@@ -7,7 +7,7 @@ import {
 import * as crypto from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { StorageService } from '../storage/storage.service';
-import { FootprintType } from './dto/upload-footprint.dto';
+import { FootprintType, FootprintSide } from './dto/upload-footprint.dto';
 import { PostureVideoType } from './dto/upload-posture-video.dto';
 import { Footprint, PostureVideo } from '@prisma/client';
 
@@ -62,6 +62,7 @@ export class MediaService {
     evaluationId: string,
     file: File,
     type: FootprintType,
+    side: FootprintSide = FootprintSide.UNKNOWN,
     therapistId: string,
   ): Promise<Footprint & { url: string }> {
     await this.verifyEvaluationOwnership(evaluationId, therapistId);
@@ -73,6 +74,7 @@ export class MediaService {
     const footprint = await this.prisma.footprint.create({
       data: {
         type,
+        side,
         date: new Date(),
         url: storagePath,
         evaluationId,

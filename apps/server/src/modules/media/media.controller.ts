@@ -87,6 +87,10 @@ export class MediaController {
           type: 'string',
           enum: ['initial', 'final', 'followup'],
         },
+        side: {
+          type: 'string',
+          enum: ['left', 'right', 'unknown'],
+        },
       },
     },
   })
@@ -107,6 +111,7 @@ export class MediaController {
       evaluationId,
       file,
       dto.type,
+      dto.side,
       user.userId,
     );
   }

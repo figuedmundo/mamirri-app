@@ -26,6 +26,10 @@ import { mediaApi } from '../../api/media';
 import { useToast } from '../../hooks/use-toast';
 import { VoiceNotesSection } from './VoiceNotesSection';
 
+import { MultimediaSection } from './media/MultimediaSection';
+
+import type { PhotoMetadata } from '@/types/patient';
+
 export function PatientProfile({
   patient,
   onEdit,
@@ -34,6 +38,7 @@ export function PatientProfile({
   onCaptureVideo,
   onSchedule,
   onViewCase,
+  onRefresh,
 }: PatientProfileProps & { onViewCase?: (caseId: string) => void }) {
   const activeCase = patient.clinicalCases?.find((c) => c.status === 'active');
   const activeEvaluation = activeCase
@@ -44,7 +49,7 @@ export function PatientProfile({
   const [isVideoOpen, setIsVideoOpen] = React.useState(false);
   const { toast } = useToast();
 
-  const handleHuellaCapture = async (blob: Blob) => {
+  const handleHuellaCapture = async (blob: Blob, metadata: PhotoMetadata) => {
     if (!activeEvaluation) {
       toast({
         title: 'No hay evaluación activa',
@@ -55,11 +60,20 @@ export function PatientProfile({
     }
 
     try {
-      await mediaApi.uploadFootprint(activeEvaluation.id, blob, 'initial');
+      let side: 'left' | 'right' | 'unknown' = 'unknown';
+      if (metadata.overlayType === 'footprint-left') side = 'left';
+      if (metadata.overlayType === 'footprint-right') side = 'right';
+
+      await mediaApi.uploadFootprint(
+        activeEvaluation.id,
+        blob,
+        'initial',
+        side,
+      );
 
       toast({
         title: 'Huella guardada',
-        description: 'La imagen se ha subido correctamente.',
+        description: `La huella ${side === 'left' ? 'izquierda' : side === 'right' ? 'derecha' : ''} se ha subido correctamente.`,
       });
 
       setIsCameraOpen(false);
@@ -237,7 +251,7 @@ export function PatientProfile({
                       <CameraCapture
                         onCapture={handleHuellaCapture}
                         onCancel={() => setIsCameraOpen(false)}
-                        overlayType="none"
+                        overlayType="footprint-left"
                       />
                     </DialogContent>
                   </Dialog>
@@ -320,6 +334,16 @@ export function PatientProfile({
               />
             </div>
           )}
+
+        {/* Multimedia Section */}
+        {activeCase && (
+          <div className="mt-8">
+            <MultimediaSection
+              clinicalCase={activeCase}
+              onRefresh={onRefresh}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -88,24 +88,25 @@ describe('MediaService', () => {
 
   describe('uploadFootprint', () => {
     it('should upload footprint and create record if authorized', async () => {
-      jest.spyOn(prismaService.evaluation, 'findUnique').mockResolvedValue({
+      (prismaService.evaluation.findUnique as jest.Mock).mockResolvedValue({
         id: mockEvaluationId,
         clinicalCase: {
           patient: {
             therapistId: mockTherapistId,
           },
         },
-      } as any);
+      });
 
-      jest.spyOn(prismaService.footprint, 'create').mockResolvedValue({
+      (prismaService.footprint.create as jest.Mock).mockResolvedValue({
         id: 'fp-1',
         url: 'path/to/file.jpg',
-      } as any);
+      });
 
       const result = await service.uploadFootprint(
         mockEvaluationId,
         mockFile,
         FootprintType.INITIAL,
+        undefined,
         mockTherapistId,
       );
 
@@ -121,20 +122,21 @@ describe('MediaService', () => {
     });
 
     it('should throw ForbiddenException if therapist does not own evaluation', async () => {
-      jest.spyOn(prismaService.evaluation, 'findUnique').mockResolvedValue({
+      (prismaService.evaluation.findUnique as jest.Mock).mockResolvedValue({
         id: mockEvaluationId,
         clinicalCase: {
           patient: {
             therapistId: 'other-therapist',
           },
         },
-      } as any);
+      });
 
       await expect(
         service.uploadFootprint(
           mockEvaluationId,
           mockFile,
           FootprintType.INITIAL,
+          undefined,
           mockTherapistId,
         ),
       ).rejects.toThrow(ForbiddenException);
@@ -143,19 +145,19 @@ describe('MediaService', () => {
 
   describe('uploadPostureVideo', () => {
     it('should upload video and create record', async () => {
-      jest.spyOn(prismaService.evaluation, 'findUnique').mockResolvedValue({
+      (prismaService.evaluation.findUnique as jest.Mock).mockResolvedValue({
         id: mockEvaluationId,
         clinicalCase: {
           patient: {
             therapistId: mockTherapistId,
           },
         },
-      } as any);
+      });
 
-      jest.spyOn(prismaService.postureVideo, 'create').mockResolvedValue({
+      (prismaService.postureVideo.create as jest.Mock).mockResolvedValue({
         id: 'vid-1',
         url: 'path/to/video.mp4',
-      } as any);
+      });
 
       const result = await service.uploadPostureVideo(
         mockEvaluationId,
@@ -178,7 +180,7 @@ describe('MediaService', () => {
 
   describe('uploadVoiceNote', () => {
     it('should append voice note with transcription to evaluation', async () => {
-      jest.spyOn(prismaService.evaluation, 'findUnique').mockResolvedValue({
+      (prismaService.evaluation.findUnique as jest.Mock).mockResolvedValue({
         id: mockEvaluationId,
         voiceNotes: [],
         clinicalCase: {
@@ -186,11 +188,9 @@ describe('MediaService', () => {
             therapistId: mockTherapistId,
           },
         },
-      } as any);
+      });
 
-      jest
-        .spyOn(prismaService.evaluation, 'update')
-        .mockResolvedValue({} as any);
+      (prismaService.evaluation.update as jest.Mock).mockResolvedValue({});
 
       const result = await service.uploadVoiceNote(
         'evaluation',
@@ -208,14 +208,14 @@ describe('MediaService', () => {
       expect(prismaService.evaluation.update).toHaveBeenCalledWith({
         where: { id: mockEvaluationId },
         data: {
-          voiceNotes: {
-            push: expect.objectContaining({
+          voiceNotes: [
+            expect.objectContaining({
               audioUrl: 'path/to/file.jpg',
               durationSeconds: 60,
               transcription: 'Transcribed text',
               transcriptionStatus: 'completed',
             }),
-          },
+          ],
         },
       });
       expect(result.durationSeconds).toBe(60);
@@ -223,7 +223,7 @@ describe('MediaService', () => {
     });
 
     it('should handle transcription timeout/failure by saving as pending', async () => {
-      jest.spyOn(prismaService.evaluation, 'findUnique').mockResolvedValue({
+      (prismaService.evaluation.findUnique as jest.Mock).mockResolvedValue({
         id: mockEvaluationId,
         voiceNotes: [],
         clinicalCase: {
@@ -231,11 +231,9 @@ describe('MediaService', () => {
             therapistId: mockTherapistId,
           },
         },
-      } as any);
+      });
 
-      jest
-        .spyOn(prismaService.evaluation, 'update')
-        .mockResolvedValue({} as any);
+      (prismaService.evaluation.update as jest.Mock).mockResolvedValue({});
 
       // Mock failed transcription
       jest.spyOn(transcriptionService, 'transcribe').mockResolvedValue({
@@ -255,23 +253,23 @@ describe('MediaService', () => {
       expect(prismaService.evaluation.update).toHaveBeenCalledWith({
         where: { id: mockEvaluationId },
         data: {
-          voiceNotes: {
-            push: expect.objectContaining({
+          voiceNotes: [
+            expect.objectContaining({
               audioUrl: 'path/to/file.jpg',
               transcription: null,
               transcriptionStatus: 'pending',
               transcriptionError: 'Timeout',
             }),
-          },
+          ],
         },
       });
       expect(result.transcriptionStatus).toBe('pending');
     });
 
     it('should throw NotFoundException if entity not found', async () => {
-      jest
-        .spyOn(prismaService.evaluation, 'findUnique')
-        .mockResolvedValue(null);
+      (prismaService.evaluation.findUnique as jest.Mock).mockResolvedValue(
+        null,
+      );
 
       await expect(
         service.uploadVoiceNote(

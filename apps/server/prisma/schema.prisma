@@ -155,6 +155,7 @@ model SessionPhoto {
 model Footprint {
   id              String   @id @default(cuid())
   type            String   // 'initial' | 'final' | 'followup'
+  side            String   @default("unknown") // 'left' | 'right' | 'unknown'
   date            DateTime
   url             String
   analysis        Json?    // HuellaAnalisis

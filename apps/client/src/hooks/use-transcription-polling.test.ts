@@ -43,7 +43,7 @@ describe('useTranscriptionPolling', () => {
     const { result } = renderHook(() => useTranscriptionPolling(defaultProps));
 
     expect(result.current.isPolling).toBe(true);
-    expect(result.current.status).toBe('pending');
+    expect(result.current.status).toBe('idle'); // Initial status is idle before first poll response
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(0);
@@ -139,7 +139,12 @@ describe('useTranscriptionPolling', () => {
       });
     }
 
-    expect(mediaApi.getVoiceNoteStatus).toHaveBeenCalledTimes(10);
+    // Advance one more time to trigger failure check (attempts >= 10)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(3000);
+    });
+
+    expect(mediaApi.getVoiceNoteStatus).toHaveBeenCalledTimes(10); // Initial + 9 retries (10th call triggers max attempts next run)
     expect(result.current.isPolling).toBe(false);
     expect(result.current.status).toBe('failed');
     expect(result.current.error).toBe('Max attempts reached');

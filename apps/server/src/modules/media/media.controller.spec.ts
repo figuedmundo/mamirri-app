@@ -104,6 +104,7 @@ describe('MediaController', () => {
         'eval-1',
         mockFile,
         dto.type,
+        undefined,
         'therapist-1',
       );
       expect(response).toEqual(result);

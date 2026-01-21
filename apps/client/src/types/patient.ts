@@ -154,6 +154,7 @@ export interface Footprint {
   id: string;
   evaluationId: string;
   type: 'initial' | 'final' | 'followup';
+  side?: 'left' | 'right' | 'unknown';
   date: string;
   url: string;
   analysis?: FootprintAnalysis;
