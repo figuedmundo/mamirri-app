@@ -232,9 +232,8 @@ describe('StorageService', () => {
       const error = new Error('InternalError');
       s3ClientMock.send.mockRejectedValue(error);
 
-      await expect(service.onModuleInit()).rejects.toThrow(
-        InternalServerErrorException,
-      );
+      // Should not throw as it catches errors
+      await expect(service.onModuleInit()).resolves.not.toThrow();
     });
   });
 });

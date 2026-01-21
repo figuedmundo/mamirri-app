@@ -9,6 +9,17 @@ export interface VoiceNote {
   audioUrl: string;
   transcription: string;
   durationSeconds: number;
+  transcriptionStatus: 'pending' | 'processing' | 'completed' | 'failed';
+  transcriptionError?: string;
+}
+
+export interface SessionPhoto {
+  id: string;
+  sessionId: string;
+  url: string;
+  caption?: string;
+  capturedAt: string;
+  createdAt: string;
 }
 
 export type AnatomicalPoint =
@@ -143,6 +154,7 @@ export interface Footprint {
   id: string;
   evaluationId: string;
   type: 'initial' | 'final' | 'followup';
+  side?: 'left' | 'right' | 'unknown';
   date: string;
   url: string;
   analysis?: FootprintAnalysis;
@@ -171,6 +183,45 @@ export interface PostureVideo {
   duration: number;
   observations: string;
 }
+
+export interface PhotoMetadata {
+  width: number;
+  height: number;
+  timestamp: Date;
+  facingMode: 'user' | 'environment';
+  overlayType: string;
+}
+
+export interface VideoMetadata {
+  durationSeconds: number;
+  facingMode: 'user' | 'environment';
+  width: number;
+  height: number;
+  timestamp: Date;
+  type?: 'gait' | 'static' | 'dynamic';
+}
+
+export type CameraCaptureState =
+  | 'idle'
+  | 'requesting'
+  | 'previewing'
+  | 'captured'
+  | 'error';
+
+export type VideoRecorderState =
+  | 'idle'
+  | 'requesting'
+  | 'recording'
+  | 'preview'
+  | 'confirm';
+
+export type PostureView =
+  | 'posture-anterior'
+  | 'posture-posterior'
+  | 'posture-lateral-left'
+  | 'posture-lateral-right'
+  | 'footprint-left'
+  | 'footprint-right';
 
 export const EvaluationType = {
   INITIAL: 'INITIAL',
@@ -253,6 +304,7 @@ export interface TreatmentSession {
   finalPainLevel: number;
   observations: string;
   voiceNotes?: VoiceNote[];
+  photos?: SessionPhoto[];
 }
 
 export interface ClinicalCase {
@@ -377,4 +429,35 @@ export interface TimelineProps {
 
   /** Called when user wants to edit a session */
   onEditSession?: (id: string) => void;
+}
+
+export interface CameraCaptureProps {
+  /** Called when user confirms a captured photo */
+  onCapture: (blob: Blob, metadata: PhotoMetadata) => void;
+
+  /** Called when user cancels/closes the camera */
+  onCancel?: () => void;
+
+  /** Overlay guide to show over camera preview */
+  overlayType?: PostureView | 'none';
+
+  /** Initial camera facing mode */
+  defaultFacingMode?: 'user' | 'environment';
+
+  /** Additional CSS classes */
+  className?: string;
+}
+
+export interface VideoRecorderProps {
+  /** Called when user confirms a captured video */
+  onCapture: (blob: Blob, metadata: VideoMetadata) => void;
+
+  /** Called when user cancels/closes the recorder */
+  onCancel?: () => void;
+
+  /** Maximum recording duration in seconds (default: 30) */
+  maxDuration?: number;
+
+  /** Additional CSS classes */
+  className?: string;
 }

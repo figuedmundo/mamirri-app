@@ -6,6 +6,9 @@ import type {
   AVDEvaluation,
   PainScale,
   Evaluation,
+  Footprint,
+  PostureVideo,
+  VideoMetadata,
 } from '../../types/patient';
 import {
   EvaluationType,
@@ -19,9 +22,22 @@ import {
   createDefaultPointStatus,
 } from './body-silhouette-types';
 import { VoiceRecorder } from './VoiceRecorder';
+import { VideoRecorder } from './VideoRecorder';
+import { TranscriptionDisplay } from './TranscriptionDisplay';
+import { useTranscriptionPolling } from '../../hooks/use-transcription-polling';
 import { useDebounce } from '../../hooks/use-debounce';
 import { useUnsavedChanges } from '../../hooks/use-unsaved-changes';
 import { useToast } from '../../hooks/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Camera } from 'lucide-react';
+import { CameraCapture } from './CameraCapture';
+import { mediaApi } from '../../api/media';
 
 import {
   getInitialEvaluation,
@@ -78,14 +94,44 @@ export function EvaluationForm({
       } as PainScale),
   );
   const [activeSection, setActiveSection] = React.useState<
-    'posturogram' | 'tests' | 'avd' | 'pain'
+    'posturogram' | 'tests' | 'avd' | 'pain' | 'media'
   >('posturogram');
+
+  const [footprints, setFootprints] = React.useState<Footprint[]>(
+    () => activeEvaluation?.footprints || [],
+  );
+  const [postureVideos, setPostureVideos] = React.useState<PostureVideo[]>(
+    () => activeEvaluation?.postureVideos || [],
+  );
+
+  const [isCameraOpen, setIsCameraOpen] = React.useState(false);
+  const [footprintSide, setFootprintSide] = React.useState<'left' | 'right'>(
+    'left',
+  );
+  const [isFootprintCameraOpen, setIsFootprintCameraOpen] =
+    React.useState(false);
 
   const [isSaving, setIsSaving] = React.useState(false);
   const [saveStatus, setSaveStatus] = React.useState<
     'idle' | 'saving' | 'saved' | 'error'
   >('idle');
   const [audioBlob, setAudioBlob] = React.useState<Blob | null>(null);
+  const [voiceNoteId, setVoiceNoteId] = React.useState<string | null>(null);
+  const [uploadStatus, setUploadStatus] = React.useState<
+    'idle' | 'uploading' | 'success' | 'error'
+  >('idle');
+
+  const {
+    transcription,
+    status: transcriptionStatus,
+    error: transcriptionError,
+    retry: retryTranscription,
+  } = useTranscriptionPolling({
+    voiceNoteId,
+    entityType: 'evaluations',
+    entityId: activeEvaluation?.id || '',
+    enabled: !!voiceNoteId,
+  });
 
   const { isDirty, markDirty, markClean } = useUnsavedChanges();
   const { toast } = useToast();
@@ -287,9 +333,30 @@ export function EvaluationForm({
     debouncedSavePainScale(updated);
   };
 
-  const handleRecordingComplete = (blob: Blob) => {
+  const handleRecordingComplete = async (blob: Blob, duration: number) => {
+    if (!activeEvaluation) return;
+
     setAudioBlob(blob);
-    markDirty();
+    setUploadStatus('uploading');
+
+    try {
+      const voiceNote = await mediaApi.uploadEvaluationVoiceNote(
+        activeEvaluation.id,
+        blob,
+        duration,
+      );
+      setVoiceNoteId(voiceNote.id);
+      setUploadStatus('success');
+      markDirty();
+    } catch (error) {
+      console.error('Voice upload error:', error);
+      setUploadStatus('error');
+      toast({
+        title: 'Error al subir nota de voz',
+        description: 'No se pudo guardar el audio. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleSave = async () => {
@@ -309,8 +376,8 @@ export function EvaluationForm({
         avdEvaluation,
         painScale,
         diagnosis: activeEvaluation.diagnosis,
-        footprints: activeEvaluation.footprints,
-        postureVideos: activeEvaluation.postureVideos,
+        footprints,
+        postureVideos,
       };
 
       // Await in case the parent returns a Promise
@@ -340,6 +407,94 @@ export function EvaluationForm({
     setPainScale(activeEvaluation.painScale);
     setAudioBlob(null);
     markClean();
+  };
+
+  const handleCameraCapture = async (blob: Blob) => {
+    if (!activeEvaluation) return;
+
+    try {
+      // Upload as footprint/clinical photo
+      // Defaulting to 'initial' or 'final' based on evaluation type
+      const photoType = activeEvaluation.type === 'FINAL' ? 'final' : 'initial';
+
+      const footprint = await mediaApi.uploadFootprint(
+        activeEvaluation.id,
+        blob,
+        photoType,
+      );
+
+      setFootprints((prev) => [...prev, footprint]);
+
+      toast({
+        title: 'Foto guardada',
+        description: 'La imagen se ha subido correctamente.',
+      });
+
+      setIsCameraOpen(false);
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: 'Error al subir',
+        description: 'No se pudo guardar la foto. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleVideoCapture = async (blob: Blob, metadata: VideoMetadata) => {
+    if (!activeEvaluation) return;
+
+    try {
+      const video = await mediaApi.uploadPostureVideo(
+        activeEvaluation.id,
+        blob,
+        'gait',
+        metadata.durationSeconds,
+      );
+
+      setPostureVideos((prev) => [...prev, video]);
+
+      toast({
+        title: 'Video guardado',
+        description: 'El video se ha subido correctamente.',
+      });
+    } catch (error) {
+      console.error('Video upload error:', error);
+      toast({
+        title: 'Error al subir',
+        description: 'No se pudo guardar el video. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleFootprintCaptureConfirm = async (blob: Blob) => {
+    if (!activeEvaluation) return;
+
+    try {
+      const photoType = activeEvaluation.type === 'FINAL' ? 'final' : 'initial';
+      const footprint = await mediaApi.uploadFootprint(
+        activeEvaluation.id,
+        blob,
+        photoType,
+        footprintSide,
+      );
+
+      setFootprints((prev) => [...prev, footprint]);
+
+      toast({
+        title: 'Huella guardada',
+        description: 'La imagen de huella se ha subido correctamente.',
+      });
+      setIsFootprintCameraOpen(false);
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: 'Error al subir',
+        description: 'No se pudo guardar la huella. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (
@@ -439,9 +594,30 @@ export function EvaluationForm({
       </div>
 
       {audioBlob && (
-        <div className="bg-teal-50 dark:bg-teal-900/20 rounded-lg p-3 text-sm text-teal-700 dark:text-teal-300">
-          Nota de voz grabada. La transcripción estará disponible próximamente.
-        </div>
+        <TranscriptionDisplay
+          status={
+            uploadStatus === 'uploading'
+              ? 'uploading'
+              : uploadStatus === 'error'
+                ? 'failed'
+                : transcriptionStatus === 'idle' ||
+                    transcriptionStatus === 'processing'
+                  ? 'pending'
+                  : transcriptionStatus
+          }
+          transcription={transcription ?? undefined}
+          audioUrl={audioBlob ? URL.createObjectURL(audioBlob) : undefined}
+          error={
+            (transcriptionError ?? undefined) ||
+            (uploadStatus === 'error' ? 'Error al subir audio' : undefined)
+          }
+          onRetry={retryTranscription}
+          onRerecord={() => {
+            setAudioBlob(null);
+            setVoiceNoteId(null);
+            setUploadStatus('idle');
+          }}
+        />
       )}
 
       <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700 overflow-x-auto">
@@ -450,12 +626,18 @@ export function EvaluationForm({
           { id: 'tests', label: 'Tests Ortopédicos' },
           { id: 'avd', label: 'Evaluación AVD' },
           { id: 'pain', label: 'Escala de Dolor' },
+          { id: 'media', label: 'Multimedia' },
         ].map((section) => (
           <button
             key={section.id}
             onClick={() =>
               setActiveSection(
-                section.id as 'posturogram' | 'tests' | 'avd' | 'pain',
+                section.id as
+                  | 'posturogram'
+                  | 'tests'
+                  | 'avd'
+                  | 'pain'
+                  | 'media',
               )
             }
             className={`px-4 py-3 font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${
@@ -479,12 +661,31 @@ export function EvaluationForm({
           </p>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center gap-6">
               <BodySilhouette
                 values={bodySilhouetteValues}
                 onChange={handleBodySilhouetteChange}
                 className="max-w-[250px]"
               />
+
+              <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    <Camera className="w-4 h-4" />
+                    Capturar Postura
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 sm:max-h-[80vh] flex flex-col">
+                  <DialogTitle className="sr-only">
+                    Capturar Postura
+                  </DialogTitle>
+                  <CameraCapture
+                    onCapture={handleCameraCapture}
+                    onCancel={() => setIsCameraOpen(false)}
+                    overlayType="posture-anterior"
+                  />
+                </DialogContent>
+              </Dialog>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -856,6 +1057,121 @@ export function EvaluationForm({
                 >
                   Agudo
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeSection === 'media' && (
+        <div className="space-y-6">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+              Huella Plantar
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400 text-sm mb-6">
+              Captura fotos de la huella plantar usando la cámara. Se recomienda
+              capturar ambos pies.
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              {footprints.map((footprint) => (
+                <div
+                  key={footprint.id}
+                  className="relative aspect-[3/4] bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700"
+                >
+                  <img
+                    src={footprint.url}
+                    alt="Huella"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1 text-center">
+                    {new Date(footprint.date).toLocaleDateString()}
+                  </div>
+                </div>
+              ))}
+
+              {footprints.length === 0 && (
+                <div className="col-span-2 md:col-span-4 text-center py-8 text-slate-500 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg">
+                  No hay huellas capturadas
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-4">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setFootprintSide('left');
+                  setIsFootprintCameraOpen(true);
+                }}
+              >
+                <Camera className="w-4 h-4 mr-2" />
+                Capturar Izquierdo
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setFootprintSide('right');
+                  setIsFootprintCameraOpen(true);
+                }}
+              >
+                <Camera className="w-4 h-4 mr-2" />
+                Capturar Derecho
+              </Button>
+            </div>
+
+            <Dialog
+              open={isFootprintCameraOpen}
+              onOpenChange={setIsFootprintCameraOpen}
+            >
+              <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 sm:max-h-[80vh] flex flex-col">
+                <DialogTitle className="sr-only">
+                  Capturar Huella Plantar
+                </DialogTitle>
+                <CameraCapture
+                  onCapture={handleFootprintCaptureConfirm}
+                  onCancel={() => setIsFootprintCameraOpen(false)}
+                  overlayType={
+                    footprintSide === 'left'
+                      ? 'footprint-left'
+                      : 'footprint-right'
+                  }
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+              Video de Marcha
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400 text-sm mb-6">
+              Graba un video de la marcha o movimientos específicos (máx 30s).
+            </p>
+
+            {postureVideos.length > 0 && (
+              <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {postureVideos.map((video) => (
+                  <div
+                    key={video.id}
+                    className="aspect-video bg-slate-900 rounded-lg overflow-hidden relative border border-slate-200 dark:border-slate-700"
+                  >
+                    <video
+                      src={video.url}
+                      controls
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex justify-center">
+              <div className="w-full max-w-lg">
+                <VideoRecorder onCapture={handleVideoCapture} />
               </div>
             </div>
           </div>

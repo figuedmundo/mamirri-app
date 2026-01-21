@@ -1,5 +1,5 @@
 import type { TreatmentSession } from '../../../types/patient';
-import { FileText, Pencil, Trash2 } from 'lucide-react';
+import { Camera, FileText, Pencil, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SessionCardProps {
@@ -43,7 +43,10 @@ export function SessionCard({
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-3">
-          <div className="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-md text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+          <div
+            data-testid="session-date-badge"
+            className="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-md text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600"
+          >
             {new Date(session.date).toLocaleDateString('es-ES', {
               weekday: 'short',
               day: 'numeric',
@@ -142,6 +145,13 @@ export function SessionCard({
           <FileText className="w-3 h-3" />
           {session.voiceNotes.length} nota
           {session.voiceNotes.length > 1 ? 's' : ''} de voz
+        </div>
+      )}
+
+      {session.photos && session.photos.length > 0 && (
+        <div className="mt-2 flex items-center gap-1 text-[10px] text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/20 px-2 py-0.5 rounded w-fit">
+          <Camera className="w-3 h-3" />
+          {session.photos.length} foto{session.photos.length > 1 ? 's' : ''}
         </div>
       )}
     </div>

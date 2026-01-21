@@ -2,31 +2,39 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useVoiceRecorder } from '@/hooks/use-voice-recorder';
 
 export interface VoiceRecorderProps {
-  onRecordingComplete: (audioBlob: Blob) => void;
+  onRecordingComplete: (audioBlob: Blob, duration: number) => void;
   onCancel?: () => void;
   className?: string;
+  autoStart?: boolean;
 }
-
-type RecorderState = 'idle' | 'recording' | 'playback' | 'confirming';
 
 export function VoiceRecorder({
   onRecordingComplete,
   onCancel,
   className,
+  autoStart = false,
 }: VoiceRecorderProps) {
-  const [state, setState] = React.useState<RecorderState>('idle');
-  const [audioBlob, setAudioBlob] = React.useState<Blob | null>(null);
-  const [audioUrl, setAudioUrl] = React.useState<string | null>(null);
-  const [duration, setDuration] = React.useState(0);
+  const {
+    state,
+    duration,
+    audioUrl,
+    error,
+    startRecording,
+    stopRecording,
+    cancelRecording,
+    confirmRecording,
+    resetRecording,
+  } = useVoiceRecorder({
+    autoStart,
+    onRecordingComplete,
+    onCancel,
+  });
+
   const [transcriptionPlaceholder, setTranscriptionPlaceholder] =
     React.useState<string | null>(null);
-
-  const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
-  const audioChunksRef = React.useRef<Blob[]>([]);
-  const timerRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
   const { toast } = useToast();
 
@@ -36,52 +44,23 @@ export function VoiceRecorder({
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const startRecording = async () => {
-    try {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        toast({
-          title: 'No soportado',
-          description:
-            'Tu navegador no soporta grabación de audio. Intenta con Chrome o Safari.',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        setAudioBlob(blob);
-        const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
-        setState('playback');
-
-        stream.getTracks().forEach((track) => track.stop());
-      };
-
-      mediaRecorder.start();
-      setState('recording');
-      setDuration(0);
-
-      timerRef.current = setInterval(() => {
-        setDuration((prev) => prev + 1);
-      }, 1000);
-    } catch (error) {
-      if (error instanceof DOMException && error.name === 'NotAllowedError') {
+  React.useEffect(() => {
+    if (error) {
+      if (
+        error.name === 'NotAllowedError' ||
+        error.message.includes('Permission denied')
+      ) {
         toast({
           title: 'Permiso denegado',
           description:
             'Por favor, permite el acceso al micrófono para grabar notas de voz.',
+          variant: 'destructive',
+        });
+      } else if (error.message === 'BROWSER_NOT_SUPPORTED') {
+        toast({
+          title: 'No soportado',
+          description:
+            'Tu navegador no soporta grabación de audio. Intenta con Chrome o Safari.',
           variant: 'destructive',
         });
       } else {
@@ -92,63 +71,20 @@ export function VoiceRecorder({
         });
       }
     }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && state === 'recording') {
-      mediaRecorderRef.current.stop();
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-    }
-  };
+  }, [error, toast]);
 
   const handleConfirm = () => {
-    if (audioBlob) {
-      onRecordingComplete(audioBlob);
-      setTranscriptionPlaceholder('Transcripcion pendiente...');
-      setState('confirming');
-    }
+    setTranscriptionPlaceholder('Transcripcion pendiente...');
+    confirmRecording();
   };
 
   const handleRestart = () => {
-    if (audioUrl) {
-      URL.revokeObjectURL(audioUrl);
-    }
-    setAudioBlob(null);
-    setAudioUrl(null);
-    setDuration(0);
-    setState('idle');
+    resetRecording();
   };
 
   const handleCancel = () => {
-    if (state === 'recording') {
-      stopRecording();
-    }
-    if (audioUrl) {
-      URL.revokeObjectURL(audioUrl);
-    }
-    setAudioBlob(null);
-    setAudioUrl(null);
-    setDuration(0);
-    setState('idle');
-    onCancel?.();
+    cancelRecording();
   };
-
-  React.useEffect(() => {
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      if (audioUrl) {
-        URL.revokeObjectURL(audioUrl);
-      }
-      if (mediaRecorderRef.current && state === 'recording') {
-        mediaRecorderRef.current.stop();
-      }
-    };
-  }, [audioUrl, state]);
 
   if (state === 'confirming' && transcriptionPlaceholder) {
     return (
@@ -191,9 +127,10 @@ export function VoiceRecorder({
     <div className={cn('flex flex-col gap-4', className)}>
       {state === 'idle' && (
         <Button
-          onClick={startRecording}
+          onClick={() => void startRecording()}
           variant="outline"
           className="flex items-center gap-2"
+          data-testid="start-voice-dictation-btn"
         >
           <svg
             className="w-5 h-5 text-rose-500"
@@ -299,12 +236,7 @@ export function VoiceRecorder({
             </div>
           </div>
 
-          <audio
-            ref={audioRef}
-            src={audioUrl}
-            controls
-            className="w-full mb-3"
-          />
+          <audio src={audioUrl} controls className="w-full mb-3" />
 
           <div className="flex justify-end gap-2">
             <Button onClick={handleRestart} variant="outline" size="sm">

@@ -4,6 +4,9 @@ import { ObjectiveCard } from './objectives/ObjectiveCard';
 import { useDebounce } from '../../hooks/use-debounce';
 import { useToast } from '../../hooks/use-toast';
 import { Target, Loader2, Check, AlertCircle } from 'lucide-react';
+import { mediaApi } from '../../api/media';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { VoiceRecorder } from './VoiceRecorder';
 
 interface ObjectivesViewProps {
   clinicalCase: ClinicalCase;
@@ -26,6 +29,10 @@ export function ObjectivesView({
   const [localObjectives, setLocalObjectives] =
     useState<TreatmentObjectives>(objectives);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+  const [dictatingType, setDictatingType] = useState<
+    keyof TreatmentObjectives | null
+  >(null);
+  const [isVoiceDialogOpen, setIsVoiceDialogOpen] = useState(false);
 
   const [prevPropObjectives, setPrevPropObjectives] = useState<
     TreatmentObjectives | undefined
@@ -71,6 +78,72 @@ export function ObjectivesView({
     debouncedSave(newObjectives);
   };
 
+  const handleDictate = (type: keyof TreatmentObjectives) => {
+    setDictatingType(type);
+    setIsVoiceDialogOpen(true);
+  };
+
+  const handleRecordingComplete = async (blob: Blob, duration: number) => {
+    if (!dictatingType) return;
+
+    const activeCase = clinicalCase;
+    const activeEval = activeCase.evaluations?.find(
+      (e) => e.type === 'INITIAL' || e.type === 'FINAL',
+    );
+
+    if (!activeEval) {
+      toast({
+        title: 'Atención',
+        description: 'Se necesita una evaluación para procesar el audio.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setIsVoiceDialogOpen(false);
+      setSaveStatus('saving');
+      toast({
+        title: 'Transcribiendo audio...',
+        description: 'Esto puede tomar unos segundos.',
+      });
+
+      const note = await mediaApi.uploadEvaluationVoiceNote(
+        activeEval.id,
+        blob,
+        duration,
+      );
+
+      if (note.transcription) {
+        const currentText = localObjectives[dictatingType];
+        const newText = currentText
+          ? `${currentText}\n${note.transcription}`
+          : note.transcription;
+
+        handleObjectiveChange(dictatingType, newText);
+        toast({
+          title: 'Dictado completado',
+          description: 'El texto ha sido añadido al objetivo.',
+        });
+      } else {
+        toast({
+          title: 'Atención',
+          description:
+            'La transcripción está siendo procesada. Por favor, revisa en unos segundos.',
+        });
+      }
+    } catch (error) {
+      console.error('Dictation error:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo procesar el dictado.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDictatingType(null);
+    }
+  };
+
   const isEmpty =
     !localObjectives.therapeutic &&
     !localObjectives.prophylactic &&
@@ -106,18 +179,35 @@ export function ObjectivesView({
             type="therapeutic"
             value={localObjectives.therapeutic}
             onChange={(v) => handleObjectiveChange('therapeutic', v)}
+            onDictate={() => handleDictate('therapeutic')}
+            isDictating={dictatingType === 'therapeutic'}
           />
           <ObjectiveCard
             type="prophylactic"
             value={localObjectives.prophylactic}
             onChange={(v) => handleObjectiveChange('prophylactic', v)}
+            onDictate={() => handleDictate('prophylactic')}
+            isDictating={dictatingType === 'prophylactic'}
           />
           <ObjectiveCard
             type="educational"
             value={localObjectives.educational}
             onChange={(v) => handleObjectiveChange('educational', v)}
+            onDictate={() => handleDictate('educational')}
+            isDictating={dictatingType === 'educational'}
           />
         </div>
+
+        <Dialog open={isVoiceDialogOpen} onOpenChange={setIsVoiceDialogOpen}>
+          <DialogContent className="sm:max-w-[400px]">
+            <DialogHeader>
+              <DialogTitle className="text-center">Dictar Objetivo</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <VoiceRecorder onRecordingComplete={handleRecordingComplete} />
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }
@@ -165,18 +255,35 @@ export function ObjectivesView({
           type="therapeutic"
           value={localObjectives.therapeutic}
           onChange={(v) => handleObjectiveChange('therapeutic', v)}
+          onDictate={() => handleDictate('therapeutic')}
+          isDictating={dictatingType === 'therapeutic'}
         />
         <ObjectiveCard
           type="prophylactic"
           value={localObjectives.prophylactic}
           onChange={(v) => handleObjectiveChange('prophylactic', v)}
+          onDictate={() => handleDictate('prophylactic')}
+          isDictating={dictatingType === 'prophylactic'}
         />
         <ObjectiveCard
           type="educational"
           value={localObjectives.educational}
           onChange={(v) => handleObjectiveChange('educational', v)}
+          onDictate={() => handleDictate('educational')}
+          isDictating={dictatingType === 'educational'}
         />
       </div>
+
+      <Dialog open={isVoiceDialogOpen} onOpenChange={setIsVoiceDialogOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle className="text-center">Dictar Objetivo</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <VoiceRecorder onRecordingComplete={handleRecordingComplete} />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

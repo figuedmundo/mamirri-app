@@ -1,4 +1,4 @@
-import { Heart, Shield, GraduationCap, Mic } from 'lucide-react';
+import { Heart, Shield, GraduationCap, Mic, Loader2 } from 'lucide-react';
 
 type ObjectiveType = 'therapeutic' | 'prophylactic' | 'educational';
 
@@ -6,6 +6,8 @@ interface ObjectiveCardProps {
   type: ObjectiveType;
   value: string;
   onChange: (value: string) => void;
+  onDictate?: () => void;
+  isDictating?: boolean;
   disabled?: boolean;
 }
 
@@ -57,6 +59,8 @@ export function ObjectiveCard({
   type,
   value,
   onChange,
+  onDictate,
+  isDictating = false,
   disabled = false,
 }: ObjectiveCardProps) {
   const config = OBJECTIVE_CONFIG[type];
@@ -77,11 +81,20 @@ export function ObjectiveCard({
         </div>
         <button
           type="button"
-          disabled
-          className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed opacity-50"
-          title="Dictado por voz (próximamente)"
+          disabled={disabled || isDictating}
+          onClick={onDictate}
+          className={`p-2 rounded-lg transition-colors ${
+            isDictating
+              ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 animate-pulse'
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-teal-600 dark:hover:text-teal-400'
+          } ${disabled ? 'cursor-not-allowed opacity-50' : ''}`}
+          title={isDictating ? 'Escuchando...' : 'Dictado por voz'}
         >
-          <Mic className="w-4 h-4" />
+          {isDictating ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Mic className="w-4 h-4" />
+          )}
         </button>
       </div>
       <textarea

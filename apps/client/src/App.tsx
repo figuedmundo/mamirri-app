@@ -16,111 +16,131 @@ import Biblioteca from './pages/Biblioteca';
 import Plantillas from './pages/Plantillas';
 import Ajustes from './pages/Ajustes';
 import CaseDetail from './pages/CaseDetail';
+import {
+  LoggerErrorBoundary,
+  useInteractionLogger,
+  usePerformanceLogger,
+} from './lib/logger';
+import { api } from './lib/axios';
+import { setupInterceptors } from './lib/logger/axios-logger';
+
+setupInterceptors(api);
+
+function AppContent() {
+  useInteractionLogger();
+  usePerformanceLogger();
+
+  return (
+    <Routes>
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+      </Route>
+
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Dashboard />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/pacientes"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Patients />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/pacientes/:id"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PatientDetail />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/pacientes/:id/casos/:caseId"
+        element={
+          <ProtectedRoute>
+            <CaseDetail />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/analisis"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Analisis />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/biblioteca"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Biblioteca />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/plantillas"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Plantillas />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/ajustes"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Ajustes />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
 
 function App() {
   return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route element={<AuthLayout />}>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-            </Route>
-
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <Dashboard />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/pacientes"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <Patients />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/pacientes/:id"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <PatientDetail />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/pacientes/:id/casos/:caseId"
-              element={
-                <ProtectedRoute>
-                  <CaseDetail />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/analisis"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <Analisis />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/biblioteca"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <Biblioteca />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/plantillas"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <Plantillas />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/ajustes"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <Ajustes />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-      <Toaster />
-    </ErrorBoundary>
+    <LoggerErrorBoundary>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <AuthProvider>
+            <AppContent />
+          </AuthProvider>
+        </BrowserRouter>
+        <Toaster />
+      </ErrorBoundary>
+    </LoggerErrorBoundary>
   );
 }
 

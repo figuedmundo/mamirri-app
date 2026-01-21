@@ -25,11 +25,14 @@ vi.mock('@/components/ui/BeforeAfterSlider', () => ({
 }));
 
 // ResizeObserver mock
-global.ResizeObserver = class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-};
+vi.stubGlobal(
+  'ResizeObserver',
+  class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  },
+);
 
 describe('PosturogramViewer', () => {
   const mockClinicalCase = {
@@ -88,7 +91,13 @@ describe('PosturogramViewer', () => {
 
   describe('Rendering', () => {
     it('should render slider and anatomical markers', () => {
-      render(<PosturogramViewer clinicalCase={mockClinicalCase} />);
+      render(
+        <PosturogramViewer
+          clinicalCase={mockClinicalCase}
+          initialPosturogramUrl="url1"
+          currentPosturogramUrl="url2"
+        />,
+      );
 
       expect(screen.getByTestId('before-after-slider')).toBeInTheDocument();
       // 6 markers
@@ -113,7 +122,13 @@ describe('PosturogramViewer', () => {
   describe('Interactions', () => {
     it('should open popover when marker is clicked', async () => {
       const user = userEvent.setup();
-      render(<PosturogramViewer clinicalCase={mockClinicalCase} />);
+      render(
+        <PosturogramViewer
+          clinicalCase={mockClinicalCase}
+          initialPosturogramUrl="url1"
+          currentPosturogramUrl="url2"
+        />,
+      );
 
       // Find head marker (first one usually, or by label if accessible)
       // Since markers are buttons inside SVG, userEvent might be tricky with tooltips overlaying
@@ -132,6 +147,8 @@ describe('PosturogramViewer', () => {
         <PosturogramViewer
           clinicalCase={mockClinicalCase}
           onPosturogramChange={onPosturogramChange}
+          initialPosturogramUrl="url1"
+          currentPosturogramUrl="url2"
         />,
       );
 
@@ -178,7 +195,13 @@ describe('PosturogramViewer', () => {
         ],
       } as unknown as ClinicalCase;
 
-      render(<PosturogramViewer clinicalCase={legacyCase} />);
+      render(
+        <PosturogramViewer
+          clinicalCase={legacyCase}
+          initialPosturogramUrl="url1"
+          currentPosturogramUrl="url2"
+        />,
+      );
 
       const headMarker = screen.getByLabelText(/cabeza: rotation/i);
       expect(headMarker).toBeInTheDocument();

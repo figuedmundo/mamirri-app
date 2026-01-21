@@ -1,3 +1,4 @@
+import React from 'react';
 import type {
   PatientProfileProps,
   ClinicalCase,
@@ -18,6 +19,16 @@ import { PainScaleDisplay } from './PainScaleDisplay';
 import { DiagnosisSection } from './DiagnosisSection';
 import { TreatmentPhaseCard } from './TreatmentPhaseCard';
 import { SessionsFooter } from './SessionsFooter';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { CameraCapture } from './CameraCapture';
+import { VideoRecorder } from './VideoRecorder';
+import { mediaApi } from '../../api/media';
+import { useToast } from '../../hooks/use-toast';
+import { VoiceNotesSection } from './VoiceNotesSection';
+
+import { MultimediaSection } from './media/MultimediaSection';
+
+import type { PhotoMetadata } from '@/types/patient';
 
 export function PatientProfile({
   patient,
@@ -27,11 +38,93 @@ export function PatientProfile({
   onCaptureVideo,
   onSchedule,
   onViewCase,
+  onRefresh,
 }: PatientProfileProps & { onViewCase?: (caseId: string) => void }) {
   const activeCase = patient.clinicalCases?.find((c) => c.status === 'active');
   const activeEvaluation = activeCase
     ? getActiveEvaluation(activeCase)
     : undefined;
+
+  const [isCameraOpen, setIsCameraOpen] = React.useState(false);
+  const [isVideoOpen, setIsVideoOpen] = React.useState(false);
+  const { toast } = useToast();
+
+  const handleHuellaCapture = async (blob: Blob, metadata: PhotoMetadata) => {
+    if (!activeEvaluation) {
+      toast({
+        title: 'No hay evaluación activa',
+        description: 'Se necesita una evaluación activa para guardar huellas.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      let side: 'left' | 'right' | 'unknown' = 'unknown';
+      if (metadata.overlayType === 'footprint-left') side = 'left';
+      if (metadata.overlayType === 'footprint-right') side = 'right';
+
+      await mediaApi.uploadFootprint(
+        activeEvaluation.id,
+        blob,
+        'initial',
+        side,
+      );
+
+      toast({
+        title: 'Huella guardada',
+        description: `La huella ${side === 'left' ? 'izquierda' : side === 'right' ? 'derecha' : ''} se ha subido correctamente.`,
+      });
+
+      setIsCameraOpen(false);
+      onCaptureFootprint?.();
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: 'Error al subir',
+        description: 'No se pudo guardar la huella. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleVideoCapture = async (
+    blob: Blob,
+    metadata: { durationSeconds: number },
+  ) => {
+    if (!activeEvaluation) {
+      toast({
+        title: 'No hay evaluación activa',
+        description: 'Se necesita una evaluación activa para guardar videos.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      await mediaApi.uploadPostureVideo(
+        activeEvaluation.id,
+        blob,
+        'gait',
+        metadata.durationSeconds,
+      );
+
+      toast({
+        title: 'Video guardado',
+        description: 'El video se ha subido correctamente.',
+      });
+
+      setIsVideoOpen(false);
+      onCaptureVideo?.();
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: 'Error al subir',
+        description: 'No se pudo guardar el video. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
@@ -142,24 +235,49 @@ export function PatientProfile({
                 )}
 
                 <div className="flex gap-2">
-                  {onCaptureFootprint && (
-                    <button
-                      onClick={onCaptureFootprint}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium transition-colors text-sm"
-                    >
-                      <Camera className="w-4 h-4" />
-                      <span>Huella</span>
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setIsCameraOpen(true)}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium transition-colors text-sm"
+                  >
+                    <Camera className="w-4 h-4" />
+                    <span>Huella</span>
+                  </button>
+
+                  <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                    <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 sm:max-h-[80vh] flex flex-col">
+                      <DialogTitle className="sr-only">
+                        Capturar Huella
+                      </DialogTitle>
+                      <CameraCapture
+                        onCapture={handleHuellaCapture}
+                        onCancel={() => setIsCameraOpen(false)}
+                        overlayType="footprint-left"
+                      />
+                    </DialogContent>
+                  </Dialog>
 
                   {onCaptureVideo && (
-                    <button
-                      onClick={onCaptureVideo}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium transition-colors text-sm"
-                    >
-                      <Video className="w-4 h-4" />
-                      <span>Video</span>
-                    </button>
+                    <>
+                      <button
+                        onClick={() => setIsVideoOpen(true)}
+                        className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium transition-colors text-sm"
+                      >
+                        <Video className="w-4 h-4" />
+                        <span>Video</span>
+                      </button>
+
+                      <Dialog open={isVideoOpen} onOpenChange={setIsVideoOpen}>
+                        <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 sm:max-h-[80vh] flex flex-col">
+                          <DialogTitle className="sr-only">
+                            Capturar Video de Marcha
+                          </DialogTitle>
+                          <VideoRecorder
+                            onCapture={handleVideoCapture}
+                            onCancel={() => setIsVideoOpen(false)}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    </>
                   )}
                 </div>
 
@@ -205,6 +323,27 @@ export function PatientProfile({
             />
           )}
         </div>
+
+        {/* Voice Notes Section */}
+        {activeEvaluation?.voiceNotes &&
+          activeEvaluation.voiceNotes.length > 0 && (
+            <div className="mt-8">
+              <VoiceNotesSection
+                voiceNotes={activeEvaluation.voiceNotes}
+                title="Notas de Voz de la Evaluación"
+              />
+            </div>
+          )}
+
+        {/* Multimedia Section */}
+        {activeCase && (
+          <div className="mt-8">
+            <MultimediaSection
+              clinicalCase={activeCase}
+              onRefresh={onRefresh}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

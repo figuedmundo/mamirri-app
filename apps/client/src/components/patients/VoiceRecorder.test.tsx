@@ -187,7 +187,10 @@ describe('VoiceRecorder', () => {
       await user.click(confirmButton);
 
       expect(mockOnRecordingComplete).toHaveBeenCalledTimes(1);
-      expect(mockOnRecordingComplete).toHaveBeenCalledWith(expect.any(Blob));
+      expect(mockOnRecordingComplete).toHaveBeenCalledWith(
+        expect.any(Blob),
+        expect.any(Number),
+      );
     });
 
     it('should show transcription placeholder after confirmation', async () => {
