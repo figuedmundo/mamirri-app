@@ -1,7 +1,15 @@
 const CACHE_NAME = 'mamirri-static-v1';
 const OFFLINE_URL = '/offline.html';
 
-const PRECACHE_ASSETS = [OFFLINE_URL];
+const PRECACHE_ASSETS = [
+  OFFLINE_URL,
+  '/manifest.json',
+  '/favicon.ico',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/apple-touch-icon.png',
+  '/maskable-icon.png',
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
