@@ -171,8 +171,8 @@ Methodology: Agile Development (1-week Sprints).
 
 ### Week 8: PWA Basics (Offline Skeleton)
 
-- [ ] **8.1** Service Worker: Cache static assets
-- [ ] **8.2** Offline indicator (connection status)
+- [x] **8.1** Service Worker: Cache static assets
+- [x] **8.2** Offline indicator (connection status)
 - [ ] **8.3** PWA manifest (install to home screen)
 - [ ] **8.4** Test: Works without internet (static pages only)
 

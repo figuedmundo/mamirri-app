@@ -9,6 +9,8 @@ import AuthLayout from './components/auth/AuthLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Toaster } from './components/ui/toaster';
+import { UpdateNotification } from './components/pwa/UpdateNotification';
+import { OfflineBanner } from './components/pwa/OfflineBanner';
 import Patients from './pages/Patients';
 import PatientDetail from './pages/PatientDetail';
 import Analisis from './pages/Analisis';
@@ -139,6 +141,8 @@ function App() {
           </AuthProvider>
         </BrowserRouter>
         <Toaster />
+        <UpdateNotification />
+        <OfflineBanner />
       </ErrorBoundary>
     </LoggerErrorBoundary>
   );
