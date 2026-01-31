@@ -9,7 +9,25 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { StorageService } from '../storage/storage.service';
 import { FootprintType, FootprintSide } from './dto/upload-footprint.dto';
 import { PostureVideoType } from './dto/upload-posture-video.dto';
-import { Footprint, PostureVideo } from '@prisma/client';
+
+export interface FootprintWithUrl {
+  id: string;
+  type: FootprintType;
+  side: FootprintSide;
+  date: Date;
+  url: string;
+  evaluationId: string;
+}
+
+export interface PostureVideoWithUrl {
+  id: string;
+  type: PostureVideoType;
+  date: Date;
+  url: string;
+  duration: number;
+  observations: string;
+  evaluationId: string;
+}
 
 import { TranscriptionService } from '../transcription/transcription.service';
 
@@ -64,7 +82,7 @@ export class MediaService {
     type: FootprintType,
     side: FootprintSide = FootprintSide.UNKNOWN,
     therapistId: string,
-  ): Promise<Footprint & { url: string }> {
+  ): Promise<FootprintWithUrl> {
     await this.verifyEvaluationOwnership(evaluationId, therapistId);
 
     const path = `evaluations/${evaluationId}/footprints`;
@@ -81,9 +99,13 @@ export class MediaService {
       },
     });
 
-    const result: Footprint & { url: string } = {
-      ...footprint,
+    const result: FootprintWithUrl = {
+      id: footprint.id,
+      type: footprint.type as FootprintType,
+      side: footprint.side as FootprintSide,
+      date: footprint.date,
       url: signedUrl,
+      evaluationId: footprint.evaluationId,
     };
     return result;
   }
@@ -94,7 +116,7 @@ export class MediaService {
     type: PostureVideoType,
     duration: number,
     therapistId: string,
-  ): Promise<PostureVideo & { url: string }> {
+  ): Promise<PostureVideoWithUrl> {
     await this.verifyEvaluationOwnership(evaluationId, therapistId);
 
     const path = `evaluations/${evaluationId}/videos`;
@@ -112,9 +134,14 @@ export class MediaService {
       },
     });
 
-    const result: PostureVideo & { url: string } = {
-      ...video,
+    const result: PostureVideoWithUrl = {
+      id: video.id,
+      type: video.type as PostureVideoType,
+      date: video.date,
       url: signedUrl,
+      duration: video.duration,
+      observations: video.observations,
+      evaluationId: video.evaluationId,
     };
     return result;
   }
