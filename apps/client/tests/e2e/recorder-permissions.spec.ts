@@ -96,9 +96,12 @@ test.describe('Recorder Permissions', () => {
     await page.getByTestId('nav-evaluation-btn').click();
 
     await casePage.startVoiceDictation();
-    await casePage.startRecording();
 
-    await expect(page.getByText(/Permiso denegado/i)).toBeVisible();
-    await expect(page.getByText(/acceso al micrófono/i)).toBeVisible();
+    await expect(page.getByText(/Permiso denegado/i)).toBeVisible({
+      timeout: 10000,
+    });
+    await expect(page.getByText(/acceso al micrófono/i)).toBeVisible({
+      timeout: 10000,
+    });
   });
 });

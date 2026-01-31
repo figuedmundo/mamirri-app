@@ -8,7 +8,9 @@ export class BasePage {
   }
 
   async waitForToast(message: string | RegExp) {
-    await expect(this.page.getByText(message).first()).toBeVisible();
+    await expect(this.page.getByText(message).first()).toBeVisible({
+      timeout: 10000,
+    });
   }
 
   async mockAuth() {

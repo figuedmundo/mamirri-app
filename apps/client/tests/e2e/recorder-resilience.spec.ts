@@ -90,7 +90,6 @@ test.describe('Recorder Resilience and Controls', () => {
     await page.getByTestId('nav-evaluation-btn').click();
 
     await casePage.startVoiceDictation();
-    await casePage.startRecording();
     await page.waitForTimeout(1000);
 
     await casePage.cancelRecording();
@@ -188,7 +187,6 @@ test.describe('Recorder Resilience and Controls', () => {
     await page.getByTestId('nav-evaluation-btn').click();
 
     await casePage.startVoiceDictation();
-    await casePage.startRecording();
     await page.waitForTimeout(1000);
     await casePage.stopRecording();
 
