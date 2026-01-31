@@ -32,9 +32,11 @@ Optional test credentials that override defaults:
 
 ## SSH Setup Guide
 
+> **Conceptual Note**: In this flow, **GitHub Actions is the "Client"** (the one initiating the connection) and your **Ubuntu Server is the "Host"**. Therefore, GitHub needs the **Private Key** to identify itself, and your Server needs the **Public Key** to verify that identity.
+
 ### Step 1: Generate a Dedicated Deploy Key
 
-On your local machine (or the server), generate a new SSH key pair specifically for GitHub Actions deployment:
+You can generate this on your local machine OR the server. It doesn't matter where it's created, only where the parts are stored.
 
 ```bash
 ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/mamirri_deploy
@@ -42,48 +44,32 @@ ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/mamirri_deploy
 
 This creates:
 
-- `~/.ssh/mamirri_deploy` (private key - keep secure!)
-- `~/.ssh/mamirri_deploy.pub` (public key - copy to server)
+- `~/.ssh/mamirri_deploy` (**Private Key** -> Goes to **GitHub Secrets**)
+- `~/.ssh/mamirri_deploy.pub` (**Public Key** -> Goes to **Server `authorized_keys`**)
 
-### Step 2: Add Public Key to Server
+### Step 2: Configure the Server (Receiver)
 
-Copy the public key to your Ubuntu home lab server:
-
-```bash
-# On your local machine, copy the public key
-ssh-copy-id -i ~/.ssh/mamirri_deploy.pub ${DEPLOY_USER}@${DEPLOY_HOST}
-
-# Or manually add to authorized_keys on the server:
-ssh ${DEPLOY_USER}@${DEPLOY_HOST} "mkdir -p ~/.ssh && chmod 700 ~/.ssh"
-cat ~/.ssh/mamirri_deploy.pub | ssh ${DEPLOY_USER}@${DEPLOY_HOST} "cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
-```
-
-### Step 3: Configure SSH Access (Server-Side)
-
-On the Ubuntu server, ensure the deployment user has proper permissions:
+Your server needs to know that anyone carrying the `mamirri_deploy` private key is allowed to enter.
 
 ```bash
-# Add user to docker group (for running Docker commands without sudo)
-sudo usermod -aG docker ${DEPLOY_USER}
+# 1. Ensure the .ssh directory exists
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
 
-# Verify SSH service is running
-sudo systemctl status ssh
-
-# Test the SSH key works (from local machine)
-ssh -i ~/.ssh/mamirri_deploy ${DEPLOY_USER}@${DEPLOY_HOST} "echo 'SSH connection successful'"
+# 2. Add the PUBLIC key content to authorized_keys
+# (If you generated the key on the server, just run this:)
+cat ~/.ssh/mamirri_deploy.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
 ```
 
-### Step 4: Add Private Key to GitHub Secrets
+### Step 3: Configure GitHub (Client)
+
+GitHub needs the private key to "act" as the client.
 
 1. Go to your GitHub repository: **Settings > Secrets and variables > Actions**
 2. Click **New repository secret**
 3. Name: `DEPLOY_SSH_KEY`
-4. Value: Copy the contents of `~/.ssh/mamirri_deploy` (the private key file)
-   ```bash
-   cat ~/.ssh/mamirri_deploy | pbcopy  # macOS
-   # OR
-   cat ~/.ssh/mamirri_deploy | xclip -selection clipboard  # Linux
-   ```
+4. Value: Copy the **entire contents** of the **Private Key** (`~/.ssh/mamirri_deploy`)
+   - Includes the `-----BEGIN ...-----` and `-----END ...-----` lines.
 5. Click **Add secret**
 
 ### Step 5: Add Additional Required Secrets
