@@ -273,8 +273,8 @@ export class PatientsService {
                     note.audioUrl = await this.storageService.getFileUrl(
                       note.audioUrl,
                     );
-                  } catch (e) {
-                    void e;
+                  } catch {
+                    // Ignore signing errors
                   }
                 }
                 return note;
@@ -290,8 +290,8 @@ export class PatientsService {
                   footprint.url = await this.storageService.getFileUrl(
                     footprint.url,
                   );
-                } catch (e) {
-                  void e;
+                } catch {
+                  // Ignore signing errors
                 }
               }
             }
@@ -303,8 +303,8 @@ export class PatientsService {
               if (video.url && !video.url.startsWith('http')) {
                 try {
                   video.url = await this.storageService.getFileUrl(video.url);
-                } catch (e) {
-                  void e;
+                } catch {
+                  // Ignore signing errors
                 }
               }
             }
@@ -328,8 +328,8 @@ export class PatientsService {
                     note.audioUrl = await this.storageService.getFileUrl(
                       note.audioUrl,
                     );
-                  } catch (e) {
-                    void e;
+                  } catch {
+                    // Ignore signing errors
                   }
                 }
                 return note;
@@ -345,8 +345,7 @@ export class PatientsService {
               if (key) {
                 try {
                   photo.url = await this.storageService.getFileUrl(key);
-                } catch (e) {
-                  void e;
+                } catch {
                   photo.url = key;
                 }
               }
