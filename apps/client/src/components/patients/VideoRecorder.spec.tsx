@@ -41,8 +41,8 @@ describe('VideoRecorder', () => {
     } as unknown as typeof MediaRecorder;
 
     // Mock URL.createObjectURL
-    (window as any).URL.createObjectURL = vi.fn(() => 'blob:mock-url');
-    (window as any).URL.revokeObjectURL = vi.fn();
+    (window.URL as typeof URL).createObjectURL = vi.fn(() => 'blob:mock-url');
+    (window.URL as typeof URL).revokeObjectURL = vi.fn();
   });
 
   it('renders initial idle state correctly', () => {

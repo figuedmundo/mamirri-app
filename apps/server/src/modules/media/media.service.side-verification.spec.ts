@@ -7,8 +7,6 @@ import { FootprintType, FootprintSide } from './dto/upload-footprint.dto';
 
 describe('MediaService - Footprint Side Verification', () => {
   let service: MediaService;
-  let prismaService: PrismaService;
-  let storageService: StorageService;
 
   const mockPrismaService = {
     footprint: {
@@ -42,8 +40,6 @@ describe('MediaService - Footprint Side Verification', () => {
     }).compile();
 
     service = module.get<MediaService>(MediaService);
-    prismaService = module.get<PrismaService>(PrismaService);
-    storageService = module.get<StorageService>(StorageService);
   });
 
   it('should pass side parameter to prisma create call', async () => {

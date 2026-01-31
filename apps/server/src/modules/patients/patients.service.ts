@@ -274,7 +274,7 @@ export class PatientsService {
                       note.audioUrl,
                     );
                   } catch (e) {
-                    // Keep original if signing fails
+                    void e;
                   }
                 }
                 return note;
@@ -290,7 +290,9 @@ export class PatientsService {
                   footprint.url = await this.storageService.getFileUrl(
                     footprint.url,
                   );
-                } catch (e) {}
+                } catch (e) {
+                  void e;
+                }
               }
             }
           }
@@ -301,7 +303,9 @@ export class PatientsService {
               if (video.url && !video.url.startsWith('http')) {
                 try {
                   video.url = await this.storageService.getFileUrl(video.url);
-                } catch (e) {}
+                } catch (e) {
+                  void e;
+                }
               }
             }
           }
@@ -324,7 +328,9 @@ export class PatientsService {
                     note.audioUrl = await this.storageService.getFileUrl(
                       note.audioUrl,
                     );
-                  } catch (e) {}
+                  } catch (e) {
+                    void e;
+                  }
                 }
                 return note;
               }),
@@ -335,14 +341,13 @@ export class PatientsService {
           if (session.photos) {
             for (const photo of session.photos) {
               // SessionPhoto uses storageKey, client expects url
-              const key = (photo as any).storageKey;
+              const key = photo.storageKey;
               if (key) {
                 try {
-                  (photo as any).url =
-                    await this.storageService.getFileUrl(key);
+                  photo.url = await this.storageService.getFileUrl(key);
                 } catch (e) {
-                  // Fallback if signing fails
-                  (photo as any).url = key;
+                  void e;
+                  photo.url = key;
                 }
               }
             }

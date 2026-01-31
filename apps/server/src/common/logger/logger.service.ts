@@ -64,15 +64,13 @@ export class LoggerService implements OnModuleInit, OnModuleDestroy {
       );
       if (Object.keys(entry).length > 6) {
         // Log metadata separately for readability
-        const {
-          timestamp,
-          level,
-          levelNum,
-          message,
-          service,
-          version,
-          ...meta
-        } = entry;
+        const meta = { ...entry };
+        delete (meta as any).timestamp;
+        delete (meta as any).level;
+        delete (meta as any).levelNum;
+        delete (meta as any).message;
+        delete (meta as any).service;
+        delete (meta as any).version;
         console.log(JSON.stringify(meta, null, 2));
       }
     } else {
@@ -87,17 +85,17 @@ export class LoggerService implements OnModuleInit, OnModuleDestroy {
 
   private getColor(level: number): string {
     switch (level) {
-      case LogLevel.DEBUG:
+      case LogLevel.DEBUG as number:
         return '\x1b[34m'; // Blue
-      case LogLevel.VERBOSE:
+      case LogLevel.VERBOSE as number:
         return '\x1b[36m'; // Cyan
-      case LogLevel.INFO:
+      case LogLevel.INFO as number:
         return '\x1b[32m'; // Green
-      case LogLevel.WARN:
+      case LogLevel.WARN as number:
         return '\x1b[33m'; // Yellow
-      case LogLevel.ERROR:
+      case LogLevel.ERROR as number:
         return '\x1b[31m'; // Red
-      case LogLevel.FATAL:
+      case LogLevel.FATAL as number:
         return '\x1b[41m'; // Red BG
       default:
         return '\x1b[0m';
