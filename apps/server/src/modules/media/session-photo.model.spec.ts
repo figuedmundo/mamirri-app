@@ -91,26 +91,34 @@ describe('SessionPhoto Model Integration', () => {
 
   afterAll(async () => {
     try {
-      if (sessionId) {
-        try {
-          await prisma.treatmentSession.delete({ where: { id: sessionId } });
-        } catch {
-          void 0;
+      if (prisma) {
+        if (sessionId) {
+          try {
+            await prisma.treatmentSession.delete({ where: { id: sessionId } });
+          } catch {
+            // ignore
+          }
         }
-      }
-      if (clinicalCaseId) {
-        await prisma.clinicalCase.delete({ where: { id: clinicalCaseId } });
-      }
-      if (patientId) {
-        await prisma.patient.delete({ where: { id: patientId } });
-      }
-      if (therapistId) {
-        await prisma.user.delete({ where: { id: therapistId } });
+        if (clinicalCaseId) {
+          await prisma.clinicalCase.delete({ where: { id: clinicalCaseId } });
+        }
+        if (patientId) {
+          await prisma.patient.delete({ where: { id: patientId } });
+        }
+        if (therapistId) {
+          await prisma.user.delete({ where: { id: therapistId } });
+        }
+        if (typeof prisma.$disconnect === 'function') {
+          await prisma.$disconnect();
+        }
       }
     } catch (e) {
       console.error('Cleanup failed', e);
     }
-    await app.close();
+
+    if (app && typeof app.close === 'function') {
+      await app.close();
+    }
   });
 
   it('should create a session photo with valid data', async () => {

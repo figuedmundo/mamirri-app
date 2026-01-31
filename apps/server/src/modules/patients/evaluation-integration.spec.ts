@@ -39,7 +39,12 @@ describe('Evaluation Integration (1:N Relation)', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    if (prisma && typeof prisma.$disconnect === 'function') {
+      await prisma.$disconnect();
+    }
+    if (app && typeof app.close === 'function') {
+      await app.close();
+    }
   });
 
   it('should allow multiple evaluations for a single clinical case', async () => {
