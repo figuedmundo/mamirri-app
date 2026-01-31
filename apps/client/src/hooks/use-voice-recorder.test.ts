@@ -32,8 +32,8 @@ describe('useVoiceRecorder', () => {
       return mockMediaRecorder;
     });
 
-    global.URL.createObjectURL = vi.fn().mockReturnValue('mock-url');
-    global.URL.revokeObjectURL = vi.fn();
+    (window as any).URL.createObjectURL = vi.fn().mockReturnValue('mock-url');
+    (window as any).URL.revokeObjectURL = vi.fn();
 
     vi.useFakeTimers();
   });

@@ -17,7 +17,7 @@ describe('VideoRecorder', () => {
     vi.clearAllMocks();
 
     // Mock navigator.mediaDevices.getUserMedia
-    Object.defineProperty(global.navigator, 'mediaDevices', {
+    Object.defineProperty(window.navigator, 'mediaDevices', {
       value: {
         getUserMedia: vi.fn().mockResolvedValue({
           getTracks: () => [{ stop: vi.fn() }],
@@ -41,8 +41,8 @@ describe('VideoRecorder', () => {
     } as unknown as typeof MediaRecorder;
 
     // Mock URL.createObjectURL
-    global.URL.createObjectURL = vi.fn(() => 'blob:mock-url');
-    global.URL.revokeObjectURL = vi.fn();
+    (window as any).URL.createObjectURL = vi.fn(() => 'blob:mock-url');
+    (window as any).URL.revokeObjectURL = vi.fn();
   });
 
   it('renders initial idle state correctly', () => {
