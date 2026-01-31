@@ -90,7 +90,7 @@ export class PatientsService {
                         'Masaje descontracturante',
                       ],
                       objectives:
-                        'Alivio del dolor and reducción de contracturas',
+                        'Alivio del dolor y reducción de contracturas',
                     },
                     {
                       number: 2,
@@ -101,7 +101,7 @@ export class PatientsService {
                         'Movilidad articular',
                         'Termoterapia',
                       ],
-                      objectives: 'Iniciar estiramientos and mejorar movilidad',
+                      objectives: 'Iniciar estiramientos y mejorar movilidad',
                     },
                     {
                       number: 3,
@@ -112,7 +112,7 @@ export class PatientsService {
                         'Fortalecimiento isométrico',
                         'Propiocepción',
                       ],
-                      objectives: 'Ganancia de flexibilidad and estabilidad',
+                      objectives: 'Ganancia de flexibilidad y estabilidad',
                     },
                     {
                       number: 4,
@@ -124,7 +124,7 @@ export class PatientsService {
                         'Trabajo funcional',
                       ],
                       objectives:
-                        'Fortalecimiento muscular and ejercicios terapéuticos',
+                        'Fortalecimiento muscular y ejercicios terapéuticos',
                     },
                     {
                       number: 5,
@@ -136,7 +136,7 @@ export class PatientsService {
                         'Retorno a actividades',
                       ],
                       objectives:
-                        'Fortalecimiento funcional and preparación para alta',
+                        'Fortalecimiento funcional y preparación para alta',
                     },
                   ],
                 },
