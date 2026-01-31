@@ -53,7 +53,7 @@ export class PatientsService {
   ): Promise<Patient> {
     const { birthDate, ...rest } = createPatientDto;
 
-    return this.prisma.$transaction(async (tx) => {
+    const patient = await this.prisma.$transaction(async (tx) => {
       const patient = await tx.patient.create({
         data: {
           ...rest,
@@ -90,7 +90,7 @@ export class PatientsService {
                         'Masaje descontracturante',
                       ],
                       objectives:
-                        'Alivio del dolor y reducción de contracturas',
+                        'Alivio del dolor and reducción de contracturas',
                     },
                     {
                       number: 2,
@@ -101,7 +101,7 @@ export class PatientsService {
                         'Movilidad articular',
                         'Termoterapia',
                       ],
-                      objectives: 'Iniciar estiramientos y mejorar movilidad',
+                      objectives: 'Iniciar estiramientos and mejorar movilidad',
                     },
                     {
                       number: 3,
@@ -112,7 +112,7 @@ export class PatientsService {
                         'Fortalecimiento isométrico',
                         'Propiocepción',
                       ],
-                      objectives: 'Ganancia de flexibilidad y estabilidad',
+                      objectives: 'Ganancia de flexibilidad and estabilidad',
                     },
                     {
                       number: 4,
@@ -124,7 +124,7 @@ export class PatientsService {
                         'Trabajo funcional',
                       ],
                       objectives:
-                        'Fortalecimiento muscular y ejercicios terapéuticos',
+                        'Fortalecimiento muscular and ejercicios terapéuticos',
                     },
                     {
                       number: 5,
@@ -136,7 +136,7 @@ export class PatientsService {
                         'Retorno a actividades',
                       ],
                       objectives:
-                        'Fortalecimiento funcional y preparación para alta',
+                        'Fortalecimiento funcional and preparación para alta',
                     },
                   ],
                 },
@@ -156,6 +156,8 @@ export class PatientsService {
 
       return patient;
     });
+
+    return patient;
   }
 
   async findAll(

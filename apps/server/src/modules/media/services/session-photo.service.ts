@@ -49,7 +49,11 @@ export class SessionPhotoService {
       },
     });
 
-    return { ...photo, url: signedUrl };
+    const result: SessionPhoto & { url: string } = {
+      ...photo,
+      url: signedUrl,
+    };
+    return result;
   }
 
   async getPhotos(

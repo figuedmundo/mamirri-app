@@ -81,7 +81,11 @@ export class MediaService {
       },
     });
 
-    return { ...footprint, url: signedUrl };
+    const result: Footprint & { url: string } = {
+      ...footprint,
+      url: signedUrl,
+    };
+    return result;
   }
 
   async uploadPostureVideo(
@@ -108,7 +112,11 @@ export class MediaService {
       },
     });
 
-    return { ...video, url: signedUrl };
+    const result: PostureVideo & { url: string } = {
+      ...video,
+      url: signedUrl,
+    };
+    return result;
   }
 
   async uploadVoiceNote(
