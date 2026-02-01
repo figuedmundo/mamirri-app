@@ -153,7 +153,7 @@ export function TreatmentTimeline({
         }
 
         toast({
-          title: 'Sesion actualizada',
+          title: 'Sesión actualizada',
           description: 'Los cambios se guardaron correctamente.',
         });
         onSessionUpdated?.({
@@ -215,6 +215,11 @@ export function TreatmentTimeline({
             variant: 'default',
           });
         }
+
+        toast({
+          title: 'Sesión creada',
+          description: 'La sesión se ha registrado correctamente.',
+        });
         onSessionCreated?.(newSession);
       }
       setIsFormOpen(false);

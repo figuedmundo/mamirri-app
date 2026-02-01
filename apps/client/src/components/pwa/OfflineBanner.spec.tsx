@@ -41,7 +41,7 @@ describe('OfflineBanner', () => {
     expect(banner).toHaveClass('bg-amber-50');
   });
 
-  it('renders restored banner when online after being offline', () => {
+  it('renders restored banner when online after being offline', async () => {
     mockUseOnlineStatus.mockReturnValue({
       isOnline: true,
       isOffline: false,
@@ -50,13 +50,13 @@ describe('OfflineBanner', () => {
 
     render(<OfflineBanner />);
 
-    const banner = screen.getByRole('alert');
+    const banner = await screen.findByRole('alert');
     expect(banner).toHaveTextContent('Conexión restaurada');
     // Check for success styling classes
     expect(banner).toHaveClass('bg-green-50');
   });
 
-  it('auto-dismisses success banner after 3 seconds', () => {
+  it('auto-dismisses success banner after 3 seconds', async () => {
     vi.useFakeTimers();
 
     mockUseOnlineStatus.mockReturnValue({
@@ -66,10 +66,15 @@ describe('OfflineBanner', () => {
     });
 
     const { container } = render(<OfflineBanner />);
+
+    await act(async () => {
+      vi.advanceTimersByTime(0);
+    });
+
     expect(screen.getByRole('alert')).toBeInTheDocument();
 
     // Fast forward 3 seconds
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(3000);
     });
 

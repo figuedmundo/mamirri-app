@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Headers, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Headers } from '@nestjs/common';
 import { LoggerService } from './logger.service';
 import { LogEntry, LogLevel } from '@mamirri/logger';
 

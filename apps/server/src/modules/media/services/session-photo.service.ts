@@ -7,7 +7,15 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { StorageService } from '../../storage/storage.service';
-import { SessionPhoto } from '@prisma/client';
+
+export interface SessionPhotoWithUrl {
+  id: string;
+  sessionId: string;
+  storageKey: string;
+  caption: string | null;
+  capturedAt: Date;
+  url: string;
+}
 
 // Define File interface locally since it's not exported from StorageService
 interface File {
@@ -33,7 +41,7 @@ export class SessionPhotoService {
     file: File,
     therapistId: string,
     caption?: string,
-  ): Promise<SessionPhoto & { url: string }> {
+  ): Promise<SessionPhotoWithUrl> {
     await this.verifySessionOwnership(sessionId, therapistId);
 
     const path = `sessions/${sessionId}/photos`;
@@ -49,13 +57,21 @@ export class SessionPhotoService {
       },
     });
 
-    return { ...photo, url: signedUrl };
+    const result: SessionPhotoWithUrl = {
+      id: photo.id,
+      sessionId: photo.sessionId,
+      storageKey: photo.storageKey,
+      caption: photo.caption,
+      capturedAt: photo.capturedAt,
+      url: signedUrl,
+    };
+    return result;
   }
 
   async getPhotos(
     sessionId: string,
     therapistId: string,
-  ): Promise<(SessionPhoto & { url: string })[]> {
+  ): Promise<SessionPhotoWithUrl[]> {
     await this.verifySessionOwnership(sessionId, therapistId);
 
     const photos = await this.prisma.sessionPhoto.findMany({
@@ -67,13 +83,29 @@ export class SessionPhotoService {
       photos.map(async (photo) => {
         try {
           const url = await this.storage.getFileUrl(photo.storageKey);
-          return { ...photo, url };
+          const result: SessionPhotoWithUrl = {
+            id: photo.id,
+            sessionId: photo.sessionId,
+            storageKey: photo.storageKey,
+            caption: photo.caption,
+            capturedAt: photo.capturedAt,
+            url,
+          };
+          return result;
         } catch (error) {
           this.logger.error(
             `Failed to generate URL for photo ${photo.id}`,
             error,
           );
-          return { ...photo, url: '' }; // Handle missing files gracefully
+          const result: SessionPhotoWithUrl = {
+            id: photo.id,
+            sessionId: photo.sessionId,
+            storageKey: photo.storageKey,
+            caption: photo.caption,
+            capturedAt: photo.capturedAt,
+            url: '',
+          };
+          return result;
         }
       }),
     );

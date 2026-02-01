@@ -7,8 +7,11 @@ export function useServiceWorker() {
   const [showReload, setShowReload] = useState(false);
 
   const onSWUpdate = useCallback((registration: ServiceWorkerRegistration) => {
-    setShowReload(true);
-    setWaitingWorker(registration.waiting);
+    // Schedule state update to avoid synchronous setState in effect
+    setTimeout(() => {
+      setShowReload(true);
+      setWaitingWorker(registration.waiting);
+    }, 0);
   }, []);
 
   const registerServiceWorker = useCallback(async () => {

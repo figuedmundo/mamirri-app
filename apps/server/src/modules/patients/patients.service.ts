@@ -53,7 +53,7 @@ export class PatientsService {
   ): Promise<Patient> {
     const { birthDate, ...rest } = createPatientDto;
 
-    return this.prisma.$transaction(async (tx) => {
+    const patient = await this.prisma.$transaction(async (tx) => {
       const patient = await tx.patient.create({
         data: {
           ...rest,
@@ -156,6 +156,8 @@ export class PatientsService {
 
       return patient;
     });
+
+    return patient;
   }
 
   async findAll(
@@ -273,8 +275,8 @@ export class PatientsService {
                     note.audioUrl = await this.storageService.getFileUrl(
                       note.audioUrl,
                     );
-                  } catch (e) {
-                    // Keep original if signing fails
+                  } catch {
+                    // Ignore signing errors
                   }
                 }
                 return note;
@@ -290,7 +292,9 @@ export class PatientsService {
                   footprint.url = await this.storageService.getFileUrl(
                     footprint.url,
                   );
-                } catch (e) {}
+                } catch {
+                  // Ignore signing errors
+                }
               }
             }
           }
@@ -301,7 +305,9 @@ export class PatientsService {
               if (video.url && !video.url.startsWith('http')) {
                 try {
                   video.url = await this.storageService.getFileUrl(video.url);
-                } catch (e) {}
+                } catch {
+                  // Ignore signing errors
+                }
               }
             }
           }
@@ -324,7 +330,9 @@ export class PatientsService {
                     note.audioUrl = await this.storageService.getFileUrl(
                       note.audioUrl,
                     );
-                  } catch (e) {}
+                  } catch {
+                    // Ignore signing errors
+                  }
                 }
                 return note;
               }),
@@ -335,14 +343,12 @@ export class PatientsService {
           if (session.photos) {
             for (const photo of session.photos) {
               // SessionPhoto uses storageKey, client expects url
-              const key = (photo as any).storageKey;
+              const key = photo.storageKey;
               if (key) {
                 try {
-                  (photo as any).url =
-                    await this.storageService.getFileUrl(key);
-                } catch (e) {
-                  // Fallback if signing fails
-                  (photo as any).url = key;
+                  photo.url = await this.storageService.getFileUrl(key);
+                } catch {
+                  photo.url = key;
                 }
               }
             }

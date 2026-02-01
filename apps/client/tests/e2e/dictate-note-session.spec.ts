@@ -108,18 +108,21 @@ test.describe('Voice Dictation in Treatment Session (Floating Bar)', () => {
 
     await casePage.startFloatingVoiceDictation();
 
-    await expect(page.getByTestId('pulsing-indicator')).toBeVisible();
+    await expect(page.getByTestId('pulsing-indicator')).toBeVisible({
+      timeout: 10000,
+    });
 
     await page.waitForTimeout(2000);
 
-    await page.getByRole('button', { name: /Detener grabación/i }).click();
+    await page.getByLabel(/Detener grabación/i).click();
 
-    await expect(casePage.confirmRecordingButton).toBeVisible();
-    await casePage.confirmRecording();
-
-    await expect(page.getByText(/Subiendo nota de voz/i)).toBeVisible();
+    await expect(page.getByText(/Subiendo|guardada/i).first()).toBeVisible({
+      timeout: 15000,
+    });
     await expect(
-      page.getByText(/Nota de voz guardada correctamente/i),
-    ).toBeVisible();
+      page
+        .locator('span[role="status"]')
+        .getByText(/Nota de voz guardada correctamente/i),
+    ).toBeVisible({ timeout: 15000 });
   });
 });

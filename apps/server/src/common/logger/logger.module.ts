@@ -15,10 +15,8 @@ import { LogLevel } from '@mamirri/logger';
 
         return new LoggerService({
           level,
-          format: configService.get('LOG_FORMAT', 'json') as 'json' | 'pretty',
-          output: configService.get('LOG_OUTPUT', 'stdout') as
-            | 'stdout'
-            | 'console',
+          format: configService.get('LOG_FORMAT', 'json'),
+          output: configService.get('LOG_OUTPUT', 'stdout'),
           serviceName: configService.get('SERVICE_NAME', 'mamirri-server'),
           version: configService.get('VERSION', '0.0.1'),
           environment: configService.get('NODE_ENV', 'development'),

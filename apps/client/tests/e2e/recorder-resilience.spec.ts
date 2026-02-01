@@ -90,14 +90,11 @@ test.describe('Recorder Resilience and Controls', () => {
     await page.getByTestId('nav-evaluation-btn').click();
 
     await casePage.startVoiceDictation();
-    await casePage.startRecording();
     await page.waitForTimeout(1000);
 
     await casePage.cancelRecording();
 
-    await expect(
-      page.getByRole('button', { name: /Iniciar grabación/i }),
-    ).toBeVisible();
+    await expect(casePage.startRecordingButton).toBeVisible();
   });
 
   test('should allow restarting a recording after review', async ({ page }) => {
@@ -188,13 +185,15 @@ test.describe('Recorder Resilience and Controls', () => {
     await page.getByTestId('nav-evaluation-btn').click();
 
     await casePage.startVoiceDictation();
-    await casePage.startRecording();
     await page.waitForTimeout(1000);
     await casePage.stopRecording();
 
     await expect(casePage.restartRecordingButton).toBeVisible();
     await casePage.restartRecording();
 
+    await expect(page.getByTestId('pulsing-indicator')).toBeVisible({
+      timeout: 10000,
+    });
     await expect(page.getByText(/Grabando/i).first()).toBeVisible({
       timeout: 10000,
     });

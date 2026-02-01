@@ -80,6 +80,7 @@ export function VoiceRecorder({
 
   const handleRestart = () => {
     resetRecording();
+    void startRecording();
   };
 
   const handleCancel = () => {
@@ -130,7 +131,7 @@ export function VoiceRecorder({
           onClick={() => void startRecording()}
           variant="outline"
           className="flex items-center gap-2"
-          data-testid="start-voice-dictation-btn"
+          data-testid="start-recording-btn"
         >
           <svg
             className="w-5 h-5 text-rose-500"
@@ -148,7 +149,7 @@ export function VoiceRecorder({
         <div className="bg-rose-50 dark:bg-rose-900/20 rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
-              <div className="relative">
+              <div className="relative" data-testid="pulsing-indicator">
                 <div className="w-12 h-12 rounded-full bg-rose-500 flex items-center justify-center animate-pulse">
                   <svg
                     className="w-6 h-6 text-white"
@@ -175,6 +176,7 @@ export function VoiceRecorder({
                 variant="ghost"
                 size="sm"
                 className="text-slate-600 dark:text-slate-400"
+                data-testid="cancel-recording"
               >
                 Cancelar
               </Button>
@@ -247,6 +249,7 @@ export function VoiceRecorder({
               variant="default"
               size="sm"
               className="bg-teal-600 hover:bg-teal-700"
+              data-testid="confirm-recording"
             >
               Confirmar
             </Button>

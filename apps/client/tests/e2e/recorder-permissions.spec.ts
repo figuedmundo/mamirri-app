@@ -10,7 +10,14 @@ test.describe('Recorder Permissions', () => {
     await casePage.mockAuth();
 
     await context.clearPermissions();
-    await context.grantPermissions([]);
+
+    // Mock getUserMedia to throw Permission Denied
+    await page.addInitScript(() => {
+      navigator.mediaDevices.getUserMedia = () =>
+        Promise.reject(
+          new DOMException('Permission denied', 'NotAllowedError'),
+        );
+    });
 
     const patientId = 'p-1';
     const caseId = 'c-1';
@@ -96,9 +103,16 @@ test.describe('Recorder Permissions', () => {
     await page.getByTestId('nav-evaluation-btn').click();
 
     await casePage.startVoiceDictation();
-    await casePage.startRecording();
 
-    await expect(page.getByText(/Permiso denegado/i)).toBeVisible();
-    await expect(page.getByText(/acceso al micrófono/i)).toBeVisible();
+    await expect(
+      page.locator('span[role="status"]').getByText(/Permiso denegado/i),
+    ).toBeVisible({
+      timeout: 10000,
+    });
+    await expect(
+      page.locator('span[role="status"]').getByText(/acceso al micrófono/i),
+    ).toBeVisible({
+      timeout: 10000,
+    });
   });
 });

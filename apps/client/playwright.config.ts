@@ -21,6 +21,7 @@ export default defineConfig({
           args: [
             '--use-fake-ui-for-media-stream',
             '--use-fake-device-for-media-stream',
+            '--allow-file-access-from-files',
             '--use-file-for-fake-audio-capture=tests/e2e/fixtures/sample-physio-note.wav',
           ],
         },

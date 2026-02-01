@@ -9,15 +9,21 @@ export function OfflineBanner() {
 
   useEffect(() => {
     if (isOnline && wasOffline) {
-      setShowRestored(true);
-      const timer = setTimeout(() => {
-        setShowRestored(false);
-      }, 3000);
-      return () => clearTimeout(timer);
+      setTimeout(() => setShowRestored(true), 0);
     } else if (isOffline) {
-      setShowRestored(false);
+      setTimeout(() => setShowRestored(false), 0);
     }
   }, [isOnline, wasOffline, isOffline]);
+
+  useEffect(() => {
+    if (!showRestored) return;
+
+    const timer = setTimeout(() => {
+      setShowRestored(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [showRestored]);
 
   if (isOffline) {
     return (

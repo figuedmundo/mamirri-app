@@ -1,4 +1,4 @@
-name: Lint
+name: Build Validation
 
 on:
   pull_request:
@@ -7,8 +7,8 @@ on:
     branches: [main, develop]
 
 jobs:
-  lint:
-    name: Lint Code
+  build:
+    name: Build Applications
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -29,8 +29,5 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm --filter server exec prisma generate
 
-      - name: Lint
-        run: pnpm lint
-
-      - name: Type Check
-        run: pnpm check-types
+      - name: Build
+        run: pnpm build

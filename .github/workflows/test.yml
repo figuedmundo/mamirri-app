@@ -10,6 +10,30 @@ jobs:
   test:
     name: Run Unit Tests
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mamirri_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mamirri_test
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: 5432
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/mamirri_test
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,8 +50,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h 127.0.0.1 -p 5432 -U postgres; do
+            echo "Waiting for postgres..."
+            sleep 1
+          done
+
       - name: Generate Prisma Client
         run: pnpm --filter server exec prisma generate
+
+      - name: Apply Prisma schema
+        run: pnpm --filter server exec prisma db push --accept-data-loss
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
 
       - name: Run Tests
         run: pnpm test

@@ -73,8 +73,8 @@ describe('Ajustes Page - PWA Cache', () => {
     fireEvent.click(confirmButton);
 
     await waitFor(() => {
-      expect((window as any).caches.delete).toHaveBeenCalledWith('cache-v1');
-      expect((window as any).caches.delete).toHaveBeenCalledWith('cache-v2');
+      expect(window.caches.delete).toHaveBeenCalledWith('cache-v1');
+      expect(window.caches.delete).toHaveBeenCalledWith('cache-v2');
     });
   });
 });

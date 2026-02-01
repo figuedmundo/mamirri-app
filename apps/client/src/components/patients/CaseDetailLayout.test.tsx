@@ -233,6 +233,7 @@ const mockVoiceNote: VoiceNote = {
   audioUrl: 'https://example.com/audio.mp3',
   transcription: 'Paciente reporta mejoría en flexibilidad de columna',
   durationSeconds: 30,
+  transcriptionStatus: 'completed',
 };
 
 const mockSession1: TreatmentSession = {

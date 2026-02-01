@@ -103,6 +103,7 @@ const mockClinicalCase: ClinicalCase = {
           audioUrl: 'https://example.com/audio.mp3',
           transcription: 'Paciente progresa adecuadamente',
           durationSeconds: 45,
+          transcriptionStatus: 'completed',
         },
       ],
     },

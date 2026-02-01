@@ -14,7 +14,7 @@ vi.mock('./CameraCapture', () => ({
   CameraCapture: ({
     onCapture,
   }: {
-    onCapture: (blob: Blob, meta: any) => void;
+    onCapture: (blob: Blob, meta: unknown) => void;
   }) => (
     <button
       onClick={() =>
@@ -35,7 +35,7 @@ vi.mock('./VideoRecorder', () => ({
   VideoRecorder: ({
     onCapture,
   }: {
-    onCapture: (blob: Blob, meta: any) => void;
+    onCapture: (blob: Blob, meta: unknown) => void;
   }) => (
     <button onClick={() => onCapture(new Blob(), { durationSeconds: 10 })}>
       Mock Video Capture

@@ -3,7 +3,6 @@ import { SanitizationService } from './sanitization.service';
 import { AuditService } from './audit.service';
 import { LogsController } from './logs.controller';
 import { LoggerService } from './logger.service';
-import { LoggerConfig } from '@mamirri/logger';
 
 describe('Backend Integration', () => {
   let sanitizationService: SanitizationService;

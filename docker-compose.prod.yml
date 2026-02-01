@@ -12,7 +12,7 @@ services:
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       - /var/backups/physio:/backups:ro
     networks:
-      - physio_network
+      - homelab_net
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
       interval: 5s
@@ -31,7 +31,7 @@ services:
     volumes:
       - minio_data:/data
     networks:
-      - physio_network
+      - homelab_net
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
       interval: 30s
@@ -46,7 +46,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - physio_network
+      - homelab_net
     restart: unless-stopped
 
   minio-provisioner:
@@ -63,13 +63,9 @@ services:
       exit 0;
       "
     networks:
-      - physio_network
+      - homelab_net
 
   server:
-    # Use pre-built image or build on server if registry not set up
-    # Spec says "use pre-built", but since we didn't set up registry push in CI,
-    # we will use build context for now to ensure it works on home lab.
-    # User can change this to image: ghcr.io/... later.
     build:
       context: .
       dockerfile: docker/server/Dockerfile
@@ -89,7 +85,6 @@ services:
       MINIO_USE_SSL: 'false'
       NODE_ENV: production
       SERVER_HOST: ${SERVER_HOST:-localhost}
-    # No ports exposed directly, Caddy will proxy via internal network
     volumes:
       - /var/backups/physio:/backups:ro
     depends_on:
@@ -98,7 +93,20 @@ services:
       minio-provisioner:
         condition: service_completed_successfully
     networks:
-      - physio_network
+      - homelab_net
+
+  client:
+    build:
+      context: .
+      dockerfile: docker/client/Dockerfile
+    container_name: physio_client
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - server
+    networks:
+      - homelab_net
+    restart: unless-stopped
 
 volumes:
   postgres_data:
@@ -106,5 +114,5 @@ volumes:
   redis_data:
 
 networks:
-  physio_network:
-    driver: bridge
+  homelab_net:
+    external: true
