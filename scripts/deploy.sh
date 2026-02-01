@@ -62,13 +62,34 @@ fi
 # Start containers
 run_cmd docker compose -f "$COMPOSE_FILE" up -d
 
-# Wait for health checks (simple wait)
-log "Waiting for services to start..."
+# Wait for health checks
+log "Waiting for services to become healthy..."
 if [ "$DRY_RUN" = false ]; then
-    sleep 10
-    # Ideally verify health status
-    if docker compose -f "$COMPOSE_FILE" ps | grep -q "unhealthy"; then
-        error_exit "Some services are unhealthy!"
+    # Wait up to 60 seconds for services to report healthy
+    ATTEMPTS=0
+    MAX_ATTEMPTS=12 # 12 * 5s = 60s
+    while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+        sleep 5
+        # Check if any container is unhealthy
+        if docker compose -f "$COMPOSE_FILE" ps | grep -q "unhealthy"; then
+            error_exit "One or more services reported as unhealthy!"
+        fi
+        
+        # Check if server and client are specifically healthy
+        SERVER_STATE=$(docker inspect --format='{{.State.Health.Status}}' physio_server 2>/dev/null)
+        CLIENT_STATE=$(docker inspect --format='{{.State.Health.Status}}' physio_client 2>/dev/null)
+        
+        if [ "$SERVER_STATE" = "healthy" ] && [ "$CLIENT_STATE" = "healthy" ]; then
+            log "All critical services (server, client) are healthy!"
+            break
+        fi
+        
+        log "Waiting for health checks... (Attempt $((ATTEMPTS+1))/$MAX_ATTEMPTS) [Server: ${SERVER_STATE:-unknown}, Client: ${CLIENT_STATE:-unknown}]"
+        ATTEMPTS=$((ATTEMPTS+1))
+    done
+
+    if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
+        error_exit "Timeout waiting for services to become healthy"
     fi
 fi
 
