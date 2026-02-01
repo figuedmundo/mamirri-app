@@ -12,6 +12,7 @@ RUN pnpm install --filter client...
 
 COPY apps/client ./apps/client
 
+COPY turbo.json ./
 RUN pnpm run build --filter client...
 
 
