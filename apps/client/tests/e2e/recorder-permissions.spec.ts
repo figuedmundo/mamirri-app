@@ -13,7 +13,6 @@ test.describe('Recorder Permissions', () => {
 
     // Mock getUserMedia to throw Permission Denied
     await page.addInitScript(() => {
-      // @ts-ignore
       navigator.mediaDevices.getUserMedia = () =>
         Promise.reject(
           new DOMException('Permission denied', 'NotAllowedError'),
