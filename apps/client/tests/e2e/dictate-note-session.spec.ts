@@ -108,7 +108,9 @@ test.describe('Voice Dictation in Treatment Session (Floating Bar)', () => {
 
     await casePage.startFloatingVoiceDictation();
 
-    await expect(page.getByText(/Grabando/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Grabando/i).first()).toBeVisible({
+      timeout: 10000,
+    });
     await expect(page.getByTestId('pulsing-indicator')).toBeVisible({
       timeout: 10000,
     });

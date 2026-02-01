@@ -193,6 +193,9 @@ test.describe('Recorder Resilience and Controls', () => {
     await expect(casePage.restartRecordingButton).toBeVisible();
     await casePage.restartRecording();
 
+    await expect(page.getByTestId('pulsing-indicator')).toBeVisible({
+      timeout: 10000,
+    });
     await expect(page.getByText(/Grabando/i).first()).toBeVisible({
       timeout: 10000,
     });
