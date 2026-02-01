@@ -105,12 +105,12 @@ test.describe('Recorder Permissions', () => {
     await casePage.startVoiceDictation();
 
     await expect(
-      page.locator('div[role="status"]').getByText(/Permiso denegado/i),
+      page.locator('span[role="status"]').getByText(/Permiso denegado/i),
     ).toBeVisible({
       timeout: 10000,
     });
     await expect(
-      page.locator('div[role="status"]').getByText(/acceso al micrófono/i),
+      page.locator('span[role="status"]').getByText(/acceso al micrófono/i),
     ).toBeVisible({
       timeout: 10000,
     });

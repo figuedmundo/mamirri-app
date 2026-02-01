@@ -27,22 +27,13 @@ export class CasePage extends BasePage {
     this.addSessionButton = page.getByRole('button', {
       name: /Agregar Sesión|Guardar Cambios/i,
     });
-    this.dictateVoiceButton = page.getByTestId('start-voice-dictation-btn');
-    this.startRecordingButton = page.getByRole('button', {
-      name: /Iniciar grabación/i,
-    });
+    this.dictateVoiceButton = page.getByTestId('start-recording-btn');
+    this.startRecordingButton = page.getByTestId('start-recording-btn');
     this.stopRecordingButton = page.getByRole('button', { name: /Detener/i });
     this.confirmRecordingButton = page
       .getByTestId('confirm-recording')
       .or(page.getByRole('button', { name: /Confirmar/i }));
-    this.cancelRecordingButton = page.getByRole('button', {
-      name: /Cancelar/i,
-    });
-    this.cancelRecordingButton = page
-      .locator('div.bg-rose-50')
-      .getByRole('button', {
-        name: /Cancelar/i,
-      });
+    this.cancelRecordingButton = page.getByTestId('cancel-recording');
     this.restartRecordingButton = page.getByRole('button', {
       name: /Volver a grabar/i,
     });

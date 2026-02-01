@@ -59,8 +59,7 @@ export function useVoiceRecorder({
     ) {
       mediaRecorderRef.current.stop();
     }
-    cleanup();
-  }, [cleanup]);
+  }, []);
 
   const startRecording = React.useCallback(async () => {
     setError(null);
@@ -83,6 +82,10 @@ export function useVoiceRecorder({
       };
 
       mediaRecorder.onstop = () => {
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
         const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         setAudioBlob(blob);
         const url = URL.createObjectURL(blob);

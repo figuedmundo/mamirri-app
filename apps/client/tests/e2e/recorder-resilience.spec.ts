@@ -94,9 +94,7 @@ test.describe('Recorder Resilience and Controls', () => {
 
     await casePage.cancelRecording();
 
-    await expect(
-      page.getByRole('button', { name: /Iniciar grabación/i }),
-    ).toBeVisible();
+    await expect(casePage.startRecordingButton).toBeVisible();
   });
 
   test('should allow restarting a recording after review', async ({ page }) => {
