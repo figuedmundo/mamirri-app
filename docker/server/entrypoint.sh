@@ -11,7 +11,6 @@ echo "Database is ready! Running migrations..."
 npx prisma migrate deploy
 
 echo "Running seed script..."
-export DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
 npx prisma db seed
 
 echo "Initialization complete. Starting application..."

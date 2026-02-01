@@ -20,9 +20,17 @@ if (connectionString && connectionString.includes('${')) {
 }
 
 async function main() {
-  const pool = new Pool({
+  const poolConfig: any = {
     connectionString,
-  });
+  };
+
+  // Use explicit credentials if available to avoid URL encoding issues with special characters
+  if (process.env.POSTGRES_USER) poolConfig.user = process.env.POSTGRES_USER;
+  if (process.env.POSTGRES_PASSWORD)
+    poolConfig.password = process.env.POSTGRES_PASSWORD;
+  if (process.env.POSTGRES_DB) poolConfig.database = process.env.POSTGRES_DB;
+
+  const pool = new Pool(poolConfig);
   const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });
 
