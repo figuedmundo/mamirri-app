@@ -12,12 +12,15 @@ vi.mock('../hooks/use-toast', () => ({
 
 describe('Ajustes Page - PWA Cache', () => {
   beforeEach(() => {
+    // create a typed mock for the caches object to avoid using `any`
+    const mockCaches = {
+      keys: vi.fn().mockResolvedValue(['cache-v1', 'cache-v2']),
+      delete: vi.fn().mockResolvedValue(true),
+    } as unknown as CacheStorage;
+
     Object.defineProperty(window, 'caches', {
       writable: true,
-      value: {
-        keys: vi.fn().mockResolvedValue(['cache-v1', 'cache-v2']),
-        delete: vi.fn().mockResolvedValue(true),
-      },
+      value: mockCaches,
     });
 
     Object.defineProperty(window, 'location', {
@@ -58,6 +61,12 @@ describe('Ajustes Page - PWA Cache', () => {
   });
 
   it('clears cache and reloads when confirmed', async () => {
+    // recreate the typed mock so we can assert against it directly
+    const mockCaches = (window.caches as unknown) as {
+      keys: () => Promise<string[]>;
+      delete: (k: string) => Promise<boolean>;
+    };
+
     render(
       <>
         <Toaster />
@@ -73,8 +82,8 @@ describe('Ajustes Page - PWA Cache', () => {
     fireEvent.click(confirmButton);
 
     await waitFor(() => {
-      expect((window as any).caches.delete).toHaveBeenCalledWith('cache-v1');
-      expect((window as any).caches.delete).toHaveBeenCalledWith('cache-v2');
+      expect(mockCaches.delete).toHaveBeenCalledWith('cache-v1');
+      expect(mockCaches.delete).toHaveBeenCalledWith('cache-v2');
     });
   });
 });
