@@ -14,7 +14,7 @@
       "dependsOn": ["^build"]
     },
     "test": {
-      "dependsOn": ["^test"],
+      "dependsOn": ["^build"],
       "env": [
         "DATABASE_URL",
         "POSTGRES_USER",
