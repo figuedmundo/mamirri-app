@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { CasePage } from './pages/CasePage';
 
 test('record treatment session flow', async ({ page }) => {

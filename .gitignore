@@ -40,3 +40,6 @@ yarn-error.log*
 .docs/
 
 *.log
+
+playwright-report/
+test-results/

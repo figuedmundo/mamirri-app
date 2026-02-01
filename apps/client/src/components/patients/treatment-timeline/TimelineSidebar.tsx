@@ -63,6 +63,7 @@ export function TimelineSidebar({
                     <button
                       key={session.id}
                       onClick={() => onSelectSession(session.id)}
+                      data-testid="sidebar-session-btn"
                       className={cn(
                         'w-full text-left p-3 rounded-lg text-sm transition-all border',
                         activeSessionId === session.id

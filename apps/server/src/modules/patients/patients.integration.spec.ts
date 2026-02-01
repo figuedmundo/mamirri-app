@@ -41,7 +41,12 @@ describe('Patients Integration (DB Layer)', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    if (prisma && typeof prisma.$disconnect === 'function') {
+      await prisma.$disconnect();
+    }
+    if (app && typeof app.close === 'function') {
+      await app.close();
+    }
   });
 
   it('should create a patient linked to a therapist', async () => {

@@ -1,0 +1,137 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
+import { PrismaService } from '../../prisma/prisma.service';
+import { StorageService } from '../storage/storage.service';
+import { TranscriptionService } from './transcription.service';
+import { VoiceNote } from '../media/media.service';
+
+@Injectable()
+export class TranscriptionProcessor {
+  private readonly logger = new Logger(TranscriptionProcessor.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly storage: StorageService,
+    private readonly transcriptionService: TranscriptionService,
+  ) {}
+
+  @Cron('*/30 * * * * *')
+  async handlePendingTranscriptions() {
+    this.logger.log('Checking for pending transcriptions...');
+    await this.processEvaluations();
+    await this.processSessions();
+  }
+
+  private async processEvaluations() {
+    const evaluations = await this.prisma.evaluation.findMany({
+      where: {
+        voiceNotes: {
+          string_contains: 'pending',
+        },
+      },
+    });
+
+    for (const evaluation of evaluations) {
+      const voiceNotes = evaluation.voiceNotes as unknown as VoiceNote[];
+      if (!Array.isArray(voiceNotes)) continue;
+
+      let updated = false;
+      const updatedNotes = await Promise.all(
+        voiceNotes.map(async (note) => {
+          if (note.transcriptionStatus === 'pending') {
+            updated = true;
+            return this.processNote(note);
+          }
+          return note;
+        }),
+      );
+
+      if (updated) {
+        await this.prisma.evaluation.update({
+          where: { id: evaluation.id },
+          data: { voiceNotes: updatedNotes as any },
+        });
+      }
+    }
+  }
+
+  private async processSessions() {
+    const sessions = await this.prisma.treatmentSession.findMany({
+      where: {
+        voiceNotes: {
+          string_contains: 'pending',
+        },
+      },
+    });
+
+    for (const session of sessions) {
+      const voiceNotes = session.voiceNotes as unknown as VoiceNote[];
+      if (!Array.isArray(voiceNotes)) continue;
+
+      let updated = false;
+      const updatedNotes = await Promise.all(
+        voiceNotes.map(async (note) => {
+          if (note.transcriptionStatus === 'pending') {
+            updated = true;
+            return this.processNote(note);
+          }
+          return note;
+        }),
+      );
+
+      if (updated) {
+        await this.prisma.treatmentSession.update({
+          where: { id: session.id },
+          data: { voiceNotes: updatedNotes as any },
+        });
+      }
+    }
+  }
+
+  private async processNote(note: VoiceNote): Promise<VoiceNote> {
+    try {
+      if ((note.retryCount || 0) >= 5) {
+        return {
+          ...note,
+          transcriptionStatus: 'failed',
+          transcriptionError: 'Max retries exceeded',
+        };
+      }
+
+      // getFile might throw if file not found in storage
+      const audioBuffer = await this.storage.getFile(note.audioUrl);
+      const filename = note.audioUrl.split('/').pop() || 'audio';
+
+      const result = await this.transcriptionService.transcribe(
+        audioBuffer,
+        filename,
+      );
+
+      if (result.status === 'completed') {
+        return {
+          ...note,
+          transcription: result.text,
+          transcriptionStatus: 'completed',
+          transcriptionError: undefined,
+        };
+      } else {
+        return {
+          ...note,
+          retryCount: (note.retryCount || 0) + 1,
+          transcriptionStatus: 'pending',
+          transcriptionError: result.error,
+        };
+      }
+    } catch (error: any) {
+      this.logger.error(
+        `Failed to process voice note ${note.audioUrl}: ${error.message}`,
+      );
+      return {
+        ...note,
+        retryCount: (note.retryCount || 0) + 1,
+        transcriptionStatus: 'pending',
+        transcriptionError: error.message,
+      };
+    }
+  }
+}

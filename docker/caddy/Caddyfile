@@ -1,0 +1,53 @@
+# Mamirri App - Caddy Configuration
+# Set these environment variables in your .env file:
+# MAMIRRI_DOMAIN=mamirri.figuedmundo.com
+# MAMIRRI_API_DOMAIN=mamirri-api.figuedmundo.com (optional - only if using separate API subdomain)
+
+# Option A: Single domain with API at /api path (RECOMMENDED - simpler)
+{$MAMIRRI_DOMAIN} {
+    # Route API requests to backend
+    handle_path /api/* {
+        reverse_proxy physio_server:3000
+    }
+
+    # Route all other requests to frontend
+    handle {
+        reverse_proxy physio_client:80
+    }
+
+    encode gzip
+
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+
+    log {
+        output file /var/log/caddy/mamirri-app.log {
+            roll_size 10MB
+            roll_keep 5
+        }
+    }
+}
+
+# Option B: Separate API subdomain (uncomment if preferred)
+# {$MAMIRRI_API_DOMAIN} {
+#     reverse_proxy physio_server:3000
+#     encode gzip
+#
+#     header {
+#         X-Content-Type-Options nosniff
+#         X-Frame-Options DENY
+#         X-XSS-Protection "1; mode=block"
+#         Referrer-Policy strict-origin-when-cross-origin
+#     }
+#
+#     log {
+#         output file /var/log/caddy/mamirri-api.log {
+#             roll_size 10MB
+#             roll_keep 5
+#         }
+#     }
+# }

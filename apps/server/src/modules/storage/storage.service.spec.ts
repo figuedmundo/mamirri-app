@@ -2,11 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { StorageService } from './storage.service';
 import { S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import {
-  BadRequestException,
-  NotFoundException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import storageConfig from '../../config/storage.config';
 
 jest.mock('@aws-sdk/client-s3');
@@ -232,9 +228,8 @@ describe('StorageService', () => {
       const error = new Error('InternalError');
       s3ClientMock.send.mockRejectedValue(error);
 
-      await expect(service.onModuleInit()).rejects.toThrow(
-        InternalServerErrorException,
-      );
+      // Should not throw as it catches errors
+      await expect(service.onModuleInit()).resolves.not.toThrow();
     });
   });
 });

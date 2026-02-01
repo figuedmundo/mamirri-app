@@ -1,15 +1,16 @@
 import {
   Controller,
   Post,
+  Get,
+  Delete,
   UseGuards,
   UseInterceptors,
   UploadedFile,
   Param,
   Body,
   HttpStatus,
-  ParseFilePipe,
-  MaxFileSizeValidator,
-  FileTypeValidator,
+  HttpCode,
+  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -19,20 +20,26 @@ import {
   ApiResponse,
   ApiConsumes,
   ApiBody,
+  ApiParam,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTherapist } from '../patients/decorators/current-therapist.decorator';
 import { MediaService } from './media.service';
+import { SessionPhotoService } from './services/session-photo.service';
 import { UploadFootprintDto } from './dto/upload-footprint.dto';
 import { UploadPostureVideoDto } from './dto/upload-posture-video.dto';
 import { UploadVoiceNoteDto } from './dto/upload-voice-note.dto';
+import { UploadSessionPhotoDto } from './dto/upload-session-photo.dto';
 
 @ApiTags('media')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('media')
 export class MediaController {
-  constructor(private readonly mediaService: MediaService) {}
+  constructor(
+    private readonly mediaService: MediaService,
+    private readonly sessionPhotoService: SessionPhotoService,
+  ) {}
 
   @Post('patients/:patientId/photos')
   @UseInterceptors(FileInterceptor('file'))
@@ -58,6 +65,9 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.mediaService.uploadPatientPhoto(patientId, file, user.userId);
   }
 
@@ -77,6 +87,10 @@ export class MediaController {
           type: 'string',
           enum: ['initial', 'final', 'followup'],
         },
+        side: {
+          type: 'string',
+          enum: ['left', 'right', 'unknown'],
+        },
       },
     },
   })
@@ -90,10 +104,14 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.mediaService.uploadFootprint(
       evaluationId,
       file,
       dto.type,
+      dto.side,
       user.userId,
     );
   }
@@ -130,6 +148,9 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.mediaService.uploadPostureVideo(
       evaluationId,
       file,
@@ -167,6 +188,9 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.mediaService.uploadVoiceNote(
       'evaluation',
       evaluationId,
@@ -204,6 +228,9 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentTherapist() user: any,
   ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
     return this.mediaService.uploadVoiceNote(
       'session',
       sessionId,
@@ -211,5 +238,146 @@ export class MediaController {
       dto.durationSeconds,
       user.userId,
     );
+  }
+
+  @Get('evaluations/:evaluationId/voice-notes/:voiceNoteId')
+  @ApiOperation({ summary: 'Get evaluation voice note status' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Voice note status retrieved successfully',
+  })
+  async getEvaluationVoiceNoteStatus(
+    @Param('evaluationId') evaluationId: string,
+    @Param('voiceNoteId') voiceNoteId: string,
+    @CurrentTherapist() user: any,
+  ) {
+    return this.mediaService.getVoiceNoteStatus(
+      'evaluation',
+      evaluationId,
+      voiceNoteId,
+      user.userId,
+    );
+  }
+
+  @Get('sessions/:sessionId/voice-notes/:voiceNoteId')
+  @ApiOperation({ summary: 'Get session voice note status' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Voice note status retrieved successfully',
+  })
+  async getSessionVoiceNoteStatus(
+    @Param('sessionId') sessionId: string,
+    @Param('voiceNoteId') voiceNoteId: string,
+    @CurrentTherapist() user: any,
+  ) {
+    return this.mediaService.getVoiceNoteStatus(
+      'session',
+      sessionId,
+      voiceNoteId,
+      user.userId,
+    );
+  }
+
+  // ============================================================================
+  // Session Photos
+  // ============================================================================
+
+  @Post('sessions/:sessionId/photos')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Upload a photo for a treatment session' })
+  @ApiConsumes('multipart/form-data')
+  @ApiParam({ name: 'sessionId', description: 'Treatment session ID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Photo file (JPEG/PNG)',
+        },
+        caption: {
+          type: 'string',
+          maxLength: 140,
+          description: 'Optional caption for the photo',
+        },
+      },
+      required: ['file'],
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Photo uploaded successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Session not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Access denied - session belongs to another therapist',
+  })
+  async uploadSessionPhoto(
+    @Param('sessionId') sessionId: string,
+    @Body() dto: UploadSessionPhotoDto,
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentTherapist() user: any,
+  ) {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
+    return this.sessionPhotoService.uploadPhoto(
+      sessionId,
+      file,
+      user.userId,
+      dto.caption,
+    );
+  }
+
+  @Get('sessions/:sessionId/photos')
+  @ApiOperation({ summary: 'List all photos for a treatment session' })
+  @ApiParam({ name: 'sessionId', description: 'Treatment session ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'List of session photos with signed URLs',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Session not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Access denied - session belongs to another therapist',
+  })
+  async getSessionPhotos(
+    @Param('sessionId') sessionId: string,
+    @CurrentTherapist() user: any,
+  ) {
+    return this.sessionPhotoService.getPhotos(sessionId, user.userId);
+  }
+
+  @Delete('sessions/:sessionId/photos/:photoId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a photo from a treatment session' })
+  @ApiParam({ name: 'sessionId', description: 'Treatment session ID' })
+  @ApiParam({ name: 'photoId', description: 'Photo ID to delete' })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Photo deleted successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Session or photo not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Access denied - session belongs to another therapist',
+  })
+  async deleteSessionPhoto(
+    @Param('sessionId') sessionId: string,
+    @Param('photoId') photoId: string,
+    @CurrentTherapist() user: any,
+  ) {
+    await this.sessionPhotoService.deletePhoto(sessionId, photoId, user.userId);
   }
 }

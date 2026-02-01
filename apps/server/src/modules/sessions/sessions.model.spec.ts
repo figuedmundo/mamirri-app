@@ -64,16 +64,25 @@ describe('TreatmentSession Model (Integration)', () => {
   });
 
   afterAll(async () => {
-    if (caseId)
-      await prisma.treatmentSession.deleteMany({
-        where: { clinicalCaseId: caseId },
-      });
-    if (caseId) await prisma.clinicalCase.deleteMany({ where: { id: caseId } });
-    if (patientId)
-      await prisma.patient.deleteMany({ where: { id: patientId } });
-    if (therapistId)
-      await prisma.user.deleteMany({ where: { id: therapistId } });
-    await prisma.$disconnect();
+    try {
+      if (prisma) {
+        if (caseId)
+          await prisma.treatmentSession.deleteMany({
+            where: { clinicalCaseId: caseId },
+          });
+        if (caseId)
+          await prisma.clinicalCase.deleteMany({ where: { id: caseId } });
+        if (patientId)
+          await prisma.patient.deleteMany({ where: { id: patientId } });
+        if (therapistId)
+          await prisma.user.deleteMany({ where: { id: therapistId } });
+        if (typeof prisma.$disconnect === 'function') {
+          await prisma.$disconnect();
+        }
+      }
+    } catch (e) {
+      console.error('Cleanup failed', e);
+    }
   });
 
   it('should create a session with default status DRAFT', async () => {

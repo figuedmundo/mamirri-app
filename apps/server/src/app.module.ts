@@ -9,13 +9,17 @@ import { ClinicalCasesModule } from './modules/clinical-cases/clinical-cases.mod
 import { SessionsModule } from './modules/sessions/sessions.module';
 import { MediaModule } from './modules/media/media.module';
 import { TreatmentPlansModule } from './modules/treatment-plans/treatment-plans.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import transcriptionConfig from './config/transcription.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '../../.env'],
+      load: [transcriptionConfig],
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     AuthModule,
     PatientsModule,

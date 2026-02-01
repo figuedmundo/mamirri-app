@@ -8,6 +8,14 @@ export class CasePage extends BasePage {
   readonly patientResponseInput: Locator;
   readonly observationsInput: Locator;
   readonly addSessionButton: Locator;
+  readonly dictateVoiceButton: Locator;
+  readonly startRecordingButton: Locator;
+  readonly stopRecordingButton: Locator;
+  readonly confirmRecordingButton: Locator;
+  readonly cancelRecordingButton: Locator;
+  readonly restartRecordingButton: Locator;
+  readonly floatingGrabarEvolucionButton: Locator;
+  readonly transcriptionStatus: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -19,6 +27,75 @@ export class CasePage extends BasePage {
     this.addSessionButton = page.getByRole('button', {
       name: /Agregar Sesión|Guardar Cambios/i,
     });
+    this.dictateVoiceButton = page.getByTestId('start-recording-btn');
+    this.startRecordingButton = page.getByTestId('start-recording-btn');
+    this.stopRecordingButton = page.getByRole('button', { name: /Detener/i });
+    this.confirmRecordingButton = page
+      .getByTestId('confirm-recording')
+      .or(page.getByRole('button', { name: /Confirmar/i }));
+    this.cancelRecordingButton = page.getByTestId('cancel-recording');
+    this.restartRecordingButton = page.getByRole('button', {
+      name: /Volver a grabar/i,
+    });
+    this.floatingGrabarEvolucionButton = page.getByTestId(
+      'floating-grabar-evolucion-btn',
+    );
+    this.transcriptionStatus = page.locator(
+      'p.whitespace-pre-wrap, p.text-xs.italic',
+    );
+  }
+
+  async startVoiceDictation() {
+    await this.dictateVoiceButton.click();
+  }
+
+  async startFloatingVoiceDictation() {
+    await this.floatingGrabarEvolucionButton.click();
+  }
+
+  async startRecording() {
+    await this.startRecordingButton.click();
+  }
+
+  async stopRecording() {
+    await this.stopRecordingButton.click();
+  }
+
+  async confirmRecording() {
+    await this.confirmRecordingButton.click();
+  }
+
+  async cancelRecording() {
+    await this.cancelRecordingButton.click();
+  }
+
+  async restartRecording() {
+    await this.restartRecordingButton.click();
+  }
+
+  async getTranscriptionText() {
+    await this.page.waitForTimeout(1000);
+    return await this.page
+      .locator('p.whitespace-pre-wrap, p.text-slate-700')
+      .filter({ hasText: /Paciente presenta mejoría/ })
+      .first()
+      .innerText();
+  }
+
+  async waitForTranscription() {
+    await this.page.waitForFunction(
+      () => {
+        const ps = Array.from(
+          document.querySelectorAll('p.whitespace-pre-wrap, p.text-slate-700'),
+        );
+        return ps.some((p) => {
+          const text = p.textContent || '';
+          return text.length > 0 && text.includes('Paciente presenta mejoría');
+        });
+      },
+      { timeout: 30000 },
+    );
+    await this.page.waitForTimeout(500);
   }
 
   async gotoDetail(patientId: string, caseId: string) {

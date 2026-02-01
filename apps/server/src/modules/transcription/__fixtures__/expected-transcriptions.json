@@ -1,0 +1,48 @@
+{
+  "conditions-1.m4a": {
+    "text": "El paciente acude a consulta por dolor intenso en la planta del pie derecho al levantarse por la mañana. A la exploración física, presenta dolor a la palpación en la inserción de la fascia plantar. Diagnóstico preliminar de fascitis plantar bilateral con componente inflamatorio agudo.",
+    "requiredTerms": ["fascitis plantar"]
+  },
+  "conditions-2.m4a": {
+    "text": "Paciente de 45 años con historia de dolor lumbar crónico. Refiere episodios recurrentes de lumbalgia mecánica que irradia hacia glúteo. En la evaluación postural se observa una escoliosis lumbar levo-convexa y rectificación de la lordosis cervical, provocando cervicalgia tensional frecuente.",
+    "requiredTerms": ["lumbalgia", "escoliosis", "cervicalgia"]
+  },
+  "conditions-3.m4a": {
+    "text": "Acude por dolor irradiado en pierna izquierda compatible con ciática. La resonancia magnética muestra una hernia discal L4-L5 posterolateral izquierda que comprime la raíz nerviosa. El paciente refiere parestesia en miembro inferior izquierdo que llega hasta el primer dedo del pie.",
+    "requiredTerms": ["ciática", "hernia discal", "parestesia"]
+  },
+  "conditions-4.m4a": {
+    "text": "Jugador de tenis amateur con dolor en hombro derecho. Presenta signos positivos para tendinitis del supraespinoso y contractura muscular en trapecio superior. Además, relata un antecedente reciente de esguince de tobillo grado dos que aún presenta leve edema residual.",
+    "requiredTerms": ["tendinitis", "contractura muscular", "esguince"]
+  },
+  "conditions-5.m4a": {
+    "text": "Paciente mujer de 60 años con dolor en cara lateral de la cadera derecha compatible con bursitis trocantérica. También consulta por adormecimiento en manos, con diagnóstico previo de síndrome del túnel carpiano bilateral. Refiere además dolor en codo derecho sugestivo de epicondilitis lateral.",
+    "requiredTerms": [
+      "bursitis",
+      "síndrome del túnel carpiano",
+      "epicondilitis"
+    ]
+  },
+  "conditions-6.m4a": {
+    "text": "Evaluación postural completa. Se observa hiperlordosis lumbar compensatoria a una cifosis dorsal aumentada. El paciente refiere gonalgia derecha al subir escaleras y coxalgia bilateral de predominio matutino. Refiere también dorsalgia mecánica tras jornadas laborales prolongadas.",
+    "requiredTerms": [
+      "hiperlordosis",
+      "cifosis",
+      "gonalgia",
+      "coxalgia",
+      "dorsalgia"
+    ]
+  },
+  "clinical-tests.m4a": {
+    "text": "Pruebas funcionales realizadas: Prueba de Lasègue positiva a treinta grados en pierna izquierda. Maniobra de Phalen positiva a los 45 segundos en ambas manos. Test de Thomas negativo, sin acortamiento del psoas ilíaco.",
+    "requiredTerms": [
+      "prueba de Lasègue",
+      "maniobra de Phalen",
+      "test de Thomas"
+    ]
+  },
+  "scales-full.m4a": {
+    "text": "Valoración inicial: Dolor reportado en escala EVA siete sobre diez en reposo. Índice de Barthel de ochenta y cinco puntos, indicando dependencia leve. Goniometría de rodilla muestra flexión de ciento veinte grados y extensión completa de cero grados.",
+    "requiredTerms": ["escala EVA", "índice de Barthel", "goniometría"]
+  }
+}

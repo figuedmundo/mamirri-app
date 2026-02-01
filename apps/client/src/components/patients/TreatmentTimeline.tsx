@@ -20,6 +20,8 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { patientsApi } from '../../api/patients';
+import { mediaApi } from '../../api/media';
+import { photoQueue, isOnline, onOnline } from '@/lib/photo-queue';
 
 export interface TreatmentTimelineProps {
   clinicalCase: ClinicalCase;
@@ -49,6 +51,40 @@ export function TreatmentTimeline({
   const { toast } = useToast();
 
   const { treatmentPlan, treatmentSessions } = clinicalCase;
+
+  React.useEffect(() => {
+    // Process queued photos when back online
+    const cleanup = onOnline(async () => {
+      const pending = await photoQueue.getAll();
+      if (pending.length === 0) return;
+
+      toast({
+        title: 'Conexión restaurada',
+        description: `Subiendo ${pending.length} fotos pendientes...`,
+      });
+
+      for (const photo of pending) {
+        try {
+          await mediaApi.uploadSessionPhoto(
+            photo.sessionId,
+            photo.blob,
+            photo.caption,
+          );
+          await photoQueue.remove(photo.id);
+        } catch (error) {
+          console.error('Failed to upload queued photo:', error);
+        }
+      }
+
+      toast({
+        title: 'Sincronización completada',
+        description: 'Todas las fotos pendientes se han subido.',
+      });
+      // Trigger refresh if needed, for now user might need to reload or we rely on parent update
+    });
+
+    return cleanup;
+  }, [toast]);
 
   const currentPhase =
     treatmentSessions.length > 0
@@ -80,11 +116,42 @@ export function TreatmentTimeline({
     setDeletingSessionId(sessionId);
   };
 
-  const handleFormSubmit = async (data: SessionFormData) => {
+  const handleFormSubmit = async (
+    data: SessionFormData,
+    photos?: Array<{ blob: Blob; caption?: string }>,
+    voiceNote?: { blob: Blob; duration: number },
+  ) => {
     setIsSubmitting(true);
     try {
       if (editingSession) {
         await patientsApi.updateSession(editingSession.id, data);
+
+        if (photos && photos.length > 0) {
+          if (isOnline()) {
+            await Promise.all(
+              photos.map((photo) =>
+                mediaApi.uploadSessionPhoto(
+                  editingSession.id,
+                  photo.blob,
+                  photo.caption,
+                ),
+              ),
+            );
+          } else {
+            await Promise.all(
+              photos.map((photo) =>
+                photoQueue.add(editingSession.id, photo.blob, photo.caption),
+              ),
+            );
+            toast({
+              title: 'Sin conexión',
+              description:
+                'Las fotos se subirán cuando vuelvas a tener internet.',
+              variant: 'default', // Info/warning style
+            });
+          }
+        }
+
         toast({
           title: 'Sesión actualizada',
           description: 'Los cambios se guardaron correctamente.',
@@ -95,9 +162,63 @@ export function TreatmentTimeline({
         });
       } else {
         const newSession = await patientsApi.addSession(clinicalCase.id, data);
+
+        if (photos && photos.length > 0) {
+          if (isOnline()) {
+            await Promise.all(
+              photos.map((photo) =>
+                mediaApi.uploadSessionPhoto(
+                  newSession.id,
+                  photo.blob,
+                  photo.caption,
+                ),
+              ),
+            );
+          } else {
+            await Promise.all(
+              photos.map((photo) =>
+                photoQueue.add(newSession.id, photo.blob, photo.caption),
+              ),
+            );
+            toast({
+              title: 'Sin conexión',
+              description:
+                'Las fotos se subirán cuando vuelvas a tener internet.',
+              variant: 'default',
+            });
+          }
+        }
+
+        if (voiceNote) {
+          try {
+            await mediaApi.uploadSessionVoiceNote(
+              newSession.id,
+              voiceNote.blob,
+              voiceNote.duration,
+            );
+          } catch (error) {
+            console.error('Failed to upload voice note:', error);
+            toast({
+              title: 'Advertencia',
+              description:
+                'La sesión se creó, pero la nota de voz no se pudo subir. Intenta agregarla editando la sesión.',
+              variant: 'destructive',
+            });
+          }
+        }
+
+        if (photos && photos.length > 0 && !isOnline()) {
+          toast({
+            title: 'Sin conexión',
+            description:
+              'Las fotos se subirán cuando vuelvas a tener internet.',
+            variant: 'default',
+          });
+        }
+
         toast({
           title: 'Sesión creada',
-          description: 'La sesión se registró correctamente.',
+          description: 'La sesión se ha registrado correctamente.',
         });
         onSessionCreated?.(newSession);
       }
@@ -106,7 +227,7 @@ export function TreatmentTimeline({
     } catch {
       toast({
         title: 'Error',
-        description: 'No se pudo guardar la sesión. Intenta de nuevo.',
+        description: 'No se pudo guardar la sesion. Intenta de nuevo.',
         variant: 'destructive',
       });
     } finally {

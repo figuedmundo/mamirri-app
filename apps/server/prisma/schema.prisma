@@ -134,12 +134,28 @@ model TreatmentSession {
 
   createdAt       DateTime @default(now())
 
+  photos          SessionPhoto[]
+
   @@map("treatment_sessions")
+}
+
+model SessionPhoto {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     TreatmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  storageKey  String
+  caption     String?  @db.VarChar(140)
+  capturedAt  DateTime
+  createdAt   DateTime @default(now())
+
+  @@map("session_photos")
+  @@index([sessionId])
 }
 
 model Footprint {
   id              String   @id @default(cuid())
   type            String   // 'initial' | 'final' | 'followup'
+  side            String   @default("unknown") // 'left' | 'right' | 'unknown'
   date            DateTime
   url             String
   analysis        Json?    // HuellaAnalisis

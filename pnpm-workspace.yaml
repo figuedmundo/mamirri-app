@@ -1,12 +1,3 @@
 packages:
-  - apps/*
-  - packages/*
-
-onlyBuiltDependencies:
-  - '@nestjs/core'
-  - '@prisma/engines'
-  - '@scarf/scarf'
-  - bcrypt
-  - esbuild
-  - prisma
-  - unrs-resolver
+  - 'apps/*'
+  - 'packages/*'

@@ -89,8 +89,8 @@ function mapLegacyPoint(
 export function PosturogramViewer({
   clinicalCase,
   onPosturogramChange,
-  initialPosturogramUrl = '/placeholder/posture-initial.png',
-  currentPosturogramUrl = '/placeholder/posture-current.png',
+  initialPosturogramUrl,
+  currentPosturogramUrl,
 }: PosturogramViewerProps) {
   const [activePoint, setActivePoint] = React.useState<AnatomicalPoint | null>(
     null,

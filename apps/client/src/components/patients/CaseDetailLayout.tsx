@@ -14,9 +14,13 @@ import { SessionDetailView } from './treatment-timeline/SessionDetailView';
 import { EvaluationForm } from './EvaluationForm';
 import { ComparisonBoard } from './ComparisonBoard';
 import { ObjectivesView } from './ObjectivesView';
+import { RecordingFloatingBar } from './RecordingFloatingBar';
+import { useVoiceRecorder } from '@/hooks/use-voice-recorder';
 import { generateComparisonReport } from '../../lib/pdf';
 import { useToast } from '../../hooks/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 import { patientsApi } from '../../api/patients';
+import { mediaApi } from '../../api/media';
 import {
   Mic,
   ArrowLeft,
@@ -48,6 +52,108 @@ export function CaseDetailLayout({
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const { toast } = useToast();
 
+  const activeEval = getActiveEvaluation(localCase);
+  const activeEvalType = activeEval?.type;
+
+  const handleRecordingComplete = async (blob: Blob, duration: number) => {
+    if (!activeEval) {
+      toast({
+        title: 'Error',
+        description: 'No hay una evaluación activa para asociar la nota.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: 'Subiendo nota de voz...',
+        description: 'Asociando a la evolución actual.',
+      });
+
+      const note = await mediaApi.uploadEvaluationVoiceNote(
+        activeEval.id,
+        blob,
+        duration,
+      );
+
+      setLocalCase((prev) => ({
+        ...prev,
+        evaluations: prev.evaluations.map((e) =>
+          e.id === activeEval.id
+            ? { ...e, voiceNotes: [...(e.voiceNotes || []), note] }
+            : e,
+        ),
+      }));
+
+      toast({
+        title: 'Éxito',
+        description: 'Nota de voz guardada correctamente.',
+        action: (
+          <ToastAction
+            altText="Deshacer guardado"
+            onClick={() => {
+              toast({
+                title: 'Acción cancelada',
+                description: 'La nota no se ha guardado.',
+              });
+            }}
+          >
+            Deshacer
+          </ToastAction>
+        ),
+      });
+    } catch (error) {
+      console.error('Recording upload error:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo guardar la nota de voz.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const {
+    isRecording,
+    duration,
+    startRecording,
+    stopRecording,
+    cancelRecording,
+    error,
+  } = useVoiceRecorder({
+    autoSave: true,
+    onRecordingComplete: handleRecordingComplete,
+  });
+
+  useEffect(() => {
+    if (error) {
+      if (
+        error.name === 'NotAllowedError' ||
+        error.message.includes('Permission denied')
+      ) {
+        toast({
+          title: 'Permiso denegado',
+          description:
+            'Por favor, permite el acceso al micrófono para grabar notas de voz.',
+          variant: 'destructive',
+        });
+      } else if (error.message === 'BROWSER_NOT_SUPPORTED') {
+        toast({
+          title: 'No soportado',
+          description:
+            'Tu navegador no soporta grabación de audio. Intenta con Chrome o Safari.',
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: 'No se pudo iniciar la grabación. Intenta de nuevo.',
+          variant: 'destructive',
+        });
+      }
+    }
+  }, [error, toast]);
+
   const [activeSessionId, setActiveSessionId] = useState<string | undefined>(
     localCase.treatmentSessions[localCase.treatmentSessions.length - 1]?.id,
   );
@@ -55,8 +161,6 @@ export function CaseDetailLayout({
   useEffect(() => {
     setLocalCase(clinicalCase);
   }, [clinicalCase]);
-
-  const activeEvalType = getActiveEvaluation(localCase)?.type;
 
   const handleSessionCreated = (session: TreatmentSession) => {
     setLocalCase((prev) => ({
@@ -277,6 +381,7 @@ export function CaseDetailLayout({
         <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg mx-4">
           <button
             onClick={() => setViewMode('timeline')}
+            data-testid="nav-timeline-btn"
             className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
               isTimelineActive
                 ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
@@ -288,6 +393,7 @@ export function CaseDetailLayout({
           </button>
           <button
             onClick={() => setViewMode('evaluation')}
+            data-testid="nav-evaluation-btn"
             className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
               viewMode === 'evaluation'
                 ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
@@ -310,6 +416,7 @@ export function CaseDetailLayout({
           </button>
           <button
             onClick={() => setViewMode('objectives')}
+            data-testid="nav-objectives-btn"
             className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
               viewMode === 'objectives'
                 ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
@@ -321,6 +428,7 @@ export function CaseDetailLayout({
           </button>
           <button
             onClick={() => setViewMode('comparison')}
+            data-testid="nav-comparison-btn"
             className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
               viewMode === 'comparison'
                 ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
@@ -333,9 +441,20 @@ export function CaseDetailLayout({
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-full font-medium shadow-lg transition-transform hover:scale-105">
-            <Mic size={18} />
-            <span className="hidden sm:inline">Grabar Evolucion</span>
+          <button
+            onClick={() => void startRecording()}
+            disabled={isRecording}
+            data-testid="floating-grabar-evolucion-btn"
+            className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium shadow-lg transition-all ${
+              isRecording
+                ? 'bg-rose-100 text-rose-400 cursor-not-allowed scale-95'
+                : 'bg-rose-600 hover:bg-rose-700 text-white hover:scale-105'
+            }`}
+          >
+            <Mic size={18} className={isRecording ? 'animate-pulse' : ''} />
+            <span className="hidden sm:inline">
+              {isRecording ? 'Grabando...' : 'Grabar Evolucion'}
+            </span>
           </button>
         </div>
       </div>
@@ -382,6 +501,13 @@ export function CaseDetailLayout({
           </div>
         )}
       </div>
+
+      <RecordingFloatingBar
+        isRecording={isRecording}
+        duration={duration}
+        onStop={stopRecording}
+        onCancel={cancelRecording}
+      />
     </div>
   );
 }

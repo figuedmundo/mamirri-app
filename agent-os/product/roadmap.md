@@ -157,12 +157,13 @@ Methodology: Agile Development (1-week Sprints).
 ### Week 7: Media & Dictation
 
 - [x] **7.1** Backend: Media upload endpoint (validation, MinIO)
-- [ ] **7.2** Frontend: Camera capture component
-- [ ] **7.3** Frontend: Photo gallery per session
-- [ ] **7.4** Backend: Whisper integration (Groq API)
-- [ ] **7.5** Frontend: Voice recorder button + transcription
-- [ ] **7.6** Wire Pacientes: onVoiceDictation, onCaptureHuella, onCaptureVideo
-- [ ] **7.7** Test: Dictate medical terms, verify accuracy
+- [x] **7.2** Frontend: Camera capture component
+- [x] **7.3** Frontend: Photo gallery per session
+- [x] **7.4** Backend: Whisper integration (Groq API)
+- [x] **7.5** Frontend: Voice recorder button + transcription
+- [x] **7.6** Wire Pacientes: onVoiceDictation, onCaptureHuella, onCaptureVideo
+- [x] **7.7** Make a list of all buttons that record auidio and video, and wire their states and methods
+- [ ] **7.8** Test: Dictate medical terms, verify accuracy
 
 **🎯 Milestone 3:** "I can take photos and dictate notes"
 
@@ -170,10 +171,10 @@ Methodology: Agile Development (1-week Sprints).
 
 ### Week 8: PWA Basics (Offline Skeleton)
 
-- [ ] **8.1** Service Worker: Cache static assets
-- [ ] **8.2** Offline indicator (connection status)
-- [ ] **8.3** PWA manifest (install to home screen)
-- [ ] **8.4** Test: Works without internet (static pages only)
+- [x] **8.1** Service Worker: Cache static assets
+- [x] **8.2** Offline indicator (connection status)
+- [x] **8.3** PWA manifest (install to home screen)
+- [x] **8.4** Test: Works without internet (static pages only)
 
 **Note:** Full offline editing (IndexedDB sync) deferred to Part 4.
 
@@ -210,12 +211,12 @@ Methodology: Agile Development (1-week Sprints).
 
 ### Week 11: Security & Performance (Post-Validation)
 
-- [ ] **11.1** Input sanitization (based on real attack vectors)
+- [x] **11.1** Input sanitization (based on real attack vectors)
 - [ ] **11.2** File upload security (malware scan if needed)
 - [ ] **11.3** Rate limiting (if API abuse detected)
 - [ ] **11.4** Database indexing (based on slow query logs)
 - [ ] **11.5** Image compression (if storage is an issue)
-- [ ] **11.6** Audit logging for sensitive operations
+- [x] **11.6** Audit logging for sensitive operations
 
 **🎯 Milestone 6:** "App is production-ready (no AI yet)"
 

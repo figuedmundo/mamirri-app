@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PatientsService } from './patients.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { StorageService } from '../storage/storage.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('PatientsService', () => {
@@ -42,6 +43,12 @@ describe('PatientsService', () => {
         {
           provide: PrismaService,
           useValue: mockPrismaService,
+        },
+        {
+          provide: StorageService,
+          useValue: {
+            getFileUrl: jest.fn(),
+          },
         },
       ],
     }).compile();

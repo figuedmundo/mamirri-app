@@ -4,18 +4,32 @@ import {
   ForbiddenException,
   Logger,
 } from '@nestjs/common';
+import * as crypto from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { StorageService } from '../storage/storage.service';
-import { FootprintType } from './dto/upload-footprint.dto';
+import { FootprintType, FootprintSide } from './dto/upload-footprint.dto';
 import { PostureVideoType } from './dto/upload-posture-video.dto';
-import {
-  Patient,
-  Footprint,
-  PostureVideo,
-  Evaluation,
-  TreatmentSession,
-  ClinicalCase,
-} from '@prisma/client';
+
+export interface FootprintWithUrl {
+  id: string;
+  type: FootprintType;
+  side: FootprintSide;
+  date: Date;
+  url: string;
+  evaluationId: string;
+}
+
+export interface PostureVideoWithUrl {
+  id: string;
+  type: PostureVideoType;
+  date: Date;
+  url: string;
+  duration: number;
+  observations: string;
+  evaluationId: string;
+}
+
+import { TranscriptionService } from '../transcription/transcription.service';
 
 // Define File interface locally since it's not exported from StorageService
 interface File {
@@ -27,6 +41,17 @@ interface File {
   buffer: Buffer;
 }
 
+export interface VoiceNote {
+  id: string;
+  audioUrl: string;
+  transcription: string | null;
+  transcriptionStatus: 'pending' | 'processing' | 'completed' | 'failed';
+  transcriptionError?: string;
+  durationSeconds: number;
+  retryCount: number;
+  createdAt: Date;
+}
+
 @Injectable()
 export class MediaService {
   private readonly logger = new Logger(MediaService.name);
@@ -34,6 +59,7 @@ export class MediaService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
+    private readonly transcriptionService: TranscriptionService,
   ) {}
 
   async uploadPatientPhoto(
@@ -54,8 +80,9 @@ export class MediaService {
     evaluationId: string,
     file: File,
     type: FootprintType,
+    side: FootprintSide = FootprintSide.UNKNOWN,
     therapistId: string,
-  ): Promise<Footprint & { url: string }> {
+  ): Promise<FootprintWithUrl> {
     await this.verifyEvaluationOwnership(evaluationId, therapistId);
 
     const path = `evaluations/${evaluationId}/footprints`;
@@ -65,13 +92,22 @@ export class MediaService {
     const footprint = await this.prisma.footprint.create({
       data: {
         type,
+        side,
         date: new Date(),
         url: storagePath,
         evaluationId,
       },
     });
 
-    return { ...footprint, url: signedUrl };
+    const result: FootprintWithUrl = {
+      id: footprint.id,
+      type: footprint.type as FootprintType,
+      side: footprint.side as FootprintSide,
+      date: footprint.date,
+      url: signedUrl,
+      evaluationId: footprint.evaluationId,
+    };
+    return result;
   }
 
   async uploadPostureVideo(
@@ -80,7 +116,7 @@ export class MediaService {
     type: PostureVideoType,
     duration: number,
     therapistId: string,
-  ): Promise<PostureVideo & { url: string }> {
+  ): Promise<PostureVideoWithUrl> {
     await this.verifyEvaluationOwnership(evaluationId, therapistId);
 
     const path = `evaluations/${evaluationId}/videos`;
@@ -98,7 +134,16 @@ export class MediaService {
       },
     });
 
-    return { ...video, url: signedUrl };
+    const result: PostureVideoWithUrl = {
+      id: video.id,
+      type: video.type as PostureVideoType,
+      date: video.date,
+      url: signedUrl,
+      duration: video.duration,
+      observations: video.observations,
+      evaluationId: video.evaluationId,
+    };
+    return result;
   }
 
   async uploadVoiceNote(
@@ -118,28 +163,88 @@ export class MediaService {
     const storagePath = await this.storage.uploadFile(file, path);
     const signedUrl = await this.storage.getFileUrl(storagePath);
 
-    const voiceNote = {
+    const transcriptionResult = await this.transcriptionService.transcribe(
+      file.buffer,
+      file.originalname,
+    );
+
+    const voiceNoteId = crypto.randomUUID();
+    const voiceNote: VoiceNote = {
+      id: voiceNoteId,
       audioUrl: storagePath,
-      transcription: null,
+      transcription: transcriptionResult.text || null,
+      transcriptionStatus:
+        transcriptionResult.status === 'completed' ? 'completed' : 'pending',
+      transcriptionError: transcriptionResult.error,
       durationSeconds,
+      retryCount: 0,
+      createdAt: new Date(),
     };
 
     if (entityType === 'evaluation') {
+      const evaluation = await this.prisma.evaluation.findUnique({
+        where: { id: entityId },
+        select: { voiceNotes: true },
+      });
+      const existingNotes = (evaluation?.voiceNotes as any[]) || [];
       await this.prisma.evaluation.update({
         where: { id: entityId },
         data: {
-          voiceNotes: { push: voiceNote } as any,
+          voiceNotes: [...existingNotes, voiceNote] as any,
         },
       });
     } else {
+      const session = await this.prisma.treatmentSession.findUnique({
+        where: { id: entityId },
+        select: { voiceNotes: true },
+      });
+      const existingNotes = (session?.voiceNotes as any[]) || [];
       await this.prisma.treatmentSession.update({
         where: { id: entityId },
         data: {
-          voiceNotes: { push: voiceNote } as any,
+          voiceNotes: [...existingNotes, voiceNote] as any,
         },
       });
     }
 
+    return { ...voiceNote, audioUrl: signedUrl };
+  }
+
+  async getVoiceNoteStatus(
+    entityType: 'evaluation' | 'session',
+    entityId: string,
+    voiceNoteId: string,
+    therapistId: string,
+  ): Promise<VoiceNote> {
+    if (entityType === 'evaluation') {
+      await this.verifyEvaluationOwnership(entityId, therapistId);
+    } else {
+      await this.verifySessionOwnership(entityId, therapistId);
+    }
+
+    const entity =
+      entityType === 'evaluation'
+        ? await this.prisma.evaluation.findUnique({
+            where: { id: entityId },
+            select: { voiceNotes: true },
+          })
+        : await this.prisma.treatmentSession.findUnique({
+            where: { id: entityId },
+            select: { voiceNotes: true },
+          });
+
+    if (!entity || !entity.voiceNotes) {
+      throw new NotFoundException('Voice note not found');
+    }
+
+    const voiceNotes = entity.voiceNotes as unknown as VoiceNote[];
+    const voiceNote = voiceNotes.find((vn) => vn.id === voiceNoteId);
+
+    if (!voiceNote) {
+      throw new NotFoundException('Voice note not found');
+    }
+
+    const signedUrl = await this.storage.getFileUrl(voiceNote.audioUrl);
     return { ...voiceNote, audioUrl: signedUrl };
   }
 

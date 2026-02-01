@@ -23,7 +23,7 @@ export class ClinicalCasesService {
       throw new NotFoundException(`Patient with ID ${patientId} not found`);
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction((tx) => {
       return tx.clinicalCase.create({
         data: {
           ...rest,

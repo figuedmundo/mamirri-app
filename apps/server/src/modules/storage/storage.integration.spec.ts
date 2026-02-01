@@ -44,7 +44,9 @@ describe('Storage Integration Tests', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    if (app && typeof app.close === 'function') {
+      await app.close();
+    }
   });
 
   describe('End-to-End File Upload Flow', () => {
