@@ -12,8 +12,8 @@ RUN pnpm install --filter client...
 
 COPY apps/client ./apps/client
 
-WORKDIR /app/apps/client
-RUN pnpm run build
+RUN pnpm run build --filter client...
+
 
 FROM nginx:alpine
 
