@@ -247,6 +247,7 @@ export function VoiceRecorder({
               variant="default"
               size="sm"
               className="bg-teal-600 hover:bg-teal-700"
+              data-testid="confirm-recording"
             >
               Confirmar
             </Button>

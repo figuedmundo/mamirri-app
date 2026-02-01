@@ -10,7 +10,15 @@ test.describe('Recorder Permissions', () => {
     await casePage.mockAuth();
 
     await context.clearPermissions();
-    await context.grantPermissions([]);
+
+    // Mock getUserMedia to throw Permission Denied
+    await page.addInitScript(() => {
+      // @ts-ignore
+      navigator.mediaDevices.getUserMedia = () =>
+        Promise.reject(
+          new DOMException('Permission denied', 'NotAllowedError'),
+        );
+    });
 
     const patientId = 'p-1';
     const caseId = 'c-1';

@@ -32,9 +32,9 @@ export class CasePage extends BasePage {
       name: /Iniciar grabación/i,
     });
     this.stopRecordingButton = page.getByRole('button', { name: /Detener/i });
-    this.confirmRecordingButton = page.getByRole('button', {
-      name: /Confirmar/i,
-    });
+    this.confirmRecordingButton = page
+      .getByTestId('confirm-recording')
+      .or(page.getByRole('button', { name: /Confirmar/i }));
     this.cancelRecordingButton = page.getByRole('button', {
       name: /Cancelar/i,
     });
