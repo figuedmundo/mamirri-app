@@ -4,6 +4,12 @@
 COMPOSE_FILE="docker-compose.prod.yml"
 LOG_FILE="${LOG_FILE:-/var/log/physio-deploy.log}"
 
+# Check write permissions for log file
+if [ ! -w "$(dirname "$LOG_FILE")" ] && [ "$EUID" -ne 0 ]; then
+    LOG_FILE="./physio-deploy.log"
+    echo "Warning: No write permission for /var/log. Logging to $LOG_FILE"
+fi
+
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
 }

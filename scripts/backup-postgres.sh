@@ -8,12 +8,24 @@ BACKUP_FILENAME="physio-backup-${TIMESTAMP}.sql"
 ENCRYPTED_FILENAME="${BACKUP_FILENAME}.gpg"
 LOG_FILE="${LOG_FILE:-/var/log/physio-backup.log}"
 
+if [ ! -w "$(dirname "$LOG_FILE")" ] && [ "$EUID" -ne 0 ]; then
+    LOG_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/physio"
+    mkdir -p "$LOG_DIR"
+    LOG_FILE="$LOG_DIR/backup.log"
+    echo "Warning: No write permission for /var/log. Logging to $LOG_FILE"
+fi
+
+if [ ! -w "$(dirname "$BACKUP_DIR")" ] && [ "$EUID" -ne 0 ]; then
+   BACKUP_DIR="${HOME}/backups/physio"
+   echo "Warning: No write permission for /var/backups. Saving backups to $BACKUP_DIR"
+fi
+
 # Ensure backup directory exists
 mkdir -p "$BACKUP_DIR"
 chmod 700 "$BACKUP_DIR"
 
 log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
 }
 
 error_exit() {
