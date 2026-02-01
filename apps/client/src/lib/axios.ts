@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showErrorToast } from './toast';
+import { isOnline } from './photo-queue';
 
 const api = axios.create({
   baseURL: '/api/v1',
@@ -7,6 +8,10 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    if (!isOnline()) {
+      showErrorToast('Estás desconectado. Revisa tu conexión a internet.');
+      return Promise.reject(new Error('OFFLINE'));
+    }
     const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
