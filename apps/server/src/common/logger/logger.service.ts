@@ -64,13 +64,21 @@ export class LoggerService implements OnModuleInit, OnModuleDestroy {
       );
       if (Object.keys(entry).length > 6) {
         // Log metadata separately for readability
-        const meta = { ...entry };
-        delete (meta as any).timestamp;
-        delete (meta as any).level;
-        delete (meta as any).levelNum;
-        delete (meta as any).message;
-        delete (meta as any).service;
-        delete (meta as any).version;
+        const {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          timestamp,
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          level,
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          levelNum,
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          message,
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          service,
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          version,
+          ...meta
+        } = entry;
         console.log(JSON.stringify(meta, null, 2));
       }
     } else {
