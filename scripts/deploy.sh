@@ -271,7 +271,10 @@ deploy_services() {
     # Pull latest code if this is a git repo
     if [ -d ".git" ] && [ "$DRY_RUN" = false ]; then
         log "Pulling latest code from git..."
-        run_cmd git pull origin main
+        # Get current branch name
+        CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+        log "Detected branch: $CURRENT_BRANCH"
+        run_cmd git pull origin "$CURRENT_BRANCH"
     fi
     
     # Stop existing containers gracefully
