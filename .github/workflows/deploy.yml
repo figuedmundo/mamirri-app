@@ -25,4 +25,4 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd /srv/apps/mamirri-app && git pull origin main && ./scripts/deploy.sh"
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd /srv/apps/mamirri-app && git pull origin main && ./scripts/deploy.sh --legacy"
