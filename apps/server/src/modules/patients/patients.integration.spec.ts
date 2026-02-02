@@ -50,7 +50,6 @@ describe('Patients Integration (DB Layer)', () => {
   });
 
   it('should create a patient linked to a therapist', async () => {
-    // 1. Create Therapist
     const therapist = await prisma.user.create({
       data: {
         email: `therapist-${Date.now()}@example.com`,
@@ -59,15 +58,14 @@ describe('Patients Integration (DB Layer)', () => {
       },
     });
 
-    // 2. Create Patient
     const patient = await prisma.patient.create({
       data: {
         name: 'John Doe',
-        age: 30,
         occupation: 'Test Occupation',
         phone: '1234567890',
         birthDate: new Date('1990-01-01'),
         therapistId: therapist.id,
+        medicalFlags: [],
       },
     });
 
@@ -93,11 +91,11 @@ describe('Patients Integration (DB Layer)', () => {
     const patient = await prisma.patient.create({
       data: {
         name: 'Jane Doe',
-        age: 25,
         occupation: 'Test Occupation',
         phone: '0987654321',
         birthDate: new Date('1995-05-05'),
         therapistId: therapist.id,
+        medicalFlags: [],
       },
     });
 
