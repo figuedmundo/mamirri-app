@@ -59,11 +59,11 @@ describe('Evaluation Integration (1:N Relation)', () => {
     const patient = await prisma.patient.create({
       data: {
         name: 'Eval Patient',
-        age: 30,
         occupation: 'Tester',
         phone: '1234567890',
         birthDate: new Date('1994-01-01'),
         therapistId: therapist.id,
+        medicalFlags: [],
       },
     });
 
