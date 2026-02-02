@@ -186,11 +186,12 @@ Methodology: Agile Development (1-week Sprints).
 
 ### Week 9: Field Testing ("The Truth")
 
-- [ ] **9.1** Install on mother's iPad
-- [ ] **9.2** Observe 3-5 real consultations
+- [x] **9.1** Install on mother's iPad
+- [x] **9.2** Observe 3-5 real consultations
 - [ ] **9.3** Document friction points (what breaks her flow?)
 - [ ] **9.4** Collect performance data (slow queries?)
 - [ ] **9.5** User feedback interview
+- [ ] 9.6  Improve create patient form
 
 **🎯 Milestone 5:** "Mother used it with a real patient without asking for help"
 
