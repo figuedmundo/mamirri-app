@@ -5,18 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Patient, TreatmentSession, Evaluation } from '@prisma/client';
-
-export interface CreatePatientDto {
-  name: string;
-  age: number;
-  occupation: string;
-  previousOccupation?: string;
-  address?: string;
-  gender?: string;
-  phone: string;
-  email?: string;
-  birthDate: string;
-}
+import { CreatePatientDto } from './dto/create-patient.dto';
 
 export interface CreateTreatmentSessionDto {
   date: string;
@@ -53,11 +42,16 @@ export class PatientsService {
   ): Promise<Patient> {
     const { birthDate, ...rest } = createPatientDto;
 
+    const birthDateObj = new Date(birthDate);
+    if (isNaN(birthDateObj.getTime())) {
+      throw new BadRequestException('Invalid birth date');
+    }
+
     const patient = await this.prisma.$transaction(async (tx) => {
       const patient = await tx.patient.create({
         data: {
           ...rest,
-          birthDate: new Date(birthDate),
+          birthDate: birthDateObj,
           therapistId,
           clinicalCases: {
             create: {
@@ -370,7 +364,11 @@ export class PatientsService {
     const { birthDate, ...rest } = updatePatientDto;
     const data: any = { ...rest };
     if (birthDate) {
-      data.birthDate = new Date(birthDate);
+      const birthDateObj = new Date(birthDate);
+      if (isNaN(birthDateObj.getTime())) {
+        throw new BadRequestException('Invalid birth date');
+      }
+      data.birthDate = birthDateObj;
     }
 
     return this.prisma.patient.update({
@@ -406,10 +404,15 @@ export class PatientsService {
 
     const { date, ...rest } = createSessionDto;
 
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) {
+      throw new BadRequestException('Invalid session date');
+    }
+
     return this.prisma.treatmentSession.create({
       data: {
         ...rest,
-        date: new Date(date),
+        date: dateObj,
         clinicalCaseId,
         therapistId,
       },
