@@ -19,6 +19,13 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+    # Log rotation: max 20MB per file, keep 3 files (60MB total)
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '20m'
+        max-file: '3'
+        labels: 'service'
 
   # MinIO (S3-compatible storage)
   minio:
@@ -38,6 +45,13 @@ services:
       timeout: 20s
       retries: 3
     restart: unless-stopped
+    # Log rotation: max 20MB per file, keep 3 files (60MB total)
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '20m'
+        max-file: '3'
+        labels: 'service'
 
   # Redis
   redis:
@@ -48,12 +62,20 @@ services:
     networks:
       - homelab_net
     restart: unless-stopped
+    # Log rotation: max 10MB per file, keep 2 files (20MB total)
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '2'
+        labels: 'service'
 
   minio-provisioner:
     image: minio/mc:latest
     container_name: physio_provisioner
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set local http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
@@ -73,7 +95,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@physio_db:5432/${POSTGRES_DB}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
       MINIO_ENDPOINT: minio
@@ -86,11 +108,14 @@ services:
       NODE_ENV: production
       SERVER_HOST: ${SERVER_HOST:-localhost}
       SEED_DATABASE: ${SEED_DATABASE:-false}
+      SENTRY_DSN: ${VITE_SENTRY_DSN}
     volumes:
       - ./backups:/backups:ro
     depends_on:
-      - postgres
-      - minio-provisioner
+      postgres:
+        condition: service_healthy
+      minio-provisioner:
+        condition: service_completed_successfully
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/v1/health']
       interval: 30s
@@ -106,6 +131,13 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
+    # Log rotation: max 50MB per file, keep 3 files (150MB total)
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '3'
+        labels: 'service'
     networks:
       - homelab_net
 
@@ -113,6 +145,9 @@ services:
     build:
       context: .
       dockerfile: docker/client/Dockerfile
+      args:
+        VITE_SENTRY_DSN: ${VITE_SENTRY_DSN}
+        VITE_APP_VERSION: ${VERSION:-1.0.0}
     container_name: physio_client
     environment:
       NODE_ENV: production
@@ -135,6 +170,13 @@ services:
         reservations:
           cpus: '0.1'
           memory: 64M
+    # Log rotation: max 20MB per file, keep 3 files (60MB total)
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '20m'
+        max-file: '3'
+        labels: 'service'
     networks:
       - homelab_net
 

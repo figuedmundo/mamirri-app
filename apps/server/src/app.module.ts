@@ -9,6 +9,7 @@ import { ClinicalCasesModule } from './modules/clinical-cases/clinical-cases.mod
 import { SessionsModule } from './modules/sessions/sessions.module';
 import { MediaModule } from './modules/media/media.module';
 import { TreatmentPlansModule } from './modules/treatment-plans/treatment-plans.module';
+import { LoggerModule } from './common/logger/logger.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import transcriptionConfig from './config/transcription.config';
 
@@ -27,6 +28,7 @@ import transcriptionConfig from './config/transcription.config';
     SessionsModule,
     MediaModule,
     TreatmentPlansModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

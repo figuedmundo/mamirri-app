@@ -7,6 +7,7 @@ import {
   REDACTED_PLACEHOLDER,
 } from '@mamirri/logger';
 import { Queue } from './queue';
+import * as Sentry from '@sentry/react';
 
 export class Logger {
   private config: LoggerConfig;
@@ -55,6 +56,31 @@ export class Logger {
 
     if (this.config.environment !== 'development') {
       this.sendToBackend(sanitized as LogEntry);
+    }
+
+    // Send ERROR and FATAL level logs to Sentry for better error tracking
+    if (level >= LogLevel.ERROR && error) {
+      this.sendToSentry(message, error, sanitized as LogEntry);
+    }
+  }
+
+  private sendToSentry(message: string, error: Error, entry: LogEntry) {
+    try {
+      Sentry.captureException(error, {
+        level: entry.levelNum === LogLevel.FATAL ? 'fatal' : 'error',
+        extra: {
+          logMessage: message,
+          correlationId: entry.correlationId,
+          timestamp: entry.timestamp,
+          version: entry.version,
+        },
+        tags: {
+          service: entry.service,
+          environment: entry.environment,
+        },
+      });
+    } catch {
+      // Silently fail if Sentry is not initialized
     }
   }
 
