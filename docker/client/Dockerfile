@@ -13,6 +13,12 @@ RUN pnpm install --filter client...
 COPY apps/client ./apps/client
 
 COPY turbo.json ./
+# Build arguments for Vite
+ARG VITE_SENTRY_DSN
+ARG VITE_APP_VERSION
+ENV VITE_SENTRY_DSN=$VITE_SENTRY_DSN
+ENV VITE_APP_VERSION=$VITE_APP_VERSION
+
 RUN pnpm run build --filter client...
 
 

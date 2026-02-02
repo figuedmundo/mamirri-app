@@ -6,7 +6,7 @@
 # Option A: Single domain with API at /api path (RECOMMENDED - simpler)
 {$MAMIRRI_DOMAIN} {
     # Route API requests to backend
-    handle_path /api/* {
+    handle /api/* {
         reverse_proxy physio_server:3000
     }
 

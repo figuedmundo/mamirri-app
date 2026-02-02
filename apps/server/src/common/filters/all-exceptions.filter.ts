@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { Prisma } from '@prisma/client';
+import * as Sentry from '@sentry/node';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -119,6 +120,22 @@ export class AllExceptionsFilter implements ExceptionFilter {
         `Http Status: ${httpStatus} Error Message: ${message}${correlationLog}`,
         exception instanceof Error ? exception.stack : '',
       );
+
+      // Send to Sentry
+      if (process.env.SENTRY_DSN) {
+        Sentry.captureException(exception, {
+          extra: {
+            path: responseBody.path,
+            correlationId,
+            body: request.body,
+            query: request.query,
+            params: request.params,
+          },
+          user: {
+            id: (request as any).user?.userId, // Capture user ID if available
+          },
+        });
+      }
     } else {
       this.logger.warn(
         `Http Status: ${httpStatus} Error Message: ${message} Path: ${responseBody.path}${correlationLog}`,
