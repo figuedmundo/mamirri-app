@@ -268,6 +268,7 @@ create_backup() {
 deploy_services() {
     log "Starting deployment process..."
     
+
     # Stop existing containers gracefully
     log "Stopping existing containers..."
     run_cmd docker compose -f "$COMPOSE_FILE" down --timeout 30
