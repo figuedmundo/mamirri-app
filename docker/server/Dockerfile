@@ -44,7 +44,12 @@ COPY packages/logger ./packages/logger
 WORKDIR /app/apps/server
 RUN npx prisma generate
 
+# Build the logger package first (required dependency)
+WORKDIR /app/packages/logger
+RUN pnpm run build
+
 # Build the application
+WORKDIR /app/apps/server
 RUN pnpm exec nest build
 
 # Stage 2: Production Runner

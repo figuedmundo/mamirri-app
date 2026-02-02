@@ -268,21 +268,11 @@ create_backup() {
 deploy_services() {
     log "Starting deployment process..."
     
-    # Pull latest code if this is a git repo
-    if [ -d ".git" ] && [ "$DRY_RUN" = false ]; then
-        log "Pulling latest code from git..."
-        run_cmd git pull origin main
-    fi
-    
+
     # Stop existing containers gracefully
     log "Stopping existing containers..."
     run_cmd docker compose -f "$COMPOSE_FILE" down --timeout 30
 
-    # Clean up old images and metadata store to prevent deadlocks
-    log "Deep cleaning Docker build cache and dangling images..."
-    docker image prune -f 2>/dev/null || true
-    docker builder prune -f 2>/dev/null || true
-    
     # Build or pull images
     if grep -q "build:" "$COMPOSE_FILE"; then
         if [ "$USE_BUILDKIT" = true ]; then
