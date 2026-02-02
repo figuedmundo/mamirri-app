@@ -270,8 +270,8 @@ deploy_services() {
     
 
     # Stop existing containers gracefully
-    log "Stopping existing containers..."
-    run_cmd docker compose -f "$COMPOSE_FILE" down --timeout 30
+    # log "Stopping existing containers..."
+    # run_cmd docker compose -f "$COMPOSE_FILE" down --timeout 30
 
     # Build or pull images
     if grep -q "build:" "$COMPOSE_FILE"; then
