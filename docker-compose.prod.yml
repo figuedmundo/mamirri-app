@@ -19,6 +19,13 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+    # Log rotation: max 20MB per file, keep 3 files (60MB total)
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '20m'
+        max-file: '3'
+        labels: 'service'
 
   # MinIO (S3-compatible storage)
   minio:
@@ -38,6 +45,13 @@ services:
       timeout: 20s
       retries: 3
     restart: unless-stopped
+    # Log rotation: max 20MB per file, keep 3 files (60MB total)
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '20m'
+        max-file: '3'
+        labels: 'service'
 
   # Redis
   redis:
@@ -48,6 +62,13 @@ services:
     networks:
       - homelab_net
     restart: unless-stopped
+    # Log rotation: max 10MB per file, keep 2 files (20MB total)
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '2'
+        labels: 'service'
 
   minio-provisioner:
     image: minio/mc:latest
@@ -106,6 +127,13 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
+    # Log rotation: max 50MB per file, keep 3 files (150MB total)
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '3'
+        labels: 'service'
     networks:
       - homelab_net
 
@@ -135,6 +163,13 @@ services:
         reservations:
           cpus: '0.1'
           memory: 64M
+    # Log rotation: max 20MB per file, keep 3 files (60MB total)
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '20m'
+        max-file: '3'
+        labels: 'service'
     networks:
       - homelab_net
 
