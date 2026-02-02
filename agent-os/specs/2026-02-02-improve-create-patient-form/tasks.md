@@ -12,22 +12,22 @@ Total Tasks: 12
 
 **Dependencies:** None
 
-- [ ] 1.0 Complete database layer
-  - [ ] 1.1 Write 2-8 focused tests for Patient Model functionality
+- [x] 1.0 Complete database layer
+  - [x] 1.1 Write 2-8 focused tests for Patient Model functionality
     - Limit to 2-8 highly focused tests maximum
     - Test ONLY: validation of new fields (emergency contact structure), removal of age/address, and successful creation with new schema
-  - [ ] 1.2 Update Patient Model in `schema.prisma`
+  - [x] 1.2 Update Patient Model in `schema.prisma`
     - Remove `age` and `address` fields
     - Add `emergencyContact` (Json)
     - Add `referralSource` (String?)
     - Add `medicalFlags` (String[] - check if array is supported or use Json)
     - _Note: PostgreSQL supports String[] arrays, but check Prisma compatibility. Fallback to Json if needed._
-  - [ ] 1.3 Create migration for Patient schema update
+  - [x] 1.3 Create migration for Patient schema update
     - Run `prisma migrate dev`
-  - [ ] 1.4 Update Patient Service/DTOs
+  - [x] 1.4 Update Patient Service/DTOs
     - Update `create-patient.dto.ts` and `update-patient.dto.ts`
     - Update type definitions to match new schema
-  - [ ] 1.5 Ensure database layer tests pass
+  - [x] 1.5 Ensure database layer tests pass
     - Run ONLY the tests written in 1.1
     - Verify migration runs successfully
 
