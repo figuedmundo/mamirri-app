@@ -8,6 +8,7 @@ export class PatientPage extends BasePage {
   readonly occupationInput: Locator;
   readonly phoneInput: Locator;
   readonly emailInput: Locator;
+  readonly birthDateInput: Locator;
   readonly createButton: Locator;
 
   constructor(page: Page) {
@@ -20,6 +21,7 @@ export class PatientPage extends BasePage {
     this.occupationInput = page.getByLabel(/Ocupación/i);
     this.phoneInput = page.getByLabel(/Teléfono/i);
     this.emailInput = page.getByLabel(/Email/i);
+    this.birthDateInput = page.getByLabel(/Fecha Nac\./i);
     this.createButton = page.getByRole('button', { name: /Crear Paciente/i });
   }
 
@@ -33,6 +35,7 @@ export class PatientPage extends BasePage {
     occupation: string;
     phone: string;
     email: string;
+    birthDate?: string;
   }) {
     await this.newPatientButton.click();
     await this.nameInput.fill(data.name);
@@ -40,6 +43,9 @@ export class PatientPage extends BasePage {
     await this.occupationInput.fill(data.occupation);
     await this.phoneInput.fill(data.phone);
     await this.emailInput.fill(data.email);
+    if (data.birthDate) {
+      await this.birthDateInput.fill(data.birthDate);
+    }
     await this.createButton.click();
   }
 }

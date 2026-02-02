@@ -9,6 +9,13 @@ import {
   DialogFooter,
   DialogDescription,
 } from '../ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Loader2 } from 'lucide-react';
 
 const patientSchema = z.object({
@@ -21,10 +28,10 @@ const patientSchema = z.object({
   phone: z.string().min(8, 'El teléfono debe tener al menos 8 dígitos'),
   email: z.string().email('Email inválido').optional().or(z.literal('')),
   birthDate: z.string().refine((date) => {
-    if (!date) return true;
+    if (!date) return false;
     const parsed = new Date(date);
     return !isNaN(parsed.getTime()) && parsed <= new Date();
-  }, 'La fecha de nacimiento no puede ser futura'),
+  }, 'Fecha de nacimiento inválida o futura'),
   address: z.string().optional(),
   gender: z.string().optional(),
   previousOccupation: z.string().optional(),
@@ -38,6 +45,20 @@ interface PatientFormProps {
   onSubmit: (data: PatientFormData) => Promise<void>;
   onCancel: () => void;
 }
+
+const calculateAge = (birthDate: string): number => {
+  if (!birthDate) return 0;
+  const today = new Date();
+  const birth = new Date(birthDate);
+  if (isNaN(birth.getTime())) return 0;
+
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age >= 0 ? age : 0;
+};
 
 export function PatientForm({
   mode,
@@ -61,10 +82,14 @@ export function PatientForm({
 
   useEffect(() => {
     if (initialData) {
-      setFormData((prev) => ({
-        ...prev,
-        ...initialData,
-      }));
+      setFormData((prev) => {
+        const newData = { ...prev, ...initialData };
+        // Recalculate age if birthDate is provided to ensure consistency
+        if (initialData.birthDate) {
+          newData.age = calculateAge(initialData.birthDate);
+        }
+        return newData;
+      });
     }
   }, [initialData]);
 
@@ -72,7 +97,17 @@ export function PatientForm({
     field: keyof PatientFormData,
     value: string | number,
   ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => {
+      const updates: Partial<PatientFormData> = { [field]: value };
+
+      if (field === 'birthDate' && typeof value === 'string') {
+        const age = calculateAge(value);
+        updates.age = age;
+      }
+
+      return { ...prev, ...updates };
+    });
+
     if (errors[field]) {
       setErrors((prev) => {
         const next = { ...prev };
@@ -141,23 +176,60 @@ export function PatientForm({
         </div>
 
         <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="birthDate" className="text-right">
+            Fecha Nac. *
+          </Label>
+          <div className="col-span-3">
+            <Input
+              id="birthDate"
+              type="date"
+              value={formData.birthDate}
+              onChange={(e) => handleChange('birthDate', e.target.value)}
+              className={errors.birthDate ? 'border-rose-500' : ''}
+            />
+            {errors.birthDate && (
+              <p className="text-xs text-rose-500 mt-1">{errors.birthDate}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="age" className="text-right">
-            Edad *
+            Edad
           </Label>
           <div className="col-span-3">
             <Input
               id="age"
               type="number"
-              value={formData.age || ''}
-              onChange={(e) =>
-                handleChange('age', parseInt(e.target.value) || 0)
-              }
-              placeholder="Edad en años"
-              className={errors.age ? 'border-rose-500' : ''}
+              value={formData.age}
+              readOnly
+              className="bg-slate-100 text-slate-500 cursor-not-allowed"
+              tabIndex={-1}
             />
             {errors.age && (
               <p className="text-xs text-rose-500 mt-1">{errors.age}</p>
             )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="gender" className="text-right">
+            Género
+          </Label>
+          <div className="col-span-3">
+            <Select
+              value={formData.gender}
+              onValueChange={(value) => handleChange('gender', value)}
+            >
+              <SelectTrigger id="gender">
+                <SelectValue placeholder="Seleccionar género" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Masculino">Masculino</SelectItem>
+                <SelectItem value="Femenino">Femenino</SelectItem>
+                <SelectItem value="Otro">Otro</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -217,24 +289,6 @@ export function PatientForm({
         </div>
 
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="birthDate" className="text-right">
-            Fecha Nac.
-          </Label>
-          <div className="col-span-3">
-            <Input
-              id="birthDate"
-              type="date"
-              value={formData.birthDate}
-              onChange={(e) => handleChange('birthDate', e.target.value)}
-              className={errors.birthDate ? 'border-rose-500' : ''}
-            />
-            {errors.birthDate && (
-              <p className="text-xs text-rose-500 mt-1">{errors.birthDate}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="address" className="text-right">
             Dirección
           </Label>
@@ -244,20 +298,6 @@ export function PatientForm({
               value={formData.address}
               onChange={(e) => handleChange('address', e.target.value)}
               placeholder="Dirección del paciente"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="gender" className="text-right">
-            Género
-          </Label>
-          <div className="col-span-3">
-            <Input
-              id="gender"
-              value={formData.gender}
-              onChange={(e) => handleChange('gender', e.target.value)}
-              placeholder="Masculino / Femenino / Otro"
             />
           </div>
         </div>

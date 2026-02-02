@@ -68,6 +68,7 @@ test('create patient flow', async ({ page }) => {
     occupation: 'Ingeniero',
     phone: '123456789',
     email: 'juan@example.com',
+    birthDate: '1980-01-01',
   });
 
   await patientPage.waitForToast(/Paciente creado correctamente/i);
