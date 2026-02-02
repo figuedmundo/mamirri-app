@@ -1,11 +1,13 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerService } from './logger.service';
+import { LogsController } from './logs.controller';
 import { LogLevel } from '@mamirri/logger';
 
 @Global()
 @Module({
   imports: [ConfigModule],
+  controllers: [LogsController],
   providers: [
     {
       provide: LoggerService,
