@@ -145,4 +145,4 @@ volumes:
 
 networks:
   homelab_net:
-    driver: bridge
+    external: true
