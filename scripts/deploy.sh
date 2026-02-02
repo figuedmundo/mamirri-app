@@ -211,6 +211,13 @@ check_prerequisites() {
     if [ ! -f ".env" ]; then
         warn ".env file not found. Ensure all environment variables are set."
     fi
+
+    # Ensure backup directory exists with correct permissions
+    if [ ! -d "$BACKUP_DIR" ]; then
+        log "Creating backup directory: $BACKUP_DIR"
+        mkdir -p "$BACKUP_DIR"
+        chmod 755 "$BACKUP_DIR"
+    fi
     
     # Check available disk space (need at least 2GB)
     if [ "$DRY_RUN" = false ]; then
