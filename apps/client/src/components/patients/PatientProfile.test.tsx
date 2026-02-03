@@ -84,11 +84,15 @@ const mockPhases: TreatmentPhase[] = [
 const mockPatient: Patient = {
   id: 'p1',
   name: 'Juan Perez',
-  age: 30,
   occupation: 'Desarrollador',
   phone: '+34 600 123 456',
   email: 'juan@example.com',
   birthDate: '1994-05-15',
+  emergencyContact: {
+    name: 'Jane Doe',
+    phone: '987654321',
+  },
+  medicalFlags: [],
   isActive: true,
   createdAt: '2025-01-01',
   clinicalCases: [
@@ -187,14 +191,19 @@ describe('PatientProfile', () => {
   });
 
   it('renders patient info grid with all fields', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-02-03'));
+
     render(<PatientProfile patient={mockPatient} />);
 
-    expect(screen.getByText('30 años')).toBeInTheDocument();
+    expect(screen.getByText('31 años')).toBeInTheDocument();
     expect(screen.getByText('Desarrollador')).toBeInTheDocument();
     expect(screen.getByText('+34 600 123 456')).toBeInTheDocument();
     expect(screen.getByText('juan@example.com')).toBeInTheDocument();
     expect(screen.getByText(/Nacido:/)).toBeInTheDocument();
     expect(screen.getByText(/Expediente creado/)).toBeInTheDocument();
+
+    vi.useRealTimers();
   });
 
   it('renders action buttons and triggers callbacks', async () => {

@@ -14,12 +14,6 @@ export class PatientResponseDto {
   name: string;
 
   @ApiProperty({
-    description: 'Age of the patient',
-    example: 30,
-  })
-  age: number;
-
-  @ApiProperty({
     description: 'Occupation',
     example: 'Engineer',
   })
@@ -30,12 +24,6 @@ export class PatientResponseDto {
     example: 'Student',
   })
   previousOccupation: string | null;
-
-  @ApiPropertyOptional({
-    description: 'Address',
-    example: '123 Main St',
-  })
-  address: string | null;
 
   @ApiPropertyOptional({
     description: 'Gender',
@@ -60,6 +48,24 @@ export class PatientResponseDto {
     example: '+1234567890',
   })
   phone: string | null;
+
+  @ApiPropertyOptional({
+    description: 'Emergency contact information',
+  })
+  emergencyContact: any;
+
+  @ApiPropertyOptional({
+    description: 'How the patient found the clinic',
+    example: 'Instagram',
+  })
+  referralSource: string | null;
+
+  @ApiProperty({
+    description: 'Medical flags/alerts',
+    example: ['Diabetes', 'Hipertensión'],
+    type: [String],
+  })
+  medicalFlags: string[];
 
   @ApiProperty({
     description: 'Date and time when the patient record was created',

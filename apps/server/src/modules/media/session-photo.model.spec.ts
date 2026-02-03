@@ -54,11 +54,11 @@ describe('SessionPhoto Model Integration', () => {
     const patient = await prisma.patient.create({
       data: {
         name: 'Photo Patient',
-        age: 25,
         occupation: 'Model',
         phone: '9876543210',
         birthDate: new Date('1999-01-01'),
         therapistId: therapist.id,
+        medicalFlags: [],
       },
     });
     patientId = patient.id;

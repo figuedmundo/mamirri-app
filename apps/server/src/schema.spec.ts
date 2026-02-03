@@ -30,10 +30,12 @@ describe('Prisma Schema Validation', () => {
   });
 
   describe('Patient Model', () => {
-    it('should have name, age, therapistId', () => {
+    it('should have name, therapistId, emergencyContact, referralSource, medicalFlags', () => {
       expect(schemaContent).toMatch(/name\s+String/);
-      expect(schemaContent).toMatch(/age\s+Int/);
       expect(schemaContent).toMatch(/therapistId\s+String/);
+      expect(schemaContent).toMatch(/emergencyContact\s+Json\?/);
+      expect(schemaContent).toMatch(/referralSource\s+String\?/);
+      expect(schemaContent).toMatch(/medicalFlags\s+String\[\]/);
     });
   });
 

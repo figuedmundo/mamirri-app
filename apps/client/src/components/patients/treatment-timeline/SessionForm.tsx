@@ -303,6 +303,7 @@ export function SessionForm({
                     ? 'border-red-500'
                     : 'border-slate-300 dark:border-slate-600',
                 )}
+                data-testid="session-phase-select"
               >
                 {phases.map((phase) => (
                   <option key={phase.number} value={phase.number}>
@@ -362,6 +363,7 @@ export function SessionForm({
                   onKeyDown={handleProcedureKeyDown}
                   placeholder="Agregar procedimiento..."
                   className="w-full px-2 py-1 border-0 focus:outline-none bg-transparent"
+                  data-testid="procedure-input"
                 />
                 {showSuggestions && filteredSuggestions.length > 0 && (
                   <div className="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg max-h-40 overflow-y-auto">
@@ -405,6 +407,7 @@ export function SessionForm({
                   ? 'border-red-500'
                   : 'border-slate-300 dark:border-slate-600',
               )}
+              data-testid="patient-response-input"
             />
             {errors.patientResponse && (
               <p className="mt-1 text-xs text-red-500">
@@ -450,6 +453,7 @@ export function SessionForm({
               rows={2}
               placeholder="Notas adicionales..."
               className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+              data-testid="observations-input"
             />
           </div>
 

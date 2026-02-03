@@ -11,6 +11,21 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
+const getAge = (birthDateString: string) => {
+  if (!birthDateString) return 0;
+  const birthDate = new Date(birthDateString);
+  const today = new Date();
+  let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    calculatedAge--;
+  }
+  return calculatedAge >= 0 ? calculatedAge : 0;
+};
+
 export function PatientList({
   patients,
   onView,
@@ -179,7 +194,7 @@ export function PatientList({
                         {patient.name}
                       </h3>
                       <p className="text-sm text-slate-500 dark:text-slate-400">
-                        {patient.age} años • {patient.occupation}
+                        {getAge(patient.birthDate)} años • {patient.occupation}
                       </p>
                     </div>
                     {patient.isActive ? (

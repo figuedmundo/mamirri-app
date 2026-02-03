@@ -134,16 +134,19 @@ export function PatientProfile({
     });
   };
 
-  const getAge = (birthDateString: string, age?: number) => {
-    if (age) return age;
+  const getAge = (birthDateString: string) => {
+    if (!birthDateString) return 0;
     const birthDate = new Date(birthDateString);
     const today = new Date();
-    const calculatedAge = today.getFullYear() - birthDate.getFullYear();
+    let calculatedAge = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    return monthDiff < 0 ||
+    if (
+      monthDiff < 0 ||
       (monthDiff === 0 && today.getDate() < birthDate.getDate())
-      ? calculatedAge - 1
-      : calculatedAge;
+    ) {
+      calculatedAge--;
+    }
+    return calculatedAge >= 0 ? calculatedAge : 0;
   };
 
   const getStatusColor = (status: string) => {
@@ -192,10 +195,11 @@ export function PatientProfile({
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                   <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                     <User className="w-4 h-4" />
-                    <span>{getAge(patient.birthDate, patient.age)} años</span>
+                    <span>{getAge(patient.birthDate)} años</span>
                     <span className="text-slate-400 dark:text-slate-500">
                       •
                     </span>
+
                     <span>{patient.occupation}</span>
                   </div>
 

@@ -8,14 +8,18 @@ import type {
 
 export interface CreatePatientDto {
   name: string;
-  age: number;
   occupation: string;
   previousOccupation?: string;
-  address?: string;
   gender?: string;
   phone: string;
   email?: string;
   birthDate: string;
+  emergencyContact: {
+    name: string;
+    phone: string;
+  };
+  referralSource?: string;
+  medicalFlags: string[];
 }
 
 export interface CreateTreatmentSessionDto {

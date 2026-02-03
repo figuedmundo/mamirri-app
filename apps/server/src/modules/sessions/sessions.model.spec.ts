@@ -42,11 +42,11 @@ describe('TreatmentSession Model (Integration)', () => {
     const patient = await prisma.patient.create({
       data: {
         name: 'Test Patient',
-        age: 30,
         phone: '1234567890',
         birthDate: new Date(),
         occupation: 'Tester',
         therapistId: therapistId,
+        medicalFlags: [],
       },
     });
     patientId = patient.id;

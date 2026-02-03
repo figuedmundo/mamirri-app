@@ -49,10 +49,14 @@ describe('generateComparisonReport', () => {
   const mockPatient: Patient = {
     id: 'p1',
     name: 'Maria Garcia',
-    age: 58,
     occupation: 'Teacher',
     phone: '123456789',
     birthDate: '1965-05-15',
+    emergencyContact: {
+      name: 'John Doe',
+      phone: '1234567',
+    },
+    medicalFlags: [],
     isActive: true,
     createdAt: '2025-01-01',
     clinicalCases: [],

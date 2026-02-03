@@ -65,7 +65,23 @@ export const generateComparisonReport = async (
     y += 6;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text(`${patient.age} años`, col1X, y);
+
+    const calculateAgeLocal = (birthDateString: string) => {
+      if (!birthDateString) return 0;
+      const birthDate = new Date(birthDateString);
+      const today = new Date();
+      let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      ) {
+        calculatedAge--;
+      }
+      return calculatedAge >= 0 ? calculatedAge : 0;
+    };
+
+    doc.text(`${calculateAgeLocal(patient.birthDate)} años`, col1X, y);
 
     const startDate = new Date(clinicalCase.startDate).toLocaleDateString(
       'es-ES',

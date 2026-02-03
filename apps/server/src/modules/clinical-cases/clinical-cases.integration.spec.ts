@@ -59,11 +59,11 @@ describe('Clinical Cases Integration (DB Layer)', () => {
     const patient = await prisma.patient.create({
       data: {
         name: 'Case Test Patient',
-        age: 35,
         occupation: 'Developer',
         phone: '1234567890',
         birthDate: new Date('1989-06-15'),
         therapistId: therapist.id,
+        medicalFlags: [],
       },
     });
 
@@ -98,11 +98,11 @@ describe('Clinical Cases Integration (DB Layer)', () => {
     const patient = await prisma.patient.create({
       data: {
         name: 'Cascade Patient',
-        age: 40,
         occupation: 'Engineer',
         phone: '9876543210',
         birthDate: new Date('1984-03-20'),
         therapistId: therapist.id,
+        medicalFlags: [],
       },
     });
 
@@ -141,11 +141,11 @@ describe('Clinical Cases Integration (DB Layer)', () => {
     const patient = await prisma.patient.create({
       data: {
         name: 'Status Patient',
-        age: 28,
         occupation: 'Teacher',
         phone: '5551234567',
         birthDate: new Date('1996-08-10'),
         therapistId: therapist.id,
+        medicalFlags: [],
       },
     });
 
@@ -184,11 +184,11 @@ describe('Clinical Cases Integration (DB Layer)', () => {
     const patient = await prisma.patient.create({
       data: {
         name: 'Eval Patient',
-        age: 45,
         occupation: 'Manager',
         phone: '1112223333',
         birthDate: new Date('1979-12-01'),
         therapistId: therapist.id,
+        medicalFlags: [],
       },
     });
 
@@ -237,11 +237,11 @@ describe('Clinical Cases Integration (DB Layer)', () => {
     const patient = await prisma.patient.create({
       data: {
         name: 'Session Patient',
-        age: 32,
         occupation: 'Nurse',
         phone: '4445556666',
         birthDate: new Date('1992-04-25'),
         therapistId: therapist.id,
+        medicalFlags: [],
       },
     });
 

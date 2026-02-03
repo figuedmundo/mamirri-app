@@ -37,9 +37,8 @@ describe('PatientsController', () => {
     it('should create a patient with therapistId', async () => {
       const dto: CreatePatientDto = {
         name: 'John Doe',
-        age: 30,
         occupation: 'Worker',
-        phone: '123',
+        phone: '1234567890',
         birthDate: '1990-01-01',
       };
       const therapistId = 'therapist-1';
@@ -51,10 +50,12 @@ describe('PatientsController', () => {
         createdAt: new Date(),
         email: null,
         previousOccupation: null,
-        address: null,
         gender: null,
         deletedAt: null,
         isActive: true,
+        emergencyContact: null,
+        referralSource: null,
+        medicalFlags: [],
       };
 
       (service.create as jest.Mock).mockResolvedValue(serviceResult);
@@ -103,7 +104,6 @@ describe('PatientsController', () => {
       const serviceResult = {
         id,
         name: 'John Doe',
-        age: 30,
         occupation: 'Engineer',
         therapistId,
         birthDate: new Date('1990-01-01'),
@@ -111,6 +111,9 @@ describe('PatientsController', () => {
         email: null,
         phone: null,
         deletedAt: null,
+        emergencyContact: null,
+        referralSource: null,
+        medicalFlags: [],
       };
 
       (service.findOne as jest.Mock).mockResolvedValue(serviceResult);
@@ -133,7 +136,6 @@ describe('PatientsController', () => {
       const serviceResult = {
         id,
         name: 'Jane Doe',
-        age: 30,
         occupation: 'Engineer',
         therapistId,
         birthDate: new Date('1990-01-01'),
@@ -141,6 +143,9 @@ describe('PatientsController', () => {
         email: null,
         phone: null,
         deletedAt: null,
+        emergencyContact: null,
+        referralSource: null,
+        medicalFlags: [],
       };
 
       (service.update as jest.Mock).mockResolvedValue(serviceResult);

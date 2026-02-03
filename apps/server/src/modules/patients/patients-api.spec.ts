@@ -33,30 +33,30 @@ describe('Patients API Refactoring', () => {
   });
 
   describe('DTO Validation', () => {
-    it('should fail validation when age is negative', async () => {
-      const dto = new CreatePatientDto();
-      dto.name = 'John Doe';
-      dto.age = -5;
-      dto.occupation = 'Tester';
-      dto.birthDate = '1990-01-01';
-      dto.phone = '1234567890';
-
-      const errors = await validate(dto);
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].property).toBe('age');
-    });
-
     it('should fail validation when name is too short', async () => {
       const dto = new CreatePatientDto();
       dto.name = 'J';
-      dto.age = 30;
       dto.occupation = 'Tester';
       dto.birthDate = '1990-01-01';
-      dto.phone = '1234567890';
+      dto.phone = '+14155552671';
 
       const errors = await validate(dto);
       expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].property).toBe('name');
+      expect(errors.some((e) => e.property === 'name')).toBe(true);
+    });
+
+    it('should fail validation when medicalFlags is not an array of strings', async () => {
+      const dto = new CreatePatientDto();
+      dto.name = 'John Doe';
+      dto.occupation = 'Tester';
+      dto.birthDate = '1990-01-01';
+      dto.phone = '+14155552671';
+      // @ts-expect-error - testing invalid type for validation
+      dto.medicalFlags = ['Diabetes', 123];
+
+      const errors = await validate(dto);
+      expect(errors.length).toBeGreaterThan(0);
+      expect(errors.some((e) => e.property === 'medicalFlags')).toBe(true);
     });
   });
 
@@ -112,37 +112,22 @@ describe('Patients API Refactoring', () => {
     });
   });
 
-  describe('DTO Validation', () => {
-    it('should fail validation when age is negative', async () => {
-      const dto = new CreatePatientDto();
-      dto.name = 'John Doe';
-      dto.age = -5;
-      dto.occupation = 'Tester';
-      dto.birthDate = '1990-01-01';
-      dto.phone = '1234567890';
-
-      const errors = await validate(dto);
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].property).toBe('age');
-    });
-
+  describe('DTO Validation (Duplicate)', () => {
     it('should fail validation when name is too short', async () => {
       const dto = new CreatePatientDto();
       dto.name = 'J';
-      dto.age = 30;
       dto.occupation = 'Tester';
       dto.birthDate = '1990-01-01';
-      dto.phone = '1234567890';
+      dto.phone = '+14155552671';
 
       const errors = await validate(dto);
       expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].property).toBe('name');
+      expect(errors.some((e) => e.property === 'name')).toBe(true);
     });
 
     it('should fail validation when phone format is invalid', async () => {
       const dto = new CreatePatientDto();
       dto.name = 'John Doe';
-      dto.age = 30;
       dto.occupation = 'Tester';
       dto.birthDate = '1990-01-01';
       dto.phone = 'invalid-phone';
@@ -155,10 +140,9 @@ describe('Patients API Refactoring', () => {
     it('should fail validation when email format is invalid', async () => {
       const dto = new CreatePatientDto();
       dto.name = 'John Doe';
-      dto.age = 30;
       dto.occupation = 'Tester';
       dto.birthDate = '1990-01-01';
-      dto.phone = '1234567890';
+      dto.phone = '+1234567890';
       dto.email = 'invalid-email';
 
       const errors = await validate(dto);
@@ -172,10 +156,9 @@ describe('Patients API Refactoring', () => {
       const therapistId = 'therapist-1';
       const createDto = {
         name: 'John Doe',
-        age: 30,
         occupation: 'Engineer',
         birthDate: '1990-01-01',
-        phone: '1234567890',
+        phone: '+1234567890',
       };
 
       const mockPatient = { id: 'p1', ...createDto };
