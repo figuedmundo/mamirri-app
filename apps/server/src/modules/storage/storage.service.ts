@@ -71,6 +71,7 @@ const MAGIC_NUMBERS: Record<string, number[]> = {
 export class StorageService implements OnModuleInit {
   private readonly logger = new Logger(StorageService.name);
   private readonly client: S3Client;
+  private readonly signingClient: S3Client;
 
   constructor() {
     const config = storageConfig();
@@ -91,6 +92,25 @@ export class StorageService implements OnModuleInit {
       region: 'us-east-1',
       forcePathStyle: true,
     });
+
+    if (config.publicEndpoint) {
+      this.logger.log(
+        `Initializing Signing Client with public endpoint: ${config.publicEndpoint}`,
+      );
+      this.signingClient = new S3Client({
+        endpoint: config.publicEndpoint.includes('://')
+          ? config.publicEndpoint
+          : `http${config.useSSL ? 's' : ''}://${config.publicEndpoint}`,
+        credentials: {
+          accessKeyId: config.accessKey,
+          secretAccessKey: config.secretKey,
+        },
+        region: 'us-east-1',
+        forcePathStyle: true,
+      });
+    } else {
+      this.signingClient = this.client;
+    }
   }
 
   async onModuleInit() {
@@ -193,7 +213,7 @@ export class StorageService implements OnModuleInit {
     });
 
     try {
-      const url = await getSignedUrl(this.client, command, {
+      const url = await getSignedUrl(this.signingClient, command, {
         expiresIn: expiry,
       });
       return url;
