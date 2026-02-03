@@ -130,7 +130,10 @@ export function PatientForm({
     [formData.birthDate],
   );
 
-  const handleChange = (field: keyof PatientFormData, value: any) => {
+  const handleChange = (
+    field: keyof PatientFormData,
+    value: string | string[],
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,

@@ -1,3 +1,4 @@
+import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { PatientForm } from './PatientForm';
@@ -11,7 +12,13 @@ class ResizeObserver {
 window.ResizeObserver = ResizeObserver;
 
 vi.mock('../ui/SplitDatePicker', () => ({
-  SplitDatePicker: ({ value, onChange }: any) => (
+  SplitDatePicker: ({
+    value,
+    onChange,
+  }: {
+    value: string;
+    onChange: (date: string) => void;
+  }) => (
     <input
       data-testid="split-date-picker"
       value={value}
@@ -21,22 +28,41 @@ vi.mock('../ui/SplitDatePicker', () => ({
 }));
 
 vi.mock('../ui/dialog', () => ({
-  DialogHeader: ({ children }: any) => <div>{children}</div>,
-  DialogTitle: ({ children }: any) => <div>{children}</div>,
-  DialogFooter: ({ children }: any) => <div>{children}</div>,
-  DialogDescription: ({ children }: any) => <div>{children}</div>,
+  DialogHeader: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  DialogTitle: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  DialogFooter: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  DialogDescription: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
 }));
 
 vi.mock('../ui/select', () => ({
-  Select: ({ children, value, onValueChange }: any) => {
+  Select: ({
+    children,
+    value,
+    onValueChange,
+  }: {
+    children: React.ReactNode;
+    value: string;
+    onValueChange: (v: string) => void;
+  }) => {
     return (
       <div data-testid="mock-select-wrapper">
-        {(Array.isArray(children) ? children : [children]).map((child: any) => {
-          if (child && child.props && child.props['data-testid']) {
+        {(Array.isArray(children) ? children : [children]).map((child, idx) => {
+          const childElement = child as React.ReactElement<{
+            'data-testid'?: string;
+          }>;
+          if (childElement?.props?.['data-testid']) {
             return (
               <select
-                key={child.props['data-testid']}
-                data-testid={child.props['data-testid']}
+                key={childElement.props['data-testid']}
+                data-testid={childElement.props['data-testid']}
                 value={value}
                 onChange={(e) => onValueChange(e.target.value)}
               >
@@ -48,21 +74,39 @@ vi.mock('../ui/select', () => ({
               </select>
             );
           }
-          return null;
+          return <React.Fragment key={idx}>{child}</React.Fragment>;
         })}
       </div>
     );
   },
-  SelectTrigger: ({ children }: any) => <>{children}</>,
-  SelectValue: ({ placeholder }: any) => <span>{placeholder}</span>,
-  SelectContent: ({ children }: any) => <>{children}</>,
-  SelectItem: ({ children, value }: any) => (
-    <option value={value}>{children}</option>
+  SelectTrigger: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
   ),
+  SelectValue: ({ placeholder }: { placeholder: string }) => (
+    <span>{placeholder}</span>
+  ),
+  SelectContent: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
+  SelectItem: ({
+    children,
+    value,
+  }: {
+    children: React.ReactNode;
+    value: string;
+  }) => <option value={value}>{children}</option>,
 }));
 
 vi.mock('../ui/checkbox', () => ({
-  Checkbox: ({ id, checked, onCheckedChange }: any) => (
+  Checkbox: ({
+    id,
+    checked,
+    onCheckedChange,
+  }: {
+    id: string;
+    checked: boolean;
+    onCheckedChange: (c: boolean) => void;
+  }) => (
     <input
       type="checkbox"
       id={id}
@@ -73,7 +117,9 @@ vi.mock('../ui/checkbox', () => ({
 }));
 
 vi.mock('../ui/scroll-area', () => ({
-  ScrollArea: ({ children }: any) => <div>{children}</div>,
+  ScrollArea: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
 }));
 
 describe('PatientForm Logic', () => {

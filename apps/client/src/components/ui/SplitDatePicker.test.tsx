@@ -1,18 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { SplitDatePicker } from './SplitDatePicker';
 
 vi.mock('./select', () => ({
-  Select: ({ children, value, onValueChange }: any) => {
+  Select: ({
+    children,
+    value,
+    onValueChange,
+  }: {
+    children: React.ReactNode;
+    value: string;
+    onValueChange: (v: string) => void;
+  }) => {
     const flatChildren = (Array.isArray(children) ? children : [children])
       .flat()
       .filter(Boolean);
 
-    const trigger = flatChildren.find(
-      (c: any) =>
-        c.type?.name === 'SelectTrigger' ||
-        c.props?.children?.type?.name === 'SelectValue',
-    );
+    const trigger = flatChildren.find((c) => {
+      const child = c as any;
+      return (
+        child.type?.name === 'SelectTrigger' ||
+        child.props?.children?.type?.name === 'SelectValue'
+      );
+    }) as any;
     const placeholder = trigger?.props?.children?.props?.placeholder;
 
     return (
@@ -24,7 +36,8 @@ vi.mock('./select', () => ({
           onChange={(e) => onValueChange?.(e.target.value)}
         >
           <option value="">Select...</option>
-          {flatChildren.map((child: any) => {
+          {flatChildren.map((childNode: any, idx: number) => {
+            const child = childNode;
             if (child.props?.children && Array.isArray(child.props.children)) {
               return child.props.children
                 .filter((c: any) => c.props?.value)
@@ -35,9 +48,13 @@ vi.mock('./select', () => ({
                 ));
             }
             if (child.props?.value) {
+              const itemChild = childNode;
               return (
-                <option key={child.props.value} value={child.props.value}>
-                  {child.props.children}
+                <option
+                  key={`${itemChild.props.value}-${idx}`}
+                  value={itemChild.props.value}
+                >
+                  {itemChild.props.children}
                 </option>
               );
             }
@@ -47,18 +64,22 @@ vi.mock('./select', () => ({
       </div>
     );
   },
-  SelectTrigger: ({ children }: any) => (
+  SelectTrigger: ({ children }: { children: React.ReactNode }) => (
     <div className="SelectTrigger">{children}</div>
   ),
-  SelectValue: ({ placeholder }: any) => (
+  SelectValue: ({ placeholder }: { placeholder: string }) => (
     <span className="SelectValue">{placeholder}</span>
   ),
-  SelectContent: ({ children }: any) => (
+  SelectContent: ({ children }: { children: React.ReactNode }) => (
     <div className="SelectContent">{children}</div>
   ),
-  SelectItem: ({ children, value }: any) => (
-    <option value={value}>{children}</option>
-  ),
+  SelectItem: ({
+    children,
+    value,
+  }: {
+    children: React.ReactNode;
+    value: string;
+  }) => <option value={value}>{children}</option>,
 }));
 
 if (
