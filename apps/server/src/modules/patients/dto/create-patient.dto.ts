@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsPhoneNumber,
   Length,
   IsDateString,
   ValidateNested,
