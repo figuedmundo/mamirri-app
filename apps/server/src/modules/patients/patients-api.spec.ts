@@ -125,18 +125,6 @@ describe('Patients API Refactoring', () => {
       expect(errors.some((e) => e.property === 'name')).toBe(true);
     });
 
-    it('should fail validation when phone format is invalid', async () => {
-      const dto = new CreatePatientDto();
-      dto.name = 'John Doe';
-      dto.occupation = 'Tester';
-      dto.birthDate = '1990-01-01';
-      dto.phone = 'invalid-phone';
-
-      const errors = await validate(dto);
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors.some((e) => e.property === 'phone')).toBe(true);
-    });
-
     it('should fail validation when email format is invalid', async () => {
       const dto = new CreatePatientDto();
       dto.name = 'John Doe';

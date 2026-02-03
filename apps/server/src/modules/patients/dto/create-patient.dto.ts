@@ -80,11 +80,11 @@ export class CreatePatientDto {
   email?: string;
 
   @ApiProperty({
-    description: 'Phone number in E.164 format',
-    example: '+1234567890',
+    description: 'Phone number',
+    example: '12345678',
   })
   @IsNotEmpty()
-  @IsPhoneNumber()
+  @IsString()
   phone: string;
 
   @ApiPropertyOptional({
