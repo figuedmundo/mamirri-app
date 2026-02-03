@@ -15,7 +15,10 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET') || 'secretKey',
-        signOptions: { expiresIn: '15m' },
+        signOptions: {
+          expiresIn: (configService.get<string>('JWT_EXPIRATION') ||
+            '7d') as any,
+        },
       }),
       inject: [ConfigService],
     }),

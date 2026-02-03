@@ -260,14 +260,15 @@ export default function PatientDetail() {
 
   const initialEditData: Partial<PatientFormData> = {
     name: patient.name,
-    age: patient.age,
     occupation: patient.occupation,
     phone: patient.phone,
     email: patient.email || '',
     birthDate: patient.birthDate,
-    address: patient.address || '',
     gender: patient.gender || '',
     previousOccupation: patient.previousOccupation || '',
+    emergencyContact: patient.emergencyContact,
+    referralSource: patient.referralSource,
+    medicalFlags: patient.medicalFlags,
   };
 
   return (
@@ -284,7 +285,7 @@ export default function PatientDetail() {
       />
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[425px] md:max-w-screen-md lg:max-w-screen-lg p-0">
           <PatientForm
             mode="edit"
             initialData={initialEditData}

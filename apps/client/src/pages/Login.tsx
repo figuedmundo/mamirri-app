@@ -30,37 +30,40 @@ const Login: React.FC = () => {
       login(response.data.user, response.data.accessToken);
       navigate('/');
     } catch {
-      setError('Invalid credentials');
+      setError('Correo o contraseña incorrectos');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle>Sign In</CardTitle>
-          <CardDescription>
-            Enter your email and password to access your account.
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+      <Card className="w-full max-w-[400px] shadow-lg">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center">
+            Iniciar Sesión
+          </CardTitle>
+          <CardDescription className="text-center text-base">
+            Ingresa tu correo y contraseña para acceder a tu cuenta.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
+              <label htmlFor="email" className="text-base font-medium">
+                Correo Electrónico
               </label>
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="nombre@ejemplo.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="h-12 text-lg"
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
+              <label htmlFor="password" className="text-base font-medium">
+                Contraseña
               </label>
               <Input
                 id="password"
@@ -68,17 +71,25 @@ const Login: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="h-12 text-lg"
               />
             </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <Button type="submit" className="w-full">
-              Sign In
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
+            <Button type="submit" className="w-full h-12 text-lg font-semibold">
+              Iniciar Sesión
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <a href="/register" className="text-sm text-blue-600 hover:underline">
-            Don't have an account? Sign up
+        <CardFooter className="flex justify-center border-t py-4">
+          <a
+            href="/register"
+            className="text-sm text-primary font-medium hover:underline"
+          >
+            ¿No tienes cuenta? Regístrate
           </a>
         </CardFooter>
       </Card>

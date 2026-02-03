@@ -153,14 +153,15 @@ export default function Patients() {
     if (!editPatient) return undefined;
     return {
       name: editPatient.name,
-      age: editPatient.age,
       occupation: editPatient.occupation,
       phone: editPatient.phone,
       email: editPatient.email || '',
       birthDate: editPatient.birthDate,
-      address: editPatient.address || '',
       gender: editPatient.gender || '',
       previousOccupation: editPatient.previousOccupation || '',
+      emergencyContact: editPatient.emergencyContact,
+      referralSource: editPatient.referralSource,
+      medicalFlags: editPatient.medicalFlags,
     };
   };
 
@@ -189,7 +190,7 @@ export default function Patients() {
       />
 
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[425px] md:max-w-screen-md lg:max-w-screen-lg p-0">
           <PatientForm
             mode="create"
             onSubmit={handleCreate}
@@ -199,7 +200,7 @@ export default function Patients() {
       </Dialog>
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[425px] md:max-w-screen-md lg:max-w-screen-lg p-0">
           <PatientForm
             mode="edit"
             initialData={getEditInitialData()}

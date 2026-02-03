@@ -4,13 +4,26 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsPhoneNumber,
   Length,
   IsDateString,
-  IsInt,
-  Min,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { IsDateStringNotFuture } from '../../../common/validators/is-date-string-not-future.validator';
+
+export class EmergencyContactDto {
+  [key: string]: any;
+
+  @ApiProperty({ example: 'Jane Doe' })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty({ example: '+1234567890' })
+  @IsString()
+  @IsNotEmpty()
+  phone: string;
+}
 
 export class CreatePatientDto {
   @ApiProperty({
@@ -23,15 +36,6 @@ export class CreatePatientDto {
   @IsNotEmpty()
   @Length(2, 100)
   name: string;
-
-  @ApiProperty({
-    description: 'Age of the patient',
-    example: 30,
-  })
-  @IsNotEmpty()
-  @IsInt()
-  @Min(0)
-  age: number;
 
   @ApiProperty({
     description: 'Occupation of the patient',
@@ -48,14 +52,6 @@ export class CreatePatientDto {
   @IsOptional()
   @IsString()
   previousOccupation?: string;
-
-  @ApiPropertyOptional({
-    description: 'Home address',
-    example: '123 Main St',
-  })
-  @IsOptional()
-  @IsString()
-  address?: string;
 
   @ApiPropertyOptional({
     description: 'Gender',
@@ -83,10 +79,53 @@ export class CreatePatientDto {
   email?: string;
 
   @ApiProperty({
-    description: 'Phone number in E.164 format',
-    example: '+1234567890',
+    description: 'Phone number',
+    example: '12345678',
   })
   @IsNotEmpty()
-  @IsPhoneNumber()
+  @IsString()
   phone: string;
+
+  @ApiPropertyOptional({
+    description: 'Emergency contact information',
+    type: () => EmergencyContactDto,
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => EmergencyContactDto)
+  emergencyContact?: EmergencyContactDto;
+
+  @ApiPropertyOptional({
+    description: 'How the patient found the clinic',
+    example: 'Instagram',
+  })
+  @IsOptional()
+  @IsString()
+  referralSource?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Specific details about the referral source (e.g. Doctor name)',
+    example: 'Dr. Smith',
+  })
+  @IsOptional()
+  @IsString()
+  referralSourceDetails?: string;
+
+  @ApiPropertyOptional({
+    description: 'Medical flags/alerts',
+    example: ['Diabetes', 'Hipertensión'],
+    type: [String],
+  })
+  @IsOptional()
+  @IsString({ each: true })
+  medicalFlags?: string[];
+
+  @ApiPropertyOptional({
+    description: 'Details for "Other" medical flags',
+    example: 'Severe allergy to latex',
+  })
+  @IsOptional()
+  @IsString()
+  medicalFlagsOther?: string;
 }

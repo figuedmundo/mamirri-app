@@ -26,14 +26,17 @@ model User {
 model Patient {
   id              String   @id @default(cuid())
   name            String
-  age             Int
   occupation      String
   previousOccupation String?
-  address         String?
   gender          String?
   phone           String
   email           String?
   birthDate       DateTime
+  emergencyContact Json?
+  referralSource  String?
+  referralSourceDetails String?
+  medicalFlags    String[]
+  medicalFlagsOther String?
   isActive        Boolean  @default(true)
   deletedAt       DateTime?
   createdAt       DateTime @default(now())

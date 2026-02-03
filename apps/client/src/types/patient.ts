@@ -326,14 +326,20 @@ export interface ClinicalCase {
 export interface Patient {
   id: string;
   name: string;
-  age: number;
   occupation: string;
   previousOccupation?: string;
-  address?: string;
   gender?: string;
   phone: string;
   email?: string;
   birthDate: string;
+  emergencyContact: {
+    name: string;
+    phone: string;
+  };
+  referralSource?: string;
+  referralSourceDetails?: string;
+  medicalFlags: string[];
+  medicalFlagsOther?: string;
   isActive: boolean;
   createdAt: string;
   clinicalCases: ClinicalCase[];

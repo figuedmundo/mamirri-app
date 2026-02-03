@@ -128,9 +128,9 @@ test.describe('Voice Dictation in Evaluation Form', () => {
 
     await page.getByTestId('nav-evaluation-btn').click();
 
+    await expect(casePage.dictateVoiceButton).toBeVisible();
     await casePage.startVoiceDictation();
-    await casePage.startRecording();
-    await expect(casePage.stopRecordingButton).toBeVisible();
+    await expect(casePage.stopRecordingButton).toBeVisible({ timeout: 10000 });
     await page.waitForTimeout(2000);
 
     await casePage.stopRecording();

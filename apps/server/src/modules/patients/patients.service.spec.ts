@@ -63,7 +63,6 @@ describe('PatientsService', () => {
   describe('createPatient', () => {
     const createDto = {
       name: 'John Doe',
-      age: 30,
       occupation: 'Engineer',
       phone: '1234567890',
       birthDate: '1993-01-01',
@@ -77,7 +76,7 @@ describe('PatientsService', () => {
       };
       mockPrismaService.patient.create.mockResolvedValue(createdPatient);
 
-      const result = await service.create(createDto, mockTherapistId);
+      const result = await service.create(createDto as any, mockTherapistId);
 
       expect(result).toEqual(createdPatient);
       expect(mockPrismaService.patient.create).toHaveBeenCalledWith(
@@ -93,6 +92,13 @@ describe('PatientsService', () => {
             }),
           }),
         }),
+      );
+    });
+
+    it('should throw BadRequestException if birthDate is invalid', async () => {
+      const invalidDto = { ...createDto, birthDate: 'invalid-date' };
+      await expect(service.create(invalidDto, mockTherapistId)).rejects.toThrow(
+        BadRequestException,
       );
     });
   });
@@ -169,7 +175,7 @@ describe('PatientsService', () => {
   });
 
   describe('update', () => {
-    const updateDto = { name: 'Jane Doe', age: 31 };
+    const updateDto = { name: 'Jane Doe' };
 
     it('should update a patient successfully', async () => {
       const existingPatient = {
@@ -183,7 +189,11 @@ describe('PatientsService', () => {
       mockPrismaService.patient.findFirst.mockResolvedValue(existingPatient);
       mockPrismaService.patient.update.mockResolvedValue(updatedPatient);
 
-      const result = await service.update('p1', updateDto, mockTherapistId);
+      const result = await service.update(
+        'p1',
+        updateDto as any,
+        mockTherapistId,
+      );
 
       expect(result).toEqual(updatedPatient);
       expect(mockPrismaService.patient.update).toHaveBeenCalledWith({
@@ -208,6 +218,20 @@ describe('PatientsService', () => {
         where: { id: 'p1' },
         data: { birthDate: new Date('1995-05-15') },
       });
+    });
+
+    it('should throw BadRequestException if birthDate is invalid', async () => {
+      const existingPatient = {
+        id: 'p1',
+        name: 'John Doe',
+        therapistId: mockTherapistId,
+        clinicalCases: [],
+      };
+      mockPrismaService.patient.findFirst.mockResolvedValue(existingPatient);
+
+      await expect(
+        service.update('p1', { birthDate: 'invalid-date' }, mockTherapistId),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw NotFoundException if patient not found', async () => {
@@ -288,6 +312,19 @@ describe('PatientsService', () => {
           therapistId: mockTherapistId,
         },
       });
+    });
+
+    it('should throw BadRequestException if date is invalid', async () => {
+      const activeCase = {
+        id: caseId,
+        patient: { therapistId: mockTherapistId },
+      };
+      mockPrismaService.clinicalCase.findFirst.mockResolvedValue(activeCase);
+
+      const invalidDto = { ...createSessionDto, date: 'invalid-date' };
+      await expect(
+        service.addSession(caseId, invalidDto, mockTherapistId),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw error if case not found or access denied', async () => {

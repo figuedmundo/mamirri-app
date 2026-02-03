@@ -30,11 +30,15 @@ vi.mock('../../lib/pdf', () => ({
 const mockPatient: Patient = {
   id: 'p1',
   name: 'Juan Perez',
-  age: 30,
   occupation: 'Desarrollador',
   phone: '+34 600 123 456',
   email: 'juan@example.com',
   birthDate: '1994-05-15',
+  emergencyContact: {
+    name: 'Jane Doe',
+    phone: '987654321',
+  },
+  medicalFlags: [],
   isActive: true,
   createdAt: '2025-01-01',
   clinicalCases: [],

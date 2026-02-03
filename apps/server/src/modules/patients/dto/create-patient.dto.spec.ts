@@ -5,7 +5,6 @@ describe('CreatePatientDto', () => {
   it('should validate a correct dto', async () => {
     const dto = new CreatePatientDto();
     dto.name = 'John Doe';
-    dto.age = 30;
     dto.occupation = 'Engineer';
     dto.birthDate = '1990-01-01'; // Past date
     dto.email = 'john@example.com';
@@ -18,7 +17,6 @@ describe('CreatePatientDto', () => {
   it('should fail when birthDate is in the future', async () => {
     const dto = new CreatePatientDto();
     dto.name = 'John Doe';
-    dto.age = 30;
     dto.occupation = 'Engineer';
     const futureDate = new Date();
     futureDate.setFullYear(futureDate.getFullYear() + 1);
@@ -38,13 +36,7 @@ describe('CreatePatientDto', () => {
     const errors = await validate(dto);
     expect(errors.length).toBeGreaterThan(0);
     expect(errors.map((e) => e.property)).toEqual(
-      expect.arrayContaining([
-        'name',
-        'age',
-        'occupation',
-        'birthDate',
-        'phone',
-      ]),
+      expect.arrayContaining(['name', 'occupation', 'birthDate', 'phone']),
     );
   });
 });

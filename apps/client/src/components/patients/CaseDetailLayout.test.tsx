@@ -216,11 +216,15 @@ vi.mock('./treatment-timeline/SessionDetailView', () => ({
 const mockPatient: Patient = {
   id: 'pac-001',
   name: 'María García',
-  age: 45,
   occupation: 'Enfermera',
   phone: '+34 600 123 456',
   email: 'maria@example.com',
   birthDate: '1980-01-15',
+  emergencyContact: {
+    name: 'Juan Doe',
+    phone: '1234567',
+  },
+  medicalFlags: [],
   isActive: true,
   createdAt: '2024-01-01T00:00:00Z',
   clinicalCases: [],
