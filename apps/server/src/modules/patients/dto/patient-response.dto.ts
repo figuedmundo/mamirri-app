@@ -52,7 +52,7 @@ export class PatientResponseDto {
   @ApiPropertyOptional({
     description: 'Emergency contact information',
   })
-  emergencyContact: any | null;
+  emergencyContact: any;
 
   @ApiPropertyOptional({
     description: 'How the patient found the clinic',

@@ -51,7 +51,7 @@ describe('Patients API Refactoring', () => {
       dto.occupation = 'Tester';
       dto.birthDate = '1990-01-01';
       dto.phone = '+14155552671';
-      // @ts-ignore
+      // @ts-expect-error - testing invalid type for validation
       dto.medicalFlags = ['Diabetes', 123];
 
       const errors = await validate(dto);

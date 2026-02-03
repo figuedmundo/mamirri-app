@@ -81,6 +81,7 @@ test('record treatment session flow', async ({ page }) => {
 
   await casePage.mockAuth();
   await casePage.gotoDetail(patientId, caseId);
+  await page.waitForLoadState('networkidle');
 
   await casePage.createSession({
     phase: '1',
@@ -146,6 +147,7 @@ test('update treatment session flow', async ({ page }) => {
   });
 
   await casePage.gotoDetail(patientId, caseId);
+  await page.waitForLoadState('networkidle');
   await casePage.editSession({ response: 'Updated response' });
 
   await casePage.waitForToast(/Sesión actualizada/i);
@@ -198,6 +200,7 @@ test('delete treatment session flow', async ({ page }) => {
   });
 
   await casePage.gotoDetail(patientId, caseId);
+  await page.waitForLoadState('networkidle');
   await casePage.deleteSession();
 
   await casePage.waitForToast(/Sesión eliminada/i);

@@ -19,11 +19,11 @@ export class CasePage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.newSessionButton = page.getByRole('button', { name: /Nueva Sesión/i });
-    this.phaseSelect = page.getByLabel('Fase', { exact: true });
-    this.procedureInput = page.getByPlaceholder('Agregar procedimiento...');
-    this.patientResponseInput = page.getByLabel(/Respuesta del Paciente/i);
-    this.observationsInput = page.getByLabel(/Observaciones/i);
+    this.newSessionButton = page.getByTestId('new-session-btn');
+    this.phaseSelect = page.getByTestId('session-phase-select');
+    this.procedureInput = page.getByTestId('procedure-input');
+    this.patientResponseInput = page.getByTestId('patient-response-input');
+    this.observationsInput = page.getByTestId('observations-input');
     this.addSessionButton = page.getByRole('button', {
       name: /Agregar Sesión|Guardar Cambios/i,
     });
@@ -126,7 +126,7 @@ export class CasePage extends BasePage {
     await this.page.locator('div.group').first().hover();
     await this.page
       .getByRole('button', { name: 'Eliminar sesión', exact: true })
-      .click();
+      .click({ force: true });
     await this.page
       .getByRole('button', { name: 'Eliminar', exact: true })
       .click();

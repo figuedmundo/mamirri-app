@@ -191,14 +191,19 @@ describe('PatientProfile', () => {
   });
 
   it('renders patient info grid with all fields', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-02-03'));
+
     render(<PatientProfile patient={mockPatient} />);
 
-    expect(screen.getByText('30 años')).toBeInTheDocument();
+    expect(screen.getByText('31 años')).toBeInTheDocument();
     expect(screen.getByText('Desarrollador')).toBeInTheDocument();
     expect(screen.getByText('+34 600 123 456')).toBeInTheDocument();
     expect(screen.getByText('juan@example.com')).toBeInTheDocument();
     expect(screen.getByText(/Nacido:/)).toBeInTheDocument();
     expect(screen.getByText(/Expediente creado/)).toBeInTheDocument();
+
+    vi.useRealTimers();
   });
 
   it('renders action buttons and triggers callbacks', async () => {

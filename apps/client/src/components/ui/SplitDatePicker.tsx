@@ -113,7 +113,7 @@ export function SplitDatePicker({
   return (
     <div className={cn('flex gap-2', className)}>
       <Select value={day} onValueChange={handleDayChange}>
-        <SelectTrigger className="w-[80px]">
+        <SelectTrigger className="w-[80px]" data-testid="day-select">
           <SelectValue placeholder="Día" />
         </SelectTrigger>
         <SelectContent>
@@ -126,7 +126,7 @@ export function SplitDatePicker({
       </Select>
 
       <Select value={month} onValueChange={handleMonthChange}>
-        <SelectTrigger className="flex-1">
+        <SelectTrigger className="flex-1" data-testid="month-select">
           <SelectValue placeholder="Mes" />
         </SelectTrigger>
         <SelectContent>
@@ -139,7 +139,7 @@ export function SplitDatePicker({
       </Select>
 
       <Select value={year} onValueChange={handleYearChange}>
-        <SelectTrigger className="w-[100px]">
+        <SelectTrigger className="w-[100px]" data-testid="year-select">
           <SelectValue placeholder="Año" />
         </SelectTrigger>
         <SelectContent>
