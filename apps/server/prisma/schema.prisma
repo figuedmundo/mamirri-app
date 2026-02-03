@@ -34,7 +34,9 @@ model Patient {
   birthDate       DateTime
   emergencyContact Json?
   referralSource  String?
+  referralSourceDetails String?
   medicalFlags    String[]
+  medicalFlagsOther String?
   isActive        Boolean  @default(true)
   deletedAt       DateTime?
   createdAt       DateTime @default(now())

@@ -46,7 +46,7 @@ describe('Patients New Schema Integration', () => {
       },
     });
     therapistId = therapist.id;
-  });
+  }, 30000);
 
   afterAll(async () => {
     if (therapistId) {

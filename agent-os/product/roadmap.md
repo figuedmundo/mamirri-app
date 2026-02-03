@@ -191,7 +191,8 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **9.3** Document friction points (what breaks her flow?)
 - [ ] **9.4** Collect performance data (slow queries?)
 - [ ] **9.5** User feedback interview
-- [ ] 9.6  Improve create patient form
+- [x] 9.6 Improve create patient form
+- [ ] 9.7 Improve login
 
 **🎯 Milestone 5:** "Mother used it with a real patient without asking for help"
 

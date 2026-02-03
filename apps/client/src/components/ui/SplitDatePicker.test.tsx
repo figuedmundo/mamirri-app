@@ -1,24 +1,65 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { SplitDatePicker } from './SplitDatePicker';
 
-if (typeof window !== 'undefined') {
-  if (!window.PointerEvent) {
-    class PointerEvent extends MouseEvent {
-      constructor(type: string, params: PointerEventInit = {}) {
-        super(type, params);
-      }
-    }
-    window.PointerEvent = PointerEvent as any;
-  }
+vi.mock('./select', () => ({
+  Select: ({ children, value, onValueChange }: any) => {
+    const flatChildren = (Array.isArray(children) ? children : [children])
+      .flat()
+      .filter(Boolean);
 
-  if (!Element.prototype.setPointerCapture) {
-    Element.prototype.setPointerCapture = vi.fn();
-    Element.prototype.releasePointerCapture = vi.fn();
-    Element.prototype.hasPointerCapture = vi.fn();
-  }
-}
+    const trigger = flatChildren.find(
+      (c: any) =>
+        c.type?.name === 'SelectTrigger' ||
+        c.props?.children?.type?.name === 'SelectValue',
+    );
+    const placeholder = trigger?.props?.children?.props?.placeholder;
+
+    return (
+      <div>
+        {placeholder && <span>{placeholder}</span>}
+        <select
+          data-testid="mock-select"
+          value={value}
+          onChange={(e) => onValueChange?.(e.target.value)}
+        >
+          <option value="">Select...</option>
+          {flatChildren.map((child: any) => {
+            if (child.props?.children && Array.isArray(child.props.children)) {
+              return child.props.children
+                .filter((c: any) => c.props?.value)
+                .map((c: any) => (
+                  <option key={c.props.value} value={c.props.value}>
+                    {c.props.children}
+                  </option>
+                ));
+            }
+            if (child.props?.value) {
+              return (
+                <option key={child.props.value} value={child.props.value}>
+                  {child.props.children}
+                </option>
+              );
+            }
+            return null;
+          })}
+        </select>
+      </div>
+    );
+  },
+  SelectTrigger: ({ children }: any) => (
+    <div className="SelectTrigger">{children}</div>
+  ),
+  SelectValue: ({ placeholder }: any) => (
+    <span className="SelectValue">{placeholder}</span>
+  ),
+  SelectContent: ({ children }: any) => (
+    <div className="SelectContent">{children}</div>
+  ),
+  SelectItem: ({ children, value }: any) => (
+    <option value={value}>{children}</option>
+  ),
+}));
 
 if (
   typeof HTMLElement !== 'undefined' &&
@@ -38,49 +79,44 @@ describe('SplitDatePicker', () => {
 
   it('calls onChange with correct date when values are selected', async () => {
     const onChange = vi.fn();
-    const user = userEvent.setup({ pointerEventsCheck: 0 });
     render(<SplitDatePicker onChange={onChange} />);
 
-    await user.click(screen.getByText('Día'));
-    await user.click(screen.getByRole('option', { name: '15' }));
+    const selects = screen.getAllByTestId('mock-select');
 
-    await user.click(screen.getByText('Mes'));
-    await user.click(screen.getByRole('option', { name: 'Junio' }));
+    const daySelect = selects[0];
+    const monthSelect = selects[1];
+    const yearSelect = selects[2];
 
-    await user.click(screen.getByText('Año'));
-    await user.click(screen.getByRole('option', { name: '1990' }));
+    fireEvent.change(daySelect, { target: { value: '15' } });
+    fireEvent.change(monthSelect, { target: { value: '6' } });
+    fireEvent.change(yearSelect, { target: { value: '1990' } });
 
     expect(onChange).toHaveBeenCalledWith('1990-06-15');
   });
 
   it('handles February 29th on leap years', async () => {
-    const user = userEvent.setup({ pointerEventsCheck: 0 });
     render(<SplitDatePicker onChange={() => {}} />);
 
-    await user.click(screen.getByText('Mes'));
-    await user.click(screen.getByRole('option', { name: 'Febrero' }));
+    const selects = screen.getAllByTestId('mock-select');
+    const monthSelect = selects[1];
+    const yearSelect = selects[2];
 
-    await user.click(screen.getByText('Año'));
-    await user.click(screen.getByRole('option', { name: '2024' }));
+    fireEvent.change(monthSelect, { target: { value: '2' } });
+    fireEvent.change(yearSelect, { target: { value: '2024' } });
 
-    await user.click(screen.getByText('Día'));
-    expect(screen.getByRole('option', { name: '29' })).toBeInTheDocument();
-    expect(
-      screen.queryByRole('option', { name: '30' }),
-    ).not.toBeInTheDocument();
+    expect(screen.getByText('29')).toBeInTheDocument();
+    expect(screen.queryByText('30')).not.toBeInTheDocument();
   });
 
   it('caps days at 30 for April', async () => {
-    const user = userEvent.setup({ pointerEventsCheck: 0 });
     render(<SplitDatePicker onChange={() => {}} />);
 
-    await user.click(screen.getByText('Mes'));
-    await user.click(screen.getByRole('option', { name: 'Abril' }));
+    const selects = screen.getAllByTestId('mock-select');
+    const monthSelect = selects[1];
 
-    await user.click(screen.getByText('Día'));
-    expect(screen.getByRole('option', { name: '30' })).toBeInTheDocument();
-    expect(
-      screen.queryByRole('option', { name: '31' }),
-    ).not.toBeInTheDocument();
+    fireEvent.change(monthSelect, { target: { value: '4' } });
+
+    expect(screen.getByText('30')).toBeInTheDocument();
+    expect(screen.queryByText('31')).not.toBeInTheDocument();
   });
 });

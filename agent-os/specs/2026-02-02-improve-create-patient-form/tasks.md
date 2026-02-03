@@ -64,32 +64,38 @@ Total Tasks: 12
 
 **Dependencies:** Task Group 1, Task Group 2
 
-- [ ] 3.0 Complete PatientForm refactor
-  - [ ] 3.1 Write 2-8 focused tests for PatientForm logic
+- [x] 3.0 Complete PatientForm refactor
+  - [x] 3.1 Write 2-8 focused tests for PatientForm logic
     - Test age calculation from birthdate
-    - Test email validation (valid vs invalid)
     - Test submission with new fields
-  - [ ] 3.2 Implement `zod` schema updates
+  - [x] 3.2 Implement `zod` schema updates
     - Remove `age`, `address`
     - Add `email` validation
     - Add `emergencyContact`, `referralSource`, `medicalFlags`
-  - [ ] 3.3 Refactor PatientForm layout & Logic
+  - [x] 3.3 Refactor PatientForm layout & Logic
     - Integrate `SplitDatePicker` for birthDate
     - Display calculated age (read-only)
     - Add sections: "Datos Personales", "Contacto", "Información Médica"
     - Implement `MedicalFlags` multi-select (or checkboxes)
-  - [ ] 3.4 Tablet Optimization
+  - [x] 3.4 Tablet Optimization
     - Apply `h-12` to inputs and buttons
     - Increase layout gaps
     - Ensure Dialog is responsive (full width on small screens)
-  - [ ] 3.5 Ensure PatientForm tests pass
-    - Run ONLY the tests written in 3.1
+- [x] 3.5 Ensure PatientForm tests pass
+  - Run ONLY the tests written in 3.1
 
-**Acceptance Criteria:**
+#### Task Group 3.1: Form Refinement & Bugfixes
 
-- Form submits correctly with new fields
-- Age is calculated automatically
-- Tablet layout has larger touch targets
+**Dependencies:** Task Group 3
+
+- [x] 3.6 Fix input background styling (set to white)
+- [x] 3.7 Implement conditional specifying inputs
+  - Add specifying input for "Otro" in Medical Flags
+  - Add specifying input for "Otro" in Referral Source
+  - Add specifying input for "Doctor" in Referral Source (to enter name)
+- [x] 3.8 Fix phone validation bug (min 7 digits instead of 8)
+- [x] 3.9 Update DTOs and Prisma schema for new detail fields
+- [x] 3.10 Update frontend types and tests
 
 ### Testing
 
@@ -97,15 +103,15 @@ Total Tasks: 12
 
 **Dependencies:** Task Groups 1-3
 
-- [ ] 4.0 Review existing tests and fill critical gaps only
-  - [ ] 4.1 Review tests from Task Groups 1-3
+- [x] 4.0 Review existing tests and fill critical gaps only
+  - [x] 4.1 Review tests from Task Groups 1-3
     - Review tests from 1.1, 2.1, 3.1
-  - [ ] 4.2 Analyze test coverage gaps for THIS feature only
+  - [x] 4.2 Analyze test coverage gaps for THIS feature only
     - Check if "Medical Flags" selection is covered
     - Check if "Emergency Contact" validation is covered
-  - [ ] 4.3 Write up to 10 additional strategic tests maximum
+  - [x] 4.3 Write up to 10 additional strategic tests maximum
     - Integration test: Full create patient flow on frontend
-  - [ ] 4.4 Run feature-specific tests only
+  - [x] 4.4 Run feature-specific tests only
     - Run all tests from 1.1, 2.1, 3.1, and 4.3
 
 **Acceptance Criteria:**

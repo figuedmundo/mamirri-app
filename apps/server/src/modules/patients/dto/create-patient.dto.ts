@@ -13,6 +13,8 @@ import { Type } from 'class-transformer';
 import { IsDateStringNotFuture } from '../../../common/validators/is-date-string-not-future.validator';
 
 export class EmergencyContactDto {
+  [key: string]: any;
+
   @ApiProperty({ example: 'Jane Doe' })
   @IsString()
   @IsNotEmpty()
@@ -103,6 +105,15 @@ export class CreatePatientDto {
   referralSource?: string;
 
   @ApiPropertyOptional({
+    description:
+      'Specific details about the referral source (e.g. Doctor name)',
+    example: 'Dr. Smith',
+  })
+  @IsOptional()
+  @IsString()
+  referralSourceDetails?: string;
+
+  @ApiPropertyOptional({
     description: 'Medical flags/alerts',
     example: ['Diabetes', 'Hipertensión'],
     type: [String],
@@ -110,4 +121,12 @@ export class CreatePatientDto {
   @IsOptional()
   @IsString({ each: true })
   medicalFlags?: string[];
+
+  @ApiPropertyOptional({
+    description: 'Details for "Other" medical flags',
+    example: 'Severe allergy to latex',
+  })
+  @IsOptional()
+  @IsString()
+  medicalFlagsOther?: string;
 }

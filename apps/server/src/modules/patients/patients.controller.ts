@@ -18,8 +18,8 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { PatientsService } from './patients.service';
+import { CreatePatientDto } from './dto/create-patient.dto';
 import type {
-  CreatePatientDto,
   CreateTreatmentSessionDto,
   UpdateEvaluationDto,
 } from './patients.service';

@@ -40,7 +40,7 @@ export class PatientsService {
     createPatientDto: CreatePatientDto,
     therapistId: string,
   ): Promise<Patient> {
-    const { birthDate, ...rest } = createPatientDto;
+    const { birthDate, emergencyContact, ...rest } = createPatientDto;
 
     const birthDateObj = new Date(birthDate);
     if (isNaN(birthDateObj.getTime())) {
@@ -51,6 +51,7 @@ export class PatientsService {
       const patient = await tx.patient.create({
         data: {
           ...rest,
+          emergencyContact: emergencyContact as any,
           birthDate: birthDateObj,
           therapistId,
           clinicalCases: {
