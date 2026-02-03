@@ -135,15 +135,15 @@ describe('Auth Integration Flows', () => {
       </AuthProvider>,
     );
 
-    fireEvent.change(screen.getByLabelText(/email/i), {
+    fireEvent.change(screen.getByLabelText(/correo electrónico/i), {
       target: { value: 'test@example.com' },
     });
-    fireEvent.change(screen.getByLabelText(/password/i), {
+    fireEvent.change(screen.getByLabelText(/contraseña/i), {
       target: { value: 'password123' },
     });
 
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+      fireEvent.click(screen.getByRole('button', { name: /iniciar sesión/i }));
     });
 
     expect(api.post).toHaveBeenCalledWith('/auth/login', {

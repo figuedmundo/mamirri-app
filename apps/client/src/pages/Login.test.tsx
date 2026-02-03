@@ -50,13 +50,13 @@ describe('Login Component', () => {
       </BrowserRouter>,
     );
 
-    fireEvent.change(screen.getByLabelText(/email/i), {
+    fireEvent.change(screen.getByLabelText(/correo electrónico/i), {
       target: { value: 'test@example.com' },
     });
-    fireEvent.change(screen.getByLabelText(/password/i), {
+    fireEvent.change(screen.getByLabelText(/contraseña/i), {
       target: { value: 'password123' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /iniciar sesión/i }));
 
     await waitFor(() => {
       expect(mockPost).toHaveBeenCalledWith('/auth/login', {
@@ -78,16 +78,18 @@ describe('Login Component', () => {
       </BrowserRouter>,
     );
 
-    fireEvent.change(screen.getByLabelText(/email/i), {
+    fireEvent.change(screen.getByLabelText(/correo electrónico/i), {
       target: { value: 'test@example.com' },
     });
-    fireEvent.change(screen.getByLabelText(/password/i), {
+    fireEvent.change(screen.getByLabelText(/contraseña/i), {
       target: { value: 'wrong' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /iniciar sesión/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/invalid credentials/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/correo o contraseña incorrectos/i),
+      ).toBeInTheDocument();
     });
 
     expect(mockLogin).not.toHaveBeenCalled();

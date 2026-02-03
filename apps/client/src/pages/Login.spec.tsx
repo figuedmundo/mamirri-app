@@ -25,10 +25,10 @@ describe('Login Page', () => {
         </AuthProvider>
       </BrowserRouter>,
     );
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /sign in/i }),
+      screen.getByRole('button', { name: /iniciar sesión/i }),
     ).toBeInTheDocument();
   });
 
@@ -40,7 +40,7 @@ describe('Login Page', () => {
         </AuthProvider>
       </BrowserRouter>,
     );
-    const emailInput = screen.getByLabelText(/email/i);
+    const emailInput = screen.getByLabelText(/correo electrónico/i);
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
     expect(emailInput).toHaveValue('test@example.com');
   });
