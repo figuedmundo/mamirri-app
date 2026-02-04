@@ -4,6 +4,7 @@ import type { VoiceNote } from '../../types/patient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useToast } from '../../hooks/use-toast';
 
 interface VoiceNotesSectionProps {
   voiceNotes?: VoiceNote[];
@@ -16,6 +17,7 @@ export function VoiceNotesSection({
   title = 'Notas de Voz',
   className,
 }: VoiceNotesSectionProps) {
+  const { toast } = useToast();
   const [expandedNoteId, setExpandedNoteId] = useState<string | null>(
     voiceNotes.length > 0 ? voiceNotes[0].id : null,
   );
@@ -171,14 +173,26 @@ export function VoiceNotesSection({
                       if (audio) {
                         try {
                           if (audio.paused) {
-                            audio.play().catch(() => {
-                              // Fallback: let the native controls handle playback
+                            audio.play().catch((err) => {
+                              console.error('Audio playback error:', err);
+                              toast({
+                                variant: 'destructive',
+                                title: 'Error de reproducción',
+                                description:
+                                  'No se pudo reproducir el audio. Verifica tu conexión.',
+                              });
                             });
                           } else {
                             audio.pause();
                           }
-                        } catch {
-                          // Fallback: let the native controls handle playback
+                        } catch (err) {
+                          console.error('Audio control error:', err);
+                          toast({
+                            variant: 'destructive',
+                            title: 'Error de audio',
+                            description:
+                              'Ocurrió un problema al controlar el audio.',
+                          });
                         }
                       }
                     }}
@@ -191,6 +205,15 @@ export function VoiceNotesSection({
                     controls
                     className="flex-1 h-8"
                     controlsList="nodownload"
+                    onError={(e) => {
+                      console.error('Audio loading error:', e);
+                      toast({
+                        variant: 'destructive',
+                        title: 'Error de carga',
+                        description:
+                          'No se pudo cargar el archivo de audio. Verifica que el archivo exista y sea accesible.',
+                      });
+                    }}
                   />
                 </div>
 
