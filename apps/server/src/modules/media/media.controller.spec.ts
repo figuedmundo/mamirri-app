@@ -11,6 +11,7 @@ describe('MediaController', () => {
   let controller: MediaController;
   let service: MediaService;
   let sessionPhotoService: SessionPhotoService;
+  let module: TestingModule;
 
   const mockMediaService = {
     uploadPatientPhoto: jest.fn(),
@@ -35,13 +36,12 @@ describe('MediaController', () => {
     size: 1024,
     buffer: Buffer.from('test'),
   } as any;
-
   beforeEach(async () => {
     const mockJwtAuthGuard: CanActivate = {
       canActivate: jest.fn().mockReturnValue(true),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       controllers: [MediaController],
       providers: [
         {
@@ -61,6 +61,12 @@ describe('MediaController', () => {
     controller = module.get<MediaController>(MediaController);
     service = module.get<MediaService>(MediaService);
     sessionPhotoService = module.get<SessionPhotoService>(SessionPhotoService);
+  });
+
+  afterEach(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   it('should be defined', () => {
