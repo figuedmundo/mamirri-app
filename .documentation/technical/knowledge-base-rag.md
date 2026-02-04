@@ -48,7 +48,23 @@ You can manage the knowledge base using these commands from the project root:
 | `pnpm knowledge:list`                       | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.                                                   |
 | `pnpm knowledge:update "ID" --options`      | Manually corrects or updates a book's metadata (title, author, volume, edition, year).                                                     |
 | `pnpm knowledge:clean "ID or filename.pdf"` | Removes a specific book and its embeddings from the database to allow re-ingestion.                                                        |
+| `pnpm knowledge:backup`                     | Creates a timestamped SQL backup of the entire vector database in the `backups/` folder.                                                   |
+| `pnpm knowledge:restore "path/to/file.sql"` | Restores the database from a backup file (Warning: Overwrites current data).                                                               |
 | `pnpm knowledge:stats`                      | Displays technical database statistics (total chunks per book).                                                                            |
+
+### Data Protection
+
+Vectorizing books is expensive (quota/time). Always backup your database before making major changes:
+
+```bash
+pnpm knowledge:backup
+```
+
+To see a list of available backups:
+
+```bash
+pnpm knowledge:restore
+```
 
 ### Adding books to the library
 

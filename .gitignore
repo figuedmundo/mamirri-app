@@ -46,3 +46,4 @@ test-results/
 
 # App Data
 apps/server/data/books/
+backups/*.sql

@@ -14,8 +14,9 @@
     "knowledge:ingest": "pnpm --filter server knowledge:ingest",
     "knowledge:search": "pnpm --filter server knowledge:search",
     "knowledge:clean": "pnpm --filter server knowledge:clean",
-    "knowledge:list": "pnpm --filter server knowledge:list",
     "knowledge:update": "pnpm --filter server knowledge:update",
+    "knowledge:backup": "pnpm --filter server knowledge:backup",
+    "knowledge:restore": "pnpm --filter server knowledge:restore",
     "knowledge:stats": "pnpm --filter server knowledge:stats"
   },
   "devDependencies": {

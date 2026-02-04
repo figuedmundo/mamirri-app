@@ -26,6 +26,8 @@
     "knowledge:clean": "ts-node scripts/clean-book.ts",
     "knowledge:list": "ts-node scripts/list-books.ts",
     "knowledge:update": "ts-node scripts/update-book.ts",
+    "knowledge:backup": "docker exec -t postgres_db pg_dump -U physio_user physio_db > ../../backups/knowledge_base_$(date +%Y%m%d_%H%M%S).sql",
+    "knowledge:restore": "ts-node scripts/restore-db.ts",
     "knowledge:stats": "prisma db execute --stdin <<'EOF'\nSELECT d.title, COUNT(e.id) as total_chunks, MIN(e.\"pageNumber\") as start_page, MAX(e.\"pageNumber\") as end_page FROM documents d JOIN embeddings e ON d.id = e.\"documentId\" GROUP BY d.title;\nEOF"
   },
   "prisma": {
