@@ -102,6 +102,7 @@ If an ingestion is interrupted (e.g., due to rate limits or internet failure):
 
 - **Vector Storage**: PostgreSQL + [pgvector](https://github.com/pgvector/pgvector)
 - **Embeddings Model**: Google Gemini (`gemini-embedding-001` - Latest 2025 Model)
+- **Metadata Orchestration**: Google Gemini 3 (`gemini-3-flash-preview`)
 - **PDF Extraction**: [pdf-parse](https://www.npmjs.com/package/pdf-parse)
 - **Database Layer**: Prisma (using `Unsupported("vector(768)")` for vector types)
 - **Indexing**: HNSW (Hierarchical Navigable Small World) for fast similarity searches.
