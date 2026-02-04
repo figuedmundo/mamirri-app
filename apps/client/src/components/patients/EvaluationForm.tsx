@@ -33,6 +33,7 @@ import {
   DialogContent,
   DialogTrigger,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Camera } from 'lucide-react';
@@ -679,6 +680,9 @@ export function EvaluationForm({
                   <DialogTitle className="sr-only">
                     Capturar Postura
                   </DialogTitle>
+                  <DialogDescription className="sr-only">
+                    Interfaz de cámara para capturar postura anterior
+                  </DialogDescription>
                   <CameraCapture
                     onCapture={handleCameraCapture}
                     onCancel={() => setIsCameraOpen(false)}
@@ -1131,6 +1135,9 @@ export function EvaluationForm({
                 <DialogTitle className="sr-only">
                   Capturar Huella Plantar
                 </DialogTitle>
+                <DialogDescription className="sr-only">
+                  Interfaz de cámara para capturar huella plantar
+                </DialogDescription>
                 <CameraCapture
                   onCapture={handleFootprintCaptureConfirm}
                   onCancel={() => setIsFootprintCameraOpen(false)}

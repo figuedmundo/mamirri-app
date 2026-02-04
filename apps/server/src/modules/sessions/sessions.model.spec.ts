@@ -9,8 +9,10 @@ describe('TreatmentSession Model (Integration)', () => {
   let patientId: string;
   let caseId: string;
 
+  let moduleFixture: TestingModule;
+
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    moduleFixture = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
@@ -79,6 +81,9 @@ describe('TreatmentSession Model (Integration)', () => {
         if (typeof prisma.$disconnect === 'function') {
           await prisma.$disconnect();
         }
+      }
+      if (moduleFixture) {
+        await moduleFixture.close();
       }
     } catch (e) {
       console.error('Cleanup failed', e);

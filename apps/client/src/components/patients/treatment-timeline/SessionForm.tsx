@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { X, Plus, Loader2, Camera } from 'lucide-react';
@@ -253,6 +254,11 @@ export function SessionForm({
           <DialogTitle>
             {isEditing ? 'Editar Sesión' : 'Nueva Sesión'}
           </DialogTitle>
+          <DialogDescription>
+            {isEditing
+              ? 'Edita los detalles de la sesión de tratamiento existente.'
+              : 'Completa el formulario para registrar una nueva sesión de tratamiento.'}
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-5">

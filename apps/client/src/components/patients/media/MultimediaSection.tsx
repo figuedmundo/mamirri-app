@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import {
   GalleryUploadButton,
@@ -255,6 +256,9 @@ export function MultimediaSection({
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Agregar Foto</DialogTitle>
+              <DialogDescription className="sr-only">
+                Opciones para subir una nueva foto a la galería
+              </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-3">
               <Button onClick={() => console.log('Camera flow placeholder')}>

@@ -43,6 +43,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Exclude cross-origin requests (e.g. MinIO storage)
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
   // Navigation requests: Network First -> Cache -> Offline Fallback
   if (event.request.mode === 'navigate') {
     event.respondWith(

@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '../components/ui/dialog';
 import { RecordingFloatingBar } from '../components/patients/RecordingFloatingBar';
 import { VideoRecorder } from '../components/patients/VideoRecorder';
@@ -286,6 +287,10 @@ export default function PatientDetail() {
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="sm:max-w-[425px] md:max-w-screen-md lg:max-w-screen-lg p-0">
+          <DialogTitle className="sr-only">Editar Paciente</DialogTitle>
+          <DialogDescription className="sr-only">
+            Formulario para editar la información del paciente.
+          </DialogDescription>
           <PatientForm
             mode="edit"
             initialData={initialEditData}
@@ -299,6 +304,9 @@ export default function PatientDetail() {
         <DialogContent className="sm:max-w-[500px] h-[80vh] flex flex-col p-0 overflow-hidden">
           <DialogHeader className="p-4 border-b">
             <DialogTitle>Grabar Video de Postura</DialogTitle>
+            <DialogDescription className="sr-only">
+              Interfaz de grabación de video para análisis de postura.
+            </DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-hidden">
             <VideoRecorder

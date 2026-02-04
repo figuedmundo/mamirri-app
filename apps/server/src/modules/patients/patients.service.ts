@@ -265,6 +265,9 @@ export class PatientsService {
           ) {
             evaluation.voiceNotes = await Promise.all(
               evaluation.voiceNotes.map(async (note: any) => {
+                if (note.createdAt && !note.date) {
+                  note.date = note.createdAt;
+                }
                 if (note.audioUrl && !note.audioUrl.startsWith('http')) {
                   try {
                     note.audioUrl = await this.storageService.getFileUrl(
@@ -320,6 +323,9 @@ export class PatientsService {
           ) {
             session.voiceNotes = await Promise.all(
               session.voiceNotes.map(async (note: any) => {
+                if (note.createdAt && !note.date) {
+                  note.date = note.createdAt;
+                }
                 if (note.audioUrl && !note.audioUrl.startsWith('http')) {
                   try {
                     note.audioUrl = await this.storageService.getFileUrl(

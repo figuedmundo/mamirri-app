@@ -9,4 +9,5 @@ export default () => ({
     'minioadmin',
   useSSL: process.env.MINIO_USE_SSL === 'true',
   bucket: process.env.MINIO_BUCKET || 'physio-media',
+  publicEndpoint: process.env.MINIO_PUBLIC_ENDPOINT,
 });

@@ -21,6 +21,7 @@ const validFile = {
 describe('StorageService', () => {
   let service: StorageService;
   let s3ClientMock: any;
+  let module: TestingModule;
 
   beforeEach(async () => {
     s3ClientMock = {
@@ -39,11 +40,17 @@ describe('StorageService', () => {
       bucket: 'test-bucket',
     });
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [StorageService],
     }).compile();
 
     service = module.get<StorageService>(StorageService);
+  });
+
+  afterEach(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   it('should be defined', () => {

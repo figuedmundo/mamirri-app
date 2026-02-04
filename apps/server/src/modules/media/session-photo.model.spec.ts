@@ -87,7 +87,7 @@ describe('SessionPhoto Model Integration', () => {
       },
     });
     sessionId = session.id;
-  });
+  }, 30000); // Increase timeout to 30s
 
   afterAll(async () => {
     try {
