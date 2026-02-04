@@ -5,7 +5,13 @@ import { useDebounce } from '../../hooks/use-debounce';
 import { useToast } from '../../hooks/use-toast';
 import { Target, Loader2, Check, AlertCircle } from 'lucide-react';
 import { mediaApi } from '../../api/media';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '../ui/dialog';
 import { VoiceRecorder } from './VoiceRecorder';
 
 interface ObjectivesViewProps {
@@ -202,6 +208,9 @@ export function ObjectivesView({
           <DialogContent className="sm:max-w-[400px]">
             <DialogHeader>
               <DialogTitle className="text-center">Dictar Objetivo</DialogTitle>
+              <DialogDescription className="text-center">
+                Usa el micrófono para dictar el objetivo del tratamiento.
+              </DialogDescription>
             </DialogHeader>
             <div className="py-4">
               <VoiceRecorder onRecordingComplete={handleRecordingComplete} />
@@ -278,6 +287,9 @@ export function ObjectivesView({
         <DialogContent className="sm:max-w-[400px]">
           <DialogHeader>
             <DialogTitle className="text-center">Dictar Objetivo</DialogTitle>
+            <DialogDescription className="text-center">
+              Usa el micrófono para dictar el objetivo del tratamiento.
+            </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <VoiceRecorder onRecordingComplete={handleRecordingComplete} />
