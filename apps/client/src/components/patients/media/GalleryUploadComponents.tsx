@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { Image, AlertTriangle, Check, X } from 'lucide-react';
 import type { QualityResult } from '@/utils/quality-validation';
@@ -165,6 +166,9 @@ export function QualityCheckDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Validación de Calidad</DialogTitle>
+          <DialogDescription className="sr-only">
+            Revisión automática de calidad de la imagen seleccionada
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">

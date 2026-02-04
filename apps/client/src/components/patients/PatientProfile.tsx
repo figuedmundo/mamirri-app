@@ -19,7 +19,12 @@ import { PainScaleDisplay } from './PainScaleDisplay';
 import { DiagnosisSection } from './DiagnosisSection';
 import { TreatmentPhaseCard } from './TreatmentPhaseCard';
 import { SessionsFooter } from './SessionsFooter';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { CameraCapture } from './CameraCapture';
 import { VideoRecorder } from './VideoRecorder';
 import { mediaApi } from '../../api/media';
@@ -252,6 +257,9 @@ export function PatientProfile({
                       <DialogTitle className="sr-only">
                         Capturar Huella
                       </DialogTitle>
+                      <DialogDescription className="sr-only">
+                        Interfaz de cámara para capturar huella plantar
+                      </DialogDescription>
                       <CameraCapture
                         onCapture={handleHuellaCapture}
                         onCancel={() => setIsCameraOpen(false)}
@@ -275,6 +283,10 @@ export function PatientProfile({
                           <DialogTitle className="sr-only">
                             Capturar Video de Marcha
                           </DialogTitle>
+                          <DialogDescription className="sr-only">
+                            Interfaz de grabación de video para análisis de
+                            marcha
+                          </DialogDescription>
                           <VideoRecorder
                             onCapture={handleVideoCapture}
                             onCancel={() => setIsVideoOpen(false)}
