@@ -247,28 +247,28 @@ Methodology: Agile Development (1-week Sprints).
 
 **Pre-requisite Check:**
 
-- [ ] Do you have 3-5 reference books (PDFs) ready?
-- [ ] Are they legally yours to process?
+- [x] Do you have 3-5 reference books (PDFs) ready?
+- [x] Are they legally yours to process?
 - [ ] Is the MVP stable enough to build on?
 
 ---
 
-### Week 12: Knowledge Base Preparation
+### Week 12: Knowledge Base Preparation ✅
 
-- [ ] **12.1** Research: PDF extraction tools (pdf-parse vs. Unstructured.io)
-- [ ] **12.2** Chunking strategy design (500 words, 50-word overlap)
-- [ ] **12.3** Metadata schema (book, page, chapter, section)
-- [ ] **12.4** Manual test: Extract 1 book, verify quality
-- [ ] **12.5** Write ingestion script with error handling
+- [x] **12.1** Research: PDF extraction tools (pdf-parse vs. Unstructured.io)
+- [x] **12.2** Chunking strategy design (500 words, 50-word overlap)
+- [x] **12.3** Metadata schema (book, page, chapter, section)
+- [x] **12.4** Manual test: Extract 1 book, verify quality
+- [x] **12.5** Write ingestion script with error handling
 
-### Week 13: Vector Database (RAG Foundation)
+### Week 13: Vector Database (RAG Foundation) ✅
 
-- [ ] **13.1** Enable pgvector on Postgres
-- [ ] **13.2** Create embeddings table schema
-- [ ] **13.3** Generate embeddings (OpenAI text-embedding-3-small)
-- [ ] **13.4** Bulk insert vectors into database
-- [ ] **13.5** Test similarity search queries
-- [ ] **13.6** Optimize: Vector index for <200ms queries
+- [x] **13.1** Enable pgvector on Postgres
+- [x] **13.2** Create embeddings table schema
+- [x] **13.3** Generate embeddings (Google Gemini text-embedding-004)
+- [x] **13.4** Bulk insert vectors into database
+- [x] **13.5** Test similarity search queries
+- [x] **13.6** Optimize: Vector index for <200ms queries
 
 ### Week 14: The AI Agent (Backend)
 

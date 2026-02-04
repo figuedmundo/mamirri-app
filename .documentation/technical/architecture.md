@@ -7,6 +7,8 @@ PhysioCopilot uses a modular monolith architecture built with:
 - **Frontend:** React + Vite + Shadcn/UI
 - **Backend:** NestJS + Prisma ORM
 - **Database:** PostgreSQL (with pgvector extension)
+- **AI Infrastructure:** Google Gemini (Embeddings + Vision)
+- **Knowledge Base:** RAG-based literature retrieval
 - **Storage:** MinIO (S3-compatible)
 - **Cache:** Redis
 - **Logging:** Structured JSON (NestJS + React)
@@ -45,9 +47,11 @@ The application uses **Driver Adapters** (`@prisma/adapter-pg`) to manage runtim
 
 ### Data Management Patterns
 
-- **Soft Deletes**: Critical entities (like `Patient`) implement soft deletes using a `deletedAt` timestamp. Records are not physically removed from the database to maintain audit trails.
+- **Knowledge Base (RAG)**: Medical books are ingested, chunked, and stored as vectors in PostgreSQL. Semantic search uses cosine similarity via `pgvector` to retrieve relevant clinical context for AI suggestions.
+- **Soft Deletes**: Critical entities (like `Patient`) implement soft deletes using a `deletedAt` timestamp.
+  Records are not physically removed from the database to maintain audit trails.
 - **Tenant Isolation**: Data access is strictly scoped to the authenticated user (`therapistId`). Service layers enforce this isolation in all queries.
 
 ---
 
-**Last Updated:** 2026-01-10
+**Last Updated:** 2026-02-04

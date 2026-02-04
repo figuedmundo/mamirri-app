@@ -212,3 +212,26 @@ model Session {
 
   @@map("sessions")
 }
+
+model Document {
+  id        String   @id @default(uuid())
+  title     String
+  author    String?
+  filePath  String   @unique
+  createdAt DateTime @default(now())
+
+  embeddings Embedding[]
+
+  @@map("documents")
+}
+
+model Embedding {
+  id         String   @id @default(uuid())
+  content    String
+  vector     Unsupported("vector(768)")
+  pageNumber Int
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@map("embeddings")
+}
