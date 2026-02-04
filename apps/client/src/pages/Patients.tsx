@@ -8,7 +8,12 @@ import {
 import { patientsApi } from '../api/patients';
 import type { Patient } from '../types/patient';
 import { useToast } from '../hooks/use-toast';
-import { Dialog, DialogContent } from '../components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '../components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -191,6 +196,10 @@ export default function Patients() {
 
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent className="sm:max-w-[425px] md:max-w-screen-md lg:max-w-screen-lg p-0">
+          <DialogTitle className="sr-only">Crear Nuevo Paciente</DialogTitle>
+          <DialogDescription className="sr-only">
+            Formulario para registrar un nuevo paciente en el sistema.
+          </DialogDescription>
           <PatientForm
             mode="create"
             onSubmit={handleCreate}
@@ -201,6 +210,10 @@ export default function Patients() {
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="sm:max-w-[425px] md:max-w-screen-md lg:max-w-screen-lg p-0">
+          <DialogTitle className="sr-only">Editar Paciente</DialogTitle>
+          <DialogDescription className="sr-only">
+            Formulario para editar la información del paciente existente.
+          </DialogDescription>
           <PatientForm
             mode="edit"
             initialData={getEditInitialData()}
