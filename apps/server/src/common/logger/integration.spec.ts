@@ -6,9 +6,10 @@ import { LoggerService } from './logger.service';
 
 describe('Backend Integration', () => {
   let sanitizationService: SanitizationService;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         SanitizationService,
         AuditService,
@@ -25,6 +26,12 @@ describe('Backend Integration', () => {
     }).compile();
 
     sanitizationService = module.get<SanitizationService>(SanitizationService);
+  });
+
+  afterEach(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   it('should sanitize PII data', () => {

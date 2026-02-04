@@ -2,7 +2,12 @@ import { Image } from 'lucide-react';
 import { useState } from 'react';
 import type { Footprint, PostureVideo } from '../../types/patient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
 interface MediaSectionProps {
@@ -123,6 +128,9 @@ export function MediaSection({
       >
         <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black border-0 max-h-[90vh] flex flex-col">
           <DialogTitle className="sr-only">Vista previa</DialogTitle>
+          <DialogDescription className="sr-only">
+            Vista previa de la imagen seleccionada
+          </DialogDescription>
           <div className="relative flex-1 flex items-center justify-center bg-black min-h-[50vh]">
             {selectedMedia?.type === 'image' && (
               <img

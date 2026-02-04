@@ -16,6 +16,12 @@ describe('AuthModule Infrastructure', () => {
       .compile();
   });
 
+  afterEach(async () => {
+    if (moduleRef) {
+      await moduleRef.close();
+    }
+  });
+
   it('should compile the module', () => {
     expect(moduleRef).toBeDefined();
   });

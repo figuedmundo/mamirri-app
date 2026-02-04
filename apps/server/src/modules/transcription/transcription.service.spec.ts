@@ -84,14 +84,20 @@ describe('TranscriptionService', () => {
   });
 
   it('should handle timeout', async () => {
+    let resolveMock: (value: any) => void = () => {};
     groqMock.audio.transcriptions.create.mockImplementation(
-      () => new Promise((resolve) => setTimeout(resolve, 6000)),
+      () =>
+        new Promise((resolve) => {
+          resolveMock = resolve;
+        }),
     );
 
     const result = await service.transcribe(mockAudioBuffer, mockFilename);
 
     expect(result.status).toBe('failed');
     expect(result.error).toContain('timed out');
+
+    resolveMock({});
   }, 7000);
 
   it('should retry on rate limit (mocked error)', async () => {
