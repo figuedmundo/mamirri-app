@@ -61,7 +61,10 @@ export class KnowledgeBaseService {
 
     for (let i = 0; i < chunks.length; i++) {
       const content = chunks[i];
-      const vector = await this.generateEmbedding(content);
+      const vector = await this.generateEmbedding(
+        content,
+        'RETRIEVAL_DOCUMENT',
+      );
       const vectorString = `[${vector.join(',')}]`;
 
       await this.prisma.$executeRaw`
@@ -80,7 +83,7 @@ export class KnowledgeBaseService {
   }
 
   async findSimilar(query: string, limit: number = 5): Promise<any[]> {
-    const vector = await this.generateEmbedding(query);
+    const vector = await this.generateEmbedding(query, 'RETRIEVAL_QUERY');
     const vectorString = `[${vector.join(',')}]`;
 
     const results: any[] = await this.prisma.$queryRaw`
@@ -119,7 +122,10 @@ export class KnowledgeBaseService {
     return chunks;
   }
 
-  private async generateEmbedding(text: string): Promise<number[]> {
+  private async generateEmbedding(
+    text: string,
+    taskType: 'RETRIEVAL_DOCUMENT' | 'RETRIEVAL_QUERY' = 'RETRIEVAL_QUERY',
+  ): Promise<number[]> {
     const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
     if (!apiKey) {
       const vector = new Array(768).fill(0);
@@ -131,7 +137,11 @@ export class KnowledgeBaseService {
       async () => {
         const result = await this.genAI
           .getGenerativeModel({ model: 'gemini-embedding-001' })
-          .embedContent(text);
+          .embedContent({
+            content: { parts: [{ text }], role: 'user' },
+            taskType,
+            outputDimensionality: 768,
+          } as any);
         return result.embedding.values;
       },
       { maxRetries: 3 },

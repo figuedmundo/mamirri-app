@@ -10,7 +10,7 @@ Build the "brain" of the AI system by ingesting medical textbooks (PDFs) and mak
 2.  **Chunking**: Split text into meaningful segments (e.g., 500 words with overlap) to preserve context.
 3.  **Metadata Extraction**: Extract Title, Chapter, Section, and Page Number where possible.
 4.  **Vector Database Setup**: Enable `pgvector` in PostgreSQL and define the schema for storing embeddings.
-5.  **Embeddings Generation**: Use an embedding model (e.g., OpenAI `text-embedding-3-small` or similar) to convert text chunks into vectors.
+5.  **Embeddings Generation**: Use an embedding model (e.g., Google `gemini-embedding-001` or similar) to convert text chunks into vectors.
 6.  **Search Test**: A simple script to query the database with a natural language question and retrieve relevant chunks.
 
 ## Context from Roadmap (Week 12-13)

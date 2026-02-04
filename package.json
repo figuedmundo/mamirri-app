@@ -10,7 +10,10 @@
     "test": "turbo run test",
     "test:e2e": "pnpm --filter client test:e2e",
     "test:e2e:ui": "pnpm --filter client test:e2e:ui",
-    "test:e2e:headed": "pnpm --filter client exec playwright test --headed"
+    "test:e2e:headed": "pnpm --filter client exec playwright test --headed",
+    "knowledge:ingest": "pnpm --filter server knowledge:ingest",
+    "knowledge:search": "pnpm --filter server knowledge:search",
+    "knowledge:stats": "pnpm --filter server knowledge:stats"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

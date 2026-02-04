@@ -21,7 +21,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "ts-node prisma/seed.ts",
-    "knowledge:ingest": "ts-node scripts/ingest-books.ts"
+    "knowledge:ingest": "ts-node scripts/ingest-books.ts",
+    "knowledge:search": "ts-node scripts/test-search.ts",
+    "knowledge:stats": "prisma db execute --stdin <<'EOF'\nSELECT d.title, COUNT(e.id) as total_chunks, MIN(e.\"pageNumber\") as start_page, MAX(e.\"pageNumber\") as end_page FROM documents d JOIN embeddings e ON d.id = e.\"documentId\" GROUP BY d.title;\nEOF"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
