@@ -88,11 +88,15 @@ describe('Service Worker', () => {
       return Promise.resolve(createResponse('network content'));
     });
 
+    g.location = { origin: 'https://example.com' };
+
     g.Request = class {
       url: string;
       method: string;
       mode: string = '';
       headers: { get: (name: string) => string | null } = { get: () => '' };
+      // Mimic browser Request.origin behavior if needed, but for now simple url is enough
+      // because we'll rely on the global origin matching the request url origin in tests
       constructor(
         input: string | { url: string; method?: string },
         init?: { method?: string },
@@ -103,6 +107,14 @@ describe('Service Worker', () => {
           this.url = input.url;
         }
         this.method = init?.method || 'GET';
+      }
+      // Add origin getter to mock Request behavior correctly
+      get origin() {
+        try {
+          return new URL(this.url).origin;
+        } catch {
+          return '';
+        }
       }
     };
   });
