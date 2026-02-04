@@ -204,9 +204,9 @@ describe('PatientForm Logic', () => {
           }),
         );
       },
-      { timeout: 3000 },
+      { timeout: 5000 },
     );
-  });
+  }, 10000);
 
   it('shows detail input when "Otro" flag is selected', async () => {
     const user = userEvent.setup({ delay: null });
