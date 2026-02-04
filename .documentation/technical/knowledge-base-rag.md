@@ -41,12 +41,14 @@ When a therapist needs a suggestion or searches the library:
 
 You can manage the knowledge base using these commands from the project root:
 
-| Command                               | Description                                                                         |
-| ------------------------------------- | ----------------------------------------------------------------------------------- |
-| `pnpm knowledge:ingest`               | Scans `apps/server/data/books/*.pdf` and generates embeddings for new files.        |
-| `pnpm knowledge:search "query"`       | Performs a semantic search across all ingested books.                               |
-| `pnpm knowledge:stats`                | Displays the total number of chunks and page ranges for each ingested book.         |
-| `pnpm knowledge:clean "filename.pdf"` | Removes a specific book and its embeddings from the database to allow re-ingestion. |
+| Command                                     | Description                                                                                                                                |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm knowledge:ingest`                     | Scans `apps/server/data/books/*.pdf` and generates embeddings for new files. AI automatically extracts Title, Author, Volume, and Edition. |
+| `pnpm knowledge:search "query"`             | Performs a semantic search across all ingested books.                                                                                      |
+| `pnpm knowledge:list`                       | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.                                                   |
+| `pnpm knowledge:update "ID" --options`      | Manually corrects or updates a book's metadata (title, author, volume, edition, year).                                                     |
+| `pnpm knowledge:clean "ID or filename.pdf"` | Removes a specific book and its embeddings from the database to allow re-ingestion.                                                        |
+| `pnpm knowledge:stats`                      | Displays technical database statistics (total chunks per book).                                                                            |
 
 ### Adding books to the library
 
@@ -57,7 +59,19 @@ You can manage the knowledge base using these commands from the project root:
    pnpm knowledge:ingest
    ```
 
-The script automatically skips files that have already been processed to avoid duplicates.
+### Managing the Library
+
+To see exactly what books are in your database and get their unique IDs:
+
+```bash
+pnpm knowledge:list
+```
+
+To manually correct a book's metadata (e.g., if the AI missed a Volume or Edition):
+
+```bash
+pnpm knowledge:update "BOOK_ID_OR_FILEPATH" --volume "Tomo 1" --edition "5th Ed"
+```
 
 ### Verifying Ingestion
 

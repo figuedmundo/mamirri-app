@@ -20,20 +20,25 @@ async function bootstrap() {
   const app = await NestFactory.createApplicationContext(CleanAppModule);
   const knowledgeBaseService = app.get(KnowledgeBaseService);
 
-  const filename = process.argv[2];
-  if (!filename) {
-    console.error('Usage: pnpm knowledge:clean <filename.pdf>');
+  const idOrFilename = process.argv[2];
+  if (!idOrFilename) {
+    console.error('Usage: pnpm knowledge:clean <ID or filename.pdf>');
     process.exit(1);
   }
 
-  const filePath = filename.startsWith('data/books/')
-    ? filename
-    : `data/books/${filename}`;
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      idOrFilename,
+    );
+  const identifier =
+    isUuid || idOrFilename.startsWith('data/books/')
+      ? idOrFilename
+      : `data/books/${idOrFilename}`;
 
-  console.log(`🧹 Attempting to clean data for: ${filePath}`);
+  console.log(`🧹 Attempting to clean data for identifier: ${identifier}`);
 
   try {
-    await knowledgeBaseService.removeDocument(filePath);
+    await knowledgeBaseService.removeDocument(identifier);
     console.log('✅ Cleanup complete.');
   } catch (error) {
     console.error('❌ Cleanup failed:', error.message);

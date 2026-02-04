@@ -51,17 +51,29 @@ export class KnowledgeBaseService {
     const pdfData = await parser.getText();
     await parser.destroy();
 
-    const title = path.basename(filePath, '.pdf');
+    // Extract high-quality metadata using AI from the first ~2000 characters
+    const firstPageText = pdfData.text.substring(0, 2000);
+    const meta = await this.extractMetadata(
+      firstPageText,
+      path.basename(filePath, '.pdf'),
+    );
+
     const document = await (this.prisma as any).document.create({
       data: {
-        title,
+        title: meta.title,
+        author: meta.author,
         filePath,
+        metadata: {
+          volume: meta.volume,
+          edition: meta.edition,
+          year: meta.year,
+        },
       },
     });
 
     try {
       const chunks = this.chunkText(pdfData.text);
-      this.logger.log(`Generated ${chunks.length} chunks for ${title}`);
+      this.logger.log(`Generated ${chunks.length} chunks for ${meta.title}`);
 
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
@@ -78,16 +90,16 @@ export class KnowledgeBaseService {
 
         if ((i + 1) % 10 === 0) {
           this.logger.log(
-            `Processed ${i + 1}/${chunks.length} chunks for ${title}`,
+            `Processed ${i + 1}/${chunks.length} chunks for ${meta.title}`,
           );
         }
 
         await sleep(1500);
       }
-      this.logger.log(`Successfully ingested ${title}`);
+      this.logger.log(`Successfully ingested ${meta.title}`);
     } catch (error) {
       this.logger.error(
-        `Failed to ingest chunks for ${title}. Cleaning up partial data...`,
+        `Failed to ingest chunks for ${meta.title}. Cleaning up partial data...`,
       );
       await (this.prisma as any).document.delete({
         where: { id: document.id },
@@ -96,13 +108,18 @@ export class KnowledgeBaseService {
     }
   }
 
-  async removeDocument(filePath: string): Promise<void> {
+  async removeDocument(idOrPath: string): Promise<void> {
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        idOrPath,
+      );
+
     const doc = await (this.prisma as any).document.findUnique({
-      where: { filePath },
+      where: isUuid ? { id: idOrPath } : { filePath: idOrPath },
     });
 
     if (!doc) {
-      this.logger.warn(`No document found with path: ${filePath}`);
+      this.logger.warn(`No document found with ID or path: ${idOrPath}`);
       return;
     }
 
@@ -110,7 +127,7 @@ export class KnowledgeBaseService {
       where: { id: doc.id },
     });
     this.logger.log(
-      `Successfully removed document and all embeddings for: ${filePath}`,
+      `Successfully removed document and all embeddings for: ${doc.title} (${doc.filePath})`,
     );
   }
 
@@ -125,6 +142,7 @@ export class KnowledgeBaseService {
         d.title as "documentTitle",
         d.author as "documentAuthor",
         d."filePath" as "documentFilePath",
+        d.metadata as "documentMetadata",
         1 - (e.vector <=> ${vectorString}::vector) as similarity
       FROM embeddings e
       JOIN documents d ON e."documentId" = d.id
@@ -133,6 +151,115 @@ export class KnowledgeBaseService {
     `;
 
     return results;
+  }
+
+  async updateMetadata(
+    idOrPath: string,
+    updates: {
+      title?: string;
+      author?: string;
+      volume?: string;
+      edition?: string;
+      year?: string;
+    },
+  ): Promise<void> {
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        idOrPath,
+      );
+
+    const doc = await (this.prisma as any).document.findUnique({
+      where: isUuid ? { id: idOrPath } : { filePath: idOrPath },
+    });
+
+    if (!doc) {
+      throw new Error(`Document not found: ${idOrPath}`);
+    }
+
+    const currentMetadata = (doc.metadata as any) || {};
+    const newMetadata = {
+      ...currentMetadata,
+      volume:
+        updates.volume !== undefined ? updates.volume : currentMetadata.volume,
+      edition:
+        updates.edition !== undefined
+          ? updates.edition
+          : currentMetadata.edition,
+      year: updates.year !== undefined ? updates.year : currentMetadata.year,
+    };
+
+    await (this.prisma as any).document.update({
+      where: { id: doc.id },
+      data: {
+        title: updates.title || doc.title,
+        author: updates.author || doc.author,
+        metadata: newMetadata,
+      },
+    });
+
+    this.logger.log(`Updated metadata for: ${doc.title}`);
+  }
+
+  private async extractMetadata(
+    text: string,
+    fallback: string,
+  ): Promise<{
+    title: string;
+    author: string;
+    volume?: string;
+    edition?: string;
+    year?: string;
+  }> {
+    const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
+
+    const beautified = fallback.replace(/_/g, ' ').replace(/-/g, ' ').trim();
+
+    if (!apiKey) {
+      return { title: beautified, author: 'Unknown Author' };
+    }
+
+    try {
+      const model = this.genAI.getGenerativeModel({
+        model: 'gemini-1.5-flash-latest',
+      });
+      const prompt = `
+        Based on the following text from the beginning of a medical book, identify the official Title, Author(s), Volume (Tomo/Volumen), Edition, and Publication Year.
+        
+        TEXT:
+        ${text}
+        
+        RULES:
+        - Return ONLY a JSON object: {"title": "...", "author": "...", "volume": "...", "edition": "...", "year": "..."}
+        - If multiple authors, list them separated by commas.
+        - If you cannot find a field, return null for that field.
+        - Use "${beautified}" if the title is not clearly found.
+      `;
+
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const jsonStr = response
+        .text()
+        .replace(/```json/g, '')
+        .replace(/```/g, '')
+        .trim();
+      const meta = JSON.parse(jsonStr);
+
+      this.logger.log(
+        `AI extracted metadata: ${meta.title} ${meta.volume ? `(${meta.volume})` : ''} by ${meta.author}`,
+      );
+      return {
+        title: meta.title || beautified,
+        author: meta.author || 'Unknown Author',
+        volume: meta.volume || undefined,
+        edition: meta.edition || undefined,
+        year: meta.year || undefined,
+      };
+    } catch (error) {
+      this.logger.warn(
+        `AI metadata extraction failed: ${error.message}. Using fallback.`,
+      );
+      return { title: beautified, author: 'Unknown Author' };
+    }
   }
 
   private chunkText(

@@ -27,8 +27,13 @@ async function bootstrap() {
     const results = await knowledgeBaseService.findSimilar(query, 5);
     console.log('--- Search Results ---');
     results.forEach((res, i) => {
+      const vol = res.documentMetadata?.volume
+        ? ` (${res.documentMetadata.volume})`
+        : '';
       console.log(`[${i + 1}] Similarity: ${res.similarity.toFixed(4)}`);
-      console.log(`Source: ${res.documentTitle} (Page ${res.pageNumber})`);
+      console.log(
+        `Source: ${res.documentTitle}${vol} (Page ${res.pageNumber})`,
+      );
       console.log(`Content: ${res.content.substring(0, 200)}...`);
       console.log('---');
     });
