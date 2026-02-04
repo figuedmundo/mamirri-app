@@ -22,13 +22,19 @@ async function bootstrap() {
   const knowledgeBaseService = app.get(KnowledgeBaseService);
 
   const booksDir = path.resolve(__dirname, '../data/books');
+  const archiveDir = path.resolve(__dirname, '../data/archive');
+
   if (!fs.existsSync(booksDir)) {
     console.log(`Creating books directory at ${booksDir}`);
     fs.mkdirSync(booksDir, { recursive: true });
   }
 
+  if (!fs.existsSync(archiveDir)) {
+    fs.mkdirSync(archiveDir, { recursive: true });
+  }
+
   const files = fs.readdirSync(booksDir).filter((f) => f.endsWith('.pdf'));
-  console.log(`Found ${files.length} PDF files in ${booksDir}`);
+  console.log(`Found ${files.length} new PDF files in ${booksDir}`);
 
   let successCount = 0;
   let failureCount = 0;
@@ -37,15 +43,20 @@ async function bootstrap() {
     const filePath = path.join('data/books', file);
     try {
       await knowledgeBaseService.ingestFile(filePath);
+
+      const newPath = path.join(archiveDir, file);
+      fs.renameSync(path.resolve(__dirname, '..', filePath), newPath);
+      console.log(`📦 Archived: ${file} -> data/archive/`);
+
       successCount++;
     } catch (error) {
-      console.error(`Failed to ingest ${file}:`, error.message);
+      console.error(`❌ Failed to ingest ${file}:`, error.message);
       failureCount++;
     }
   }
 
-  console.log('--- Ingestion Summary ---');
-  console.log(`Total files: ${files.length}`);
+  console.log('\n--- Ingestion Summary ---');
+  console.log(`Total files found: ${files.length}`);
   console.log(`Successfully processed: ${successCount}`);
   console.log(`Failed: ${failureCount}`);
 

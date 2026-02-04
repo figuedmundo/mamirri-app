@@ -53,7 +53,7 @@ async function bootstrap() {
 
   try {
     execSync(
-      `cat "${absolutePath}" | docker exec -i postgres_db psql -U physio_user -d physio_db`,
+      `cat "${absolutePath}" | docker exec -i physio_db psql -U physio_user -d physio_db`,
       { stdio: 'inherit' },
     );
     console.log('✅ Restore complete.');

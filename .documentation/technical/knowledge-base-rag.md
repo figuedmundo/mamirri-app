@@ -51,13 +51,49 @@ You can manage the knowledge base using these commands from the project root:
 | `pnpm knowledge:backup`                     | Creates a timestamped SQL backup of the entire vector database in the `backups/` folder.                                                   |
 | `pnpm knowledge:restore "path/to/file.sql"` | Restores the database from a backup file (Warning: Overwrites current data).                                                               |
 | `pnpm knowledge:stats`                      | Displays technical database statistics (total chunks per book).                                                                            |
+| `pnpm knowledge:wipe`                       | **DANGER**: Wipes all books and vectors from the database (useful before a clean import).                                                  |
 
-### Data Protection
+### Migration & Data Protection
 
-Vectorizing books is expensive (quota/time). Always backup your database before making major changes:
+Vectorizing books is expensive (quota/time). Use these commands to move your library between environments (e.g., from Local to Production) without affecting other data like patients or users.
+
+#### 1. Full System Backup (Safest)
+
+Saves everything (Library + Patients + Users). Use this for general security.
 
 ```bash
 pnpm knowledge:backup
+```
+
+#### 2. Export Library Only (Migration)
+
+Saves **only** the vectorized books and metadata. Perfect for moving your library to production.
+
+```bash
+pnpm knowledge:export
+```
+
+#### 3. Import Library
+
+**Crucial**: Always ensure your database schema is up to date before importing data.
+
+```bash
+# 1. Sync the schema (Migrations)
+pnpm db:deploy
+
+# 2. Import the data
+pnpm knowledge:import "backups/your_file.sql"
+```
+
+If you use a `library_only_...` file, it will append those books to your database without touching existing patients/users.
+
+#### 4. Clean Slate Import
+
+If you want to replace your current library with a new one:
+
+```bash
+pnpm knowledge:wipe
+pnpm knowledge:import "backups/your_file.sql"
 ```
 
 To see a list of available backups:
