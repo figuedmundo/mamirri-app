@@ -5,6 +5,9 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import * as fs from 'fs';
 import * as path from 'path';
 import { withRetry } from '../transcription/utils/retry';
+import { promisify } from 'util';
+
+const sleep = promisify(setTimeout);
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { PDFParse } = require('pdf-parse');
@@ -56,30 +59,59 @@ export class KnowledgeBaseService {
       },
     });
 
-    const chunks = this.chunkText(pdfData.text);
-    this.logger.log(`Generated ${chunks.length} chunks for ${title}`);
+    try {
+      const chunks = this.chunkText(pdfData.text);
+      this.logger.log(`Generated ${chunks.length} chunks for ${title}`);
 
-    for (let i = 0; i < chunks.length; i++) {
-      const content = chunks[i];
-      const vector = await this.generateEmbedding(
-        content,
-        'RETRIEVAL_DOCUMENT',
-      );
-      const vectorString = `[${vector.join(',')}]`;
-
-      await this.prisma.$executeRaw`
-        INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector)
-        VALUES (gen_random_uuid(), ${content}, 1, ${document.id}, ${vectorString}::vector)
-      `;
-
-      if ((i + 1) % 10 === 0) {
-        this.logger.log(
-          `Processed ${i + 1}/${chunks.length} chunks for ${title}`,
+      for (let i = 0; i < chunks.length; i++) {
+        const content = chunks[i];
+        const vector = await this.generateEmbedding(
+          content,
+          'RETRIEVAL_DOCUMENT',
         );
+        const vectorString = `[${vector.join(',')}]`;
+
+        await this.prisma.$executeRaw`
+          INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector)
+          VALUES (gen_random_uuid(), ${content}, 1, ${document.id}, ${vectorString}::vector)
+        `;
+
+        if ((i + 1) % 10 === 0) {
+          this.logger.log(
+            `Processed ${i + 1}/${chunks.length} chunks for ${title}`,
+          );
+        }
+
+        await sleep(1500);
       }
+      this.logger.log(`Successfully ingested ${title}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to ingest chunks for ${title}. Cleaning up partial data...`,
+      );
+      await (this.prisma as any).document.delete({
+        where: { id: document.id },
+      });
+      throw error;
+    }
+  }
+
+  async removeDocument(filePath: string): Promise<void> {
+    const doc = await (this.prisma as any).document.findUnique({
+      where: { filePath },
+    });
+
+    if (!doc) {
+      this.logger.warn(`No document found with path: ${filePath}`);
+      return;
     }
 
-    this.logger.log(`Successfully ingested ${title}`);
+    await (this.prisma as any).document.delete({
+      where: { id: doc.id },
+    });
+    this.logger.log(
+      `Successfully removed document and all embeddings for: ${filePath}`,
+    );
   }
 
   async findSimilar(query: string, limit: number = 5): Promise<any[]> {
@@ -144,7 +176,7 @@ export class KnowledgeBaseService {
           } as any);
         return result.embedding.values;
       },
-      { maxRetries: 3 },
+      { maxRetries: 5 },
       this.logger,
     );
   }

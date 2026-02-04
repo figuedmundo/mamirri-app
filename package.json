@@ -13,6 +13,7 @@
     "test:e2e:headed": "pnpm --filter client exec playwright test --headed",
     "knowledge:ingest": "pnpm --filter server knowledge:ingest",
     "knowledge:search": "pnpm --filter server knowledge:search",
+    "knowledge:clean": "pnpm --filter server knowledge:clean",
     "knowledge:stats": "pnpm --filter server knowledge:stats"
   },
   "devDependencies": {

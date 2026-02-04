@@ -23,6 +23,7 @@
     "seed": "ts-node prisma/seed.ts",
     "knowledge:ingest": "ts-node scripts/ingest-books.ts",
     "knowledge:search": "ts-node scripts/test-search.ts",
+    "knowledge:clean": "ts-node scripts/clean-book.ts",
     "knowledge:stats": "prisma db execute --stdin <<'EOF'\nSELECT d.title, COUNT(e.id) as total_chunks, MIN(e.\"pageNumber\") as start_page, MAX(e.\"pageNumber\") as end_page FROM documents d JOIN embeddings e ON d.id = e.\"documentId\" GROUP BY d.title;\nEOF"
   },
   "prisma": {

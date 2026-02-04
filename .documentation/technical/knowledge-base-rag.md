@@ -41,11 +41,12 @@ When a therapist needs a suggestion or searches the library:
 
 You can manage the knowledge base using these commands from the project root:
 
-| Command                         | Description                                                                  |
-| ------------------------------- | ---------------------------------------------------------------------------- |
-| `pnpm knowledge:ingest`         | Scans `apps/server/data/books/*.pdf` and generates embeddings for new files. |
-| `pnpm knowledge:search "query"` | Performs a semantic search across all ingested books.                        |
-| `pnpm knowledge:stats`          | Displays the total number of chunks and page ranges for each ingested book.  |
+| Command                               | Description                                                                         |
+| ------------------------------------- | ----------------------------------------------------------------------------------- |
+| `pnpm knowledge:ingest`               | Scans `apps/server/data/books/*.pdf` and generates embeddings for new files.        |
+| `pnpm knowledge:search "query"`       | Performs a semantic search across all ingested books.                               |
+| `pnpm knowledge:stats`                | Displays the total number of chunks and page ranges for each ingested book.         |
+| `pnpm knowledge:clean "filename.pdf"` | Removes a specific book and its embeddings from the database to allow re-ingestion. |
 
 ### Adding books to the library
 
@@ -71,6 +72,17 @@ To test that the AI can actually "understand" the content:
 ```bash
 pnpm knowledge:search "huesos del carpo"
 ```
+
+## Troubleshooting Failures
+
+If an ingestion is interrupted (e.g., due to rate limits or internet failure):
+
+1.  **Auto-Cleanup**: The system is designed to automatically delete the partial "Document" record if the process crashes. Running `pnpm knowledge:ingest` again will restart the book from the beginning.
+2.  **Manual Reset**: If a book seems corrupted or incomplete in search results, you can force a reset by running:
+    ```bash
+    pnpm knowledge:clean "Latarjet_Ruiz_Liard_Anatomia_Humana_5a_E.pdf"
+    ```
+    Then, run `pnpm knowledge:ingest` to process it again.
 
 ## Technical Stack
 
