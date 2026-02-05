@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Length, IsNumberString } from 'class-validator';
+import { IsNotEmpty, Length, IsNumberString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SetupPinDto {
