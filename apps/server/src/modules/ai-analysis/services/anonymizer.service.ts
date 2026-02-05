@@ -28,13 +28,6 @@ interface ClinicalCaseWithPatient {
   }>;
 }
 
-const PII_FIELDS = [
-  'patient.name',
-  'patient.email',
-  'patient.phone',
-  'patient.emergencyContact',
-] as const;
-
 const FIELDS_TO_REMOVE = [
   'patient.email',
   'patient.phone',
