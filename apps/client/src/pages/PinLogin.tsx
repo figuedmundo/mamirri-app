@@ -14,34 +14,30 @@ import PinDots from '../components/auth/PinDots';
 import { api } from '../lib/axios';
 
 const PinLogin: React.FC = () => {
+  const storedName = localStorage.getItem('last_user_name') || '';
+  const storedEmail = localStorage.getItem('last_user_email') || '';
+
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedName = localStorage.getItem('last_user_name');
-    const storedEmail = localStorage.getItem('last_user_email');
-    if (storedName) setName(storedName);
-    if (storedEmail) setEmail(storedEmail);
-
     if (!storedEmail) {
       navigate('/login');
     }
-  }, [navigate]);
+  }, [navigate, storedEmail]);
 
   const handlePinComplete = async (completedPin: string) => {
     try {
       setError('');
       const response = await api.post('/auth/pin/login', {
-        email,
+        email: storedEmail,
         pin: completedPin,
       });
       login(response.data.user, response.data.accessToken);
       navigate('/');
-    } catch (err: any) {
+    } catch {
       setError('PIN incorrecto');
       setPin('');
     }
@@ -52,7 +48,7 @@ const PinLogin: React.FC = () => {
       <Card className="w-full max-w-[400px] shadow-lg">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
-            Hola, {name || 'Bienvenido'}
+            Hola, {storedName || 'Bienvenido'}
           </CardTitle>
           <CardDescription className="text-center text-base">
             Ingresa tu PIN para acceder.

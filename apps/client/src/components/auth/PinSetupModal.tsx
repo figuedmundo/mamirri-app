@@ -34,7 +34,7 @@ const PinSetupModal: React.FC<PinSetupModalProps> = ({ isOpen, onClose }) => {
           await api.post('/auth/pin/setup', { pin: completedPin });
           await checkPinStatus();
           onClose();
-        } catch (err) {
+        } catch {
           setError('Error al guardar el PIN');
           reset();
         }
