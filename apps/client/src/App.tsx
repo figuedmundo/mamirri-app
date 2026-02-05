@@ -3,6 +3,7 @@ import { MainLayout } from './components/MainLayout';
 import { Dashboard } from './pages/Dashboard';
 import { AuthProvider } from './context/AuthProvider';
 import Login from './pages/Login';
+import PinLogin from './pages/PinLogin';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import AuthLayout from './components/auth/AuthLayout';
@@ -36,6 +37,7 @@ function AppContent() {
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
+        <Route path="/pin-login" element={<PinLogin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>

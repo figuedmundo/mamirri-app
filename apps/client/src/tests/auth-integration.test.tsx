@@ -17,6 +17,7 @@ import { api } from '../lib/axios';
 vi.mock('../lib/axios', () => ({
   api: {
     post: vi.fn(),
+    get: vi.fn(),
   },
 }));
 
@@ -56,6 +57,7 @@ describe('Auth Integration Flows', () => {
     (api.post as Mock).mockResolvedValueOnce({
       data: { user: mockUser, accessToken: mockToken },
     });
+    (api.get as Mock).mockResolvedValue({ data: { hasPinSet: true } });
 
     render(
       <AuthProvider>
@@ -75,21 +77,21 @@ describe('Auth Integration Flows', () => {
       </AuthProvider>,
     );
 
-    fireEvent.change(screen.getByLabelText(/name/i), {
+    fireEvent.change(screen.getByLabelText(/nombre/i), {
       target: { value: 'New User' },
     });
-    fireEvent.change(screen.getByLabelText(/email/i), {
+    fireEvent.change(screen.getByLabelText(/correo electrónico/i), {
       target: { value: 'new@example.com' },
     });
-    fireEvent.change(screen.getByLabelText(/^password/i), {
+    fireEvent.change(screen.getByLabelText(/^contraseña/i), {
       target: { value: 'password123' },
     });
-    fireEvent.change(screen.getByLabelText(/confirm password/i), {
+    fireEvent.change(screen.getByLabelText(/confirmar contraseña/i), {
       target: { value: 'password123' },
     });
 
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
+      fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }));
     });
 
     expect(api.post).toHaveBeenCalledWith('/auth/register', {
@@ -116,6 +118,7 @@ describe('Auth Integration Flows', () => {
     (api.post as Mock).mockResolvedValueOnce({
       data: { user: mockUser, accessToken: mockToken },
     });
+    (api.get as Mock).mockResolvedValue({ data: { hasPinSet: true } });
 
     render(
       <AuthProvider>

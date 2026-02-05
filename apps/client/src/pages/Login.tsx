@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/use-auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate, useSearchParams } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import PinSetupModal from '../components/auth/PinSetupModal';
 import { Input } from '../components/ui/input';
 import {
   Card,
@@ -16,9 +18,22 @@ import { api } from '../lib/axios';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const { login, checkPinStatus, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [error, setError] = useState('');
+  const [showPinSetup, setShowPinSetup] = useState(false);
+
+  const lastEmail = localStorage.getItem('last_user_email');
+  const isManual = searchParams.get('manual') === 'true';
+
+  if (isAuthenticated && !isLoading && !showPinSetup) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (lastEmail && !isManual && !isAuthenticated && !isLoading) {
+    return <Navigate to="/pin-login" replace />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +43,15 @@ const Login: React.FC = () => {
         password,
       });
       login(response.data.user, response.data.accessToken);
-      navigate('/');
+
+      const hasPin = await checkPinStatus();
+      const skipped = localStorage.getItem('pin_setup_skipped') === 'true';
+
+      if (!hasPin && !skipped) {
+        setShowPinSetup(true);
+      } else {
+        navigate('/');
+      }
     } catch {
       setError('Correo o contraseña incorrectos');
     }
@@ -58,6 +81,7 @@ const Login: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoFocus
                 className="h-12 text-lg"
               />
             </div>
@@ -84,15 +108,22 @@ const Login: React.FC = () => {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center border-t py-4">
-          <a
-            href="/register"
-            className="text-sm text-primary font-medium hover:underline"
+        <CardFooter className="flex flex-col gap-4 border-t py-6">
+          <Button
+            variant="outline"
+            className="w-full h-12 text-lg font-medium gap-2"
+            onClick={() => navigate('/register')}
           >
-            ¿No tienes cuenta? Regístrate
-          </a>
+            Crear Cuenta
+            <ArrowRight className="w-5 h-5" />
+          </Button>
+          <p className="text-sm text-gray-500 text-center">
+            ¿No tienes cuenta? Regístrate arriba
+          </p>
         </CardFooter>
       </Card>
+
+      <PinSetupModal isOpen={showPinSetup} onClose={() => navigate('/')} />
     </div>
   );
 };

@@ -22,7 +22,8 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   }
 
   if (!isAuthenticated && !isLoading) {
-    return <Navigate to="/login" replace />;
+    const hasPin = localStorage.getItem('last_user_email');
+    return <Navigate to={hasPin ? '/pin-login' : '/login'} replace />;
   }
 
   return <>{children}</>;

@@ -201,7 +201,8 @@ Methodology: Agile Development (1-week Sprints).
 **Critical Buffer Week - Expect the Unexpected**
 
 - [ ] **10.1** Prioritize top 3 UX blockers from Week 9
-- [ ] **10.1.1** Make login more fast , the doctor feels enter email is slow, make the create account more visible
+- [x] **10.1.1** Make login more fast , the doctor feels enter email is slow, make the create account more visible
+- [ ] **10.1.2** Theraphist want have a profile page where can update personal details
 
 - [ ] **10.2** Fix critical bugs (data loss, crashes)
 - [ ] **10.3** Refine UI based on real usage (button sizes, wording)
