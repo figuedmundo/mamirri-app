@@ -1,8 +1,58 @@
 # API Reference
 
-**Last Updated:** 2026-01-17
+**Last Updated:** 2026-02-05
 
 All endpoints require authentication via Bearer token (JWT) unless otherwise noted.
+
+---
+
+## AI Analysis
+
+### POST /api/v1/ai/analyze
+
+Analyze a clinical case using RAG over medical literature. Returns treatment suggestions with citations.
+
+- **Body:**
+  ```json
+  {
+    "clinicalCaseId": "uuid-of-clinical-case"
+  }
+  ```
+- **Response:** `200 OK`
+  ```json
+  {
+    "primarySuggestion": {
+      "title": "Tratamiento conservador para fascitis plantar",
+      "description": "Se recomienda estiramientos y terapia manual...",
+      "confidence": "HIGH",
+      "reasoning": "Basado en la presentación clínica y literatura..."
+    },
+    "alternatives": [...],
+    "citations": [
+      {
+        "quote": "El estiramiento es el pilar del tratamiento...",
+        "quoteOriginal": "Stretching is the pillar of treatment...",
+        "documentTitle": "Manual de Fisioterapia",
+        "author": "Kapandji",
+        "pageNumber": 234,
+        "relevance": 0.95
+      }
+    ],
+    "reasoning": {
+      "step1_understanding": "Análisis de síntomas...",
+      "step2_literature": "Resultados de búsqueda...",
+      "step3_synthesis": "Recomendación final..."
+    },
+    "metadata": {
+      "processingTimeMs": 1200,
+      "anonymizationApplied": true
+    }
+  }
+  ```
+- **Errors:**
+  - `401 Unauthorized`: Token missing or invalid.
+  - `403 Forbidden`: Case belongs to another therapist.
+  - `404 Not Found`: Case does not exist.
 
 ---
 

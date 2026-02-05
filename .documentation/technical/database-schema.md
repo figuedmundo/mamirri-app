@@ -121,6 +121,31 @@ Defines the strategy and goals for a Clinical Case.
 
 - **One-to-One** with `ClinicalCase`.
 
+## Knowledge Base Documents (`documents`)
+
+Stores metadata for ingested medical literature.
+
+| Field       | Type       | Description                 |
+| ----------- | ---------- | --------------------------- |
+| `id`        | `String`   | Unique identifier (UUID)    |
+| `title`     | `String`   | Book/Document title         |
+| `author`    | `String`   | Author(s)                   |
+| `filePath`  | `String`   | Unique path to source file  |
+| `metadata`  | `Json?`    | Volume, edition, year, etc. |
+| `createdAt` | `DateTime` | Ingestion timestamp         |
+
+## Embeddings (`embeddings`)
+
+Stores vectorized text chunks for semantic search.
+
+| Field        | Type     | Description                       |
+| ------------ | -------- | --------------------------------- |
+| `id`         | `String` | Unique identifier (UUID)          |
+| `content`    | `String` | Raw text chunk (approx 500 words) |
+| `pageNumber` | `Int`    | Reference page in source document |
+| `vector`     | `Vector` | 768-dim embedding (pgvector)      |
+| `documentId` | `String` | Foreign key to `Document`         |
+
 ---
 
-**Last Updated:** 2026-01-17
+**Last Updated:** 2026-02-05

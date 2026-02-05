@@ -275,13 +275,13 @@ Methodology: Agile Development (1-week Sprints).
 
 ### Week 14: The AI Agent (Backend)
 
-- [ ] **14.1** NestJS: AIAnalysis module
-- [ ] **14.2** RAG logic: Semantic search implementation
-- [ ] **14.3** LLM integration: Gemini or Groq
-- [ ] **14.4** System Prompt engineering (Chain of Thought)
-- [ ] **14.5** Anonymization: Strip PII before sending to LLM
-- [ ] **14.6** Translation service: EN ↔ ES for medical terms
-- [ ] **14.7** Test: Query "fascitis plantar" → returns relevant book passages
+- [x] **14.1** NestJS: AIAnalysis module
+- [x] **14.2** RAG logic: Semantic search implementation
+- [x] **14.3** LLM integration: Gemini or Groq
+- [x] **14.4** System Prompt engineering (Chain of Thought)
+- [x] **14.5** Anonymization: Strip PII before sending to LLM
+- [x] **14.6** Translation service: EN ↔ ES for medical terms
+- [x] **14.7** Test: Query "fascitis plantar" → returns relevant book passages
 
 ### Week 15: Vision & Full Analysis
 

@@ -11,6 +11,7 @@ import { MediaModule } from './modules/media/media.module';
 import { TreatmentPlansModule } from './modules/treatment-plans/treatment-plans.module';
 import { UsersModule } from './modules/users/users.module';
 import { LoggerModule } from './common/logger/logger.module';
+import { AiAnalysisModule } from './modules/ai-analysis/ai-analysis.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import transcriptionConfig from './config/transcription.config';
 
@@ -31,6 +32,7 @@ import transcriptionConfig from './config/transcription.config';
     TreatmentPlansModule,
     UsersModule,
     LoggerModule,
+    AiAnalysisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
