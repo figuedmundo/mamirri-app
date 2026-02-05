@@ -12,6 +12,7 @@ import { Label } from '../ui/label';
 import { useToast } from '../../hooks/use-toast';
 import { usersApi } from '../../api/users';
 import { Loader2 } from 'lucide-react';
+import { isAxiosError } from 'axios';
 
 interface ChangePasswordModalProps {
   isOpen: boolean;
@@ -51,11 +52,14 @@ export function ChangePasswordModal({
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message =
+        isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : 'Error al cambiar la contraseña';
       toast({
         title: 'Error',
-        description:
-          error.response?.data?.message || 'Error al cambiar la contraseña',
+        description: message,
         variant: 'destructive',
       });
     } finally {

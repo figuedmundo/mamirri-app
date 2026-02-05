@@ -8,6 +8,7 @@ import { usersApi } from '../api/users';
 import { Loader2, Camera, Trash2, User as UserIcon } from 'lucide-react';
 import { ChangePasswordModal } from '../components/profile/ChangePasswordModal';
 import PinSetupModal from '../components/auth/PinSetupModal';
+import { isAxiosError } from 'axios';
 
 export default function Perfil() {
   const { user, updateUser } = useAuth();
@@ -61,11 +62,14 @@ export default function Perfil() {
         title: 'Éxito',
         description: 'Perfil actualizado correctamente',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message =
+        isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : 'Error al actualizar el perfil';
       toast({
         title: 'Error',
-        description:
-          error.response?.data?.message || 'Error al actualizar el perfil',
+        description: message,
         variant: 'destructive',
       });
     } finally {
@@ -85,7 +89,7 @@ export default function Perfil() {
         title: 'Éxito',
         description: 'Foto de perfil actualizada',
       });
-    } catch (error: any) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Error al subir la foto',
@@ -105,7 +109,7 @@ export default function Perfil() {
         title: 'Éxito',
         description: 'Foto de perfil eliminada',
       });
-    } catch (error: any) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Error al eliminar la foto',
@@ -326,10 +330,12 @@ export default function Perfil() {
         isOpen={isPasswordModalOpen}
         onClose={() => setIsPasswordModalOpen(false)}
       />
-      <PinSetupModal
-        isOpen={isPinModalOpen}
-        onClose={() => setIsPinModalOpen(false)}
-      />
+      {isPinModalOpen && (
+        <PinSetupModal
+          isOpen={isPinModalOpen}
+          onClose={() => setIsPinModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
