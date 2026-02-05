@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
+import { useAuth } from '../hooks/use-auth';
 
 interface Patient {
   id: string;
@@ -16,6 +17,7 @@ interface Session {
 
 export const Dashboard = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const todaySessions: Session[] = [];
 
@@ -32,7 +34,7 @@ export const Dashboard = () => {
           Panel Principal
         </h1>
         <p className="text-slate-600 dark:text-slate-400 mt-2">
-          Bienvenido, Dr. García
+          Bienvenido, {user?.name || 'Dr. García'}
         </p>
       </div>
 

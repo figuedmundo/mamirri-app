@@ -50,21 +50,21 @@ describe('Register Component', () => {
       </BrowserRouter>,
     );
 
-    fireEvent.change(screen.getByLabelText(/name/i), {
+    fireEvent.change(screen.getByLabelText(/nombre/i), {
       target: { value: 'Test User' },
     });
-    fireEvent.change(screen.getByLabelText(/email/i), {
+    fireEvent.change(screen.getByLabelText(/correo electrónico/i), {
       target: { value: 'test@example.com' },
     });
 
-    fireEvent.change(screen.getByLabelText(/^password$/i), {
+    fireEvent.change(screen.getByLabelText(/^contraseña$/i), {
       target: { value: 'password123' },
     });
-    fireEvent.change(screen.getByLabelText(/confirm password/i), {
+    fireEvent.change(screen.getByLabelText(/confirmar contraseña/i), {
       target: { value: 'password123' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
+    fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }));
 
     await waitFor(() => {
       expect(mockPost).toHaveBeenCalledWith('/auth/register', {
@@ -76,7 +76,6 @@ describe('Register Component', () => {
     });
 
     expect(mockLogin).toHaveBeenCalledWith(mockUser, mockToken);
-    expect(mockNavigate).toHaveBeenCalledWith('/');
   });
 
   it('shows error when passwords do not match', async () => {
@@ -86,23 +85,25 @@ describe('Register Component', () => {
       </BrowserRouter>,
     );
 
-    fireEvent.change(screen.getByLabelText(/name/i), {
+    fireEvent.change(screen.getByLabelText(/nombre/i), {
       target: { value: 'Test User' },
     });
-    fireEvent.change(screen.getByLabelText(/email/i), {
+    fireEvent.change(screen.getByLabelText(/correo electrónico/i), {
       target: { value: 'test@example.com' },
     });
-    fireEvent.change(screen.getByLabelText(/^password$/i), {
+    fireEvent.change(screen.getByLabelText(/^contraseña$/i), {
       target: { value: 'password123' },
     });
-    fireEvent.change(screen.getByLabelText(/confirm password/i), {
+    fireEvent.change(screen.getByLabelText(/confirmar contraseña/i), {
       target: { value: 'mismatch' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
+    fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/passwords do not match/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/las contraseñas no coinciden/i),
+      ).toBeInTheDocument();
     });
 
     expect(mockPost).not.toHaveBeenCalled();

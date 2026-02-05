@@ -10,6 +10,7 @@ const mockPost = vi.fn();
 vi.mock('../hooks/use-auth', () => ({
   useAuth: () => ({
     login: mockLogin,
+    checkPinStatus: vi.fn().mockResolvedValue(true),
   }),
 }));
 

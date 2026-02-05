@@ -3,6 +3,7 @@ import { MainLayout } from './components/MainLayout';
 import { Dashboard } from './pages/Dashboard';
 import { AuthProvider } from './context/AuthProvider';
 import Login from './pages/Login';
+import PinLogin from './pages/PinLogin';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import AuthLayout from './components/auth/AuthLayout';
@@ -17,6 +18,7 @@ import Analisis from './pages/Analisis';
 import Biblioteca from './pages/Biblioteca';
 import Plantillas from './pages/Plantillas';
 import Ajustes from './pages/Ajustes';
+import Perfil from './pages/Perfil';
 import CaseDetail from './pages/CaseDetail';
 import {
   LoggerErrorBoundary,
@@ -36,6 +38,7 @@ function AppContent() {
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
+        <Route path="/pin-login" element={<PinLogin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
@@ -121,6 +124,17 @@ function AppContent() {
           <ProtectedRoute>
             <MainLayout>
               <Ajustes />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/perfil"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Perfil />
             </MainLayout>
           </ProtectedRoute>
         }

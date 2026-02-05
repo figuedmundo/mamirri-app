@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppShell } from './shell/AppShell';
+import { useAuth } from '../hooks/use-auth';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -8,6 +9,7 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user: authUser, logout } = useAuth();
 
   const navigationItems = [
     {
@@ -38,7 +40,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   ];
 
   const user = {
-    name: 'Dra. Noemi Herbas',
+    name: authUser?.name || 'Dra. Noemi Herbas',
     avatarUrl: undefined,
   };
 
@@ -46,7 +48,8 @@ export function MainLayout({ children }: MainLayoutProps) {
     navigate(href);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
   };
 

@@ -10,17 +10,35 @@
     "test": "turbo run test",
     "test:e2e": "pnpm --filter client test:e2e",
     "test:e2e:ui": "pnpm --filter client test:e2e:ui",
-    "test:e2e:headed": "pnpm --filter client exec playwright test --headed"
+    "test:e2e:headed": "pnpm --filter client exec playwright test --headed",
+    "db:deploy": "pnpm --filter server db:deploy",
+    "knowledge:list": "pnpm --filter server knowledge:list",
+    "knowledge:ingest": "pnpm --filter server knowledge:ingest",
+    "knowledge:search": "pnpm --filter server knowledge:search",
+    "knowledge:clean": "pnpm --filter server knowledge:clean",
+    "knowledge:update": "pnpm --filter server knowledge:update",
+    "knowledge:archive": "pnpm --filter server knowledge:archive",
+    "knowledge:backup": "pnpm --filter server knowledge:backup",
+    "knowledge:export": "pnpm --filter server knowledge:export",
+    "knowledge:import": "pnpm --filter server knowledge:import",
+    "knowledge:wipe": "pnpm --filter server knowledge:wipe",
+    "knowledge:restore": "pnpm --filter server knowledge:restore",
+    "knowledge:stats": "pnpm --filter server knowledge:stats"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "eslint": "^9.17.0",
     "prettier": "^3.7.4",
+    "tsx": "^4.21.0",
     "turbo": "^2.8.1",
     "typescript": "5.9.2"
   },
   "packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "dotenv": "^17.2.3"
   }
 }

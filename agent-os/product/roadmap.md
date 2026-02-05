@@ -201,6 +201,9 @@ Methodology: Agile Development (1-week Sprints).
 **Critical Buffer Week - Expect the Unexpected**
 
 - [ ] **10.1** Prioritize top 3 UX blockers from Week 9
+- [x] **10.1.1** Make login more fast , the doctor feels enter email is slow, make the create account more visible
+- [x] **10.1.2** Theraphist want have a profile page where can update personal details
+
 - [ ] **10.2** Fix critical bugs (data loss, crashes)
 - [ ] **10.3** Refine UI based on real usage (button sizes, wording)
 - [ ] **10.4** Performance: Only fix proven bottlenecks
@@ -247,34 +250,34 @@ Methodology: Agile Development (1-week Sprints).
 
 **Pre-requisite Check:**
 
-- [ ] Do you have 3-5 reference books (PDFs) ready?
-- [ ] Are they legally yours to process?
+- [x] Do you have 3-5 reference books (PDFs) ready?
+- [x] Are they legally yours to process?
 - [ ] Is the MVP stable enough to build on?
 
 ---
 
-### Week 12: Knowledge Base Preparation
+### Week 12: Knowledge Base Preparation ✅
 
-- [ ] **12.1** Research: PDF extraction tools (pdf-parse vs. Unstructured.io)
-- [ ] **12.2** Chunking strategy design (500 words, 50-word overlap)
-- [ ] **12.3** Metadata schema (book, page, chapter, section)
-- [ ] **12.4** Manual test: Extract 1 book, verify quality
-- [ ] **12.5** Write ingestion script with error handling
+- [x] **12.1** Research: PDF extraction tools (pdf-parse vs. Unstructured.io)
+- [x] **12.2** Chunking strategy design (500 words, 50-word overlap)
+- [x] **12.3** Metadata schema (book, page, chapter, section)
+- [x] **12.4** Manual test: Extract 1 book, verify quality
+- [x] **12.5** Write ingestion script with error handling
 
-### Week 13: Vector Database (RAG Foundation)
+### Week 13: Vector Database (RAG Foundation) ✅
 
-- [ ] **13.1** Enable pgvector on Postgres
-- [ ] **13.2** Create embeddings table schema
-- [ ] **13.3** Generate embeddings (OpenAI text-embedding-3-small)
-- [ ] **13.4** Bulk insert vectors into database
-- [ ] **13.5** Test similarity search queries
-- [ ] **13.6** Optimize: Vector index for <200ms queries
+- [x] **13.1** Enable pgvector on Postgres
+- [x] **13.2** Create embeddings table schema
+- [x] **13.3** Generate embeddings (Google Gemini text-embedding-004)
+- [x] **13.4** Bulk insert vectors into database
+- [x] **13.5** Test similarity search queries
+- [x] **13.6** Optimize: Vector index for <200ms queries
 
 ### Week 14: The AI Agent (Backend)
 
 - [ ] **14.1** NestJS: AIAnalysis module
 - [ ] **14.2** RAG logic: Semantic search implementation
-- [ ] **14.3** LLM integration: OpenAI GPT-4 or Gemini
+- [ ] **14.3** LLM integration: Gemini or Groq
 - [ ] **14.4** System Prompt engineering (Chain of Thought)
 - [ ] **14.5** Anonymization: Strip PII before sending to LLM
 - [ ] **14.6** Translation service: EN ↔ ES for medical terms

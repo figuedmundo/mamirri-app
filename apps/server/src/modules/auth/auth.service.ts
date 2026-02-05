@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
+import { SetupPinDto } from './dto/setup-pin.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
 
     if (user && (await bcrypt.compare(pass, user.passwordHash))) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { passwordHash: _hash, ...result } = user;
+      const { passwordHash: _hash, pinHash: _pinHash, ...result } = user;
       return result;
     }
     return null;
@@ -71,7 +72,7 @@ export class AuthService {
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { passwordHash: _unneeded, ...result } = user;
+    const { passwordHash: _unneeded, pinHash: _pinUnneeded, ...result } = user;
     return this.login(result);
   }
 
@@ -88,7 +89,7 @@ export class AuthService {
       if (!user) throw new UnauthorizedException();
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { passwordHash: _hash, ...result } = user;
+      const { passwordHash: _hash, pinHash: _pinHash, ...result } = user;
       return this.login(result);
     } catch {
       throw new UnauthorizedException();
@@ -98,5 +99,46 @@ export class AuthService {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logout(_userId: string) {
     return true;
+  }
+
+  async setupPin(userId: string, setupPinDto: SetupPinDto) {
+    const { pin } = setupPinDto;
+    const salt = await bcrypt.genSalt();
+    const pinHash = await bcrypt.hash(pin, salt);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { pinHash },
+    });
+
+    return { success: true };
+  }
+
+  async validatePin(email: string, pin: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user || !user.pinHash) {
+      throw new UnauthorizedException('Invalid PIN or user has no PIN set');
+    }
+
+    const isMatch = await bcrypt.compare(pin, user.pinHash);
+    if (!isMatch) {
+      throw new UnauthorizedException('Invalid PIN');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordHash: _hash, pinHash: _pin, ...result } = user;
+    return this.login(result);
+  }
+
+  async getPinStatus(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { pinHash: true },
+    });
+
+    return { hasPinSet: !!user?.pinHash };
   }
 }

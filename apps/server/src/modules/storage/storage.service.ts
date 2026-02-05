@@ -109,6 +109,9 @@ export class StorageService implements OnModuleInit {
         forcePathStyle: true,
       });
     } else {
+      this.logger.warn(
+        'MINIO_PUBLIC_ENDPOINT is not set. URLs will be signed using the internal endpoint. This may cause issues if the client cannot reach the internal endpoint.',
+      );
       this.signingClient = this.client;
     }
   }
@@ -216,6 +219,7 @@ export class StorageService implements OnModuleInit {
       const url = await getSignedUrl(this.signingClient, command, {
         expiresIn: expiry,
       });
+      this.logger.debug(`Generated signed URL for ${path}: ${url}`);
       return url;
     } catch (error) {
       if (this.isNotFoundError(error)) {

@@ -1,13 +1,14 @@
-import { useState } from 'react'
-import { User, LogOut } from 'lucide-react'
+import { useState } from 'react';
+import { User, LogOut, UserCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export interface UserMenuProps {
-  user: { name: string; avatarUrl?: string }
-  onLogout?: () => void
+  user: { name: string; avatarUrl?: string };
+  onLogout?: () => void;
 }
 
 export function UserMenu({ user, onLogout }: UserMenuProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="relative">
@@ -43,10 +44,18 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
               <div className="px-4 py-2 text-sm text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
                 {user.name}
               </div>
+              <Link
+                to="/perfil"
+                className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 flex items-center space-x-2"
+                onClick={() => setIsOpen(false)}
+              >
+                <UserCircle className="w-4 h-4" />
+                <span>Mi Perfil</span>
+              </Link>
               <button
                 onClick={() => {
-                  onLogout?.()
-                  setIsOpen(false)
+                  onLogout?.();
+                  setIsOpen(false);
                 }}
                 className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 flex items-center space-x-2"
               >
@@ -58,5 +67,5 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
         </>
       )}
     </div>
-  )
+  );
 }

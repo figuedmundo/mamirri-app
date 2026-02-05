@@ -1,102 +1,95 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [vector]
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String
-  name         String
-  role         String   @default("THERAPIST")
-  createdAt    DateTime @default(now())
-
-  // Relations
-  patients Patient[]
-  sessions Session[] // Keep for backward compat
+  id                String             @id @default(cuid())
+  email             String             @unique
+  passwordHash      String
+  name              String
+  role              String             @default("THERAPIST")
+  createdAt         DateTime           @default(now())
+  pinHash           String?
+  phone             String?
+  profilePhotoUrl   String?
+  clinicName        String?
+  licenseNumber     String?
+  specialty         String?
+  yearsExperience   Int?
+  patients          Patient[]
+  sessions          Session[]
   treatmentSessions TreatmentSession[]
 
-  @@map("users")
   @@index([email])
+  @@map("users")
 }
 
 model Patient {
-  id              String   @id @default(cuid())
-  name            String
-  occupation      String
-  previousOccupation String?
-  gender          String?
-  phone           String
-  email           String?
-  birthDate       DateTime
-  emergencyContact Json?
-  referralSource  String?
+  id                    String         @id @default(cuid())
+  email                 String?
+  therapistId           String
+  deletedAt             DateTime?
+  birthDate             DateTime
+  createdAt             DateTime       @default(now())
+  gender                String?
+  isActive              Boolean        @default(true)
+  name                  String
+  occupation            String
+  phone                 String
+  previousOccupation    String?
+  emergencyContact      Json?
+  medicalFlags          String[]
+  referralSource        String?
+  medicalFlagsOther     String?
   referralSourceDetails String?
-  medicalFlags    String[]
-  medicalFlagsOther String?
-  isActive        Boolean  @default(true)
-  deletedAt       DateTime?
-  createdAt       DateTime @default(now())
+  clinicalCases         ClinicalCase[]
+  therapist             User           @relation(fields: [therapistId], references: [id])
+  sessions              Session[]
 
-  therapistId     String
-  therapist       User     @relation(fields: [therapistId], references: [id])
-
-  // Relations
-  clinicalCases   ClinicalCase[]
-  sessions        Session[] // Legacy/Generic
-  
-  @@map("patients")
   @@index([name])
+  @@map("patients")
 }
 
 model ClinicalCase {
-  id              String   @id @default(cuid())
-  title           String
-  status          String   // 'active' | 'completed' | 'inactive'
-  startDate       DateTime
-  endDate         DateTime?
-  consultationReason String
-  
-  // JSON arrays/objects for flexible fields
-  pathologicalHistory    Json? // string[]
-  pharmacologicalHistory String?
+  id                      String             @id @default(cuid())
+  patientId               String
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+  consultationReason      String
+  endDate                 DateTime?
   initialMedicalDiagnosis String?
-
-  patientId       String
-  patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
-
-  // Relations
-  evaluations         Evaluation[]
-  treatmentPlan       TreatmentPlan?
-  treatmentSessions   TreatmentSession[]
-  insoles             Insole[]
-
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  pathologicalHistory     Json?
+  pharmacologicalHistory  String?
+  startDate               DateTime
+  status                  String
+  title                   String
+  patient                 Patient            @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  evaluations             Evaluation[]
+  insoles                 Insole[]
+  treatmentPlan           TreatmentPlan?
+  treatmentSessions       TreatmentSession[]
 
   @@map("clinical_cases")
 }
 
 model Evaluation {
-  id              String   @id @default(cuid())
-  date            DateTime
-  type            String   // 'INITIAL' | 'PROGRESS' | 'FINAL'
-  
-  // JSON fields for complex nested data types
-  posturogram     Json     // Posturograma
-  orthopedicTests Json     // TestOrtopedicos
-  avdEvaluation   Json     // EvaluacionAVD
-  painScale       Json     // EscalaDolor
-  diagnosis       Json     // Diagnostico
-  voiceNotes      Json?    // VoiceNote[]
-
+  id              String         @id @default(cuid())
   clinicalCaseId  String
-  clinicalCase    ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
-
-  // Relations
+  avdEvaluation   Json
+  date            DateTime
+  diagnosis       Json
+  orthopedicTests Json
+  painScale       Json
+  posturogram     Json
+  voiceNotes      Json?
+  type            String
+  clinicalCase    ClinicalCase   @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
   footprints      Footprint[]
   postureVideos   PostureVideo[]
 
@@ -104,111 +97,122 @@ model Evaluation {
 }
 
 model TreatmentPlan {
-  id              String   @id @default(cuid())
-  createdAt       DateTime @default(now())
-  
-  objectives      Json     // ObjetivosTratamiento
-  phases          Json     // FaseTratamiento[]
-  insoleSnapshot  Json?    // Plantilla (snapshot inside plan)
-
-  clinicalCaseId  String   @unique
-  clinicalCase    ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+  id             String       @id @default(cuid())
+  clinicalCaseId String       @unique
+  createdAt      DateTime     @default(now())
+  insoleSnapshot Json?
+  objectives     Json
+  phases         Json
+  clinicalCase   ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
 
   @@map("treatment_plans")
 }
 
 model TreatmentSession {
-  id              String   @id @default(cuid())
-  status          String   @default("DRAFT")
+  id              String         @id @default(cuid())
+  clinicalCaseId  String
+  therapistId     String
+  createdAt       DateTime       @default(now())
   date            DateTime
-  phaseNumber     Int
-  procedures      String[] // tecnicasAplicadas
-  patientResponse String
   finalPainLevel  Int
   observations    String?
+  patientResponse String
+  phaseNumber     Int
+  procedures      String[]
+  voiceNotes      Json?
   deletedAt       DateTime?
-  voiceNotes      Json?    // VoiceNote[]
-
-  clinicalCaseId  String
-  clinicalCase    ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
-  
-  therapistId     String
-  therapist       User         @relation(fields: [therapistId], references: [id])
-
-  createdAt       DateTime @default(now())
-
+  status          String         @default("DRAFT")
   photos          SessionPhoto[]
+  clinicalCase    ClinicalCase   @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+  therapist       User           @relation(fields: [therapistId], references: [id])
 
   @@map("treatment_sessions")
 }
 
 model SessionPhoto {
-  id          String   @id @default(cuid())
-  sessionId   String
-  session     TreatmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  storageKey  String
-  caption     String?  @db.VarChar(140)
-  capturedAt  DateTime
-  createdAt   DateTime @default(now())
+  id         String           @id @default(cuid())
+  sessionId  String
+  storageKey String
+  caption    String?          @db.VarChar(140)
+  capturedAt DateTime
+  createdAt  DateTime         @default(now())
+  session    TreatmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
-  @@map("session_photos")
   @@index([sessionId])
+  @@map("session_photos")
 }
 
 model Footprint {
-  id              String   @id @default(cuid())
-  type            String   // 'initial' | 'final' | 'followup'
-  side            String   @default("unknown") // 'left' | 'right' | 'unknown'
-  date            DateTime
-  url             String
-  analysis        Json?    // HuellaAnalisis
-  comparison      Json?    // HuellaComparacion
-
-  evaluationId    String
-  evaluation      Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  id           String     @id @default(cuid())
+  type         String
+  date         DateTime
+  url          String
+  analysis     Json?
+  comparison   Json?
+  evaluationId String
+  side         String     @default("unknown")
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
 
   @@map("footprints")
 }
 
 model PostureVideo {
-  id              String   @id @default(cuid())
-  type            String   // 'gait' | 'static' | 'dynamic'
-  date            DateTime
-  url             String
-  duration        Int
-  observations    String
-
-  evaluationId    String
-  evaluation      Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  id           String     @id @default(cuid())
+  type         String
+  date         DateTime
+  url          String
+  duration     Int
+  observations String
+  evaluationId String
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
 
   @@map("posture_videos")
 }
 
 model Insole {
-  id              String   @id @default(cuid())
-  type            String   // 'orthopedic-insole' | 'ankle-brace' | 'other'
-  material        String   // 'cork' | 'neoprene' | 'eva' | 'other'
-  features        Json?    // Detailed characteristics
-
-  clinicalCaseId  String
-  clinicalCase    ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+  id             String       @id @default(cuid())
+  type           String
+  material       String
+  features       Json?
+  clinicalCaseId String
+  clinicalCase   ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
 
   @@map("insoles")
 }
 
-// Keep generic Session for now if needed by other modules, or phase out
 model Session {
   id          String   @id @default(cuid())
-  status      String   @default("DRAFT")
+  patientId   String
+  therapistId String
   notes       String?
   date        DateTime @default(now())
   createdAt   DateTime @default(now())
-
-  patientId   String
+  status      String   @default("DRAFT")
   patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  
-  therapistId String
   therapist   User     @relation(fields: [therapistId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
+}
+
+model Document {
+  id         String      @id @default(uuid())
+  title      String
+  author     String?
+  filePath   String      @unique
+  createdAt  DateTime    @default(now())
+  metadata   Json?
+  embeddings Embedding[]
+
+  @@map("documents")
+}
+
+model Embedding {
+  id         String                @id @default(uuid())
+  content    String
+  vector     Unsupported("vector")
+  pageNumber Int
+  documentId String
+  document   Document              @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@map("embeddings")
 }
