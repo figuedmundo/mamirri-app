@@ -33,6 +33,7 @@ async function bootstrap() {
     console.error('  --volume "Tomo 1"');
     console.error('  --edition "5th Edition"');
     console.error('  --year "2023"');
+    console.error('  --path "data/archive/new_filename.pdf"');
     process.exit(1);
   }
 
@@ -43,6 +44,7 @@ async function bootstrap() {
     if (args[i] === '--volume') updates.volume = args[++i];
     if (args[i] === '--edition') updates.edition = args[++i];
     if (args[i] === '--year') updates.year = args[++i];
+    if (args[i] === '--path') updates.filePath = args[++i];
   }
 
   console.log(`📝 Attempting to update metadata for: ${identifier}`);

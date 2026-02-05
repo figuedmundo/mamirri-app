@@ -46,5 +46,6 @@ test-results/
 
 # App Data
 apps/server/data/books/
-backups/*.sql
+backups/*.sql*
 apps/server/data/archive/
+*.sql.gz

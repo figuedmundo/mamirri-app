@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { KnowledgeBaseModule } from '../src/modules/knowledge-base/knowledge-base.module';
-import { PrismaService } from '../src/prisma/prisma.service';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
@@ -52,8 +51,11 @@ async function bootstrap() {
   console.log(`🔄 Restoring from: ${absolutePath}...`);
 
   try {
+    const isCompressed = absolutePath.endsWith('.gz');
+    const catCmd = isCompressed ? 'gunzip -c' : 'cat';
+
     execSync(
-      `cat "${absolutePath}" | docker exec -i physio_db psql -U physio_user -d physio_db`,
+      `${catCmd} "${absolutePath}" | docker exec -i physio_db psql -U physio_user -d physio_db`,
       { stdio: 'inherit' },
     );
     console.log('✅ Restore complete.');

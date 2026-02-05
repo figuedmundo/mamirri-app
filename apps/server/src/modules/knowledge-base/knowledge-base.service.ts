@@ -9,8 +9,8 @@ import { promisify } from 'util';
 
 const sleep = promisify(setTimeout);
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { PDFParse } = require('pdf-parse');
+import { PDFParse } from 'pdf-parse';
+import { execSync } from 'child_process';
 
 @Injectable()
 export class KnowledgeBaseService {
@@ -51,8 +51,8 @@ export class KnowledgeBaseService {
     const pdfData = await parser.getText();
     await parser.destroy();
 
-    // Extract high-quality metadata using AI from the first ~2000 characters
     const firstPageText = pdfData.text.substring(0, 2000);
+
     const meta = await this.extractMetadata(
       firstPageText,
       path.basename(filePath, '.pdf'),
@@ -131,6 +131,45 @@ export class KnowledgeBaseService {
     );
   }
 
+  async exportDocument(idOrPath: string, outputPath: string): Promise<void> {
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        idOrPath,
+      );
+
+    const doc = await (this.prisma as any).document.findUnique({
+      where: isUuid ? { id: idOrPath } : { filePath: idOrPath },
+    });
+
+    if (!doc) {
+      throw new Error(`Document not found: ${idOrPath}`);
+    }
+
+    const tempSchema = `temp_exp_${doc.id.replace(/-/g, '_')}`;
+
+    try {
+      const setupCmd = `docker exec -t physio_db psql -U physio_user -d physio_db -c "
+        DROP SCHEMA IF EXISTS ${tempSchema} CASCADE;
+        CREATE SCHEMA ${tempSchema};
+        CREATE TABLE ${tempSchema}.documents AS SELECT * FROM public.documents WHERE id = '${doc.id}';
+        CREATE TABLE ${tempSchema}.embeddings AS SELECT * FROM public.embeddings WHERE \\"documentId\\" = '${doc.id}';
+      "`;
+      execSync(setupCmd);
+
+      const dumpCmd = `docker exec -t physio_db pg_dump -U physio_user -d physio_db \
+        --data-only --column-inserts --schema=${tempSchema} \
+        | sed 's/${tempSchema}\\.//g' | gzip > "${outputPath}"`;
+      execSync(dumpCmd);
+
+      this.logger.log(
+        `Atomic backup created for "${doc.title}" at: ${outputPath}`,
+      );
+    } finally {
+      const cleanupCmd = `docker exec -t physio_db psql -U physio_user -d physio_db -c "DROP SCHEMA IF EXISTS ${tempSchema} CASCADE;"`;
+      execSync(cleanupCmd);
+    }
+  }
+
   async findSimilar(query: string, limit: number = 5): Promise<any[]> {
     const vector = await this.generateEmbedding(query, 'RETRIEVAL_QUERY');
     const vectorString = `[${vector.join(',')}]`;
@@ -161,6 +200,7 @@ export class KnowledgeBaseService {
       volume?: string;
       edition?: string;
       year?: string;
+      filePath?: string;
     },
   ): Promise<void> {
     const isUuid =
@@ -176,7 +216,7 @@ export class KnowledgeBaseService {
       throw new Error(`Document not found: ${idOrPath}`);
     }
 
-    const currentMetadata = (doc.metadata as any) || {};
+    const currentMetadata = doc.metadata || {};
     const newMetadata = {
       ...currentMetadata,
       volume:
@@ -193,6 +233,7 @@ export class KnowledgeBaseService {
       data: {
         title: updates.title || doc.title,
         author: updates.author || doc.author,
+        filePath: updates.filePath || doc.filePath,
         metadata: newMetadata,
       },
     });
@@ -236,7 +277,7 @@ export class KnowledgeBaseService {
       `;
 
       const result = await model.generateContent(prompt);
-      const response = await result.response;
+      const response = result.response;
       const jsonStr = response
         .text()
         .replace(/```json/g, '')

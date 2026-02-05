@@ -201,6 +201,8 @@ Methodology: Agile Development (1-week Sprints).
 **Critical Buffer Week - Expect the Unexpected**
 
 - [ ] **10.1** Prioritize top 3 UX blockers from Week 9
+- [ ] **10.1.1** Make login more fast , the doctor feels enter email is slow, make the create account more visible
+
 - [ ] **10.2** Fix critical bugs (data loss, crashes)
 - [ ] **10.3** Refine UI based on real usage (button sizes, wording)
 - [ ] **10.4** Performance: Only fix proven bottlenecks
@@ -274,7 +276,7 @@ Methodology: Agile Development (1-week Sprints).
 
 - [ ] **14.1** NestJS: AIAnalysis module
 - [ ] **14.2** RAG logic: Semantic search implementation
-- [ ] **14.3** LLM integration: OpenAI GPT-4 or Gemini
+- [ ] **14.3** LLM integration: Gemini or Groq
 - [ ] **14.4** System Prompt engineering (Chain of Thought)
 - [ ] **14.5** Anonymization: Strip PII before sending to LLM
 - [ ] **14.6** Translation service: EN ↔ ES for medical terms

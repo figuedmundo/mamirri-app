@@ -55,14 +55,36 @@ You can manage the knowledge base using these commands from the project root:
 
 ### Migration & Data Protection
 
-Vectorizing books is expensive (quota/time). Use these commands to move your library between environments (e.g., from Local to Production) without affecting other data like patients or users.
+Mamirri uses a high-performance, atomic backup strategy to protect expensive vector data while minimizing disk usage.
 
-#### 1. Full System Backup (Safest)
+#### 1. Individual "Atomic" Book Backups
 
-Saves everything (Library + Patients + Users). Use this for general security.
+When you run `pnpm knowledge:ingest`, the system automatically creates a compressed `.sql.gz` file for **each specific book** in `backups/library/`.
+
+- **Benefit**: You only back up each book once. If you add 1,000 books, you have 1,000 small files instead of one giant 10GB file.
+
+#### 2. Full System Backup
+
+Saves everything (Library + Patients + Users) into a compressed file.
 
 ```bash
 pnpm knowledge:backup
+```
+
+#### 3. Selective Multi-Book Export
+
+Saves **all** currently ingested books into one compressed file.
+
+```bash
+pnpm knowledge:export
+```
+
+#### 4. Smart Restore / Import
+
+The `knowledge:import` command automatically handles both compressed (`.gz`) and standard SQL files.
+
+```bash
+pnpm knowledge:import "backups/library/Anatomia_Tomo1.sql.gz"
 ```
 
 #### 2. Export Library Only (Migration)

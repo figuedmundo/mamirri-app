@@ -21,8 +21,9 @@ async function bootstrap() {
   const app = await NestFactory.createApplicationContext(IngestionAppModule);
   const knowledgeBaseService = app.get(KnowledgeBaseService);
 
-  const booksDir = path.resolve(__dirname, '../data/books');
-  const archiveDir = path.resolve(__dirname, '../data/archive');
+  const serverDir = path.resolve(__dirname, '..');
+  const booksDir = path.join(serverDir, 'data/books');
+  const archiveDir = path.join(serverDir, 'data/archive');
 
   if (!fs.existsSync(booksDir)) {
     console.log(`Creating books directory at ${booksDir}`);
@@ -40,12 +41,28 @@ async function bootstrap() {
   let failureCount = 0;
 
   for (const file of files) {
-    const filePath = path.join('data/books', file);
-    try {
-      await knowledgeBaseService.ingestFile(filePath);
+    const relFilePath = `data/books/${file}`;
+    const absFilePath = path.join(serverDir, relFilePath);
 
-      const newPath = path.join(archiveDir, file);
-      fs.renameSync(path.resolve(__dirname, '..', filePath), newPath);
+    try {
+      await knowledgeBaseService.ingestFile(relFilePath);
+
+      const safeTitle = file.replace(/\.pdf$/i, '').replace(/[^a-z0-9]/gi, '_');
+      const backupPath = path.resolve(
+        serverDir,
+        `../../backups/library/${safeTitle}.sql.gz`,
+      );
+
+      const libDir = path.dirname(backupPath);
+      if (!fs.existsSync(libDir)) fs.mkdirSync(libDir, { recursive: true });
+
+      await knowledgeBaseService.exportDocument(relFilePath, backupPath);
+      console.log(
+        `💾 Atomic backup saved to: backups/library/${safeTitle}.sql.gz`,
+      );
+
+      const newAbsPath = path.join(archiveDir, file);
+      fs.renameSync(absFilePath, newAbsPath);
       console.log(`📦 Archived: ${file} -> data/archive/`);
 
       successCount++;

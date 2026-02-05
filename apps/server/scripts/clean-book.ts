@@ -30,10 +30,11 @@ async function bootstrap() {
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       idOrFilename,
     );
-  const identifier =
-    isUuid || idOrFilename.startsWith('data/books/')
-      ? idOrFilename
-      : `data/books/${idOrFilename}`;
+
+  let identifier = idOrFilename;
+  if (!isUuid && !idOrFilename.includes('/')) {
+    identifier = `data/books/${idOrFilename}`;
+  }
 
   console.log(`🧹 Attempting to clean data for identifier: ${identifier}`);
 
@@ -41,7 +42,18 @@ async function bootstrap() {
     await knowledgeBaseService.removeDocument(identifier);
     console.log('✅ Cleanup complete.');
   } catch (error) {
-    console.error('❌ Cleanup failed:', error.message);
+    if (!isUuid && identifier.startsWith('data/books/')) {
+      const archivePath = identifier.replace('data/books/', 'data/archive/');
+      console.log(`🔍 Not found in books. Trying archive path: ${archivePath}`);
+      try {
+        await knowledgeBaseService.removeDocument(archivePath);
+        console.log('✅ Cleanup complete (from archive).');
+      } catch (innerError) {
+        console.error('❌ Cleanup failed:', innerError.message);
+      }
+    } else {
+      console.error('❌ Cleanup failed:', error.message);
+    }
   }
 
   await app.close();
