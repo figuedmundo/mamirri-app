@@ -169,6 +169,7 @@ describe('Users API', () => {
         stream: null as any,
         buffer: Buffer.from('test'),
       };
+      mockUsersService.uploadPhoto.mockResolvedValue({ id: 'user-1' });
       const result = await controller.uploadPhoto(file, {
         userId: 'user-1',
       } as any);
@@ -177,8 +178,8 @@ describe('Users API', () => {
 
     it('should return 401 when unauthenticated for DELETE /users/me/photo', async () => {
       expect(controller).toBeDefined();
-      const result = await controller.deletePhoto({ userId: 'user-1' } as any);
-      expect(result).toBeDefined();
+      await controller.deletePhoto({ userId: 'user-1' } as any);
+      expect(mockUsersService.deletePhoto).toHaveBeenCalledWith('user-1');
     });
   });
 });
