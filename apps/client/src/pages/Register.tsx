@@ -142,7 +142,9 @@ const Register: React.FC = () => {
         </CardFooter>
       </Card>
 
-      <PinSetupModal isOpen={showPinSetup} onClose={() => navigate('/')} />
+      {showPinSetup && (
+        <PinSetupModal isOpen={showPinSetup} onClose={() => navigate('/')} />
+      )}
     </div>
   );
 };

@@ -71,6 +71,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const updateUser = (userData: Partial<User>) => {
+    if (!user) return;
+    const updatedUser = { ...user, ...userData };
+    setUser(updatedUser);
+    localStorage.setItem('user_data', JSON.stringify(updatedUser));
+    if (userData.email) {
+      localStorage.setItem('last_user_email', userData.email);
+    }
+    if (userData.name) {
+      localStorage.setItem('last_user_name', userData.name);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -81,6 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         login,
         logout,
         checkPinStatus,
+        updateUser,
       }}
     >
       {children}

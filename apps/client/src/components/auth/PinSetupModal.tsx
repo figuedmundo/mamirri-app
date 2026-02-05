@@ -23,36 +23,48 @@ const PinSetupModal: React.FC<PinSetupModalProps> = ({ isOpen, onClose }) => {
   const [error, setError] = useState('');
   const { checkPinStatus } = useAuth();
 
+  const reset = () => {
+    setPin('');
+    setConfirmPin('');
+    setStep('enter');
+    setError('');
+  };
+
   const handlePinComplete = async (completedPin: string) => {
     if (step === 'enter') {
       setPin(completedPin);
       setConfirmPin('');
       setStep('confirm');
+      setError('');
     } else {
       if (completedPin === pin) {
         try {
           await api.post('/auth/pin/setup', { pin: completedPin });
           await checkPinStatus();
+          reset();
           onClose();
         } catch {
           setError('Error al guardar el PIN');
-          reset();
         }
       } else {
         setError('Los PINs no coinciden');
-        reset();
+        setConfirmPin('');
       }
     }
   };
 
-  const reset = () => {
-    setPin('');
-    setConfirmPin('');
-    setStep('enter');
+  const handleSetPin = (newPin: string) => {
+    if (error) setError('');
+    if (step === 'enter') {
+      setPin(newPin);
+    } else {
+      setConfirmPin(newPin);
+    }
   };
 
   const handleSkip = () => {
     localStorage.setItem('pin_setup_skipped', 'true');
+    reset();
     onClose();
   };
 
@@ -84,7 +96,7 @@ const PinSetupModal: React.FC<PinSetupModalProps> = ({ isOpen, onClose }) => {
 
           <PinPad
             pin={step === 'enter' ? pin : confirmPin}
-            setPin={step === 'enter' ? setPin : setConfirmPin}
+            setPin={handleSetPin}
             onComplete={handlePinComplete}
           />
         </div>
