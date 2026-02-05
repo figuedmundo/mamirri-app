@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { ProfilePage } from './pages/ProfilePage';
 
 test('therapist profile flow', async ({ page }) => {
+  const profilePage = new ProfilePage(page);
+
   const mockUser = {
     id: '1',
     email: 'terapeuta@test.com',
@@ -34,36 +37,30 @@ test('therapist profile flow', async ({ page }) => {
     });
   });
 
-  await page.goto('/');
-
-  await page.evaluate(() => {
-    localStorage.setItem('access_token', 'mock-token');
-    localStorage.setItem(
-      'user_data',
-      JSON.stringify({
-        id: '1',
-        email: 'terapeuta@test.com',
-        name: 'Terapeuta de Prueba',
-        role: 'THERAPIST',
-      }),
-    );
-  });
-
-  await page.goto('/perfil');
-
-  await expect(page.getByText(/Información Personal/i)).toBeVisible();
-  await expect(page.getByLabel(/Nombre completo/i)).toHaveValue(
-    'Terapeuta de Prueba',
+  await page.addInitScript(
+    (data) => {
+      window.localStorage.setItem('access_token', 'mock-token');
+      window.localStorage.setItem('user_data', JSON.stringify(data));
+    },
+    {
+      id: '1',
+      email: 'terapeuta@test.com',
+      name: 'Terapeuta de Prueba',
+      role: 'THERAPIST',
+    },
   );
 
-  await page.getByLabel(/Nombre completo/i).fill('Terapeuta Actualizado');
-  await page.getByLabel(/Teléfono/i).fill('600123456');
+  await profilePage.gotoProfile();
 
-  await page.getByRole('button', { name: /Guardar cambios/i }).click();
+  await expect(page.getByText(/Información Personal/i)).toBeVisible();
+  await expect(profilePage.nameInput).toHaveValue('Terapeuta de Prueba');
 
-  await expect(
-    page.getByText(/Perfil actualizado correctamente/i).first(),
-  ).toBeVisible();
+  await profilePage.updateProfile({
+    name: 'Terapeuta Actualizado',
+    phone: '600123456',
+  });
+
+  await profilePage.waitForToast(/Perfil actualizado correctamente/i);
 
   await expect(
     page
