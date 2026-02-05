@@ -48,7 +48,7 @@ describe('Auth PIN Endpoints', () => {
 
   describe('POST /auth/pin/setup', () => {
     it('should call authService.setupPin', async () => {
-      const user = { id: '1' };
+      const user = { userId: '1' };
       const dto = { pin: '1234' };
       (service.setupPin as jest.Mock).mockResolvedValue({ success: true });
 
@@ -77,7 +77,7 @@ describe('Auth PIN Endpoints', () => {
 
   describe('GET /auth/pin/status', () => {
     it('should return true if user has PIN set', async () => {
-      const user = { id: '1' };
+      const user = { userId: '1' };
       (service.getPinStatus as jest.Mock).mockResolvedValue({
         hasPinSet: true,
       });
@@ -88,7 +88,7 @@ describe('Auth PIN Endpoints', () => {
     });
 
     it('should return false if user does not have PIN set', async () => {
-      const user = { id: '1' };
+      const user = { userId: '1' };
       (service.getPinStatus as jest.Mock).mockResolvedValue({
         hasPinSet: false,
       });
