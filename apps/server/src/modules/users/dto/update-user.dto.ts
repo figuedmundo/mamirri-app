@@ -9,7 +9,6 @@ import {
   Min,
   Length,
 } from 'class-validator';
-import { IsDateStringNotFuture } from '../../../common/validators/is-date-string-not-future.validator';
 
 export class CreateUserDto {
   @ApiPropertyOptional({ description: 'Email address' })

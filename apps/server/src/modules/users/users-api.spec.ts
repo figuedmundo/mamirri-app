@@ -3,13 +3,10 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { validate } from 'class-validator';
-import * as bcrypt from 'bcrypt';
 
 describe('Users API', () => {
   let controller: UsersController;
-  let service: UsersService;
 
   const mockUsersService = {
     getProfile: jest.fn(),
@@ -31,7 +28,6 @@ describe('Users API', () => {
     }).compile();
 
     controller = module.get<UsersController>(UsersController);
-    service = module.get<UsersService>(UsersService);
   });
 
   afterEach(() => {
@@ -134,16 +130,16 @@ describe('Users API', () => {
   describe('Authentication', () => {
     it('should return 401 when unauthenticated for GET /users/me', async () => {
       expect(controller).toBeDefined();
-      expect(() =>
-        controller.getProfile({ userId: 'user-1' } as any),
-      ).not.toThrow();
+      const result = await controller.getProfile({ userId: 'user-1' } as any);
+      expect(result).toBeDefined();
     });
 
     it('should return 401 when unauthenticated for PATCH /users/me', async () => {
       expect(controller).toBeDefined();
-      expect(() =>
-        controller.updateProfile({}, { userId: 'user-1' } as any),
-      ).not.toThrow();
+      const result = await controller.updateProfile({}, {
+        userId: 'user-1',
+      } as any);
+      expect(result).toBeDefined();
     });
 
     it('should return 401 when unauthenticated for PATCH /users/me/password', async () => {
@@ -153,11 +149,10 @@ describe('Users API', () => {
         newPassword: 'NewPassword123',
         confirmPassword: 'NewPassword123',
       };
-      expect(() =>
-        controller.changePassword(changePasswordDto, {
-          userId: 'user-1',
-        } as any),
-      ).not.toThrow();
+      const result = await controller.changePassword(changePasswordDto, {
+        userId: 'user-1',
+      } as any);
+      expect(result).toBeDefined();
     });
 
     it('should return 401 when unauthenticated for POST /users/me/photo', async () => {
@@ -174,16 +169,16 @@ describe('Users API', () => {
         stream: null as any,
         buffer: Buffer.from('test'),
       };
-      expect(() =>
-        controller.uploadPhoto(file, { userId: 'user-1' } as any),
-      ).not.toThrow();
+      const result = await controller.uploadPhoto(file, {
+        userId: 'user-1',
+      } as any);
+      expect(result).toBeDefined();
     });
 
     it('should return 401 when unauthenticated for DELETE /users/me/photo', async () => {
       expect(controller).toBeDefined();
-      expect(() =>
-        controller.deletePhoto({ userId: 'user-1' } as any),
-      ).not.toThrow();
+      const result = await controller.deletePhoto({ userId: 'user-1' } as any);
+      expect(result).toBeDefined();
     });
   });
 });
