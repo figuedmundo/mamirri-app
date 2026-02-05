@@ -52,6 +52,7 @@ export class AuthController {
     res.send({
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
+      user: tokens.user,
     });
   }
 
@@ -134,7 +135,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'PIN successfully set' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async setupPin(@CurrentUser() user: any, @Body() setupPinDto: SetupPinDto) {
-    return this.authService.setupPin(user.id, setupPinDto);
+    return this.authService.setupPin(user.userId, setupPinDto);
   }
 
   @Public()
@@ -183,7 +184,7 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getPinStatus(@CurrentUser() user: any) {
-    return this.authService.getPinStatus(user.id);
+    return this.authService.getPinStatus(user.userId);
   }
 
   private setRefreshTokenCookie(res: Response, token: string) {
