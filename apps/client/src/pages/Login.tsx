@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/use-auth';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
@@ -22,6 +22,13 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [showPinSetup, setShowPinSetup] = useState(false);
+
+  useEffect(() => {
+    const lastEmail = localStorage.getItem('last_user_email');
+    if (lastEmail) {
+      navigate('/pin-login');
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
