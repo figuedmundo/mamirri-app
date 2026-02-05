@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../hooks/use-auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import PinSetupModal from '../components/auth/PinSetupModal';
@@ -18,17 +18,22 @@ import { api } from '../lib/axios';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, checkPinStatus } = useAuth();
+  const { login, checkPinStatus, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [error, setError] = useState('');
   const [showPinSetup, setShowPinSetup] = useState(false);
 
-  useEffect(() => {
-    const lastEmail = localStorage.getItem('last_user_email');
-    if (lastEmail) {
-      navigate('/pin-login');
-    }
-  }, [navigate]);
+  const lastEmail = localStorage.getItem('last_user_email');
+  const isManual = searchParams.get('manual') === 'true';
+
+  if (isAuthenticated && !isLoading && !showPinSetup) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (lastEmail && !isManual && !isAuthenticated && !isLoading) {
+    return <Navigate to="/pin-login" replace />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

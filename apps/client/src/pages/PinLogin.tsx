@@ -67,7 +67,7 @@ const PinLogin: React.FC = () => {
         </CardContent>
         <CardFooter className="flex justify-center border-t py-4">
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/login?manual=true')}
             className="text-sm text-primary font-medium hover:underline"
           >
             Usar correo y contraseña →

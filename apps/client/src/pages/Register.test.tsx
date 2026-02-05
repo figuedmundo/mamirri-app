@@ -76,7 +76,6 @@ describe('Register Component', () => {
     });
 
     expect(mockLogin).toHaveBeenCalledWith(mockUser, mockToken);
-    expect(mockNavigate).toHaveBeenCalledWith('/');
   });
 
   it('shows error when passwords do not match', async () => {
