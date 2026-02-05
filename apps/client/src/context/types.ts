@@ -3,6 +3,13 @@ export interface User {
   email: string;
   name: string;
   role: string;
+  phone?: string;
+  profilePhotoUrl?: string;
+  clinicName?: string;
+  licenseNumber?: string;
+  specialty?: string;
+  yearsExperience?: number;
+  createdAt?: string;
 }
 
 export interface AuthContextType {
@@ -13,4 +20,5 @@ export interface AuthContextType {
   login: (user: User, accessToken: string) => void;
   logout: () => void;
   checkPinStatus: () => Promise<boolean>;
+  updateUser: (userData: Partial<User>) => void;
 }

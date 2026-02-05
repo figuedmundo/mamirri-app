@@ -16,6 +16,12 @@ model User {
   role              String             @default("THERAPIST")
   createdAt         DateTime           @default(now())
   pinHash           String?
+  phone             String?
+  profilePhotoUrl   String?
+  clinicName        String?
+  licenseNumber     String?
+  specialty         String?
+  yearsExperience   Int?
   patients          Patient[]
   sessions          Session[]
   treatmentSessions TreatmentSession[]

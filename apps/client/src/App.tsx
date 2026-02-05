@@ -18,6 +18,7 @@ import Analisis from './pages/Analisis';
 import Biblioteca from './pages/Biblioteca';
 import Plantillas from './pages/Plantillas';
 import Ajustes from './pages/Ajustes';
+import Perfil from './pages/Perfil';
 import CaseDetail from './pages/CaseDetail';
 import {
   LoggerErrorBoundary,
@@ -123,6 +124,17 @@ function AppContent() {
           <ProtectedRoute>
             <MainLayout>
               <Ajustes />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/perfil"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Perfil />
             </MainLayout>
           </ProtectedRoute>
         }
