@@ -183,11 +183,11 @@ Estimated Effort: 3-4 days
     - Query 3: `findSimilar(pharmacologicalHistory contraindications, 3)`
     - Execute queries in parallel with `Promise.all()`
     - Deduplicate chunks by content hash
-  - [x] 5.5 Implement Gemini LLM call
-    - Use `@google/generative-ai` SDK
-    - Configure model from `AI_MODEL` env (default: `gemini-2.0-flash`)
-    - Set temperature: 0.3, maxOutputTokens: 4096
-    - Wrap with `withRetry()` utility (max 3 retries)
+- [x] 5.5 Implement Gemini LLM call
+  - Use `@google/generative-ai` SDK
+  - Configure model from `AI_MODEL` env (default: `gemini-3-flash`)
+  - Set temperature: 0.3, maxOutputTokens: 4096
+  - Wrap with `withRetry()` utility (max 3 retries)
   - [x] 5.6 Implement response parsing
     - Parse JSON from LLM response
     - Validate against `AnalysisResultDto` schema
@@ -323,7 +323,7 @@ Phase 4: API & Integration (Day 3-4)
 Add to `.env`:
 
 ```bash
-AI_MODEL=gemini-2.0-flash
+AI_MODEL=gemini-3-flash
 AI_TEMPERATURE=0.3
 AI_MAX_TOKENS=4096
 ```

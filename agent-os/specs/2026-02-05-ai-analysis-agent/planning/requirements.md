@@ -257,7 +257,7 @@ Response: AnalysisResult (if previously analyzed, returns cached)
 **LLM Configuration:**
 
 - Provider: Google Gemini
-- Model: `gemini-2.0-flash` (or configurable via env)
+- Model: `gemini-3-flash` (or configurable via env)
 - Temperature: 0.3 (low for clinical accuracy)
 - Max tokens: 4096 for response
 

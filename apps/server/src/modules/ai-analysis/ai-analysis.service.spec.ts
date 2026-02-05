@@ -58,7 +58,7 @@ describe('AiAnalysisService', () => {
     const mockConfig = {
       get: jest.fn().mockImplementation((key: string) => {
         if (key === 'GOOGLE_API_KEY') return null;
-        if (key === 'AI_MODEL') return 'gemini-2.0-flash';
+        if (key === 'AI_MODEL') return 'gemini-3-flash';
         return null;
       }),
     };

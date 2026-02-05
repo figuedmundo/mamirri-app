@@ -38,7 +38,7 @@ Build a NestJS backend module that provides AI-powered clinical decision support
 **Gemini LLM Integration**
 
 - Use `@google/generative-ai` package (already installed)
-- Model: `gemini-2.0-flash` configurable via `AI_MODEL` env variable
+- Model: `gemini-3-flash` configurable via `AI_MODEL` env variable
 - Temperature: 0.3 for clinical accuracy
 - Max response tokens: 4096
 - Wrap API calls with `withRetry()` utility from transcription module

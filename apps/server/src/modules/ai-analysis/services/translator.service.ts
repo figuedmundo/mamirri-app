@@ -81,7 +81,7 @@ export class TranslatorService {
 
     try {
       const model = this.genAI.getGenerativeModel({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-3-flash',
       });
 
       const prompt = `Translate the following medical text from English to Spanish. 
