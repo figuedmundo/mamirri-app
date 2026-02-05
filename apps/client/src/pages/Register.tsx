@@ -25,7 +25,7 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Las contraseñas no coinciden');
       return;
     }
     try {
@@ -38,48 +38,54 @@ const Register: React.FC = () => {
       login(response.data.user, response.data.accessToken);
       navigate('/');
     } catch {
-      setError('Registration failed. Email might be taken.');
+      setError('Error al registrar. El correo podría estar en uso.');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
-          <CardDescription>Create an account to get started.</CardDescription>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+      <Card className="w-full max-w-[400px] shadow-lg">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center">
+            Crear Cuenta
+          </CardTitle>
+          <CardDescription className="text-center text-base">
+            Crea una cuenta para comenzar.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium">
-                Name
+              <label htmlFor="name" className="text-base font-medium">
+                Nombre
               </label>
               <Input
                 id="name"
                 type="text"
-                placeholder="John Doe"
+                placeholder="Tu nombre"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                className="h-12 text-lg"
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
+              <label htmlFor="email" className="text-base font-medium">
+                Correo Electrónico
               </label>
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="nombre@ejemplo.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="h-12 text-lg"
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
+              <label htmlFor="password" className="text-base font-medium">
+                Contraseña
               </label>
               <Input
                 id="password"
@@ -87,11 +93,15 @@ const Register: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="h-12 text-lg"
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="text-sm font-medium">
-                Confirm Password
+              <label
+                htmlFor="confirmPassword"
+                className="text-base font-medium"
+              >
+                Confirmar Contraseña
               </label>
               <Input
                 id="confirmPassword"
@@ -99,17 +109,25 @@ const Register: React.FC = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                className="h-12 text-lg"
               />
             </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <Button type="submit" className="w-full">
-              Sign Up
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
+            <Button type="submit" className="w-full h-12 text-lg font-semibold">
+              Crear Cuenta
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <a href="/login" className="text-sm text-blue-600 hover:underline">
-            Already have an account? Sign in
+        <CardFooter className="flex justify-center border-t py-4">
+          <a
+            href="/login"
+            className="text-sm text-primary font-medium hover:underline"
+          >
+            ¿Ya tienes cuenta? Inicia sesión
           </a>
         </CardFooter>
       </Card>

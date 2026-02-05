@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   UseGuards,
   Res,
@@ -17,6 +18,8 @@ import {
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { SetupPinDto } from './dto/setup-pin.dto';
+import { PinLoginDto } from './dto/pin-login.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
@@ -121,6 +124,66 @@ export class AuthController {
     this.authService.logout(user.id);
     res.clearCookie('refresh_token');
     res.send({ success: true });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('pin/setup')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Setup 4-digit PIN for current user' })
+  @ApiBody({ type: SetupPinDto })
+  @ApiResponse({ status: 200, description: 'PIN successfully set' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async setupPin(@CurrentUser() user: any, @Body() setupPinDto: SetupPinDto) {
+    return this.authService.setupPin(user.id, setupPinDto);
+  }
+
+  @Public()
+  @Post('pin/login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Login with email and PIN' })
+  @ApiBody({ type: PinLoginDto })
+  @ApiResponse({
+    status: 200,
+    description: 'User successfully logged in with PIN',
+    schema: {
+      example: {
+        accessToken: 'ey...',
+        refreshToken: 'ey...',
+        user: {
+          id: '1',
+          email: 'test@example.com',
+          name: 'Test User',
+          role: 'USER',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async pinLogin(@Body() pinLoginDto: PinLoginDto, @Res() res: Response) {
+    const tokens = await this.authService.validatePin(
+      pinLoginDto.email,
+      pinLoginDto.pin,
+    );
+    this.setRefreshTokenCookie(res, tokens.refreshToken);
+    res.send({
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      user: tokens.user,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('pin/status')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Check if current user has a PIN set' })
+  @ApiResponse({
+    status: 200,
+    description: 'PIN status returned',
+    schema: { example: { hasPinSet: true } },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getPinStatus(@CurrentUser() user: any) {
+    return this.authService.getPinStatus(user.id);
   }
 
   private setRefreshTokenCookie(res: Response, token: string) {
