@@ -36,6 +36,7 @@ Comprehensive documentation is available in the [`.documentation/`](.documentati
 - **[API Reference](.documentation/technical/api-reference.md)**: REST API endpoints and payload examples.
 - **[Security & Privacy](.documentation/technical/security.md)**: Data encryption and anonymization requirements.
 - **[Logging System](.documentation/technical/logging-system.md)**: Structured logging, sanitization, and observability.
+- **[Knowledge Base & RAG](.documentation/technical/knowledge-base-rag.md)**: AI semantic search and medical literature retrieval.
 - **[Frontend Auth](.documentation/technical/frontend-authentication.md)**: Implementation details for JWT and protected routes.
 
 ### 🇪🇸 Original Project Proposal (ES)
@@ -109,6 +110,7 @@ documentation/
 │   ├── ci-cd.md                       # CI/CD pipeline and secrets
 │   ├── database-schema.md            # Prisma models and relationships
 │   ├── api-reference.md            # API endpoint documentation
+│   ├── knowledge-base-rag.md         # RAG and Knowledge Base infrastructure
 │   ├── security.md                   # Security and privacy requirements
 │   ├── logging-system.md              # Logging, sanitization, and observability
 │   └── frontend-authentication.md      # Frontend auth implementation

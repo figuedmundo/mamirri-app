@@ -43,3 +43,9 @@ yarn-error.log*
 
 playwright-report/
 test-results/
+
+# App Data
+apps/server/data/books/
+backups/*.sql*
+apps/server/data/archive/
+*.sql.gz

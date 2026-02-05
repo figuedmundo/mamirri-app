@@ -1,9 +1,11 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [pgvector(map: "vector")]
 }
 
 model User {
@@ -211,4 +213,28 @@ model Session {
   therapist   User     @relation(fields: [therapistId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  title     String
+  author    String?
+  metadata  Json?
+  filePath  String   @unique
+  createdAt DateTime @default(now())
+
+  embeddings Embedding[]
+
+  @@map("documents")
+}
+
+model Embedding {
+  id         String   @id @default(uuid())
+  content    String
+  vector     Unsupported("vector(768)")
+  pageNumber Int
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@map("embeddings")
 }
