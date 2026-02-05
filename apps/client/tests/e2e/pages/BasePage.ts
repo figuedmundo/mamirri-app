@@ -26,6 +26,14 @@ export class BasePage {
       });
     });
 
+    await this.page.route('**/api/v1/auth/pin/status', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ hasPinSet: true }),
+      });
+    });
+
     await this.page.addInitScript(() => {
       window.localStorage.setItem('access_token', 'fake-token');
       window.localStorage.setItem(

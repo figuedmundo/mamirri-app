@@ -7,6 +7,7 @@ import { api } from '../lib/axios';
 vi.mock('../lib/axios', () => ({
   api: {
     post: vi.fn(),
+    get: vi.fn().mockResolvedValue({ data: { hasPinSet: false } }),
   },
 }));
 
