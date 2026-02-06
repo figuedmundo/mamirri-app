@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { GoogleGenAI } from '@google/genai';
 import { AiAnalysisService } from './ai-analysis.service';
@@ -24,11 +24,8 @@ const mockTranslatorService = {};
 const mockPromptBuilderService = {};
 
 describe('SDK Migration', () => {
-  let aiAnalysisService: AiAnalysisService;
-  let knowledgeBaseService: KnowledgeBaseService;
-
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    await Test.createTestingModule({
       providers: [
         AiAnalysisService,
         KnowledgeBaseService,
@@ -63,7 +60,7 @@ describe('SDK Migration', () => {
       text: () => 'Test response',
     });
 
-    // @ts-ignore - limited mocking for verification
+    // @ts-expect-error - limited mocking for verification
     client.models = { generateContent: mockGenerateContent } as any;
 
     await client.models.generateContent({
@@ -84,7 +81,7 @@ describe('SDK Migration', () => {
       embedding: { values: [0.1, 0.2, 0.3] },
     });
 
-    // @ts-ignore - limited mocking for verification
+    // @ts-expect-error - limited mocking for verification
     client.models = { embedContent: mockEmbedContent } as any;
 
     await client.models.embedContent({

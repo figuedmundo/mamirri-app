@@ -14,7 +14,7 @@ export class VisionPromptBuilderService {
       case 'FOOTPRINT':
         return FOOTPRINT_ANALYSIS_PROMPT;
       default:
-        throw new Error(`Unknown image type: ${imageType}`);
+        throw new Error(`Unknown image type: ${imageType as any}`);
     }
   }
 }
