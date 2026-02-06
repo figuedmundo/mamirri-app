@@ -444,7 +444,7 @@ export function CaseDetailLayout({
         <div className="flex items-center gap-3">
           <AnalyzeButton
             caseId={localCase.id}
-            evaluationCount={localCase.evaluations.length}
+            evaluationCount={localCase.evaluations?.length ?? 0}
             onAnalysisComplete={(result) => {
               console.log('Analysis result:', result);
               toast({
