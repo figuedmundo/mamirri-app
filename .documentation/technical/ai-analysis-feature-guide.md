@@ -320,10 +320,11 @@ reports lower back pain starting 3 weeks ago"
 - Medical images and posturograms
 - Complete evaluation data
 
-**In-memory only:**
+**Temporary mappings:**
 
-- Anonymization mappings (for rehydrating responses)
-- These are destroyed when the analysis completes
+- The system temporarily remembers which placeholder belongs to which patient
+- This memory is automatically erased after showing you the results
+- No patient-identifying information is stored permanently
 
 ### What Goes to the AI
 
@@ -344,48 +345,39 @@ reports lower back pain starting 3 weeks ago"
 
 ### Data Flow
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  YOUR SERVER (Protected)                                     │
-│  ┌───────────────────────────────────────────────────┐     │
-│  │ Patient Data: Juan Pérez, 600123456, DOB: 1990   │     │
-│  └──────────────────┬────────────────────────────────┘     │
-│                     │                                       │
-│              AnonymizerService                            │
-│                     │                                       │
-│  ┌──────────────────▼────────────────────────────────┐     │
-│  │ Anonymized: [PATIENT], [AGE] años (36)           │     │
-│  └──────────────────┬────────────────────────────────┘     │
-└─────────────────────┼───────────────────────────────────────┘
-                      │
-           HTTPS Connection
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│  GOOGLE GEMINI (External)                                    │
-│  - Sees only anonymized data                                │
-│  - No identifying information                               │
-│  - Returns analysis with placeholders                       │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-           HTTPS Connection
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│  YOUR SERVER (Protected)                                     │
-│  - Rehydrates placeholders with real names                  │
-│  - Stores original data locally                             │
-│  - Shows results to therapist                               │
-└─────────────────────────────────────────────────────────────┘
+**Simple version:** Patient data stays on your server → Only anonymized descriptions go to Google → Results come back with placeholders → Your server fills in the real names
+
+```mermaid
+flowchart TD
+    A[Patient Data<br/>Juan Pérez, 600123456] --> B[Your Server]
+    B -->|AnonymizerService| C[Anonymized Data<br/>[PATIENT], [AGE] años]
+    C -->|HTTPS| D[Google Gemini]
+    D -->|Returns analysis| E[Results with placeholders]
+    E -->|Your Server| F[Results with real names<br/>shown to you]
+
+    style A fill:#e1f5e1,stroke:#333
+    style B fill:#fff3cd,stroke:#333
+    style F fill:#e1f5e1,stroke:#333
+    style D fill:#ffe6e6,stroke:#333
 ```
 
-### Certifications & Compliance
+### Compliance Notes
 
-While we implement privacy-by-design principles, consult with your legal team regarding:
+**What the software does:**
 
-- **GDPR compliance** (if treating EU patients)
-- **HIPAA compliance** (if applicable to your region)
-- **Local healthcare data regulations**
+- Strips all PII before external API calls
+- Does not store patient data on external servers
+- Does not use patient data to train AI models
+- Maintains audit logs without patient-identifying information
 
-The technical implementation provides strong privacy protections, but regulatory compliance requires organizational and legal measures beyond the software.
+**What you need to verify:**
+
+- Ensure your Google Cloud account has appropriate data processing agreements
+- Check if your region requires specific consent for AI-assisted clinical tools
+- Verify compliance with local healthcare data regulations (HIPAA, GDPR, etc.)
+- Consider patient consent policies for AI-assisted analysis
+
+The technical safeguards are in place, but regulatory compliance depends on your specific jurisdiction and practice requirements.
 
 ---
 

@@ -174,10 +174,11 @@ reporta dolor lumbar desde hace 3 semanas"
 - Imágenes médicas y posturogramas
 - Datos completos de evaluación
 
-**Solo en memoria temporal:**
+**Mapeos temporales:**
 
-- Mapeos de anonimización (para recuperar nombres en la respuesta)
-- Se destruyen automáticamente al completar el análisis
+- El sistema recuerda temporalmente qué placeholder pertenece a qué paciente
+- Esta memoria se borra automáticamente después de mostrarte los resultados
+- No se almacena permanentemente información que identifique al paciente
 
 ### 12.3 Qué llega a la IA externa
 
@@ -198,17 +199,39 @@ reporta dolor lumbar desde hace 3 semanas"
 
 ### 12.5 Flujo de datos
 
+**Versión simple:** Los datos del paciente permanecen en tu servidor → Solo descripciones anonimizadas van a Google → Los resultados regresan con placeholders → Tu servidor completa con los nombres reales
+
+```mermaid
+flowchart TD
+    A[Datos del Paciente<br/>Juan Pérez, 600123456] --> B[Tu Servidor]
+    B -->|AnonymizerService| C[Datos Anonimizados<br/>[PACIENTE], [EDAD] años]
+    C -->|HTTPS| D[Google Gemini]
+    D -->|Devuelve análisis| E[Resultados con placeholders]
+    E -->|Tu Servidor| F[Resultados con nombres reales<br/>mostrados a ti]
+
+    style A fill:#e1f5e1,stroke:#333
+    style B fill:#fff3cd,stroke:#333
+    style F fill:#e1f5e1,stroke:#333
+    style D fill:#ffe6e6,stroke:#333
 ```
-TU SERVIDOR (Protegido)
-  ↓ AnonimizerService
-DATOS ANONIMIZADOS
-  ↓ HTTPS
-GEMINI (Externo)
-  ↓ HTTPS
-RESPUESTA ANONIMIZADA
-  ↓ Rehidratación
-RESULTADO EN TU SERVIDOR
-```
+
+### 12.6 Notas de cumplimiento
+
+**Lo que hace el software:**
+
+- Elimina toda la información de identificación personal antes de las llamadas a la API externa
+- No almacena datos de pacientes en servidores externos
+- No utiliza datos de pacientes para entrenar modelos de IA
+- Mantiene logs de auditoría sin información que identifique al paciente
+
+**Lo que necesitas verificar:**
+
+- Asegúrate de que tu cuenta de Google Cloud tenga acuerdos de procesamiento de datos apropiados
+- Verifica si tu región requiere consentimiento específico para herramientas clínicas asistidas por IA
+- Comprueba el cumplimiento con regulaciones locales de datos de salud (HIPAA, GDPR, etc.)
+- Considera las políticas de consentimiento del paciente para análisis asistido por IA
+
+Las salvaguardas técnicas están en su lugar, pero el cumplimiento regulatorio depende de tu jurisdicción específica y los requisitos de tu práctica.
 
 ---
 
