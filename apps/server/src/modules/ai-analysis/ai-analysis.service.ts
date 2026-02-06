@@ -44,7 +44,8 @@ export class AiAnalysisService {
       );
     }
     this.genAI = new GoogleGenAI({ apiKey: apiKey || 'mock-key' });
-    this.model = this.configService.get<string>('AI_MODEL') || 'gemini-3-flash';
+    this.model =
+      this.configService.get<string>('AI_MODEL') || 'gemini-3-flash-preview';
     this.temperature = parseFloat(
       this.configService.get<string>('AI_TEMPERATURE') || '0.3',
     );
