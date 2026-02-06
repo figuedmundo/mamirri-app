@@ -10,7 +10,7 @@ import { KnowledgeBaseService } from '../knowledge-base/knowledge-base.service';
 import { AnonymizerService } from './services/anonymizer.service';
 import { TranslatorService } from './services/translator.service';
 import { PromptBuilderService } from './services/prompt-builder.service';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import { withRetry } from '../transcription/utils/retry';
 import {
   AnalysisResult,
@@ -21,7 +21,7 @@ import {
 @Injectable()
 export class AiAnalysisService {
   private readonly logger = new Logger(AiAnalysisService.name);
-  private readonly genAI: GoogleGenerativeAI;
+  private readonly genAI: GoogleGenAI;
   private readonly model: string;
   private readonly temperature: number;
   private readonly maxTokens: number;
@@ -40,7 +40,7 @@ export class AiAnalysisService {
         'GOOGLE_API_KEY not set. AI Analysis will use mock responses.',
       );
     }
-    this.genAI = new GoogleGenerativeAI(apiKey || 'mock-key');
+    this.genAI = new GoogleGenAI({ apiKey: apiKey || 'mock-key' });
     this.model = this.configService.get<string>('AI_MODEL') || 'gemini-3-flash';
     this.temperature = parseFloat(
       this.configService.get<string>('AI_TEMPERATURE') || '0.3',
@@ -199,16 +199,13 @@ export class AiAnalysisService {
 
     return await withRetry(
       async () => {
-        const model = this.genAI.getGenerativeModel({
+        const response = await this.genAI.models.generateContent({
           model: this.model,
-          generationConfig: {
+          config: {
             temperature: this.temperature,
             maxOutputTokens: this.maxTokens,
           },
-        });
-
-        const chat = model.startChat({
-          history: [
+          contents: [
             {
               role: 'user',
               parts: [{ text: systemPrompt }],
@@ -221,11 +218,14 @@ export class AiAnalysisService {
                 },
               ],
             },
+            {
+              role: 'user',
+              parts: [{ text: userPrompt }],
+            },
           ],
         });
 
-        const result = await chat.sendMessage(userPrompt);
-        return result.response.text();
+        return response.text || '';
       },
       { maxRetries: 3 },
       this.logger,

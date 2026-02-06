@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AiAnalysisController } from './ai-analysis.controller';
 import { AiAnalysisService } from './ai-analysis.service';
+import { VisionService } from './services/vision.service';
 import { NotFoundException, ForbiddenException } from '@nestjs/common';
 
 describe('AiAnalysisController', () => {
@@ -42,9 +43,16 @@ describe('AiAnalysisController', () => {
       analyzeCase: jest.fn(),
     };
 
+    const mockVisionService = {
+      analyzeImageById: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AiAnalysisController],
-      providers: [{ provide: AiAnalysisService, useValue: mockService }],
+      providers: [
+        { provide: AiAnalysisService, useValue: mockService },
+        { provide: VisionService, useValue: mockVisionService },
+      ],
     }).compile();
 
     controller = module.get<AiAnalysisController>(AiAnalysisController);
