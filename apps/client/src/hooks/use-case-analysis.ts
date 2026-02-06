@@ -23,7 +23,7 @@ export function useCaseAnalysis(): UseCaseAnalysisReturn {
       const data = await aiAnalysisApi.analyzeCase(caseId);
       setResult(data);
       return data;
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorObj =
         err instanceof Error ? err : new Error('Analysis failed');
       setError(errorObj);

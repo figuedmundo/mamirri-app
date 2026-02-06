@@ -9,7 +9,8 @@ describe('AnalyzeButton', () => {
   const mockAnalyzeCase = vi.fn();
 
   beforeEach(() => {
-    (useCaseAnalysis as any).mockReturnValue({
+    // @ts-expect-error - mockReturnValue is a vitest mock method
+    useCaseAnalysis.mockReturnValue({
       analyzeCase: mockAnalyzeCase,
       isAnalyzing: false,
     });
@@ -40,7 +41,8 @@ describe('AnalyzeButton', () => {
   });
 
   it('shows loading state during analysis', () => {
-    (useCaseAnalysis as any).mockReturnValue({
+    // @ts-expect-error - mockReturnValue is a vitest mock method
+    useCaseAnalysis.mockReturnValue({
       analyzeCase: mockAnalyzeCase,
       isAnalyzing: true,
     });
