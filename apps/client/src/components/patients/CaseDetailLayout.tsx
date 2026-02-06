@@ -442,6 +442,14 @@ export function CaseDetailLayout({
         </div>
 
         <div className="flex items-center gap-3">
+          {console.log(
+            '[DEBUG] CaseDetailLayout - localCase.evaluations:',
+            localCase.evaluations,
+            'length:',
+            localCase.evaluations?.length,
+            'evalCount:',
+            localCase.evaluations?.length ?? 0,
+          )}
           <AnalyzeButton
             caseId={localCase.id}
             evaluationCount={localCase.evaluations?.length ?? 0}

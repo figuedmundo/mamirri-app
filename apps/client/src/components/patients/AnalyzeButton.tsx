@@ -17,6 +17,12 @@ export function AnalyzeButton({
   onAnalysisComplete,
   onError,
 }: AnalyzeButtonProps) {
+  console.log(
+    '[DEBUG] AnalyzeButton - evaluationCount:',
+    evaluationCount,
+    'disabled:',
+    evaluationCount < 1,
+  );
   const { analyzeCase, isAnalyzing } = useCaseAnalysis();
   const [showSuccess, setShowSuccess] = useState(false);
 
