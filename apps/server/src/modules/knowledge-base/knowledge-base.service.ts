@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import * as fs from 'fs';
 import * as path from 'path';
 import { withRetry } from '../transcription/utils/retry';
@@ -15,7 +15,7 @@ import { execSync } from 'child_process';
 @Injectable()
 export class KnowledgeBaseService {
   private readonly logger = new Logger(KnowledgeBaseService.name);
-  private readonly genAI: GoogleGenerativeAI;
+  private readonly genAI: GoogleGenAI;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -27,7 +27,7 @@ export class KnowledgeBaseService {
         'GOOGLE_API_KEY is not set. Using MOCK embeddings for verification.',
       );
     }
-    this.genAI = new GoogleGenerativeAI(apiKey || 'mock-key');
+    this.genAI = new GoogleGenAI({ apiKey: apiKey || 'mock-key' });
   }
 
   async ingestFile(filePath: string): Promise<void> {
@@ -260,9 +260,6 @@ export class KnowledgeBaseService {
     }
 
     try {
-      const model = this.genAI.getGenerativeModel({
-        model: 'gemini-3-flash-preview',
-      });
       const prompt = `
         Based on the following text from the beginning of a medical book, identify the official Title, Author(s), Volume (Tomo/Volumen), Edition, and Publication Year.
         
@@ -276,10 +273,12 @@ export class KnowledgeBaseService {
         - Use "${beautified}" if the title is not clearly found.
       `;
 
-      const result = await model.generateContent(prompt);
-      const response = result.response;
-      const jsonStr = response
-        .text()
+      const result = await this.genAI.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      });
+
+      const jsonStr = (result.text || '')
         .replace(/```json/g, '')
         .replace(/```/g, '')
         .trim();
@@ -335,14 +334,23 @@ export class KnowledgeBaseService {
 
     return await withRetry(
       async () => {
-        const result = await this.genAI
-          .getGenerativeModel({ model: 'gemini-embedding-001' })
-          .embedContent({
-            content: { parts: [{ text }], role: 'user' },
-            taskType,
+        const result = await this.genAI.models.embedContent({
+          model: 'gemini-embedding-001',
+          contents: [{ role: 'user', parts: [{ text }] }],
+          config: {
+            taskType: taskType,
             outputDimensionality: 768,
-          } as any);
-        return result.embedding.values;
+          },
+        });
+
+        if (
+          !result.embeddings ||
+          result.embeddings.length === 0 ||
+          !result.embeddings[0].values
+        ) {
+          throw new Error('No embedding returned');
+        }
+        return result.embeddings[0].values;
       },
       { maxRetries: 5 },
       this.logger,
