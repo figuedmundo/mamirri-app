@@ -7,6 +7,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AnonymizerService } from './services/anonymizer.service';
 import { TranslatorService } from './services/translator.service';
 import { PromptBuilderService } from './services/prompt-builder.service';
+import { DataAggregationService } from './services/data-aggregation.service';
 
 // Mock dependencies
 const mockConfigService = {
@@ -22,6 +23,7 @@ const mockKnowledgeBaseService = {};
 const mockAnonymizerService = {};
 const mockTranslatorService = {};
 const mockPromptBuilderService = {};
+const mockDataAggregationService = {};
 
 describe('SDK Migration', () => {
   beforeEach(async () => {
@@ -35,6 +37,10 @@ describe('SDK Migration', () => {
         { provide: AnonymizerService, useValue: mockAnonymizerService },
         { provide: TranslatorService, useValue: mockTranslatorService },
         { provide: PromptBuilderService, useValue: mockPromptBuilderService },
+        {
+          provide: DataAggregationService,
+          useValue: mockDataAggregationService,
+        },
       ],
     }).compile();
 

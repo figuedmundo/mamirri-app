@@ -10,6 +10,7 @@ import { KnowledgeBaseService } from '../knowledge-base/knowledge-base.service';
 import { AnonymizerService } from './services/anonymizer.service';
 import { TranslatorService } from './services/translator.service';
 import { PromptBuilderService } from './services/prompt-builder.service';
+import { DataAggregationService } from './services/data-aggregation.service';
 import { GoogleGenAI } from '@google/genai';
 import { withRetry } from '../transcription/utils/retry';
 import {
@@ -17,6 +18,7 @@ import {
   RagChunk,
   Citation,
 } from './interfaces/analysis.interfaces';
+import { CaseDataAggregate } from './interfaces/aggregation.interfaces';
 
 @Injectable()
 export class AiAnalysisService {
@@ -33,6 +35,7 @@ export class AiAnalysisService {
     private readonly anonymizerService: AnonymizerService,
     private readonly translatorService: TranslatorService,
     private readonly promptBuilderService: PromptBuilderService,
+    private readonly dataAggregationService: DataAggregationService,
   ) {
     const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
     if (!apiKey) {
@@ -57,16 +60,34 @@ export class AiAnalysisService {
   ): Promise<AnalysisResult> {
     const startTime = Date.now();
 
-    const caseData = await this.loadClinicalCase(clinicalCaseId, therapistId);
+    const caseData: CaseDataAggregate =
+      await this.dataAggregationService.aggregateCaseData(
+        clinicalCaseId,
+        therapistId,
+      );
 
-    const anonymized = this.anonymizerService.anonymize(caseData);
+    const anonymized = this.anonymizerService.anonymize(caseData as any);
 
     const ragChunks = await this.executeMultiQueryRag(caseData);
+
+    const warnings: string[] = [];
+    if (ragChunks.length === 0) {
+      warnings.push('No se encontró literatura médica relevante para el caso.');
+    }
+
+    const serviceStatus = {
+      rag: ragChunks.length > 0,
+      vision: caseData.visionFindings && caseData.visionFindings.length > 0,
+      voice: caseData.voiceTranscripts && caseData.voiceTranscripts.length > 0,
+      llm: true,
+    };
 
     const systemPrompt = this.promptBuilderService.buildSystemPrompt();
     const userPrompt = this.promptBuilderService.buildUserPrompt(
       anonymized.text,
       ragChunks,
+      caseData.visionFindings,
+      caseData.voiceTranscripts,
     );
 
     const llmResponse = await this.callLlm(systemPrompt, userPrompt);
@@ -93,37 +114,10 @@ export class AiAnalysisService {
         anonymizationApplied: true,
         translationsApplied: translatedCitations.filter((c) => c.quoteOriginal)
           .length,
+        serviceStatus,
+        warnings,
       },
     };
-  }
-
-  private async loadClinicalCase(
-    clinicalCaseId: string,
-    therapistId: string,
-  ): Promise<any> {
-    const clinicalCase = await this.prisma.clinicalCase.findUnique({
-      where: { id: clinicalCaseId },
-      include: {
-        patient: true,
-        evaluations: {
-          orderBy: { date: 'desc' },
-          take: 1,
-        },
-        treatmentPlan: true,
-      },
-    });
-
-    if (!clinicalCase) {
-      throw new NotFoundException(`Clinical case not found: ${clinicalCaseId}`);
-    }
-
-    if (clinicalCase.patient.therapistId !== therapistId) {
-      throw new ForbiddenException(
-        'You do not have access to this clinical case',
-      );
-    }
-
-    return clinicalCase;
   }
 
   private async executeMultiQueryRag(caseData: any): Promise<RagChunk[]> {
@@ -360,6 +354,13 @@ export class AiAnalysisService {
         processingTimeMs: 0,
         anonymizationApplied: false,
         translationsApplied: 0,
+        serviceStatus: {
+          rag: false,
+          vision: false,
+          voice: false,
+          llm: false,
+        },
+        warnings: ['Service unavailable'],
       },
     };
   }

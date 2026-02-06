@@ -286,7 +286,7 @@ Methodology: Agile Development (1-week Sprints).
 ### Week 15: Vision & Full Analysis
 
 - [ ] **15.1** Gemini Vision: Image description API
-- [ ] **15.2** Orchestration: Combine Voice + Vision + RAG + LLM
+- [x] **15.2** Orchestration: Combine Voice + Vision + RAG + LLM
 - [ ] **15.3** "Analyze Case" endpoint (orchestrates all services)
 - [ ] **15.4** Frontend: Suggestions UI (cards, citations)
 - [ ] **15.5** Feedback loop: Like/Dislike buttons

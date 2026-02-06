@@ -60,6 +60,20 @@ class ReasoningDto {
   step3_synthesis: string;
 }
 
+class ServiceStatusDto {
+  @ApiProperty({ description: 'RAG service status' })
+  rag: boolean;
+
+  @ApiProperty({ description: 'Vision service status' })
+  vision: boolean;
+
+  @ApiProperty({ description: 'Voice service status' })
+  voice: boolean;
+
+  @ApiProperty({ description: 'LLM service status' })
+  llm: boolean;
+}
+
 class MetadataDto {
   @ApiProperty({ description: 'Number of tokens in the query' })
   queryTokens: number;
@@ -75,6 +89,20 @@ class MetadataDto {
 
   @ApiProperty({ description: 'Number of translations applied' })
   translationsApplied: number;
+
+  @ApiProperty({
+    description: 'Status of underlying services',
+    type: ServiceStatusDto,
+    required: false,
+  })
+  serviceStatus?: ServiceStatusDto;
+
+  @ApiProperty({
+    description: 'Warnings generated during analysis',
+    type: [String],
+    required: false,
+  })
+  warnings?: string[];
 }
 
 export class AnalysisResultDto {

@@ -7,6 +7,7 @@ import { TranslatorService } from './services/translator.service';
 import { PromptBuilderService } from './services/prompt-builder.service';
 import { VisionService } from './services/vision.service';
 import { VisionPromptBuilderService } from './services/vision-prompt-builder.service';
+import { DataAggregationService } from './services/data-aggregation.service';
 import { KnowledgeBaseModule } from '../knowledge-base/knowledge-base.module';
 import { PrismaModule } from '../../prisma/prisma.module';
 import { StorageModule } from '../storage/storage.module';
@@ -21,6 +22,7 @@ import { StorageModule } from '../storage/storage.module';
     PromptBuilderService,
     VisionService,
     VisionPromptBuilderService,
+    DataAggregationService,
   ],
   exports: [AiAnalysisService],
 })
