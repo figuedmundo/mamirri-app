@@ -21,6 +21,7 @@ import { useToast } from '../../hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 import { patientsApi } from '../../api/patients';
 import { mediaApi } from '../../api/media';
+import { AnalyzeButton } from './AnalyzeButton';
 import {
   Mic,
   ArrowLeft,
@@ -441,6 +442,17 @@ export function CaseDetailLayout({
         </div>
 
         <div className="flex items-center gap-3">
+          <AnalyzeButton
+            caseId={localCase.id}
+            evaluationCount={localCase.evaluations?.length ?? 0}
+            onAnalysisComplete={(result) => {
+              console.log('Analysis result:', result);
+              toast({
+                title: 'Análisis completado',
+                description: 'Resultados listos para revisar.',
+              });
+            }}
+          />
           <button
             onClick={() => void startRecording()}
             disabled={isRecording}

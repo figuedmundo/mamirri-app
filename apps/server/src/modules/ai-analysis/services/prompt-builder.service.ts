@@ -4,6 +4,7 @@ import {
   buildUserPrompt,
 } from '../constants/system-prompts';
 import { RagChunk } from '../interfaces/analysis.interfaces';
+import { VisionFinding, VoiceNote } from '../interfaces/aggregation.interfaces';
 
 @Injectable()
 export class PromptBuilderService {
@@ -11,9 +12,43 @@ export class PromptBuilderService {
     return AI_ANALYSIS_SYSTEM_PROMPT;
   }
 
-  buildUserPrompt(anonymizedCaseText: string, ragChunks: RagChunk[]): string {
+  buildUserPrompt(
+    anonymizedCaseText: string,
+    ragChunks: RagChunk[],
+    visionFindings?: VisionFinding[],
+    voiceTranscripts?: VoiceNote[],
+  ): string {
     const ragContext = this.formatRagContext(ragChunks);
-    return buildUserPrompt(anonymizedCaseText, ragContext);
+
+    let expandedCaseText = anonymizedCaseText;
+
+    if (visionFindings && visionFindings.length > 0) {
+      const visionContext = this.buildVisionContext(visionFindings);
+      expandedCaseText += `\n\n### Hallazgos Visuales (IA)\n${visionContext}`;
+    }
+
+    if (voiceTranscripts && voiceTranscripts.length > 0) {
+      const voiceContext = this.buildVoiceContext(voiceTranscripts);
+      expandedCaseText += `\n\n### Transcripciones de Voz (Contexto Adicional)\n${voiceContext}`;
+    }
+
+    return buildUserPrompt(expandedCaseText, ragContext);
+  }
+
+  buildVisionContext(visionFindings: VisionFinding[]): string {
+    return visionFindings
+      .map((finding) => {
+        return `- **${finding.source}** (${finding.date.toISOString().split('T')[0]}): ${finding.findings}`;
+      })
+      .join('\n');
+  }
+
+  buildVoiceContext(voiceTranscripts: VoiceNote[]): string {
+    return voiceTranscripts
+      .map((note) => {
+        return `> **${note.source}** (${note.date.toISOString().split('T')[0]}): "${note.transcript}"`;
+      })
+      .join('\n\n');
   }
 
   private formatRagContext(chunks: RagChunk[]): string {

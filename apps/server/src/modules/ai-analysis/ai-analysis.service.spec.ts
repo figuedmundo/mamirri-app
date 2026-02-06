@@ -7,6 +7,7 @@ import { KnowledgeBaseService } from '../knowledge-base/knowledge-base.service';
 import { AnonymizerService } from './services/anonymizer.service';
 import { TranslatorService } from './services/translator.service';
 import { PromptBuilderService } from './services/prompt-builder.service';
+import { DataAggregationService } from './services/data-aggregation.service';
 
 describe('AiAnalysisService', () => {
   let service: AiAnalysisService;
@@ -36,6 +37,13 @@ describe('AiAnalysisService', () => {
     treatmentPlan: null,
   };
 
+  const mockAggregatedData = {
+    ...mockClinicalCase,
+    sessions: [],
+    visionFindings: [],
+    voiceTranscripts: [],
+  };
+
   beforeEach(async () => {
     const mockPrisma = {
       clinicalCase: {
@@ -63,6 +71,22 @@ describe('AiAnalysisService', () => {
       }),
     };
 
+    const mockDataAggregation = {
+      aggregateCaseData: jest
+        .fn()
+        .mockImplementation((caseId: string, therapistId: string) => {
+          if (caseId === 'non-existent') {
+            throw new NotFoundException(`Clinical case not found: ${caseId}`);
+          }
+          if (therapistId === 'different-therapist') {
+            throw new ForbiddenException(
+              'You do not have access to this clinical case',
+            );
+          }
+          return Promise.resolve(mockAggregatedData);
+        }),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AiAnalysisService,
@@ -72,6 +96,7 @@ describe('AiAnalysisService', () => {
         { provide: PrismaService, useValue: mockPrisma },
         { provide: KnowledgeBaseService, useValue: mockKnowledgeBase },
         { provide: ConfigService, useValue: mockConfig },
+        { provide: DataAggregationService, useValue: mockDataAggregation },
       ],
     }).compile();
 

@@ -36,7 +36,8 @@ export class VisionService {
     }
     this.genAI = new GoogleGenAI({ apiKey: apiKey || 'mock-key' });
     this.model =
-      this.configService.get<string>('AI_VISION_MODEL') || 'gemini-3-flash';
+      this.configService.get<string>('AI_VISION_MODEL') ||
+      'gemini-3-flash-preview';
   }
 
   async analyzeImage(

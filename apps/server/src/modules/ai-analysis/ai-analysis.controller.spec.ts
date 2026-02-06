@@ -115,4 +115,57 @@ describe('AiAnalysisController', () => {
       );
     });
   });
+
+  describe('POST /ai/cases/:caseId/analyze', () => {
+    it('should return analysis result for valid request', async () => {
+      service.analyzeCase.mockResolvedValue(mockAnalysisResult);
+
+      const result = await controller.analyzeCaseMultiModal('case-123', {
+        userId: 'therapist-123',
+      });
+
+      expect(result).toEqual(mockAnalysisResult);
+      expect(service.analyzeCase).toHaveBeenCalledWith(
+        'case-123',
+        'therapist-123',
+      );
+    });
+
+    it('should throw 404 for non-existent clinical case', async () => {
+      service.analyzeCase.mockRejectedValue(
+        new NotFoundException('Clinical case not found'),
+      );
+
+      await expect(
+        controller.analyzeCaseMultiModal('non-existent', {
+          userId: 'therapist-123',
+        }),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw 403 for unauthorized access', async () => {
+      service.analyzeCase.mockRejectedValue(
+        new ForbiddenException('Access denied'),
+      );
+
+      await expect(
+        controller.analyzeCaseMultiModal('case-123', {
+          userId: 'wrong-therapist',
+        }),
+      ).rejects.toThrow(ForbiddenException);
+    });
+
+    it('should pass therapist ID from CurrentTherapist decorator', async () => {
+      service.analyzeCase.mockResolvedValue(mockAnalysisResult);
+
+      await controller.analyzeCaseMultiModal('case-123', {
+        userId: 'my-therapist-id',
+      });
+
+      expect(service.analyzeCase).toHaveBeenCalledWith(
+        'case-123',
+        'my-therapist-id',
+      );
+    });
+  });
 });

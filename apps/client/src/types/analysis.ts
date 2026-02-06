@@ -16,12 +16,6 @@ export interface Citation {
   relevance: number;
 }
 
-export interface Reasoning {
-  step1_understanding: string;
-  step2_literature: string;
-  step3_synthesis: string;
-}
-
 export interface ServiceStatus {
   rag: boolean;
   vision: boolean;
@@ -39,37 +33,16 @@ export interface AnalysisMetadata {
   warnings?: string[];
 }
 
+export interface Reasoning {
+  step1_understanding: string;
+  step2_literature: string;
+  step3_synthesis: string;
+}
+
 export interface AnalysisResult {
   primarySuggestion: Suggestion;
   alternatives: Suggestion[];
   citations: Citation[];
   reasoning: Reasoning;
   metadata: AnalysisMetadata;
-}
-
-export interface AnonymizationMapping {
-  [placeholder: string]: string;
-}
-
-export interface AnonymizedResult {
-  text: string;
-  data: Record<string, unknown>;
-  mapping: AnonymizationMapping;
-}
-
-export interface TranslatedResult {
-  translated: string;
-  original: string;
-  language: 'en' | 'es';
-  wasCached: boolean;
-}
-
-export interface RagChunk {
-  content: string;
-  pageNumber: number;
-  documentTitle: string;
-  documentAuthor: string;
-  documentFilePath: string;
-  documentMetadata: Record<string, unknown>;
-  similarity: number;
 }

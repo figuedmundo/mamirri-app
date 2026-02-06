@@ -1,9 +1,17 @@
-import { Controller, Post, Body, UseGuards, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  HttpStatus,
+  Param,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
+  ApiParam,
 } from '@nestjs/swagger';
 import { AiAnalysisService } from './ai-analysis.service';
 import { AnalyzeCaseDto } from './dto/analyze-case.dto';
@@ -24,9 +32,36 @@ export class AiAnalysisController {
     private readonly visionService: VisionService,
   ) {}
 
+  @Post('cases/:caseId/analyze')
+  @ApiOperation({
+    summary: 'Analyze clinical case with AI (Multi-modal)',
+    description:
+      'Analyzes a clinical case using RAG, vision findings, and voice notes to provide treatment suggestions.',
+  })
+  @ApiParam({ name: 'caseId', description: 'ID of the clinical case' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Analysis completed successfully',
+    type: AnalysisResultDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Clinical case not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Access denied to this clinical case',
+  })
+  async analyzeCaseMultiModal(
+    @Param('caseId') caseId: string,
+    @CurrentTherapist() user: { userId: string },
+  ): Promise<AnalysisResultDto> {
+    return this.aiAnalysisService.analyzeCase(caseId, user.userId);
+  }
+
   @Post('analyze')
   @ApiOperation({
-    summary: 'Analyze clinical case with AI',
+    summary: 'Analyze clinical case with AI (Legacy)',
     description:
       'Analyzes a clinical case using RAG over medical literature and returns treatment suggestions with citations.',
   })
