@@ -346,3 +346,212 @@ curl -X POST http://localhost:3000/api/v1/ai/cases/YOUR_CASE_ID/analyze \
 - [Knowledge Base & RAG](knowledge-base-rag.md) - Managing medical literature
 - [API Reference](api-reference.md) - Complete API documentation
 - [Security & Privacy](security.md) - Data protection details
+
+---
+
+## Appendix: Future Architecture Considerations
+
+### Provider-Agnostic AI Architecture (Option B)
+
+**Status:** Future enhancement (not yet implemented)  
+**Last Modified:** 2026-02-06
+
+#### The Vision
+
+Make the AI Analysis service provider-agnostic so you can switch between AI providers (Google Gemini, OpenAI GPT, Anthropic Claude) based on:
+
+- **Price optimization** - Use whichever provider is cheaper at the moment
+- **Availability** - Fail over if one provider is down
+- **Performance** - Choose based on latency or quality needs
+- **Compliance** - Some clients may require specific providers
+
+#### Current Limitation: Embeddings Are Model-Specific
+
+**Critical constraint:** The Knowledge Base (RAG) uses **Gemini embeddings** (`gemini-embedding-004`).
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  EMBEDDINGS ARE MODEL-SPECIFIC                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Text: "Fascitis plantar es una inflamación..."                  │
+│                                                                  │
+│  ┌────────────────────┐      ┌────────────────────┐             │
+│  │ Gemini Embedding   │  ≠   │ OpenAI Embedding   │             │
+│  │ [0.12, -0.45, ...] │      │ [0.89, 0.23, ...]  │             │
+│  │ 768 dimensions     │      │ 1536 dimensions    │             │
+│  └────────────────────┘      └────────────────────┘             │
+│                                                                  │
+│  WHY? Each model creates vectors in its own "semantic space"     │
+│  with different dimensionalities and mathematical properties.    │
+│                                                                  │
+│  You CANNOT mix embeddings from different models!                │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**What this means:**
+
+| Component                 | Can Switch Provider? | Impact                                   |
+| ------------------------- | -------------------- | ---------------------------------------- |
+| **Text Generation** (LLM) | ✅ Yes               | Easy - just change API endpoint          |
+| **Vision Analysis**       | ✅ Yes               | Requires code changes but doable         |
+| **Embeddings/RAG**        | ❌ No                | Would require **re-ingesting all books** |
+
+#### Architecture for Provider-Agnostic LLM
+
+If you want to switch the **analysis LLM** (not embeddings), here's the architecture:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    AI Analysis Module                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌──────────────────┐                                          │
+│  │ AIProvider       │◄────────── Interface                     │
+│  │ Interface        │                                          │
+│  ├──────────────────┤                                          │
+│  │ + generateContent│                                          │
+│  │ + getModelName() │                                          │
+│  └────────┬─────────┘                                          │
+│           │                                                      │
+│     ┌─────┴─────┐                                                │
+│     │           │                                                │
+│  ┌──▼───┐   ┌───▼────┐   ┌──────────────┐                      │
+│  │Google│   │ OpenAI │   │  Anthropic   │                      │
+│  │Provider   │Provider│   │   Provider   │                      │
+│  └──┬───┘   └───┬────┘   └──────────────┘                      │
+│     │           │                                                │
+│     └─────┬─────┘                                                │
+│           │                                                      │
+│     ┌─────▼─────┐                                                │
+│     │ Config    │                                                │
+│     │ AI_ANALYSIS_PROVIDER=google|openai|anthropic               │
+│     └───────────┘                                                │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### Environment Variables (Future Design)
+
+```bash
+# Provider selection
+AI_ANALYSIS_PROVIDER=google  # Options: google, openai, anthropic
+
+# Google Gemini (current)
+GOOGLE_API_KEY=your_key
+GOOGLE_ANALYSIS_MODEL=gemini-3-flash-preview
+
+# OpenAI (optional future)
+OPENAI_API_KEY=your_key
+OPENAI_ANALYSIS_MODEL=gpt-4-turbo-preview
+
+# Anthropic (optional future)
+ANTHROPIC_API_KEY=your_key
+ANTHROPIC_ANALYSIS_MODEL=claude-3-opus-20240229
+
+# Note: Embeddings always use Gemini (knowledge base is locked)
+GOOGLE_EMBEDDING_MODEL=gemini-embedding-004
+```
+
+#### Why Embeddings Can't Be Swapped
+
+**The technical reason:**
+
+1. **Different Vector Spaces**: Each embedding model maps text to vectors differently
+   - Gemini: "fascitis plantar" → `[0.12, -0.45, 0.89, ...]` (768 dims)
+   - OpenAI: "fascitis plantar" → `[0.89, 0.23, -0.67, ...]` (1536 dims)
+
+2. **Semantic Mapping**: The meaning of dimensions is model-specific
+   - Dimension 5 might mean "medical" in Gemini but "anatomy" in OpenAI
+
+3. **Similarity Math**: Cosine similarity only works within the same vector space
+   - Comparing Gemini vector to OpenAI vector = meaningless
+
+**What switching would require:**
+
+```bash
+# 1. Wipe current embeddings
+pnpm knowledge:wipe
+
+# 2. Change embedding model in code
+# 3. Re-ingest ALL books (expensive!)
+pnpm knowledge:ingest
+
+# 4. Wait 2-4 hours for 20+ books
+```
+
+#### Recommendation
+
+**Current approach (keep as-is):**
+
+- Use Gemini for everything (embeddings + LLM + vision)
+- Simple, consistent, cost-effective
+- One API key to manage
+
+**Future enhancement (if needed):**
+
+- Keep Gemini embeddings (can't change without re-ingesting)
+- Make LLM provider-agnostic (easy to switch)
+- Use adapter pattern for different LLM APIs
+
+**When to consider Option B:**
+
+- Gemini becomes too expensive
+- Gemini has reliability issues
+- You need features only available in GPT-4 or Claude
+- Compliance requirements dictate specific providers
+
+**Cost comparison (approximate, per 1M tokens):**
+
+| Provider  | Model          | Input  | Output |
+| --------- | -------------- | ------ | ------ |
+| Google    | Gemini 3 Flash | $0.075 | $0.30  |
+| OpenAI    | GPT-4 Turbo    | $10.00 | $30.00 |
+| Anthropic | Claude 3 Opus  | $15.00 | $75.00 |
+
+_Gemini is currently 130x cheaper than GPT-4 and 200x cheaper than Claude!_
+
+#### Implementation Notes
+
+If you decide to implement Option B later:
+
+1. **Create provider interface:**
+
+   ```typescript
+   export interface AIProvider {
+     generateContent(prompt: string, config?: ProviderConfig): Promise<string>;
+     getModelInfo(): ModelInfo;
+   }
+   ```
+
+2. **Implement adapters:**
+   - `GoogleProvider` - uses `@google/genai`
+   - `OpenAIProvider` - uses `openai` SDK
+   - `AnthropicProvider` - uses `@anthropic-ai/sdk`
+
+3. **Factory pattern:**
+
+   ```typescript
+   @Injectable()
+   export class AIProviderFactory {
+     create(provider: string): AIProvider {
+       switch (provider) {
+         case 'google':
+           return new GoogleProvider();
+         case 'openai':
+           return new OpenAIProvider();
+         case 'anthropic':
+           return new AnthropicProvider();
+       }
+     }
+   }
+   ```
+
+4. **Keep embeddings separate:**
+   - Always use Gemini for embeddings (KnowledgeBaseService)
+   - Only swap the LLM (AiAnalysisService)
+
+---
+
+**Bottom line:** You CAN switch LLM providers for text generation, but you CANNOT switch embedding providers without re-ingesting your entire medical library. The current Gemini-only approach is simpler and significantly cheaper.
