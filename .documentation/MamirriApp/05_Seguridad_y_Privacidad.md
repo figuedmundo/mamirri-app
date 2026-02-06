@@ -203,11 +203,11 @@ reporta dolor lumbar desde hace 3 semanas"
 
 ```mermaid
 flowchart TD
-    A[Datos del Paciente<br/>Juan Pérez, 600123456] --> B[Tu Servidor]
-    B -->|AnonymizerService| C[Datos Anonimizados<br/>[PACIENTE], [EDAD] años]
-    C -->|HTTPS| D[Google Gemini]
-    D -->|Devuelve análisis| E[Resultados con placeholders]
-    E -->|Tu Servidor| F[Resultados con nombres reales<br/>mostrados a ti]
+    A["Datos del Paciente: Juan Pérez, 600123456"] --> B["Tu Servidor"]
+    B -->|AnonymizerService| C["Datos Anonimizados: [PACIENTE], [EDAD] años"]
+    C -->|HTTPS| D["Google Gemini"]
+    D -->|Devuelve análisis| E["Resultados con placeholders"]
+    E -->|Tu Servidor| F["Resultados con nombres reales mostrados a ti"]
 
     style A fill:#e1f5e1,stroke:#333
     style B fill:#fff3cd,stroke:#333

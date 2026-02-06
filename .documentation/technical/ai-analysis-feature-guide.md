@@ -349,11 +349,11 @@ reports lower back pain starting 3 weeks ago"
 
 ```mermaid
 flowchart TD
-    A[Patient Data<br/>Juan Pérez, 600123456] --> B[Your Server]
-    B -->|AnonymizerService| C[Anonymized Data<br/>[PATIENT], [AGE] años]
-    C -->|HTTPS| D[Google Gemini]
-    D -->|Returns analysis| E[Results with placeholders]
-    E -->|Your Server| F[Results with real names<br/>shown to you]
+    A["Patient Data: Juan Pérez, 600123456"] --> B["Your Server"]
+    B -->|AnonymizerService| C["Anonymized Data: [PATIENT], [AGE] años"]
+    C -->|HTTPS| D["Google Gemini"]
+    D -->|Returns analysis| E["Results with placeholders"]
+    E -->|Your Server| F["Results with real names shown to you"]
 
     style A fill:#e1f5e1,stroke:#333
     style B fill:#fff3cd,stroke:#333
