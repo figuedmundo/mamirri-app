@@ -281,28 +281,111 @@ curl -X POST http://localhost:3000/api/v1/ai/cases/YOUR_CASE_ID/analyze \
 
 ## Privacy & Security
 
-### Data Protection
+### Privacy Guarantees for Therapists
 
-**Anonymization happens before any external API calls:**
+**Your patients' data is protected.** Before any information leaves your server to the AI, all personally identifiable information (PII) is removed or masked.
 
-- Patient names → "[PATIENT]"
-- Specific dates → relative time references
-- Contact info → removed entirely
-- Only clinical patterns and anonymized demographics are sent to Gemini
+### What Gets Anonymized
 
-**What stays in your infrastructure:**
+When you click **Analyze with AI**, the system processes patient data through an anonymization pipeline:
 
-- Anonymization mappings (in-memory only)
-- Original patient data
-- Voice recordings
-- Medical images
+| Original Data                     | What the AI Sees              | Why                                |
+| --------------------------------- | ----------------------------- | ---------------------------------- |
+| Patient name (e.g., "Juan Pérez") | `[PATIENT]`                   | Identity protected                 |
+| Birth date (e.g., "1990-03-15")   | `[AGE] años (36)`             | Age preserved for clinical context |
+| Email address                     | **Removed entirely**          | No contact info sent               |
+| Phone number                      | **Removed entirely**          | No contact info sent               |
+| Emergency contact                 | **Removed entirely**          | No third-party data sent           |
+| Specific dates                    | Relative time ("3 weeks ago") | Timeline preserved without dates   |
+
+**Example transformation:**
+
+```
+BEFORE ANONYMIZATION:
+"Juan Pérez, born March 15 1990, phone 600123456,
+reports lower back pain starting January 10 2024"
+
+AFTER ANONYMIZATION:
+"[PATIENT], [AGE] años (36),
+reports lower back pain starting 3 weeks ago"
+```
+
+### What Stays on Your Server
+
+**Never leaves your infrastructure:**
+
+- Original patient names and demographics
+- Phone numbers and email addresses
+- Voice recordings and transcriptions
+- Medical images and posturograms
+- Complete evaluation data
+
+**In-memory only:**
+
+- Anonymization mappings (for rehydrating responses)
+- These are destroyed when the analysis completes
+
+### What Goes to the AI
+
+**Only this information reaches Google's Gemini:**
+
+- Anonymized clinical descriptions
+- Pain scales and symptoms
+- Posturogram analysis results
+- Treatment session summaries
+- Citations from medical literature
 
 ### GDPR Compliance
 
-- No PII is sent to external LLM providers
-- No patient data is used to train AI models
-- All citations use original book content (no patient data)
-- Audit trail of analysis requests (case ID + timestamp only)
+- **No PII sent externally** - All identifying data stripped before API calls
+- **No training on your data** - Google does not use your patient data to train models
+- **Book citations only** - AI recommendations cite original textbook content, never patient cases
+- **Audit trail** - System logs only case ID and timestamp, no patient details
+
+### Data Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  YOUR SERVER (Protected)                                     │
+│  ┌───────────────────────────────────────────────────┐     │
+│  │ Patient Data: Juan Pérez, 600123456, DOB: 1990   │     │
+│  └──────────────────┬────────────────────────────────┘     │
+│                     │                                       │
+│              AnonymizerService                            │
+│                     │                                       │
+│  ┌──────────────────▼────────────────────────────────┐     │
+│  │ Anonymized: [PATIENT], [AGE] años (36)           │     │
+│  └──────────────────┬────────────────────────────────┘     │
+└─────────────────────┼───────────────────────────────────────┘
+                      │
+           HTTPS Connection
+                      │
+┌─────────────────────▼───────────────────────────────────────┐
+│  GOOGLE GEMINI (External)                                    │
+│  - Sees only anonymized data                                │
+│  - No identifying information                               │
+│  - Returns analysis with placeholders                       │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+           HTTPS Connection
+                      │
+┌─────────────────────▼───────────────────────────────────────┐
+│  YOUR SERVER (Protected)                                     │
+│  - Rehydrates placeholders with real names                  │
+│  - Stores original data locally                             │
+│  - Shows results to therapist                               │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Certifications & Compliance
+
+While we implement privacy-by-design principles, consult with your legal team regarding:
+
+- **GDPR compliance** (if treating EU patients)
+- **HIPAA compliance** (if applicable to your region)
+- **Local healthcare data regulations**
+
+The technical implementation provides strong privacy protections, but regulatory compliance requires organizational and legal measures beyond the software.
 
 ---
 
