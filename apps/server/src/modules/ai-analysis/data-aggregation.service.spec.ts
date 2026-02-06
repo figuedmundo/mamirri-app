@@ -5,7 +5,6 @@ import { NotFoundException, ForbiddenException } from '@nestjs/common';
 
 describe('DataAggregationService', () => {
   let service: DataAggregationService;
-  let prismaService: PrismaService;
 
   const mockPrismaService = {
     clinicalCase: {
@@ -33,7 +32,6 @@ describe('DataAggregationService', () => {
     }).compile();
 
     service = module.get<DataAggregationService>(DataAggregationService);
-    prismaService = module.get<PrismaService>(PrismaService);
     jest.clearAllMocks();
   });
 

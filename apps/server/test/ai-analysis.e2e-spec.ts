@@ -33,7 +33,6 @@ jest.mock('@google/genai', () => ({
 
 describe('AiAnalysis (e2e)', () => {
   let app: INestApplication;
-  let prismaService: PrismaService;
 
   const mockPrismaService = {
     clinicalCase: { findUnique: jest.fn() },
@@ -62,8 +61,6 @@ describe('AiAnalysis (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-
-    prismaService = app.get<PrismaService>(PrismaService);
   });
 
   afterAll(async () => {
