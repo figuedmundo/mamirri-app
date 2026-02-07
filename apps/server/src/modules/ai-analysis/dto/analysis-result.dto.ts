@@ -74,6 +74,26 @@ class ServiceStatusDto {
   llm: boolean;
 }
 
+class VisionAnalysisDto {
+  @ApiProperty({ description: 'Total number of footprint images found' })
+  totalImages: number;
+
+  @ApiProperty({ description: 'Number of images with cached analysis' })
+  cacheHits: number;
+
+  @ApiProperty({ description: 'Number of Vision AI API calls made' })
+  apiCalls: number;
+
+  @ApiProperty({ description: 'Number of images that failed analysis' })
+  failures: number;
+
+  @ApiProperty({
+    description: 'IDs of images that failed analysis',
+    type: [String],
+  })
+  failedImageIds: string[];
+}
+
 class MetadataDto {
   @ApiProperty({ description: 'Number of tokens in the query' })
   queryTokens: number;
@@ -103,6 +123,13 @@ class MetadataDto {
     required: false,
   })
   warnings?: string[];
+
+  @ApiProperty({
+    description: 'Statistics about vision analysis',
+    type: VisionAnalysisDto,
+    required: false,
+  })
+  visionAnalysis?: VisionAnalysisDto;
 }
 
 export class AnalysisResultDto {

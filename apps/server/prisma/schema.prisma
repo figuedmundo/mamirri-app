@@ -148,6 +148,7 @@ model Footprint {
   date         DateTime
   url          String
   analysis     Json?
+  analyzedAt   DateTime?
   comparison   Json?
   evaluationId String
   side         String     @default("unknown")

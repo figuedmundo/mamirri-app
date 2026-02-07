@@ -5,6 +5,7 @@ import {
   UseGuards,
   HttpStatus,
   Param,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -12,6 +13,7 @@ import {
   ApiResponse,
   ApiBearerAuth,
   ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { AiAnalysisService } from './ai-analysis.service';
 import { AnalyzeCaseDto } from './dto/analyze-case.dto';
@@ -39,6 +41,12 @@ export class AiAnalysisController {
       'Analyzes a clinical case using RAG, vision findings, and voice notes to provide treatment suggestions.',
   })
   @ApiParam({ name: 'caseId', description: 'ID of the clinical case' })
+  @ApiQuery({
+    name: 'forceVision',
+    required: false,
+    type: Boolean,
+    description: 'Whether to force fresh vision analysis of images',
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Analysis completed successfully',
@@ -55,8 +63,13 @@ export class AiAnalysisController {
   async analyzeCaseMultiModal(
     @Param('caseId') caseId: string,
     @CurrentTherapist() user: { userId: string },
+    @Query('forceVision') forceVision?: string,
   ): Promise<AnalysisResultDto> {
-    return this.aiAnalysisService.analyzeCase(caseId, user.userId);
+    return this.aiAnalysisService.analyzeCase(
+      caseId,
+      user.userId,
+      forceVision === 'true',
+    );
   }
 
   @Post('analyze')

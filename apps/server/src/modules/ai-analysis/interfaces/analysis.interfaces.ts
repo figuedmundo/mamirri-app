@@ -37,6 +37,13 @@ export interface AnalysisMetadata {
   translationsApplied: number;
   serviceStatus?: ServiceStatus;
   warnings?: string[];
+  visionAnalysis?: {
+    totalImages: number;
+    cacheHits: number;
+    apiCalls: number;
+    failures: number;
+    failedImageIds: string[];
+  };
 }
 
 export interface AnalysisResult {

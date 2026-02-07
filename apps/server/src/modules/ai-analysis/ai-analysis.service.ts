@@ -53,6 +53,7 @@ export class AiAnalysisService {
   async analyzeCase(
     clinicalCaseId: string,
     therapistId: string,
+    forceVision = false,
   ): Promise<AnalysisResult> {
     const startTime = Date.now();
 
@@ -60,6 +61,7 @@ export class AiAnalysisService {
       await this.dataAggregationService.aggregateCaseData(
         clinicalCaseId,
         therapistId,
+        forceVision,
       );
 
     const anonymized = this.anonymizerService.anonymize(caseData as any);
@@ -73,7 +75,10 @@ export class AiAnalysisService {
 
     const serviceStatus = {
       rag: ragChunks.length > 0,
-      vision: caseData.visionFindings && caseData.visionFindings.length > 0,
+      vision:
+        caseData.visionFindings &&
+        caseData.visionFindings.filter((f) => f.source === 'FOOTPRINT').length >
+          0,
       voice: caseData.voiceTranscripts && caseData.voiceTranscripts.length > 0,
       llm: true,
     };
@@ -112,6 +117,7 @@ export class AiAnalysisService {
           .length,
         serviceStatus,
         warnings,
+        visionAnalysis: caseData.visionStats,
       },
     };
   }
