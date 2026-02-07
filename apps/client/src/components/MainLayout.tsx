@@ -53,12 +53,17 @@ export function MainLayout({ children }: MainLayoutProps) {
     navigate('/login');
   };
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <AppShell
       navigationItems={navigationItems}
       user={user}
       onNavigate={handleNavigate}
       onLogout={handleLogout}
+      onLogoClick={handleLogoClick}
     >
       {children}
     </AppShell>
