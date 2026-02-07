@@ -9,7 +9,10 @@ import {
   CaseDataAggregate,
   VisionFinding,
   VoiceNote,
+  VisionAnalysisStats,
 } from '../interfaces/aggregation.interfaces';
+import { VisionService } from './vision.service';
+import { StorageService } from '../../storage/storage.service';
 
 interface JsonVoiceNote {
   id: string;
@@ -22,11 +25,16 @@ interface JsonVoiceNote {
 export class DataAggregationService {
   private readonly logger = new Logger(DataAggregationService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly visionService: VisionService,
+    private readonly storageService: StorageService,
+  ) {}
 
   async aggregateCaseData(
     clinicalCaseId: string,
     therapistId: string,
+    forceVision = false,
   ): Promise<CaseDataAggregate> {
     const clinicalCase = await this.prisma.clinicalCase.findUnique({
       where: { id: clinicalCaseId },
@@ -60,7 +68,9 @@ export class DataAggregationService {
       }),
     ]);
 
-    const visionFindings = this.extractVisionFindings(evaluations);
+    const { findings: visionFindings, stats: visionStats } =
+      await this.extractVisionFindings(evaluations, forceVision);
+
     const voiceTranscripts = this.extractVoiceTranscripts(
       evaluations,
       recentSessions,
@@ -72,11 +82,24 @@ export class DataAggregationService {
       recentSessions,
       visionFindings,
       voiceTranscripts,
+      visionStats,
     };
   }
 
-  private extractVisionFindings(evaluations: any[]): VisionFinding[] {
+  private async extractVisionFindings(
+    evaluations: any[],
+    forceVision: boolean,
+  ): Promise<{ findings: VisionFinding[]; stats: VisionAnalysisStats }> {
     const findings: VisionFinding[] = [];
+    const stats: VisionAnalysisStats = {
+      totalImages: 0,
+      cacheHits: 0,
+      apiCalls: 0,
+      failures: 0,
+      failedImageIds: [],
+    };
+
+    const footprintTasks: Promise<void>[] = [];
 
     for (const evaluation of evaluations) {
       if (
@@ -95,24 +118,97 @@ export class DataAggregationService {
 
       if (evaluation.footprints && Array.isArray(evaluation.footprints)) {
         for (const footprint of evaluation.footprints) {
-          if (
-            footprint.analysis &&
-            typeof footprint.analysis === 'object' &&
-            Object.keys(footprint.analysis).length > 0
-          ) {
-            const content = JSON.stringify(footprint.analysis, null, 2);
-            findings.push({
-              source: 'FOOTPRINT',
-              date: footprint.date,
-              findings: content,
-              id: footprint.id,
-            });
-          }
+          stats.totalImages++;
+          footprintTasks.push(
+            (async () => {
+              try {
+                const finding = await this.analyzeFootprintIfNeeded(
+                  footprint,
+                  forceVision,
+                  stats,
+                );
+                if (finding) {
+                  findings.push(finding);
+                }
+              } catch (error) {
+                this.logger.error(
+                  `Error processing footprint ${footprint.id}: ${error.message}`,
+                );
+                stats.failures++;
+                stats.failedImageIds.push(footprint.id);
+              }
+            })(),
+          );
         }
       }
     }
 
-    return findings;
+    await Promise.allSettled(footprintTasks);
+
+    return { findings, stats };
+  }
+
+  private async analyzeFootprintIfNeeded(
+    footprint: any,
+    forceVision: boolean,
+    stats: VisionAnalysisStats,
+  ): Promise<VisionFinding | null> {
+    const hasAnalysis =
+      footprint.analysis &&
+      typeof footprint.analysis === 'object' &&
+      Object.keys(footprint.analysis).length > 0;
+
+    if (hasAnalysis && !forceVision) {
+      stats.cacheHits++;
+      return {
+        source: 'FOOTPRINT',
+        date: footprint.date,
+        findings: JSON.stringify(footprint.analysis, null, 2),
+        id: footprint.id,
+      };
+    }
+
+    stats.apiCalls++;
+    const imageBuffer = await this.storageService.getFile(footprint.url);
+    const mimeType = this.inferMimeType(footprint.url);
+
+    const result = await this.visionService.analyzeImage(
+      imageBuffer,
+      'FOOTPRINT',
+      mimeType,
+    );
+
+    const analysisResults = result.structuredAnalysis;
+
+    await this.prisma.footprint.update({
+      where: { id: footprint.id },
+      data: {
+        analysis: analysisResults as any,
+        analyzedAt: new Date(),
+      },
+    });
+
+    return {
+      source: 'FOOTPRINT',
+      date: footprint.date,
+      findings: JSON.stringify(analysisResults, null, 2),
+      confidence: analysisResults.confidence,
+      id: footprint.id,
+    };
+  }
+
+  private inferMimeType(url: string): string {
+    const ext = url.split('.').pop()?.toLowerCase();
+    switch (ext) {
+      case 'png':
+        return 'image/png';
+      case 'webp':
+        return 'image/webp';
+      case 'jpg':
+      case 'jpeg':
+      default:
+        return 'image/jpeg';
+    }
   }
 
   private extractVoiceTranscripts(

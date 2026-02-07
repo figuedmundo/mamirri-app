@@ -13,6 +13,7 @@ describe('AiAnalysisService', () => {
   let service: AiAnalysisService;
   let prismaService: jest.Mocked<PrismaService>;
   let knowledgeBaseService: jest.Mocked<KnowledgeBaseService>;
+  let dataAggregationService: jest.Mocked<DataAggregationService>;
 
   const mockClinicalCase = {
     id: 'case-123',
@@ -74,17 +75,28 @@ describe('AiAnalysisService', () => {
     const mockDataAggregation = {
       aggregateCaseData: jest
         .fn()
-        .mockImplementation((caseId: string, therapistId: string) => {
-          if (caseId === 'non-existent') {
-            throw new NotFoundException(`Clinical case not found: ${caseId}`);
-          }
-          if (therapistId === 'different-therapist') {
-            throw new ForbiddenException(
-              'You do not have access to this clinical case',
-            );
-          }
-          return Promise.resolve(mockAggregatedData);
-        }),
+        .mockImplementation(
+          (caseId: string, therapistId: string, forceVision: boolean) => {
+            if (caseId === 'non-existent') {
+              throw new NotFoundException(`Clinical case not found: ${caseId}`);
+            }
+            if (therapistId === 'different-therapist') {
+              throw new ForbiddenException(
+                'You do not have access to this clinical case',
+              );
+            }
+            return Promise.resolve({
+              ...mockAggregatedData,
+              visionStats: {
+                totalImages: 1,
+                cacheHits: forceVision ? 0 : 1,
+                apiCalls: forceVision ? 1 : 0,
+                failures: 0,
+                failedImageIds: [],
+              },
+            });
+          },
+        ),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -103,6 +115,7 @@ describe('AiAnalysisService', () => {
     service = module.get<AiAnalysisService>(AiAnalysisService);
     prismaService = module.get(PrismaService);
     knowledgeBaseService = module.get(KnowledgeBaseService);
+    dataAggregationService = module.get(DataAggregationService);
   });
 
   describe('analyzeCase', () => {
@@ -162,15 +175,29 @@ describe('AiAnalysisService', () => {
       );
     });
 
-    it('should handle LLM failure gracefully', async () => {
+    it('should pass forceVision parameter to DataAggregationService', async () => {
+      (prismaService.clinicalCase.findUnique as jest.Mock).mockResolvedValue(
+        mockClinicalCase,
+      );
+
+      await service.analyzeCase('case-123', 'therapist-123', true);
+
+      expect(dataAggregationService.aggregateCaseData).toHaveBeenCalledWith(
+        'case-123',
+        'therapist-123',
+        true,
+      );
+    });
+
+    it('should include visionAnalysis stats in metadata', async () => {
       (prismaService.clinicalCase.findUnique as jest.Mock).mockResolvedValue(
         mockClinicalCase,
       );
 
       const result = await service.analyzeCase('case-123', 'therapist-123');
 
-      expect(result).toBeDefined();
-      expect(result.metadata).toBeDefined();
+      expect(result.metadata).toHaveProperty('visionAnalysis');
+      expect(result.metadata.visionAnalysis?.totalImages).toBe(1);
     });
   });
 });

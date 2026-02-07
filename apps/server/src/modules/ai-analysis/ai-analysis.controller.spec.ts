@@ -120,14 +120,33 @@ describe('AiAnalysisController', () => {
     it('should return analysis result for valid request', async () => {
       service.analyzeCase.mockResolvedValue(mockAnalysisResult);
 
-      const result = await controller.analyzeCaseMultiModal('case-123', {
-        userId: 'therapist-123',
-      });
+      const result = await controller.analyzeCaseMultiModal(
+        'case-123',
+        { userId: 'therapist-123' },
+        'false',
+      );
 
       expect(result).toEqual(mockAnalysisResult);
       expect(service.analyzeCase).toHaveBeenCalledWith(
         'case-123',
         'therapist-123',
+        false,
+      );
+    });
+
+    it('should pass forceVision=true when query parameter is "true"', async () => {
+      service.analyzeCase.mockResolvedValue(mockAnalysisResult);
+
+      await controller.analyzeCaseMultiModal(
+        'case-123',
+        { userId: 'therapist-123' },
+        'true',
+      );
+
+      expect(service.analyzeCase).toHaveBeenCalledWith(
+        'case-123',
+        'therapist-123',
+        true,
       );
     });
 
@@ -165,6 +184,7 @@ describe('AiAnalysisController', () => {
       expect(service.analyzeCase).toHaveBeenCalledWith(
         'case-123',
         'my-therapist-id',
+        false,
       );
     });
   });

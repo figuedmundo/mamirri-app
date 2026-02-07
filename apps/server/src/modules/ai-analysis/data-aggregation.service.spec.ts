@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataAggregationService } from './services/data-aggregation.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { VisionService } from './services/vision.service';
+import { StorageService } from '../storage/storage.service';
 import { NotFoundException, ForbiddenException } from '@nestjs/common';
 
 describe('DataAggregationService', () => {
@@ -21,12 +23,28 @@ describe('DataAggregationService', () => {
   const mockDate = new Date('2024-01-01');
 
   beforeEach(async () => {
+    const mockVisionService = {
+      analyzeImage: jest.fn(),
+    };
+
+    const mockStorageService = {
+      getFile: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DataAggregationService,
         {
           provide: PrismaService,
           useValue: mockPrismaService,
+        },
+        {
+          provide: VisionService,
+          useValue: mockVisionService,
+        },
+        {
+          provide: StorageService,
+          useValue: mockStorageService,
         },
       ],
     }).compile();

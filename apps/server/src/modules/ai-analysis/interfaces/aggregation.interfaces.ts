@@ -23,10 +23,19 @@ export interface VoiceNote {
   id: string;
 }
 
+export interface VisionAnalysisStats {
+  totalImages: number;
+  cacheHits: number;
+  apiCalls: number;
+  failures: number;
+  failedImageIds: string[];
+}
+
 export interface CaseDataAggregate extends ClinicalCase {
   patient: Patient;
   evaluations: (Evaluation & { footprints: Footprint[] })[];
   recentSessions: TreatmentSession[];
   visionFindings: VisionFinding[];
   voiceTranscripts: VoiceNote[];
+  visionStats?: VisionAnalysisStats;
 }
