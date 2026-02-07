@@ -6,9 +6,6 @@ import { StorageService } from '../../storage/storage.service';
 
 describe('DataAggregationService (Vision Integration)', () => {
   let service: DataAggregationService;
-  let visionService: VisionService;
-  let storageService: StorageService;
-  let prisma: PrismaService;
 
   const mockPrismaService = {
     clinicalCase: {
@@ -46,9 +43,6 @@ describe('DataAggregationService (Vision Integration)', () => {
     }).compile();
 
     service = module.get<DataAggregationService>(DataAggregationService);
-    visionService = module.get<VisionService>(VisionService);
-    storageService = module.get<StorageService>(StorageService);
-    prisma = module.get<PrismaService>(PrismaService);
     jest.clearAllMocks();
   });
 

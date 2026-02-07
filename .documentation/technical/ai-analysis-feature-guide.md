@@ -4,7 +4,7 @@
 
 The AI Analysis feature provides physiotherapists with evidence-based clinical suggestions by combining multiple data sources: voice transcripts from evaluations, vision analysis of posturograms and footprints, medical literature (RAG), and structured clinical data. This multi-modal approach gives the AI a complete picture of the patient, resulting in more accurate and contextually relevant recommendations.
 
-**Last Modified:** 2026-02-06
+**Last Modified:** 2026-02-07
 
 ---
 
@@ -30,9 +30,10 @@ When you click **Analyze with AI**, the system runs this pipeline:
 ```
 1. Gather Data (Parallel)
    ├── Fetch all evaluations (Initial, Progress, Final)
-   ├── Fetch last 3 treatment sessions
-   ├── Extract vision findings from posturograms/footprints
-   └── Collect voice transcripts from evaluations and sessions
+    ├── Fetch last 3 treatment sessions
+    ├── Extract vision findings (uses [hybrid caching](ai-vision-integration.md))
+    └── Collect voice transcripts from evaluations and sessions
+
 
 2. Anonymize (Privacy Protection)
    ├── Replace names with "Patient"
@@ -110,6 +111,11 @@ Analyzes a clinical case using all available data sources.
 |-----------|------|-------------|
 | caseId | string | UUID of the clinical case |
 
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| forceVision | boolean | (Optional) Bypass cache and force fresh image analysis. Defaults to `false`. |
+
 **Response:**
 
 ```json
@@ -143,6 +149,12 @@ Analyzes a clinical case using all available data sources.
       "vision": true,
       "voice": false,
       "llm": true
+    },
+    "visionAnalysis": {
+      "totalImages": 2,
+      "cacheHits": 1,
+      "apiCalls": 1,
+      "failures": 0
     },
     "warnings": []
   }
@@ -187,7 +199,8 @@ User clicks "Analyze"
 DataAggregationService.aggregateCaseData()
   ├── Prisma: Fetch evaluations
   ├── Prisma: Fetch sessions (last 3)
-  ├── Extract: vision findings JSON
+  ├── Vision AI: Analyze unanalyzed footprints (in parallel)
+  ├── Extract: cached vision findings JSON
   └── Extract: voice notes arrays
   ↓
 AnonymizerService.anonymize()
