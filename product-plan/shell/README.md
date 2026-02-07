@@ -32,11 +32,12 @@ Shell de navegación horizontal optimizado para tablet que maximiza el área de 
 
 ```typescript
 interface AppShellProps {
-  children: React.ReactNode
-  navigationItems: Array<{ label: string; href: string; isActive?: boolean }>
-  user?: { name: string; avatarUrl?: string }
-  onNavigate?: (href: string) => void
-  onLogout?: () => void
+  children: React.ReactNode;
+  navigationItems: Array<{ label: string; href: string; isActive?: boolean }>;
+  user?: { name: string; avatarUrl?: string };
+  onNavigate?: (href: string) => void;
+  onLogout?: () => void;
+  onLogoClick?: () => void;
 }
 ```
 
@@ -44,8 +45,8 @@ interface AppShellProps {
 
 ```typescript
 interface MainNavProps {
-  items: Array<{ label: string; href: string; isActive?: boolean }>
-  onItemClick?: (href: string) => void
+  items: Array<{ label: string; href: string; isActive?: boolean }>;
+  onItemClick?: (href: string) => void;
 }
 ```
 
@@ -53,8 +54,8 @@ interface MainNavProps {
 
 ```typescript
 interface UserMenuProps {
-  user: { name: string; avatarUrl?: string }
-  onLogout?: () => void
+  user: { name: string; avatarUrl?: string };
+  onLogout?: () => void;
 }
 ```
 
