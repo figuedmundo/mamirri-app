@@ -65,7 +65,7 @@ export class KnowledgeBaseService {
     try {
       const { stdout } = await exec('docker --version', { timeout: 5000 });
       return stdout.includes('Docker');
-    } catch (_error) {
+    } catch {
       this.logger.warn('Docker is not available or not running');
       return false;
     }
@@ -77,7 +77,7 @@ export class KnowledgeBaseService {
         timeout: 10000,
       });
       return stdout.trim().length > 0;
-    } catch (_error) {
+    } catch {
       return false;
     }
   }
@@ -92,7 +92,7 @@ export class KnowledgeBaseService {
     }
 
     try {
-      const { stdout, stderr } = await exec(
+      const { stderr } = await exec(
         `docker build -t ${imageName} "${doclingDir}"`,
         { timeout: 300000 }, // 5 minutes timeout for building
       );
