@@ -11,11 +11,32 @@ const sleep = promisify(setTimeout);
 
 import { PDFParse } from 'pdf-parse';
 import { execSync } from 'child_process';
+import { randomUUID } from 'crypto';
+
+import { Prisma } from '@prisma/client';
+
+export interface BM25Result {
+  id: string;
+  content: string;
+  pageNumber: number;
+  documentTitle: string;
+  documentAuthor: string;
+  documentFilePath: string;
+  documentMetadata: Record<string, unknown>;
+  bm25Score: number;
+}
+
+export interface SearchFilters {
+  documentIds?: string[];
+  minYear?: number;
+  volume?: string;
+}
 
 @Injectable()
 export class KnowledgeBaseService {
   private readonly logger = new Logger(KnowledgeBaseService.name);
   private readonly genAI: GoogleGenAI;
+  private readonly chunksPerParent = 5;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -30,7 +51,10 @@ export class KnowledgeBaseService {
     this.genAI = new GoogleGenAI({ apiKey: apiKey || 'mock-key' });
   }
 
-  async ingestFile(filePath: string): Promise<void> {
+  async ingestFile(
+    filePath: string,
+    useSemanticChunking: boolean = true,
+  ): Promise<void> {
     const absolutePath = path.resolve(filePath);
     if (!fs.existsSync(absolutePath)) {
       throw new Error(`File not found: ${absolutePath}`);
@@ -72,9 +96,53 @@ export class KnowledgeBaseService {
     });
 
     try {
-      const chunks = this.chunkText(pdfData.text);
-      this.logger.log(`Generated ${chunks.length} chunks for ${meta.title}`);
+      let chunks: string[] = [];
+      let parentChunks: string[] = [];
 
+      if (useSemanticChunking) {
+        try {
+          const result = await this.semanticChunk(pdfData.text);
+          chunks = result.chunks;
+          parentChunks = result.parentChunks;
+        } catch (error) {
+          this.logger.warn(
+            `Semantic chunking failed: ${error.message}. Falling back to naive chunking.`,
+          );
+          chunks = this.chunkText(pdfData.text);
+        }
+      } else {
+        chunks = this.chunkText(pdfData.text);
+      }
+
+      this.logger.log(
+        `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${meta.title}`,
+      );
+
+      const parentIds: string[] = [];
+
+      // 1. Insert parent chunks first
+      if (parentChunks.length > 0) {
+        for (let i = 0; i < parentChunks.length; i++) {
+          const content = parentChunks[i];
+          const vector = await this.generateEmbedding(
+            content,
+            'RETRIEVAL_DOCUMENT',
+          );
+          const vectorString = `[${vector.join(',')}]`;
+          const parentId = randomUUID();
+          parentIds.push(parentId);
+
+          await this.prisma.$executeRaw`
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
+            VALUES (${parentId}::uuid, ${content}, 1, ${document.id}, ${vectorString}::vector, ${content})
+          `;
+
+          // Sleep to avoid rate limits
+          await sleep(1500);
+        }
+      }
+
+      // 2. Insert child chunks with reference to parent
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
         const vector = await this.generateEmbedding(
@@ -83,9 +151,20 @@ export class KnowledgeBaseService {
         );
         const vectorString = `[${vector.join(',')}]`;
 
+        let parentId: string | null = null;
+        let parentContent: string | null = null;
+
+        if (parentChunks.length > 0) {
+          const parentIndex = Math.floor(i / this.chunksPerParent);
+          if (parentIndex < parentIds.length) {
+            parentId = parentIds[parentIndex];
+            parentContent = parentChunks[parentIndex];
+          }
+        }
+
         await this.prisma.$executeRaw`
-          INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector)
-          VALUES (gen_random_uuid(), ${content}, 1, ${document.id}, ${vectorString}::vector)
+          INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
+          VALUES (gen_random_uuid(), ${content}, 1, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
         `;
 
         if ((i + 1) % 10 === 0) {
@@ -170,12 +249,59 @@ export class KnowledgeBaseService {
     }
   }
 
-  async findSimilar(query: string, limit: number = 5): Promise<any[]> {
+  async findSimilar(
+    query: string,
+    limit: number = 5,
+    filters?: SearchFilters,
+    options?: { hybridSearch?: boolean },
+  ): Promise<any[]> {
+    const useHybrid = options?.hybridSearch ?? true;
+
+    if (!useHybrid) {
+      return this.findSimilarDense(query, limit, filters);
+    }
+
+    const retrieveMore = Math.ceil(limit * 3);
+
+    const [denseResults, bm25Results] = await Promise.all([
+      this.findSimilarDense(query, retrieveMore, filters),
+      this.findSimilarBM25(query, retrieveMore, filters),
+    ]);
+
+    if (bm25Results.length === 0) {
+      return denseResults.slice(0, limit);
+    }
+
+    const combined = this.combineWithRRF(denseResults, bm25Results);
+    return combined.slice(0, limit);
+  }
+
+  private async findSimilarDense(
+    query: string,
+    limit: number = 5,
+    filters?: SearchFilters,
+  ): Promise<any[]> {
     const vector = await this.generateEmbedding(query, 'RETRIEVAL_QUERY');
     const vectorString = `[${vector.join(',')}]`;
 
+    // Base query parts
+    let whereClause = Prisma.sql``;
+
+    if (filters?.documentIds?.length) {
+      whereClause = Prisma.sql`${whereClause} AND e."documentId" = ANY(${filters.documentIds}::text[])`;
+    }
+
+    if (filters?.minYear) {
+      whereClause = Prisma.sql`${whereClause} AND (d.metadata->>'year')::int >= ${filters.minYear}`;
+    }
+
+    if (filters?.volume) {
+      whereClause = Prisma.sql`${whereClause} AND d.metadata->>'volume' = ${filters.volume}`;
+    }
+
     const results: any[] = await this.prisma.$queryRaw`
       SELECT 
+        e.id,
         e.content, 
         e."pageNumber", 
         d.title as "documentTitle",
@@ -185,11 +311,114 @@ export class KnowledgeBaseService {
         1 - (e.vector <=> ${vectorString}::vector) as similarity
       FROM embeddings e
       JOIN documents d ON e."documentId" = d.id
+      WHERE 1=1 ${whereClause}
       ORDER BY e.vector <=> ${vectorString}::vector
       LIMIT ${limit}
     `;
 
     return results;
+  }
+
+  /**
+   * Full-text search using PostgreSQL tsvector/tsquery
+   * Uses ts_rank for BM25-style scoring
+   */
+  async findSimilarBM25(
+    query: string,
+    limit: number = 10,
+    filters?: SearchFilters,
+  ): Promise<BM25Result[]> {
+    // Base query parts
+    let whereClause = Prisma.sql``;
+
+    if (filters?.documentIds?.length) {
+      whereClause = Prisma.sql`${whereClause} AND e."documentId" = ANY(${filters.documentIds}::text[])`;
+    }
+
+    if (filters?.minYear) {
+      whereClause = Prisma.sql`${whereClause} AND (d.metadata->>'year')::int >= ${filters.minYear}`;
+    }
+
+    if (filters?.volume) {
+      whereClause = Prisma.sql`${whereClause} AND d.metadata->>'volume' = ${filters.volume}`;
+    }
+
+    // Using plainto_tsquery for natural language query handling
+    const results: any[] = await this.prisma.$queryRaw`
+      SELECT 
+        e.id,
+        e.content,
+        e."pageNumber",
+        d.title as "documentTitle",
+        d.author as "documentAuthor",
+        d."filePath" as "documentFilePath",
+        d.metadata as "documentMetadata",
+        ts_rank(to_tsvector('english', e.content), plainto_tsquery('english', ${query})) as "bm25Score"
+      FROM embeddings e
+      JOIN documents d ON e."documentId" = d.id
+      WHERE to_tsvector('english', e.content) @@ plainto_tsquery('english', ${query})
+      ${whereClause}
+      ORDER BY "bm25Score" DESC
+      LIMIT ${limit}
+    `;
+
+    // Map raw results to typed interface
+    return results.map((r) => ({
+      id: r.id,
+      content: r.content,
+      pageNumber: r.pageNumber,
+      documentTitle: r.documentTitle,
+      documentAuthor: r.documentAuthor,
+      documentFilePath: r.documentFilePath,
+      documentMetadata: r.documentMetadata,
+      bm25Score: r.bm25Score,
+    }));
+  }
+
+  /**
+   * Combines dense and sparse search results using RRF
+   * Formula: score = sum(1.0 / (k + rank)) where k=60
+   *
+   * @param denseResults - Results from vector similarity search
+   * @param sparseResults - Results from BM25 search
+   * @returns Combined results sorted by RRF score
+   */
+  private combineWithRRF(
+    denseResults: Array<{ id: string; similarity: number; [key: string]: any }>,
+    sparseResults: Array<{ id: string; bm25Score: number; [key: string]: any }>,
+    k: number = 60,
+  ): Array<{ id: string; rrfScore: number; [key: string]: any }> {
+    const scoreMap = new Map<string, { rrfScore: number; data: any }>();
+
+    // Add dense results
+    denseResults.forEach((result, rank) => {
+      const rrfContrib = 1.0 / (k + rank + 1);
+      const existing = scoreMap.get(result.id);
+      if (existing) {
+        existing.rrfScore += rrfContrib;
+        // Merge data if needed, but dense result usually has similarity
+        existing.data = { ...existing.data, ...result };
+      } else {
+        scoreMap.set(result.id, { rrfScore: rrfContrib, data: result });
+      }
+    });
+
+    // Add sparse results
+    sparseResults.forEach((result, rank) => {
+      const rrfContrib = 1.0 / (k + rank + 1);
+      const existing = scoreMap.get(result.id);
+      if (existing) {
+        existing.rrfScore += rrfContrib;
+        existing.data = { ...existing.data, ...result };
+      } else {
+        scoreMap.set(result.id, { rrfScore: rrfContrib, data: result });
+      }
+    });
+
+    // Sort by RRF score descending
+    return Array.from(scoreMap.values())
+      .sort((a, b) => b.rrfScore - a.rrfScore)
+      .map((item) => ({ ...item.data, rrfScore: item.rrfScore }));
   }
 
   async updateMetadata(
@@ -300,6 +529,128 @@ export class KnowledgeBaseService {
       );
       return { title: beautified, author: 'Unknown Author' };
     }
+  }
+
+  private cosineSimilarity(a: number[], b: number[]): number {
+    let dotProduct = 0;
+    let normA = 0;
+    let normB = 0;
+    for (let i = 0; i < a.length; i++) {
+      dotProduct += a[i] * b[i];
+      normA += a[i] * a[i];
+      normB += b[i] * b[i];
+    }
+    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+  }
+
+  private async semanticChunk(
+    text: string,
+    options: {
+      similarityThreshold?: number;
+      targetChunkSize?: number;
+      maxChunkSize?: number;
+    } = {},
+  ): Promise<{ chunks: string[]; parentChunks: string[] }> {
+    const {
+      similarityThreshold = 0.85,
+      targetChunkSize = 400,
+      maxChunkSize = 512,
+    } = options;
+
+    // 1. Split text into paragraphs first to respect boundaries
+    const paragraphs = text.split(/\n\n+/);
+    const refinedSentences: { text: string; isParagraphStart: boolean }[] = [];
+
+    for (const para of paragraphs) {
+      const paraSentences = para.match(/(?<=[.!?])\s+/g)
+        ? para.split(/(?<=[.!?])\s+/)
+        : [para];
+
+      paraSentences.forEach((s, i) => {
+        if (s.trim().length > 0) {
+          refinedSentences.push({
+            text: s.trim(),
+            isParagraphStart: i === 0,
+          });
+        }
+      });
+    }
+
+    if (refinedSentences.length === 0) {
+      return { chunks: [], parentChunks: [] };
+    }
+
+    // 2. Generate embeddings for sentences (batched)
+    const embeddings: number[][] = [];
+    const batchSize = 10;
+
+    for (let i = 0; i < refinedSentences.length; i += batchSize) {
+      const batch = refinedSentences.slice(i, i + batchSize);
+      // Use concurrent processing with rate limit awareness
+      const batchPromises = batch.map((s) =>
+        this.generateEmbedding(s.text, 'RETRIEVAL_DOCUMENT'),
+      );
+      const batchEmbeddings = await Promise.all(batchPromises);
+      embeddings.push(...batchEmbeddings);
+      await sleep(2000); // Sleep between batches
+    }
+
+    // 3. Group sentences into chunks
+    const chunks: string[] = [];
+    let currentChunkSentences: string[] = [];
+    let currentChunkTokens = 0;
+
+    for (let i = 0; i < refinedSentences.length; i++) {
+      const sentence = refinedSentences[i];
+      const sentenceEmbedding = embeddings[i];
+      const sentenceTokens = sentence.text.split(/\s+/).length; // Approximation
+
+      if (currentChunkSentences.length === 0) {
+        currentChunkSentences.push(sentence.text);
+        currentChunkTokens += sentenceTokens;
+        continue;
+      }
+
+      const prevEmbedding = embeddings[i - 1];
+      const similarity = this.cosineSimilarity(
+        prevEmbedding,
+        sentenceEmbedding,
+      );
+
+      const isSimilarityDrop = similarity < similarityThreshold;
+      const isMaxChunkSizeExceeded =
+        currentChunkTokens + sentenceTokens > maxChunkSize;
+      const isParagraphStart = sentence.isParagraphStart;
+
+      // Decision to start new chunk
+      if (
+        isParagraphStart ||
+        (currentChunkTokens >= targetChunkSize && isSimilarityDrop) ||
+        isMaxChunkSizeExceeded
+      ) {
+        chunks.push(currentChunkSentences.join(' '));
+        currentChunkSentences = [sentence.text];
+        currentChunkTokens = sentenceTokens;
+      } else {
+        currentChunkSentences.push(sentence.text);
+        currentChunkTokens += sentenceTokens;
+      }
+    }
+
+    if (currentChunkSentences.length > 0) {
+      chunks.push(currentChunkSentences.join(' '));
+    }
+
+    // 4. Create parent chunks
+    // Combine 4-5 regular chunks
+    const parentChunks: string[] = [];
+
+    for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
+      const parentChunk = chunks.slice(i, i + this.chunksPerParent).join(' ');
+      parentChunks.push(parentChunk);
+    }
+
+    return { chunks, parentChunks };
   }
 
   private chunkText(
