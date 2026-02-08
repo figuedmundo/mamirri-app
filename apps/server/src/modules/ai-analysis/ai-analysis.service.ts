@@ -24,6 +24,7 @@ export class AiAnalysisService {
   private readonly model: string;
   private readonly temperature: number;
   private readonly maxTokens: number;
+  private readonly enableHyde: boolean;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -60,6 +61,14 @@ export class AiAnalysisService {
       this.configService.get<string>('AI_MAX_TOKENS') || '4096',
       10,
     );
+
+    this.enableHyde = this.configService.get<string>('ENABLE_HYDE') === 'true';
+
+    if (this.enableHyde) {
+      this.logger.log('HyDE (Hypothetical Document Embeddings) enabled');
+    } else {
+      this.logger.log('HyDE disabled. Using standard RAG queries.');
+    }
   }
 
   async analyzeCase(
@@ -159,7 +168,7 @@ export class AiAnalysisService {
       const response = await withRetry(
         async () => {
           return this.cohereClient!.rerank({
-            model: 'rerank-v3.5',
+            model: 'rerank-v4.0-pro',
             query: query,
             documents: documents,
             topN: topN,
@@ -201,11 +210,49 @@ export class AiAnalysisService {
     this.logger.debug('Executing multi-query RAG strategy');
 
     try {
+      let finalDiagnosisQuery = diagnosisQuery;
+      let finalTreatmentQuery = treatmentQuery;
+
+      if (this.enableHyde) {
+        try {
+          this.logger.debug('Generating HyDE synthetic documents...');
+          const [hydeDiagnosisDoc, hydeTreatmentDoc] = await Promise.all([
+            this.generateHydeDocument(
+              this.promptBuilderService.buildHydeDiagnosisPrompt(
+                diagnosisQuery,
+              ),
+            ),
+            this.generateHydeDocument(
+              this.promptBuilderService.buildHydeTreatmentPrompt(
+                treatmentQuery,
+              ),
+            ),
+          ]);
+
+          if (hydeDiagnosisDoc) {
+            finalDiagnosisQuery = hydeDiagnosisDoc;
+            this.logger.debug(
+              `Using HyDE document for diagnosis (${hydeDiagnosisDoc.length} chars)`,
+            );
+          }
+          if (hydeTreatmentDoc) {
+            finalTreatmentQuery = hydeTreatmentDoc;
+            this.logger.debug(
+              `Using HyDE document for treatment (${hydeTreatmentDoc.length} chars)`,
+            );
+          }
+        } catch (hydeError) {
+          this.logger.warn(
+            `HyDE generation failed, falling back to standard queries: ${hydeError.message}`,
+          );
+        }
+      }
+
       // Retrieve MORE candidates for reranking (was 5, 5, 3 - now 8, 8, 4)
       const [diagnosisResults, treatmentResults, contraindicationResults] =
         await Promise.all([
-          this.knowledgeBaseService.findSimilar(diagnosisQuery, 8),
-          this.knowledgeBaseService.findSimilar(treatmentQuery, 8),
+          this.knowledgeBaseService.findSimilar(finalDiagnosisQuery, 8),
+          this.knowledgeBaseService.findSimilar(finalTreatmentQuery, 8),
           this.knowledgeBaseService.findSimilar(contraindicationsQuery, 4),
         ]);
 
@@ -223,7 +270,7 @@ export class AiAnalysisService {
 
       // NEW: Rerank deduplicated results
       // Build a combined query for reranking
-      const combinedQuery = `${diagnosisQuery} ${treatmentQuery}`;
+      const combinedQuery = `${finalDiagnosisQuery} ${finalTreatmentQuery}`;
       const reranked = await this.rerankChunks(combinedQuery, deduplicated, 8);
 
       this.logger.debug(
@@ -258,6 +305,34 @@ export class AiAnalysisService {
     }
 
     return unique.sort((a, b) => b.similarity - a.similarity);
+  }
+
+  private async generateHydeDocument(hydePrompt: string): Promise<string> {
+    const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
+    if (!apiKey) {
+      return '';
+    }
+
+    try {
+      const response = await this.genAI.models.generateContent({
+        model: this.model,
+        config: {
+          temperature: this.temperature,
+          maxOutputTokens: this.maxTokens,
+        },
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: hydePrompt }],
+          },
+        ],
+      });
+
+      return response.text || '';
+    } catch (error) {
+      this.logger.error(`HyDE document generation failed: ${error.message}`);
+      return '';
+    }
   }
 
   private async callLlm(

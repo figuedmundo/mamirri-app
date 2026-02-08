@@ -9,6 +9,7 @@ Before you begin, ensure you have the following installed:
 - **Node.js**: Version 20 or higher
 - **pnpm**: Version 10 or higher (install via `npm install -g pnpm` or Corepack)
 - **Docker & Docker Compose**: For running the database and infrastructure services
+- **Python**: Version 3.11 or higher (required for the Docling RAG worker)
 - **Git**: For version control
 
 ## 1. Quick Start (Docker-Native)
@@ -55,6 +56,25 @@ Run Prisma migrations to set up the database schema:
 ```bash
 pnpm --filter server exec npx prisma migrate dev
 ```
+
+### 2.4 Setup Docling Worker (RAG Ingestion)
+
+Mamirri uses **Docling** for high-quality PDF extraction. This requires a Python environment.
+
+1.  **Create a virtual environment** (recommended):
+
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate # On Windows use: .venv\Scripts\activate
+    ```
+
+2.  **Install dependencies**:
+
+    ```bash
+    pip install -r apps/workers/docling/requirements.txt
+    ```
+
+If Python or Docling is not available, the system will automatically fall back to a basic PDF parser (`pdf-parse`), but ingestion quality for tables and complex layouts will be reduced.
 
 ## 3. Running the Application
 

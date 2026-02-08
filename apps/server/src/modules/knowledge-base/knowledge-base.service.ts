@@ -10,10 +10,13 @@ import { promisify } from 'util';
 const sleep = promisify(setTimeout);
 
 import { PDFParse } from 'pdf-parse';
-import { execSync } from 'child_process';
+import { exec as execAsync, execSync } from 'child_process';
 import { randomUUID } from 'crypto';
 
+const exec = promisify(execAsync);
+
 import { Prisma } from '@prisma/client';
+import { CohereClient } from 'cohere-ai';
 
 export interface BM25Result {
   id: string;
@@ -36,6 +39,7 @@ export interface SearchFilters {
 export class KnowledgeBaseService {
   private readonly logger = new Logger(KnowledgeBaseService.name);
   private readonly genAI: GoogleGenAI;
+  private readonly cohere: CohereClient;
   private readonly chunksPerParent = 5;
 
   constructor(
@@ -49,6 +53,217 @@ export class KnowledgeBaseService {
       );
     }
     this.genAI = new GoogleGenAI({ apiKey: apiKey || 'mock-key' });
+
+    const cohereKey = this.configService.get<string>('COHERE_API_KEY');
+    if (!cohereKey) {
+      this.logger.warn('COHERE_API_KEY is not set. Reranking will be skipped.');
+    }
+    this.cohere = new CohereClient({ token: cohereKey || 'mock-key' });
+  }
+
+  private async isDockerAvailable(): Promise<boolean> {
+    try {
+      const { stdout } = await exec('docker --version', { timeout: 5000 });
+      return stdout.includes('Docker');
+    } catch (error) {
+      this.logger.warn('Docker is not available or not running');
+      return false;
+    }
+  }
+
+  private async dockerImageExists(imageName: string): Promise<boolean> {
+    try {
+      const { stdout } = await exec(`docker images -q ${imageName}`, { timeout: 10000 });
+      return stdout.trim().length > 0;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  private async buildDockerImage(imageName: string): Promise<void> {
+    this.logger.log(`Building Docker image: ${imageName}`);
+    const doclingDir = path.join(process.cwd(), 'apps', 'workers', 'docling');
+
+    if (!fs.existsSync(doclingDir)) {
+      this.logger.warn(`Docling directory not found: ${doclingDir}`);
+      throw new Error('Docling worker directory not found');
+    }
+
+    try {
+      const { stdout, stderr } = await exec(
+        `docker build -t ${imageName} "${doclingDir}"`,
+        { timeout: 300000 }, // 5 minutes timeout for building
+      );
+
+      if (stderr && !stderr.includes('Sending build context') && !stderr.includes('Step')) {
+        this.logger.warn(`Docker build warnings: ${stderr}`);
+      }
+
+      this.logger.log(`Docker image built successfully: ${imageName}`);
+    } catch (error) {
+      this.logger.error(`Failed to build Docker image: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Extract text from PDF using Docling Docker container.
+   * Automatically builds the image if needed.
+   * Falls back to pdf-parse if Docker is not available.
+   */
+  private async extractPdfWithDocling(filePath: string): Promise<string> {
+    const imageName = 'docling-worker:latest';
+    const absolutePath = path.resolve(filePath);
+
+    const dockerAvailable = await this.isDockerAvailable();
+    if (!dockerAvailable) {
+      this.logger.warn('Docker not available, falling back to pdf-parse');
+      return this.extractPdfWithPdfParse(filePath);
+    }
+
+    const imageExists = await this.dockerImageExists(imageName);
+    if (!imageExists) {
+      this.logger.log('Docling-worker image not found. Building... (this may take a few minutes)');
+      try {
+        await this.buildDockerImage(imageName);
+      } catch (error) {
+        this.logger.warn(`Failed to build Docker image: ${error.message}. Falling back to pdf-parse`);
+        return this.extractPdfWithPdfParse(filePath);
+      }
+    }
+
+    try {
+      this.logger.log(`Extracting PDF using Docling Docker: ${filePath}`);
+      const { stdout, stderr } = await exec(
+        `docker run --rm -v "${absolutePath}:/input.pdf" ${imageName} /input.pdf`,
+        { encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024, timeout: 120000 }, // 120MB buffer, 2 min timeout
+      );
+
+      if (stderr && stderr.toLowerCase().includes('error')) {
+        this.logger.warn(`Docling execution error: ${stderr}. Falling back to pdf-parse`);
+        return this.extractPdfWithPdfParse(filePath);
+      }
+
+      return stdout;
+    } catch (error) {
+      this.logger.warn(`Failed to run Docling container: ${error.message}. Falling back to pdf-parse`);
+      return this.extractPdfWithPdfParse(filePath);
+    }
+  }
+  }
+
+  /**
+   * Check if the docling-worker Docker image exists.
+   */
+  private async dockerImageExists(imageName: string): Promise<boolean> {
+    try {
+      const { stdout } = await exec(`docker images -q ${imageName}`, {
+        timeout: 10000,
+      });
+      return stdout.trim().length > 0;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Build the docling-worker Docker image.
+   */
+  private async buildDockerImage(imageName: string): Promise<void> {
+    this.logger.log(`Building Docker image: ${imageName}`);
+    const doclingDir = path.join(process.cwd(), 'apps', 'workers', 'docling');
+
+    if (!fs.existsSync(doclingDir)) {
+      this.logger.warn(`Docling directory not found: ${doclingDir}`);
+      throw new Error('Docling worker directory not found');
+    }
+
+    try {
+      const { stdout, stderr } = await exec(
+        `docker build -t ${imageName} "${doclingDir}"`,
+        { timeout: 300000 }, // 5 minutes timeout for building
+      );
+
+      if (
+        stderr &&
+        !stderr.includes('Sending build context') &&
+        !stderr.includes('Step')
+      ) {
+        this.logger.warn(`Docker build warnings: ${stderr}`);
+      }
+
+      this.logger.log(`Docker image built successfully: ${imageName}`);
+    } catch (error) {
+      this.logger.error(`Failed to build Docker image: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Extract text from PDF using Docling Docker container.
+   * Automatically builds the image if needed.
+   * Falls back to pdf-parse if Docker is not available.
+   */
+  private async extractPdfWithDocling(filePath: string): Promise<string> {
+    const imageName = 'docling-worker:latest';
+    const absolutePath = path.resolve(filePath);
+
+    // Check if Docker is available
+    const dockerAvailable = await this.isDockerAvailable();
+    if (!dockerAvailable) {
+      this.logger.warn('Docker not available, falling back to pdf-parse');
+      return this.extractPdfWithPdfParse(filePath);
+    }
+
+    // Check if image exists, build if needed
+    const imageExists = await this.dockerImageExists(imageName);
+    if (!imageExists) {
+      this.logger.log(
+        'Docling-worker image not found. Building... (this may take a few minutes)',
+      );
+      try {
+        await this.buildDockerImage(imageName);
+      } catch (error) {
+        this.logger.warn(
+          `Failed to build Docker image: ${error.message}. Falling back to pdf-parse`,
+        );
+        return this.extractPdfWithPdfParse(filePath);
+      }
+    }
+
+    // Run Docker container for PDF extraction
+    try {
+      this.logger.log(`Extracting PDF using Docling Docker: ${filePath}`);
+      const { stdout, stderr } = await exec(
+        `docker run --rm -v "${absolutePath}:/input.pdf" ${imageName} /input.pdf`,
+        { encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024, timeout: 120000 }, // 120MB buffer, 2 min timeout
+      );
+
+      if (stderr && stderr.toLowerCase().includes('error')) {
+        this.logger.warn(
+          `Docling execution error: ${stderr}. Falling back to pdf-parse`,
+        );
+        return this.extractPdfWithPdfParse(filePath);
+      }
+
+      return stdout;
+    } catch (error) {
+      this.logger.warn(
+        `Failed to run Docling container: ${error.message}. Falling back to pdf-parse`,
+      );
+      return this.extractPdfWithPdfParse(filePath);
+    }
+  }
+
+  /**
+   * Extract text from PDF using pdf-parse (fallback method).
+   */
+  private async extractPdfWithPdfParse(filePath: string): Promise<string> {
+    const dataBuffer = fs.readFileSync(filePath);
+    const parser = new PDFParse({ data: dataBuffer });
+    const pdfData = await parser.getText();
+    await parser.destroy();
+    return pdfData.text;
   }
 
   async ingestFile(
@@ -70,12 +285,9 @@ export class KnowledgeBaseService {
     }
 
     this.logger.log(`Ingesting file: ${filePath}`);
-    const dataBuffer = fs.readFileSync(absolutePath);
-    const parser = new PDFParse({ data: dataBuffer });
-    const pdfData = await parser.getText();
-    await parser.destroy();
+    const pdfText = await this.extractPdfWithDocling(absolutePath);
 
-    const firstPageText = pdfData.text.substring(0, 2000);
+    const firstPageText = pdfText.substring(0, 2000);
 
     const meta = await this.extractMetadata(
       firstPageText,
@@ -101,17 +313,17 @@ export class KnowledgeBaseService {
 
       if (useSemanticChunking) {
         try {
-          const result = await this.semanticChunk(pdfData.text);
+          const result = await this.semanticChunk(pdfText);
           chunks = result.chunks;
           parentChunks = result.parentChunks;
         } catch (error) {
           this.logger.warn(
             `Semantic chunking failed: ${error.message}. Falling back to naive chunking.`,
           );
-          chunks = this.chunkText(pdfData.text);
+          chunks = this.chunkText(pdfText);
         }
       } else {
-        chunks = this.chunkText(pdfData.text);
+        chunks = this.chunkText(pdfText);
       }
 
       this.logger.log(
@@ -273,19 +485,58 @@ export class KnowledgeBaseService {
       return this.findSimilarDense(query, limit, filters);
     }
 
-    const retrieveMore = Math.ceil(limit * 3);
+    const retrieveMore = Math.ceil(limit * 5); // Fetch more for reranking
 
     const [denseResults, bm25Results] = await Promise.all([
       this.findSimilarDense(query, retrieveMore, filters),
       this.findSimilarBM25(query, retrieveMore, filters),
     ]);
 
+    let results: any[];
+
     if (bm25Results.length === 0) {
-      return denseResults.slice(0, limit);
+      results = denseResults;
+    } else {
+      results = this.combineWithRRF(denseResults, bm25Results);
     }
 
-    const combined = this.combineWithRRF(denseResults, bm25Results);
-    return combined.slice(0, limit);
+    // Apply Cross-Encoder Reranking
+    const reranked = await this.rerank(query, results, limit);
+    return reranked;
+  }
+
+  private async rerank(
+    query: string,
+    documents: any[],
+    topN: number,
+  ): Promise<any[]> {
+    const apiKey = this.configService.get<string>('COHERE_API_KEY');
+    if (!apiKey || documents.length === 0) {
+      return documents.slice(0, topN);
+    }
+
+    try {
+      const response = await this.cohere.v2.rerank({
+        documents: documents.map((d) => d.parentContent || d.content),
+        query,
+        topN,
+        model: 'rerank-v4.0-pro',
+      });
+
+      // Map rerank results back to original documents
+      return response.results.map((r) => {
+        const originalDoc = documents[r.index];
+        return {
+          ...originalDoc,
+          rerankScore: r.relevanceScore,
+          // Optimization: Return parent content as main content for LLM context
+          content: originalDoc.parentContent || originalDoc.content,
+        };
+      });
+    } catch (error) {
+      this.logger.warn(`Reranking failed: ${error.message}. Returning top K.`);
+      return documents.slice(0, topN);
+    }
   }
 
   private async findSimilarDense(
@@ -314,7 +565,8 @@ export class KnowledgeBaseService {
     const results: any[] = await this.prisma.$queryRaw`
       SELECT 
         e.id,
-        e.content, 
+        e.content,
+        e."parentContent",
         e."pageNumber", 
         d.title as "documentTitle",
         d.author as "documentAuthor",
@@ -360,6 +612,7 @@ export class KnowledgeBaseService {
       SELECT 
         e.id,
         e.content,
+        e."parentContent",
         e."pageNumber",
         d.title as "documentTitle",
         d.author as "documentAuthor",

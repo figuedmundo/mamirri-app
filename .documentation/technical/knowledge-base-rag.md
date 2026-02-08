@@ -20,7 +20,7 @@ The process is divided into two main phases: Ingestion and Retrieval.
 
 Before the AI can search books, they must be processed into a format it can understand:
 
-1. **Extraction**: Mamirri reads PDF files from `apps/server/data/books`.
+1. **Extraction**: Mamirri uses **Docling** (via a specialized worker) to read PDF files from `apps/server/data/books`. Unlike standard PDF parsers, Docling is layout-aware and handles tables and multi-column text with high precision.
 2. **Chunking**: Large books are broken down into smaller "chunks". Two strategies are available:
    - **Naive Chunking** (default): Fixed-size chunks of ~500 words with 50-word overlap. Simple, fast, and quota-friendly.
    - **Semantic Chunking** (opt-in): Uses sentence embeddings to detect topic boundaries, creating more coherent chunks. Requires significantly more API quota.
@@ -42,23 +42,28 @@ Before the AI can search books, they must be processed into a format it can unde
 
 When a therapist needs a suggestion or searches the library:
 
-1. **Query Embedding**: Mamirri converts the search query (e.g., "huesos del cráneo") into a vector.
+1. **Query Transformation (HyDE)**: If `ENABLE_HYDE=true`, the system uses **Gemini 3 Flash** to generate a hypothetical "ideal" clinical description based on the query. This improves retrieval for vague symptom descriptions.
+   - **Diagnosis & Treatment**: Both use HyDE for expanded context.
+   - **Contraindications**: Always uses the original query to ensure strict keyword matching for safety.
+2. **Query Embedding**: Mamirri converts the search query (or the HyDE synthetic document) into a vector.
    - **Task Type**: We use `RETRIEVAL_QUERY` for the search term to ensure the best semantic match against indexed documents.
-2. **Hybrid Search**: Combines two retrieval methods for better results:
+3. **Hybrid Search**: Combines two retrieval methods for better results:
    - **Dense (Vector) Search**: Finds semantically similar chunks using cosine similarity.
    - **Sparse (BM25) Search**: Finds exact keyword matches using PostgreSQL full-text search.
-3. **Reciprocal Rank Fusion (RRF)**: Merges results from both methods using the formula `score = 1/(k + rank)` where k=60.
-4. **Reranking** (optional): If `COHERE_API_KEY` is configured, results are reranked using Cohere's neural reranker for improved relevance.
-5. **Context**: The top-ranked chunks are provided to the AI to generate a grounded response with citations (title and page number).
+4. **Reciprocal Rank Fusion (RRF)**: Merges results from both methods using the formula `score = 1/(k + rank)` where k=60.
+5. **Reranking**: If `COHERE_API_KEY` is configured, results are reranked using **Cohere Rerank v4.0-pro**. This model is specifically trained for cross-encoder reranking, providing a massive boost in precision by evaluating the actual relationship between the query and each chunk.
+6. **Context**: The top-ranked chunks are provided to the AI to generate a grounded response with citations (title and page number).
 
 #### Search Architecture
 
 ```
-Query: "fracturas del húmero"
+Query: "dolor lumbar vago"
          │
-         ├── Dense Search ──────────────┐
+         ├── HyDE (Gemini 3 Flash) ─── Synthetic Passage
+         │                               │
+         ├── Dense Search <──────────────┘
          │   (semantic similarity)       │
-         │                               ├── RRF Fusion ── Rerank ── Top K Results
+         │                               ├── RRF Fusion ── Rerank (Cohere v4) ── Top K Results
          └── BM25 Search ───────────────┘
              (exact keywords)
 ```
@@ -229,18 +234,20 @@ If an ingestion is interrupted (e.g., due to rate limits or internet failure):
 - **Vector Storage**: PostgreSQL + [pgvector](https://github.com/pgvector/pgvector)
 - **Embeddings Model**: Google Gemini (`gemini-embedding-001` - Latest 2025 Model)
 - **Metadata Orchestration**: Google Gemini 3 (`gemini-3-flash-preview`)
-- **PDF Extraction**: [pdf-parse](https://www.npmjs.com/package/pdf-parse)
+- **Query Transformation**: HyDE (Hypothetical Document Embeddings) via Gemini 3 Flash
+- **PDF Extraction**: **Docling** (Layout-aware Python worker)
 - **Database Layer**: Prisma (using `Unsupported("vector(768)")` for vector types)
 - **Indexing**: HNSW (Hierarchical Navigable Small World) for fast similarity searches.
 - **Optimization**: Matryoshka Representation Learning (MRL) for efficient 768-dim storage.
 - **Hybrid Search**: BM25 (PostgreSQL tsvector) + Dense vectors with RRF fusion
-- **Reranking**: Cohere Rerank API (optional, improves result quality)
+- **Reranking**: Cohere Rerank API (**v4.0-pro**)
 
 ## Environment Variables
 
-| Variable         | Required | Description                                                   |
-| ---------------- | -------- | ------------------------------------------------------------- |
-| `GOOGLE_API_KEY` | Yes      | Google Gemini API key for embeddings and metadata extraction  |
-| `COHERE_API_KEY` | No       | Cohere API key for neural reranking (improves search quality) |
+| Variable         | Required | Description                                                        |
+| ---------------- | -------- | ------------------------------------------------------------------ |
+| `GOOGLE_API_KEY` | Yes      | Google Gemini API key for embeddings and HyDE generation           |
+| `COHERE_API_KEY` | No       | Cohere API key for **v4.0-pro** reranking (highly recommended)     |
+| `ENABLE_HYDE`    | No       | Set to `true` to enable HyDE query transformation (default: false) |
 
-Without `COHERE_API_KEY`, the system falls back to RRF-only ranking which still works well.
+Without `COHERE_API_KEY`, the system falls back to RRF-only ranking. Without `ENABLE_HYDE`, the system uses the raw user query.

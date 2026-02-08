@@ -43,6 +43,11 @@
         "@playwright/mcp@latest"
       ],
       "enabled": false
+    },
+    "z.ai-web-search-sse": {
+      "type": "remote",
+      "enabled": true,
+      "url": "https://api.z.ai/api/mcp/web_search/sse?Authorization=2abc7127803b4c66b16f73158aca25b5.yVVpgpSFyqAVdod4"
     }
   }
 }

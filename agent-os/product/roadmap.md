@@ -301,7 +301,7 @@ Methodology: Agile Development (1-week Sprints).
 
 **🔴 Critical Improvements (High Impact):**
 
-- [x] **16.1** Semantic Chunking — Replace word-based (500w) with semantic splitting ✅
+- [x] **16.1** Semantic Chunking — Replace word-based (500w) with semantic splitting [NOTE: semantic chunking was disabled as it consumed too many tokens]
   - Group sentences by embedding similarity (respects meaning boundaries)
   - Expected improvement: +70% retrieval accuracy
   - Implementation: `KnowledgeBaseService.semanticChunk()`

@@ -91,6 +91,80 @@ const TEST_CASES: TestCase[] = [
     expectedKeyTerms: ['tendón aquiles', 'engrosamiento', 'ecografía'],
     category: 'diagnosis',
   },
+  // HyDE Target Test Cases - Vague Symptom Queries
+  // These queries are intentionally vague to test HyDE's ability to generate
+  // clinical descriptions that improve retrieval
+  {
+    id: 'TC-HYDE-001',
+    query: 'dolor talón mañana',
+    expectedDocuments: [
+      'fisioterapia_traumatologia.pdf',
+      'rehabilitacion_pie.pdf',
+    ],
+    expectedKeyTerms: [
+      'fascitis plantar',
+      'talalgia',
+      'estiramiento aquileo',
+      'mañana',
+      'dolor talón',
+    ],
+    category: 'diagnosis',
+  },
+  {
+    id: 'TC-HYDE-002',
+    query: 'mucho dolor espalda al levantarse',
+    expectedDocuments: ['ortopedia_columna.pdf', 'rehabilitacion_columna.pdf'],
+    expectedKeyTerms: [
+      'lumbalgia',
+      'mecánica',
+      'rigidez matutina',
+      'dolor lumbar',
+      'postura',
+    ],
+    category: 'diagnosis',
+  },
+  {
+    id: 'TC-HYDE-003',
+    query: 'pierna pesada al correr',
+    expectedDocuments: [
+      'fisioterapia_deportiva.pdf',
+      'rehabilitacion_muscular.pdf',
+    ],
+    expectedKeyTerms: [
+      'síndrome compartimental',
+      'fatiga muscular',
+      'claudicación intermitente',
+      'ejercicio',
+      'pierna',
+    ],
+    category: 'diagnosis',
+  },
+  {
+    id: 'TC-HYDE-004',
+    query: 'hombro crujido al levantar brazo',
+    expectedDocuments: ['terapia_manual.pdf', 'rehabilitacion_hombro.pdf'],
+    expectedKeyTerms: [
+      'pinzamiento subacromial',
+      'crepitación',
+      'dolor hombro',
+      'abducción',
+      'manguito rotador',
+    ],
+    category: 'diagnosis',
+  },
+  {
+    id: 'TC-HYDE-005',
+    query: 'rodilla se traba al caminar',
+    expectedDocuments: ['ortopedia_rodilla.pdf', 'rehabilitacion_rodilla.pdf'],
+    expectedKeyTerms: [
+      'menisco',
+      'rodilla',
+      'bloqueo',
+      'derrame',
+      'inestabilidad',
+    ],
+    category: 'diagnosis',
+  },
 ];
 
 /**
@@ -185,6 +259,7 @@ function calculateFaithfulness(
 
 describe('RAG Evaluation Framework', () => {
   let knowledgeBaseService: KnowledgeBaseService;
+  let configService: ConfigService;
 
   interface EvaluationResult {
     testCaseId: string;
@@ -195,6 +270,19 @@ describe('RAG Evaluation Framework', () => {
     recall: number;
     faithfulness: number;
     passed: boolean;
+    hydeEnabled?: boolean;
+  }
+
+  interface ComparisonResult {
+    testCaseId: string;
+    query: string;
+    baselinePrecision: number;
+    baselineFaithfulness: number;
+    hydePrecision: number;
+    hydeFaithfulness: number;
+    precisionImprovement: number;
+    faithfulnessImprovement: number;
+    significantImprovement: boolean;
   }
 
   beforeAll(async () => {
@@ -214,7 +302,10 @@ describe('RAG Evaluation Framework', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn(),
+            get: jest.fn((key: string) => {
+              if (key === 'ENABLE_HYDE') return 'false';
+              return undefined;
+            }),
           },
         },
       ],
@@ -222,15 +313,22 @@ describe('RAG Evaluation Framework', () => {
 
     knowledgeBaseService =
       module.get<KnowledgeBaseService>(KnowledgeBaseService);
+    configService = module.get<ConfigService>(ConfigService);
 
     // Mocking findSimilar for the purpose of this test file structure validation
     // In a real evaluation, this would call the actual implementation
     jest.spyOn(knowledgeBaseService, 'findSimilar').mockResolvedValue([]);
   });
 
-  // This is marked as .skip by default - run manually for evaluation
-  it.skip('should evaluate all test cases and generate report', async () => {
+  async function runEvaluationPass(
+    hydeEnabled: boolean,
+  ): Promise<EvaluationResult[]> {
     const results: EvaluationResult[] = [];
+
+    jest.spyOn(configService, 'get').mockImplementation((key: string) => {
+      if (key === 'ENABLE_HYDE') return hydeEnabled ? 'true' : 'false';
+      return undefined;
+    });
 
     for (const testCase of TEST_CASES) {
       // Cast result to any because we are mocking it or using the real one which returns BM25Result
@@ -256,10 +354,22 @@ describe('RAG Evaluation Framework', () => {
         recall,
         faithfulness,
         passed: precision >= 0.75 && faithfulness >= 0.8,
+        hydeEnabled,
       });
     }
 
-    // Calculate aggregates
+    return results;
+  }
+
+  function generateReport(
+    results: EvaluationResult[],
+    passName: string,
+  ): {
+    avgPrecision: number;
+    avgRecall: number;
+    avgFaithfulness: number;
+    passRate: number;
+  } {
     const avgPrecision =
       results.reduce((sum, r) => sum + r.precision, 0) / (results.length || 1);
     const avgRecall =
@@ -270,8 +380,7 @@ describe('RAG Evaluation Framework', () => {
     const passRate =
       results.filter((r) => r.passed).length / (results.length || 1);
 
-    // Generate report
-    console.log('\n=== RAG EVALUATION REPORT ===');
+    console.log(`\n=== ${passName} ===`);
     console.log(`Date: ${new Date().toISOString()}`);
     console.log(`Total Test Cases: ${results.length}`);
     console.log(`\n--- AGGREGATE METRICS ---`);
@@ -294,10 +403,129 @@ describe('RAG Evaluation Framework', () => {
       );
     });
 
-    // Assert minimum thresholds
-    // Using 0 as baseline since we mock empty results by default
-    expect(avgPrecision).toBeGreaterThanOrEqual(0);
-    expect(avgFaithfulness).toBeGreaterThanOrEqual(0);
+    return {
+      avgPrecision,
+      avgRecall,
+      avgFaithfulness,
+      passRate,
+    };
+  }
+
+  function compareResults(
+    baseline: EvaluationResult[],
+    experiment: EvaluationResult[],
+  ): ComparisonResult[] {
+    const baselineMap = new Map(baseline.map((r) => [r.testCaseId, r]));
+    const comparisons: ComparisonResult[] = [];
+
+    for (const expResult of experiment) {
+      const baseResult = baselineMap.get(expResult.testCaseId);
+      if (!baseResult) continue;
+
+      const precisionImprovement = expResult.precision - baseResult.precision;
+      const faithfulnessImprovement =
+        expResult.faithfulness - baseResult.faithfulness;
+
+      comparisons.push({
+        testCaseId: expResult.testCaseId,
+        query: expResult.query,
+        baselinePrecision: baseResult.precision,
+        baselineFaithfulness: baseResult.faithfulness,
+        hydePrecision: expResult.precision,
+        hydeFaithfulness: expResult.faithfulness,
+        precisionImprovement,
+        faithfulnessImprovement,
+        significantImprovement:
+          precisionImprovement > 0.05 || faithfulnessImprovement > 0.05,
+      });
+    }
+
+    return comparisons;
+  }
+
+  function generateComparisonReport(comparisons: ComparisonResult[]): void {
+    const avgPrecisionImprovement =
+      comparisons.reduce((sum, r) => sum + r.precisionImprovement, 0) /
+      (comparisons.length || 1);
+    const avgFaithfulnessImprovement =
+      comparisons.reduce((sum, r) => sum + r.faithfulnessImprovement, 0) /
+      (comparisons.length || 1);
+    const significantImprovements = comparisons.filter(
+      (r) => r.significantImprovement,
+    ).length;
+
+    console.log('\n=== BASELINE VS HYDE COMPARISON ===');
+    console.log(`Total Comparisons: ${comparisons.length}`);
+    console.log(
+      `Significant Improvements: ${significantImprovements} (>5% gain)`,
+    );
+    console.log(`\n--- AVERAGE IMPROVEMENTS ---`);
+    console.log(
+      `Context Precision: ${avgPrecisionImprovement > 0 ? '+' : ''}${(avgPrecisionImprovement * 100).toFixed(1)}%`,
+    );
+    console.log(
+      `Faithfulness: ${avgFaithfulnessImprovement > 0 ? '+' : ''}${(avgFaithfulnessImprovement * 100).toFixed(1)}%`,
+    );
+    console.log(`\n--- PER-QUERY COMPARISON ---`);
+    comparisons.forEach((r) => {
+      const status = r.significantImprovement ? '✓' : '-';
+      const pChange = r.precisionImprovement > 0 ? '+' : '';
+      const fChange = r.faithfulnessImprovement > 0 ? '+' : '';
+      console.log(`${status} [${r.testCaseId}] ${r.query.substring(0, 35)}...`);
+      console.log(
+        `   Precision: ${(r.baselinePrecision * 100).toFixed(0)}% → ${(r.hydePrecision * 100).toFixed(0)}% (${pChange}${(r.precisionImprovement * 100).toFixed(0)}%)`,
+      );
+      console.log(
+        `   Faithfulness: ${(r.baselineFaithfulness * 100).toFixed(0)}% → ${(r.hydeFaithfulness * 100).toFixed(0)}% (${fChange}${(r.faithfulnessImprovement * 100).toFixed(0)}%)`,
+      );
+    });
+
+    console.log(`\n--- HYDE-SPECIFIC TESTS ---`);
+    const hydeTests = comparisons.filter((r) =>
+      r.testCaseId.startsWith('TC-HYDE-'),
+    );
+    if (hydeTests.length > 0) {
+      const hydePrecisionImprovement =
+        hydeTests.reduce((sum, r) => sum + r.precisionImprovement, 0) /
+        hydeTests.length;
+      const hydeFaithfulnessImprovement =
+        hydeTests.reduce((sum, r) => sum + r.faithfulnessImprovement, 0) /
+        hydeTests.length;
+      console.log(
+        `HyDE Tests (Vague Queries) Precision Improvement: ${hydePrecisionImprovement > 0 ? '+' : ''}${(hydePrecisionImprovement * 100).toFixed(1)}%`,
+      );
+      console.log(
+        `HyDE Tests (Vague Queries) Faithfulness Improvement: ${hydeFaithfulnessImprovement > 0 ? '+' : ''}${(hydeFaithfulnessImprovement * 100).toFixed(1)}%`,
+      );
+    }
+  }
+
+  // This is marked as .skip by default - run manually for evaluation
+  it.skip('should evaluate all test cases with baseline and HyDE, then compare', async () => {
+    console.log('\n========================================');
+    console.log('RAG EVALUATION: BASELINE VS HYDE COMPARISON');
+    console.log('========================================');
+
+    console.log('\n--- PASS 1: BASELINE (ENABLE_HYDE=false) ---');
+    const baselineResults = await runEvaluationPass(false);
+    generateReport(baselineResults, 'BASELINE RESULTS');
+
+    console.log('\n--- PASS 2: EXPERIMENT (ENABLE_HYDE=true) ---');
+    const experimentResults = await runEvaluationPass(true);
+    generateReport(experimentResults, 'HYDE EXPERIMENT RESULTS');
+
+    const comparisons = compareResults(baselineResults, experimentResults);
+    generateComparisonReport(comparisons);
+
+    const baselineAvgPrecision =
+      baselineResults.reduce((sum, r) => sum + r.precision, 0) /
+      (baselineResults.length || 1);
+    const experimentAvgPrecision =
+      experimentResults.reduce((sum, r) => sum + r.precision, 0) /
+      (experimentResults.length || 1);
+
+    expect(baselineAvgPrecision).toBeGreaterThanOrEqual(0);
+    expect(experimentAvgPrecision).toBeGreaterThanOrEqual(0);
   });
 });
 

@@ -245,7 +245,7 @@ describe('AiAnalysisService', () => {
       );
 
       expect(mockRerank).toHaveBeenCalledWith({
-        model: 'rerank-v3.5',
+        model: 'rerank-v4.0-pro',
         query: 'test query',
         documents: ['First', 'Second'],
         topN: 2,
