@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { KnowledgeBaseService, BM25Result } from './knowledge-base.service';
+import { KnowledgeBaseService } from './knowledge-base.service';
 import { AiAnalysisService } from '../ai-analysis/ai-analysis.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
@@ -225,9 +225,7 @@ describe('RAG Evaluation Framework', () => {
 
     // Mocking findSimilar for the purpose of this test file structure validation
     // In a real evaluation, this would call the actual implementation
-    jest
-      .spyOn(knowledgeBaseService, 'findSimilar')
-      .mockImplementation(async () => []);
+    jest.spyOn(knowledgeBaseService, 'findSimilar').mockResolvedValue([]);
   });
 
   // This is marked as .skip by default - run manually for evaluation

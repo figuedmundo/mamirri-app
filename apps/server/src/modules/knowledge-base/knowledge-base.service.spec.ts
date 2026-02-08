@@ -58,8 +58,8 @@ describe('KnowledgeBaseService', () => {
 
     (service as any).generateEmbeddingsBatch = jest
       .fn()
-      .mockImplementation(async (texts: string[]) =>
-        texts.map(() => new Array(768).fill(0)),
+      .mockImplementation((texts: string[]) =>
+        Promise.resolve(texts.map(() => new Array(768).fill(0))),
       );
   });
 
@@ -197,12 +197,12 @@ describe('KnowledgeBaseService', () => {
       const mockDenseResults = [{ id: '1', similarity: 0.9 }];
       const mockBM25Results: any[] = [];
 
-      mockPrisma.$queryRaw.mockImplementation(async (query: any) => {
+      mockPrisma.$queryRaw.mockImplementation((query: any) => {
         const sqlString = JSON.stringify(query);
         if (sqlString.includes('ts_rank')) {
-          return mockBM25Results;
+          return Promise.resolve(mockBM25Results);
         }
-        return mockDenseResults;
+        return Promise.resolve(mockDenseResults);
       });
 
       const results = await service.findSimilar('query');
@@ -299,8 +299,8 @@ describe('KnowledgeBaseService', () => {
       const text = 'First sentence. Second sentence. Third sentence.';
       (service as any).generateEmbeddingsBatch = jest
         .fn()
-        .mockImplementation(async (texts: string[]) =>
-          texts.map(() => new Array(768).fill(0.1)),
+        .mockImplementation((texts: string[]) =>
+          Promise.resolve(texts.map(() => new Array(768).fill(0.1))),
         );
 
       const result = await (service as any).semanticChunk(text, {
@@ -317,8 +317,8 @@ describe('KnowledgeBaseService', () => {
       const text = 'Paragraph one.\n\nParagraph two.';
       (service as any).generateEmbeddingsBatch = jest
         .fn()
-        .mockImplementation(async (texts: string[]) =>
-          texts.map(() => new Array(768).fill(0.1)),
+        .mockImplementation((texts: string[]) =>
+          Promise.resolve(texts.map(() => new Array(768).fill(0.1))),
         );
 
       const result = await (service as any).semanticChunk(text);
@@ -343,16 +343,18 @@ describe('KnowledgeBaseService', () => {
       const text = 'Cat eats. Dog barks. Car drives. Bus stops.';
       (service as any).generateEmbeddingsBatch = jest
         .fn()
-        .mockImplementation(async (texts: string[]) =>
-          texts.map((t) => {
-            const vec = new Array(768).fill(0);
-            if (t.includes('Cat') || t.includes('Dog')) {
-              vec[0] = 1;
-            } else {
-              vec[1] = 1;
-            }
-            return vec;
-          }),
+        .mockImplementation((texts: string[]) =>
+          Promise.resolve(
+            texts.map((t) => {
+              const vec = new Array(768).fill(0);
+              if (t.includes('Cat') || t.includes('Dog')) {
+                vec[0] = 1;
+              } else {
+                vec[1] = 1;
+              }
+              return vec;
+            }),
+          ),
         );
 
       const result = await (service as any).semanticChunk(text, {
@@ -371,8 +373,8 @@ describe('KnowledgeBaseService', () => {
 
       (service as any).generateEmbeddingsBatch = jest
         .fn()
-        .mockImplementation(async (texts: string[]) =>
-          texts.map(() => new Array(768).fill(0.1)),
+        .mockImplementation((texts: string[]) =>
+          Promise.resolve(texts.map(() => new Array(768).fill(0.1))),
         );
 
       // Force small chunks to trigger multiple chunks creation
