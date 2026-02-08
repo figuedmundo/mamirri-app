@@ -73,90 +73,6 @@ export class KnowledgeBaseService {
 
   private async dockerImageExists(imageName: string): Promise<boolean> {
     try {
-      const { stdout } = await exec(`docker images -q ${imageName}`, { timeout: 10000 });
-      return stdout.trim().length > 0;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  private async buildDockerImage(imageName: string): Promise<void> {
-    this.logger.log(`Building Docker image: ${imageName}`);
-    const doclingDir = path.join(process.cwd(), 'apps', 'workers', 'docling');
-
-    if (!fs.existsSync(doclingDir)) {
-      this.logger.warn(`Docling directory not found: ${doclingDir}`);
-      throw new Error('Docling worker directory not found');
-    }
-
-    try {
-      const { stdout, stderr } = await exec(
-        `docker build -t ${imageName} "${doclingDir}"`,
-        { timeout: 300000 }, // 5 minutes timeout for building
-      );
-
-      if (stderr && !stderr.includes('Sending build context') && !stderr.includes('Step')) {
-        this.logger.warn(`Docker build warnings: ${stderr}`);
-      }
-
-      this.logger.log(`Docker image built successfully: ${imageName}`);
-    } catch (error) {
-      this.logger.error(`Failed to build Docker image: ${error.message}`);
-      throw error;
-    }
-  }
-
-  /**
-   * Extract text from PDF using Docling Docker container.
-   * Automatically builds the image if needed.
-   * Falls back to pdf-parse if Docker is not available.
-   */
-  private async extractPdfWithDocling(filePath: string): Promise<string> {
-    const imageName = 'docling-worker:latest';
-    const absolutePath = path.resolve(filePath);
-
-    const dockerAvailable = await this.isDockerAvailable();
-    if (!dockerAvailable) {
-      this.logger.warn('Docker not available, falling back to pdf-parse');
-      return this.extractPdfWithPdfParse(filePath);
-    }
-
-    const imageExists = await this.dockerImageExists(imageName);
-    if (!imageExists) {
-      this.logger.log('Docling-worker image not found. Building... (this may take a few minutes)');
-      try {
-        await this.buildDockerImage(imageName);
-      } catch (error) {
-        this.logger.warn(`Failed to build Docker image: ${error.message}. Falling back to pdf-parse`);
-        return this.extractPdfWithPdfParse(filePath);
-      }
-    }
-
-    try {
-      this.logger.log(`Extracting PDF using Docling Docker: ${filePath}`);
-      const { stdout, stderr } = await exec(
-        `docker run --rm -v "${absolutePath}:/input.pdf" ${imageName} /input.pdf`,
-        { encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024, timeout: 120000 }, // 120MB buffer, 2 min timeout
-      );
-
-      if (stderr && stderr.toLowerCase().includes('error')) {
-        this.logger.warn(`Docling execution error: ${stderr}. Falling back to pdf-parse`);
-        return this.extractPdfWithPdfParse(filePath);
-      }
-
-      return stdout;
-    } catch (error) {
-      this.logger.warn(`Failed to run Docling container: ${error.message}. Falling back to pdf-parse`);
-      return this.extractPdfWithPdfParse(filePath);
-    }
-  }
-  }
-
-  /**
-   * Check if the docling-worker Docker image exists.
-   */
-  private async dockerImageExists(imageName: string): Promise<boolean> {
-    try {
       const { stdout } = await exec(`docker images -q ${imageName}`, {
         timeout: 10000,
       });
@@ -166,9 +82,6 @@ export class KnowledgeBaseService {
     }
   }
 
-  /**
-   * Build the docling-worker Docker image.
-   */
   private async buildDockerImage(imageName: string): Promise<void> {
     this.logger.log(`Building Docker image: ${imageName}`);
     const doclingDir = path.join(process.cwd(), 'apps', 'workers', 'docling');
@@ -208,14 +121,12 @@ export class KnowledgeBaseService {
     const imageName = 'docling-worker:latest';
     const absolutePath = path.resolve(filePath);
 
-    // Check if Docker is available
     const dockerAvailable = await this.isDockerAvailable();
     if (!dockerAvailable) {
       this.logger.warn('Docker not available, falling back to pdf-parse');
       return this.extractPdfWithPdfParse(filePath);
     }
 
-    // Check if image exists, build if needed
     const imageExists = await this.dockerImageExists(imageName);
     if (!imageExists) {
       this.logger.log(
@@ -231,7 +142,6 @@ export class KnowledgeBaseService {
       }
     }
 
-    // Run Docker container for PDF extraction
     try {
       this.logger.log(`Extracting PDF using Docling Docker: ${filePath}`);
       const { stdout, stderr } = await exec(
