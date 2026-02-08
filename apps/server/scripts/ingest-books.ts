@@ -6,6 +6,20 @@ import * as path from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 
+const args = process.argv.slice(2);
+const useSemanticChunking = args.includes('--semantic-chunking');
+
+if (useSemanticChunking) {
+  console.log(
+    '🧠 Semantic chunking ENABLED (requires ~28K embeddings per large book)',
+  );
+  console.log('⚠️  Make sure you have sufficient API quota or paid tier.\n');
+} else {
+  console.log(
+    '📄 Using naive chunking (quota-friendly, ~800 embeddings per book)\n',
+  );
+}
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -45,7 +59,7 @@ async function bootstrap() {
     const absFilePath = path.join(serverDir, relFilePath);
 
     try {
-      await knowledgeBaseService.ingestFile(relFilePath);
+      await knowledgeBaseService.ingestFile(relFilePath, useSemanticChunking);
 
       const safeTitle = file.replace(/\.pdf$/i, '').replace(/[^a-z0-9]/gi, '_');
       const backupPath = path.resolve(

@@ -53,7 +53,7 @@ export class KnowledgeBaseService {
 
   async ingestFile(
     filePath: string,
-    useSemanticChunking: boolean = true,
+    useSemanticChunking: boolean = false,
   ): Promise<void> {
     const absolutePath = path.resolve(filePath);
     if (!fs.existsSync(absolutePath)) {
@@ -120,14 +120,18 @@ export class KnowledgeBaseService {
 
       const parentIds: string[] = [];
 
-      // 1. Insert parent chunks first
       if (parentChunks.length > 0) {
+        this.logger.log(
+          `Generating embeddings for ${parentChunks.length} parent chunks...`,
+        );
+        const parentEmbeddings = await this.generateEmbeddingsBatch(
+          parentChunks,
+          'RETRIEVAL_DOCUMENT',
+        );
+
         for (let i = 0; i < parentChunks.length; i++) {
           const content = parentChunks[i];
-          const vector = await this.generateEmbedding(
-            content,
-            'RETRIEVAL_DOCUMENT',
-          );
+          const vector = parentEmbeddings[i];
           const vectorString = `[${vector.join(',')}]`;
           const parentId = randomUUID();
           parentIds.push(parentId);
@@ -136,19 +140,21 @@ export class KnowledgeBaseService {
             INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
             VALUES (${parentId}::uuid, ${content}, 1, ${document.id}, ${vectorString}::vector, ${content})
           `;
-
-          // Sleep to avoid rate limits
-          await sleep(1500);
         }
+        this.logger.log(`Inserted ${parentChunks.length} parent chunks`);
       }
 
-      // 2. Insert child chunks with reference to parent
+      this.logger.log(
+        `Generating embeddings for ${chunks.length} child chunks...`,
+      );
+      const childEmbeddings = await this.generateEmbeddingsBatch(
+        chunks,
+        'RETRIEVAL_DOCUMENT',
+      );
+
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
-        const vector = await this.generateEmbedding(
-          content,
-          'RETRIEVAL_DOCUMENT',
-        );
+        const vector = childEmbeddings[i];
         const vectorString = `[${vector.join(',')}]`;
 
         let parentId: string | null = null;
@@ -167,13 +173,11 @@ export class KnowledgeBaseService {
           VALUES (gen_random_uuid(), ${content}, 1, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
         `;
 
-        if ((i + 1) % 10 === 0) {
+        if ((i + 1) % 100 === 0) {
           this.logger.log(
-            `Processed ${i + 1}/${chunks.length} chunks for ${meta.title}`,
+            `Inserted ${i + 1}/${chunks.length} chunks for ${meta.title}`,
           );
         }
-
-        await sleep(1500);
       }
       this.logger.log(`Successfully ingested ${meta.title}`);
     } catch (error) {
@@ -580,20 +584,11 @@ export class KnowledgeBaseService {
       return { chunks: [], parentChunks: [] };
     }
 
-    // 2. Generate embeddings for sentences (batched)
-    const embeddings: number[][] = [];
-    const batchSize = 10;
-
-    for (let i = 0; i < refinedSentences.length; i += batchSize) {
-      const batch = refinedSentences.slice(i, i + batchSize);
-      // Use concurrent processing with rate limit awareness
-      const batchPromises = batch.map((s) =>
-        this.generateEmbedding(s.text, 'RETRIEVAL_DOCUMENT'),
-      );
-      const batchEmbeddings = await Promise.all(batchPromises);
-      embeddings.push(...batchEmbeddings);
-      await sleep(2000); // Sleep between batches
-    }
+    const sentenceTexts = refinedSentences.map((s) => s.text);
+    const embeddings = await this.generateEmbeddingsBatch(
+      sentenceTexts,
+      'RETRIEVAL_DOCUMENT',
+    );
 
     // 3. Group sentences into chunks
     const chunks: string[] = [];
@@ -706,5 +701,87 @@ export class KnowledgeBaseService {
       { maxRetries: 5 },
       this.logger,
     );
+  }
+
+  /**
+   * Generate embeddings for multiple texts in a single API call.
+   * Gemini API supports batching up to 100 texts per request.
+   * This dramatically reduces API call count (e.g., 2800 calls -> ~30 calls).
+   *
+   * @param texts - Array of texts to embed (max 100 per batch)
+   * @param taskType - Type of embedding task
+   * @returns Array of embedding vectors in the same order as input texts
+   */
+  async generateEmbeddingsBatch(
+    texts: string[],
+    taskType: 'RETRIEVAL_DOCUMENT' | 'RETRIEVAL_QUERY' = 'RETRIEVAL_QUERY',
+  ): Promise<number[][]> {
+    const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
+
+    // Return mock embeddings if no API key
+    if (!apiKey) {
+      return texts.map((text) => {
+        const vector = new Array(768).fill(0);
+        vector[0] = text.length / 1000;
+        return vector;
+      });
+    }
+
+    if (texts.length === 0) {
+      return [];
+    }
+
+    // Gemini supports up to 100 texts per batch
+    const MAX_BATCH_SIZE = 100;
+    const allEmbeddings: number[][] = [];
+
+    for (let i = 0; i < texts.length; i += MAX_BATCH_SIZE) {
+      const batch = texts.slice(i, i + MAX_BATCH_SIZE);
+
+      const batchEmbeddings = await withRetry(
+        async () => {
+          // Pass array of strings directly to contents
+          const result = await this.genAI.models.embedContent({
+            model: 'gemini-embedding-001',
+            contents: batch,
+            config: {
+              taskType: taskType,
+              outputDimensionality: 768,
+            },
+          });
+
+          if (!result.embeddings || result.embeddings.length !== batch.length) {
+            throw new Error(
+              `Expected ${batch.length} embeddings, got ${result.embeddings?.length || 0}`,
+            );
+          }
+
+          return result.embeddings.map((e) => {
+            if (!e.values) {
+              throw new Error('Embedding missing values');
+            }
+            return e.values;
+          });
+        },
+        { maxRetries: 5 },
+        this.logger,
+      );
+
+      allEmbeddings.push(...batchEmbeddings);
+
+      // Log progress for large batches
+      if (texts.length > MAX_BATCH_SIZE) {
+        this.logger.log(
+          `Batch embedding progress: ${Math.min(i + MAX_BATCH_SIZE, texts.length)}/${texts.length}`,
+        );
+      }
+
+      // Small delay between batches to avoid rate limits
+      if (i + MAX_BATCH_SIZE < texts.length) {
+        await sleep(500);
+      }
+    }
+
+    return allEmbeddings;
   }
 }

@@ -55,6 +55,12 @@ describe('KnowledgeBaseService', () => {
     (service as any).generateEmbedding = jest
       .fn()
       .mockResolvedValue(new Array(768).fill(0));
+
+    (service as any).generateEmbeddingsBatch = jest
+      .fn()
+      .mockImplementation(async (texts: string[]) =>
+        texts.map(() => new Array(768).fill(0)),
+      );
   });
 
   it('should be defined', () => {
@@ -88,6 +94,28 @@ describe('KnowledgeBaseService', () => {
 
       expect((prisma as any).document.create).not.toHaveBeenCalled();
     });
+
+    it('should use naive chunking by default (useSemanticChunking=false)', async () => {
+      mockPrisma.document.findUnique.mockResolvedValue(null);
+      const chunkTextSpy = jest.spyOn(service as any, 'chunkText');
+      const semanticChunkSpy = jest.spyOn(service as any, 'semanticChunk');
+
+      await service.ingestFile('data/books/test.pdf');
+
+      expect(chunkTextSpy).toHaveBeenCalled();
+      expect(semanticChunkSpy).not.toHaveBeenCalled();
+    }, 30000);
+
+    it('should use semantic chunking when explicitly enabled', async () => {
+      mockPrisma.document.findUnique.mockResolvedValue(null);
+      const semanticChunkSpy = jest
+        .spyOn(service as any, 'semanticChunk')
+        .mockResolvedValue({ chunks: ['chunk1'], parentChunks: ['parent1'] });
+
+      await service.ingestFile('data/books/test.pdf', true);
+
+      expect(semanticChunkSpy).toHaveBeenCalled();
+    }, 30000);
   });
 
   describe('findSimilar', () => {
@@ -269,9 +297,11 @@ describe('KnowledgeBaseService', () => {
   describe('semanticChunk', () => {
     it('should split text preserving sentence boundaries', async () => {
       const text = 'First sentence. Second sentence. Third sentence.';
-      (service as any).generateEmbedding = jest
+      (service as any).generateEmbeddingsBatch = jest
         .fn()
-        .mockResolvedValue(new Array(768).fill(0.1));
+        .mockImplementation(async (texts: string[]) =>
+          texts.map(() => new Array(768).fill(0.1)),
+        );
 
       const result = await (service as any).semanticChunk(text, {
         similarityThreshold: 0.85,
@@ -285,9 +315,11 @@ describe('KnowledgeBaseService', () => {
 
     it('should respect paragraph boundaries', async () => {
       const text = 'Paragraph one.\n\nParagraph two.';
-      (service as any).generateEmbedding = jest
+      (service as any).generateEmbeddingsBatch = jest
         .fn()
-        .mockResolvedValue(new Array(768).fill(0.1));
+        .mockImplementation(async (texts: string[]) =>
+          texts.map(() => new Array(768).fill(0.1)),
+        );
 
       const result = await (service as any).semanticChunk(text);
 
@@ -309,18 +341,19 @@ describe('KnowledgeBaseService', () => {
 
     it('should group similar sentences together', async () => {
       const text = 'Cat eats. Dog barks. Car drives. Bus stops.';
-      // Mock embeddings: Cat/Dog similar, Car/Bus similar, but Cat/Car different
-      (service as any).generateEmbedding = jest
+      (service as any).generateEmbeddingsBatch = jest
         .fn()
-        .mockImplementation(async (t) => {
-          const vec = new Array(768).fill(0);
-          if (t.includes('Cat') || t.includes('Dog')) {
-            vec[0] = 1; // [1, 0, ...]
-          } else {
-            vec[1] = 1; // [0, 1, ...]
-          }
-          return vec;
-        });
+        .mockImplementation(async (texts: string[]) =>
+          texts.map((t) => {
+            const vec = new Array(768).fill(0);
+            if (t.includes('Cat') || t.includes('Dog')) {
+              vec[0] = 1;
+            } else {
+              vec[1] = 1;
+            }
+            return vec;
+          }),
+        );
 
       const result = await (service as any).semanticChunk(text, {
         similarityThreshold: 0.8,
@@ -336,9 +369,11 @@ describe('KnowledgeBaseService', () => {
       const sentence = 'This is a test sentence.';
       const text = Array(20).fill(sentence).join(' '); // 20 sentences
 
-      (service as any).generateEmbedding = jest
+      (service as any).generateEmbeddingsBatch = jest
         .fn()
-        .mockResolvedValue(new Array(768).fill(0.1));
+        .mockImplementation(async (texts: string[]) =>
+          texts.map(() => new Array(768).fill(0.1)),
+        );
 
       // Force small chunks to trigger multiple chunks creation
       // With 20 sentences, if targetChunkSize is very small, we get many chunks.
@@ -349,6 +384,51 @@ describe('KnowledgeBaseService', () => {
 
       expect(result.chunks.length).toBeGreaterThan(5);
       expect(result.parentChunks.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('generateEmbeddingsBatch', () => {
+    it('should return mock embeddings when no API key', async () => {
+      const mockConfigNoKey = { get: jest.fn().mockReturnValue(null) };
+      const moduleNoKey: TestingModule = await Test.createTestingModule({
+        providers: [
+          KnowledgeBaseService,
+          { provide: PrismaService, useValue: mockPrisma },
+          { provide: ConfigService, useValue: mockConfigNoKey },
+        ],
+      }).compile();
+      const serviceNoKey =
+        moduleNoKey.get<KnowledgeBaseService>(KnowledgeBaseService);
+
+      const texts = ['Hello world', 'Goodbye world'];
+      const result = await serviceNoKey.generateEmbeddingsBatch(texts);
+
+      expect(result.length).toBe(2);
+      expect(result[0].length).toBe(768);
+      expect(result[1].length).toBe(768);
+    });
+
+    it('should return empty array for empty input', async () => {
+      const result = await service.generateEmbeddingsBatch([]);
+      expect(result).toEqual([]);
+    });
+
+    it('should return embeddings proportional to text length for mock', async () => {
+      const mockConfigNoKey = { get: jest.fn().mockReturnValue(null) };
+      const moduleNoKey: TestingModule = await Test.createTestingModule({
+        providers: [
+          KnowledgeBaseService,
+          { provide: PrismaService, useValue: mockPrisma },
+          { provide: ConfigService, useValue: mockConfigNoKey },
+        ],
+      }).compile();
+      const serviceNoKey =
+        moduleNoKey.get<KnowledgeBaseService>(KnowledgeBaseService);
+
+      const texts = ['short', 'this is a much longer text for testing'];
+      const result = await serviceNoKey.generateEmbeddingsBatch(texts);
+
+      expect(result[0][0]).toBeLessThan(result[1][0]);
     });
   });
 });
