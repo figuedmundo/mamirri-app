@@ -16,7 +16,7 @@ if (useSemanticChunking) {
   console.log('⚠️  Make sure you have sufficient API quota or paid tier.\n');
 } else {
   console.log(
-    '📄 Using naive chunking (quota-friendly, ~800 embeddings per book)\n',
+    '📄 Using naive chunking (quota-friendly)\n',
   );
 }
 
