@@ -84,11 +84,7 @@ describe('KnowledgeBaseService - Rerank with Cohere v4.0', () => {
       ];
 
       // Access the private rerank method
-      const rerankedDocuments = await (service as any).rerank(
-        query,
-        documents,
-        3,
-      );
+      await (service as any).rerank(query, documents, 3);
 
       // Verify the Cohere API was called with the correct model
       expect(mockCohereClient.v2.rerank).toHaveBeenCalledWith({

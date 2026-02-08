@@ -65,7 +65,7 @@ export class KnowledgeBaseService {
     try {
       const { stdout } = await exec('docker --version', { timeout: 5000 });
       return stdout.includes('Docker');
-    } catch (error) {
+    } catch (_error) {
       this.logger.warn('Docker is not available or not running');
       return false;
     }
@@ -77,7 +77,7 @@ export class KnowledgeBaseService {
         timeout: 10000,
       });
       return stdout.trim().length > 0;
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   }
@@ -134,9 +134,9 @@ export class KnowledgeBaseService {
       );
       try {
         await this.buildDockerImage(imageName);
-      } catch (error) {
+      } catch (_error) {
         this.logger.warn(
-          `Failed to build Docker image: ${error.message}. Falling back to pdf-parse`,
+          `Failed to build Docker image: ${_error.message}. Falling back to pdf-parse`,
         );
         return this.extractPdfWithPdfParse(filePath);
       }
@@ -157,9 +157,9 @@ export class KnowledgeBaseService {
       }
 
       return stdout;
-    } catch (error) {
+    } catch (_error) {
       this.logger.warn(
-        `Failed to run Docling container: ${error.message}. Falling back to pdf-parse`,
+        `Failed to run Docling container: ${_error.message}. Falling back to pdf-parse`,
       );
       return this.extractPdfWithPdfParse(filePath);
     }
@@ -231,9 +231,19 @@ export class KnowledgeBaseService {
             `Semantic chunking failed: ${error.message}. Falling back to naive chunking.`,
           );
           chunks = this.chunkText(pdfText);
+          for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
+            parentChunks.push(
+              chunks.slice(i, i + this.chunksPerParent).join(' '),
+            );
+          }
         }
       } else {
         chunks = this.chunkText(pdfText);
+        for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
+          parentChunks.push(
+            chunks.slice(i, i + this.chunksPerParent).join(' '),
+          );
+        }
       }
 
       this.logger.log(

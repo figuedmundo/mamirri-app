@@ -1,8 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { AiAnalysisService } from './ai-analysis.service';
-import { RagChunk } from './interfaces/analysis.interfaces';
 import { PrismaService } from '../../prisma/prisma.service';
 import { KnowledgeBaseService } from '../knowledge-base/knowledge-base.service';
 import { AnonymizerService } from './services/anonymizer.service';
@@ -26,7 +24,6 @@ jest.mock('@google/genai', () => ({
 describe('AiAnalysisService - HyDE Flow', () => {
   let service: AiAnalysisService;
   let knowledgeBaseService: jest.Mocked<KnowledgeBaseService>;
-  let dataAggregationService: jest.Mocked<DataAggregationService>;
   let mockGenAI: jest.Mocked<GoogleGenAI>;
 
   const mockClinicalCase = {
@@ -134,7 +131,6 @@ describe('AiAnalysisService - HyDE Flow', () => {
 
     service = module.get<AiAnalysisService>(AiAnalysisService);
     knowledgeBaseService = module.get(KnowledgeBaseService);
-    dataAggregationService = module.get(DataAggregationService);
     (service as any).genAI = mockGenAI;
   });
 
@@ -275,7 +271,6 @@ describe('AiAnalysisService - HyDE Flow', () => {
 
       service = module.get<AiAnalysisService>(AiAnalysisService);
       knowledgeBaseService = module.get(KnowledgeBaseService);
-      dataAggregationService = module.get(DataAggregationService);
       (service as any).genAI = mockGenAI;
     });
 
@@ -393,7 +388,6 @@ describe('AiAnalysisService - HyDE Flow', () => {
 
       service = module.get<AiAnalysisService>(AiAnalysisService);
       knowledgeBaseService = module.get(KnowledgeBaseService);
-      dataAggregationService = module.get(DataAggregationService);
       (service as any).genAI = mockGenAI;
     });
 
@@ -470,7 +464,6 @@ describe('AiAnalysisService - HyDE Flow', () => {
 
       service = module.get<AiAnalysisService>(AiAnalysisService);
       knowledgeBaseService = module.get(KnowledgeBaseService);
-      dataAggregationService = module.get(DataAggregationService);
       (service as any).genAI = mockGenAI;
     });
 
@@ -538,7 +531,6 @@ describe('AiAnalysisService - HyDE Flow', () => {
 
       service = module.get<AiAnalysisService>(AiAnalysisService);
       knowledgeBaseService = module.get(KnowledgeBaseService);
-      dataAggregationService = module.get(DataAggregationService);
       (service as any).genAI = mockGenAI;
     });
 
