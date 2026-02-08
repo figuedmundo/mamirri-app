@@ -40,5 +40,19 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "dotenv": "^17.2.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@prisma/engines",
+      "@scarf/scarf",
+      "@sentry-internal/node-cpu-profiler",
+      "bcrypt",
+      "core-js",
+      "esbuild",
+      "prisma",
+      "protobufjs",
+      "unrs-resolver"
+    ]
   }
 }
