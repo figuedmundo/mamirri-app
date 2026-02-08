@@ -61,6 +61,17 @@ describe('KnowledgeBaseService', () => {
       .mockImplementation((texts: string[]) =>
         Promise.resolve(texts.map(() => new Array(768).fill(0))),
       );
+
+    // Mock private methods to avoid Docker and external API calls
+    (service as any).extractPdfWithDocling = jest
+      .fn()
+      .mockResolvedValue('Mocked PDF content from Docling');
+
+    (service as any).extractMetadata = jest.fn().mockResolvedValue({
+      title: 'Mock Title',
+      author: 'Mock Author',
+      year: 2024,
+    });
   });
 
   it('should be defined', () => {

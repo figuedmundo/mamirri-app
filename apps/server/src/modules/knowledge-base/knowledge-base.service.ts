@@ -84,7 +84,7 @@ export class KnowledgeBaseService {
 
   private async buildDockerImage(imageName: string): Promise<void> {
     this.logger.log(`Building Docker image: ${imageName}`);
-    const doclingDir = path.join(process.cwd(), 'apps', 'workers', 'docling');
+    const doclingDir = path.join(process.cwd(), '..', 'workers', 'docling');
 
     if (!fs.existsSync(doclingDir)) {
       this.logger.warn(`Docling directory not found: ${doclingDir}`);
