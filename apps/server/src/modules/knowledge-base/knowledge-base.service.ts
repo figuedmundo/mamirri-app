@@ -267,7 +267,7 @@ export class KnowledgeBaseService {
           const parentId = randomUUID();
           parentIds.push(parentId);
 
-          await this.prisma.$executeRaw`
+          await (this.prisma as any).$executeRaw`
             INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
             VALUES (${parentId}::uuid, ${content}, 1, ${document.id}, ${vectorString}::vector, ${content})
           `;
@@ -306,7 +306,7 @@ export class KnowledgeBaseService {
           }
         }
 
-        await this.prisma.$executeRaw`
+        await (this.prisma as any).$executeRaw`
           INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
           VALUES (gen_random_uuid(), ${content}, 1, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
         `;
@@ -482,7 +482,7 @@ export class KnowledgeBaseService {
       whereClause = Prisma.sql`${whereClause} AND d.metadata->>'volume' = ${filters.volume}`;
     }
 
-    const results: any[] = await this.prisma.$queryRaw`
+    const results: any[] = await (this.prisma as any).$queryRaw`
       SELECT 
         e.id,
         e.content,
@@ -528,7 +528,7 @@ export class KnowledgeBaseService {
     }
 
     // Using plainto_tsquery for natural language query handling
-    const results: any[] = await this.prisma.$queryRaw`
+    const results: any[] = await (this.prisma as any).$queryRaw`
       SELECT 
         e.id,
         e.content,
