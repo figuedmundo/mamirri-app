@@ -16,10 +16,10 @@ model User {
   role              String             @default("THERAPIST")
   createdAt         DateTime           @default(now())
   pinHash           String?
-  phone             String?
-  profilePhotoUrl   String?
   clinicName        String?
   licenseNumber     String?
+  phone             String?
+  profilePhotoUrl   String?
   specialty         String?
   yearsExperience   Int?
   patients          Patient[]
@@ -148,10 +148,10 @@ model Footprint {
   date         DateTime
   url          String
   analysis     Json?
-  analyzedAt   DateTime?
   comparison   Json?
   evaluationId String
   side         String     @default("unknown")
+  analyzedAt   DateTime?
   evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
 
   @@map("footprints")
@@ -207,13 +207,19 @@ model Document {
   @@map("documents")
 }
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model Embedding {
-  id         String                @id @default(uuid())
-  content    String
-  vector     Unsupported("vector")
-  pageNumber Int
-  documentId String
-  document   Document              @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  id            String                @id @default(uuid())
+  content       String
+  vector        Unsupported("vector")
+  pageNumber    Int
+  documentId    String
+  parentContent String?
+  parentId      String?
+  document      Document              @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  parent        Embedding?            @relation("ParentChild", fields: [parentId], references: [id])
+  children      Embedding[]           @relation("ParentChild")
 
+  @@index([vector])
   @@map("embeddings")
 }

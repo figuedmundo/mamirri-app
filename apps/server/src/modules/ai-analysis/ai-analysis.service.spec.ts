@@ -2,12 +2,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { AiAnalysisService } from './ai-analysis.service';
+import { RagChunk } from './interfaces/analysis.interfaces';
 import { PrismaService } from '../../prisma/prisma.service';
 import { KnowledgeBaseService } from '../knowledge-base/knowledge-base.service';
 import { AnonymizerService } from './services/anonymizer.service';
 import { TranslatorService } from './services/translator.service';
 import { PromptBuilderService } from './services/prompt-builder.service';
 import { DataAggregationService } from './services/data-aggregation.service';
+
+jest.mock('../transcription/utils/retry', () => ({
+  withRetry: jest.fn().mockImplementation((fn) => fn()),
+}));
 
 describe('AiAnalysisService', () => {
   let service: AiAnalysisService;
@@ -198,6 +203,111 @@ describe('AiAnalysisService', () => {
 
       expect(result.metadata).toHaveProperty('visionAnalysis');
       expect(result.metadata.visionAnalysis?.totalImages).toBe(1);
+    });
+  });
+
+  describe('rerankChunks', () => {
+    it('should call Cohere API with correct parameters', async () => {
+      // Mock cohereClient.rerank
+      const mockRerank = jest.fn().mockResolvedValue({
+        results: [
+          { index: 1, relevanceScore: 0.95 },
+          { index: 0, relevanceScore: 0.8 },
+        ],
+      });
+      (service as any).cohereClient = { rerank: mockRerank };
+
+      const chunks: RagChunk[] = [
+        {
+          content: 'First',
+          similarity: 0.9,
+          pageNumber: 1,
+          documentTitle: 'Title 1',
+          documentAuthor: 'Author 1',
+          documentFilePath: 'path/1',
+          documentMetadata: {},
+        },
+        {
+          content: 'Second',
+          similarity: 0.8,
+          pageNumber: 2,
+          documentTitle: 'Title 2',
+          documentAuthor: 'Author 2',
+          documentFilePath: 'path/2',
+          documentMetadata: {},
+        },
+      ];
+
+      const result = await (service as any).rerankChunks(
+        'test query',
+        chunks,
+        2,
+      );
+
+      expect(mockRerank).toHaveBeenCalledWith({
+        model: 'rerank-v4.0-pro',
+        query: 'test query',
+        documents: ['First', 'Second'],
+        topN: 2,
+      });
+
+      // Verify reordering
+      expect(result[0].content).toBe('Second'); // index 1 ranked first
+      expect(result[0].relevanceScore).toBe(0.95);
+    });
+
+    it('should gracefully degrade when Cohere API fails', async () => {
+      const mockRerank = jest.fn().mockRejectedValue(new Error('API Error'));
+      (service as any).cohereClient = { rerank: mockRerank };
+
+      const chunks: RagChunk[] = [
+        {
+          content: 'First',
+          similarity: 0.9,
+          pageNumber: 1,
+          documentTitle: 'Title 1',
+          documentAuthor: 'Author 1',
+          documentFilePath: 'path/1',
+          documentMetadata: {},
+        },
+        {
+          content: 'Second',
+          similarity: 0.8,
+          pageNumber: 2,
+          documentTitle: 'Title 2',
+          documentAuthor: 'Author 2',
+          documentFilePath: 'path/2',
+          documentMetadata: {},
+        },
+      ];
+
+      const result = await (service as any).rerankChunks(
+        'test query',
+        chunks,
+        2,
+      );
+
+      // Should return original order (fallback)
+      expect(result[0].content).toBe('First');
+    });
+
+    it('should skip reranking when COHERE_API_KEY is not set', async () => {
+      (service as any).cohereClient = null;
+
+      const chunks: RagChunk[] = [
+        {
+          content: 'Test',
+          similarity: 0.9,
+          pageNumber: 1,
+          documentTitle: 'Title',
+          documentAuthor: 'Author',
+          documentFilePath: 'path',
+          documentMetadata: {},
+        },
+      ];
+      const result = await (service as any).rerankChunks('query', chunks, 1);
+
+      expect(result).toEqual(chunks);
     });
   });
 });

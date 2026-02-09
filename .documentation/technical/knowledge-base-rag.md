@@ -18,40 +18,96 @@ The process is divided into two main phases: Ingestion and Retrieval.
 
 ### Phase 1: Ingestion (Building the Library)
 
-Before the AI can search books, they must be processed into a format it can understand:
+The ingestion process is decoupled into two steps to ensure high-quality data and allow for manual review.
 
-1. **Extraction**: Mamirri reads PDF files from `apps/server/data/books`.
-2. **Chunking**: Large books are broken down into smaller "chunks" of about 500 words. This ensures the AI can pinpoint specific sections rather than reading an entire chapter.
-3. **Embedding**: Each chunk is converted into a list of numbers called a "vector" using Google Gemini's latest `gemini-embedding-001` model (released in 2025).
-   - **Task Type**: We use `RETRIEVAL_DOCUMENT` during ingestion to optimize the vector for being searched.
-   - **Dimensionality**: We use **768 dimensions** (truncated from 3072). This utilizes Matryoshka Representation Learning (MRL) to save 75% database space with virtually no loss in search quality.
-4. **Storage**: These vectors are stored in a PostgreSQL database using the `pgvector` extension.
+#### Step 1: Conversion (PDF → Markdown)
+
+First, we convert raw PDF files into a clean, reviewable Markdown format.
+
+1.  **Input**: Place PDF files in `apps/server/data/pdfs/`.
+2.  **Extraction**: The system uses **PyMuPDF4LLM** to extract text from the PDF. This tool is optimized for RAG, preserving layout, tables, and headers better than standard extractors.
+3.  **Metadata Extraction**: **Gemini 3 Flash** analyzes the first few pages to extract:
+    - Title
+    - Author
+    - Volume / Edition
+    - Publication Year
+4.  **Staging**: The result is saved as a Markdown file in `apps/server/data/markdowns/`.
+    - **Frontmatter**: A YAML header containing the extracted metadata (which you can manually edit if needed).
+    - **Content**: The full text of the book in Markdown.
+5.  **Archive**: The original PDF is moved to `apps/server/data/archive/pdfs/`.
+
+#### Step 2: Ingestion (Markdown → Vector DB)
+
+Once the Markdown files are in the staging area (`data/markdowns/`), they are processed into vectors.
+
+1.  **Input**: Reads `.md` files from `apps/server/data/markdowns/`.
+2.  **Chunking**: Breaks the text into chunks.
+    - **Naive Chunking** (default): ~500 words with overlap.
+    - **Semantic Chunking** (opt-in): Uses embeddings to find topic boundaries.
+3.  **Embedding**: Converts chunks to vectors using **Google Gemini** (`gemini-embedding-001`, 768 dim).
+4.  **Storage**: Saves vectors to PostgreSQL (`pgvector`).
+5.  **Finalizing**:
+    - Moves the Markdown file to the final library folder: `apps/server/data/books/`.
+    - Creates an **Atomic Backup** (`.sql.gz`) of the newly ingested book in `backups/library/`.
+
+#### Chunking Strategy Comparison
+
+| Strategy              | Embeddings per Book | API Quota Needed        | Best For                               |
+| --------------------- | ------------------- | ----------------------- | -------------------------------------- |
+| **Naive** (default)   | ~800-1,000          | Fits free tier (1K/day) | Most use cases, hobby projects         |
+| **Semantic** (opt-in) | ~25,000-30,000      | Requires paid tier      | Production with high-quality retrieval |
+
+**Why the difference?** Semantic chunking embeds every sentence to calculate similarity scores between adjacent sentences, then groups similar sentences into coherent chunks. This produces better topical boundaries but consumes ~30x more API quota.
 
 ### Phase 2: Retrieval (Finding the Answer)
 
 When a therapist needs a suggestion or searches the library:
 
-1. **Query Embedding**: Mamirri converts the search query (e.g., "huesos del cráneo") into a vector.
+1. **Query Transformation (HyDE)**: If `ENABLE_HYDE=true`, the system uses **Gemini 3 Flash** to generate a hypothetical "ideal" clinical description based on the query. This improves retrieval for vague symptom descriptions.
+   - **Diagnosis & Treatment**: Both use HyDE for expanded context.
+   - **Contraindications**: Always uses the original query to ensure strict keyword matching for safety.
+2. **Query Embedding**: Mamirri converts the search query (or the HyDE synthetic document) into a vector.
    - **Task Type**: We use `RETRIEVAL_QUERY` for the search term to ensure the best semantic match against indexed documents.
-2. **Semantic Search**: It compares this query vector against all the vectors in the database.
-3. **Ranking**: It finds the chunks with the most similar meaning using **Cosine Similarity** (`<=>` operator in pgvector).
-4. **Context**: These relevant chunks are then provided to the AI to generate a grounded response with citations (title and page number).
+3. **Hybrid Search**: Combines two retrieval methods for better results:
+   - **Dense (Vector) Search**: Finds semantically similar chunks using cosine similarity.
+   - **Sparse (BM25) Search**: Finds exact keyword matches using PostgreSQL full-text search.
+4. **Reciprocal Rank Fusion (RRF)**: Merges results from both methods using the formula `score = 1/(k + rank)` where k=60.
+5. **Reranking**: If `COHERE_API_KEY` is configured, results are reranked using **Cohere Rerank v4.0-pro**. This model is specifically trained for cross-encoder reranking, providing a massive boost in precision by evaluating the actual relationship between the query and each chunk.
+6. **Context**: The top-ranked chunks are provided to the AI to generate a grounded response with citations (title and page number).
+
+#### Search Architecture
+
+```
+Query: "dolor lumbar vago"
+         │
+         ├── HyDE (Gemini 3 Flash) ─── Synthetic Passage
+         │                               │
+         ├── Dense Search <──────────────┘
+         │   (semantic similarity)       │
+         │                               ├── RRF Fusion ── Rerank (Cohere v4) ── Top K Results
+         └── BM25 Search ───────────────┘
+             (exact keywords)
+```
 
 ## Operational Commands
 
 You can manage the knowledge base using these commands from the project root:
 
-| Command                                     | Description                                                                                                                                |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `pnpm knowledge:ingest`                     | Scans `apps/server/data/books/*.pdf` and generates embeddings for new files. AI automatically extracts Title, Author, Volume, and Edition. |
-| `pnpm knowledge:search "query"`             | Performs a semantic search across all ingested books.                                                                                      |
-| `pnpm knowledge:list`                       | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.                                                   |
-| `pnpm knowledge:update "ID" --options`      | Manually corrects or updates a book's metadata (title, author, volume, edition, year).                                                     |
-| `pnpm knowledge:clean "ID or filename.pdf"` | Removes a specific book and its embeddings from the database to allow re-ingestion.                                                        |
-| `pnpm knowledge:backup`                     | Creates a timestamped SQL backup of the entire vector database in the `backups/` folder.                                                   |
-| `pnpm knowledge:restore "path/to/file.sql"` | Restores the database from a backup file (Warning: Overwrites current data).                                                               |
-| `pnpm knowledge:stats`                      | Displays technical database statistics (total chunks per book).                                                                            |
-| `pnpm knowledge:wipe`                       | **DANGER**: Wipes all books and vectors from the database (useful before a clean import).                                                  |
+| Command                                        | Description                                                                                                     |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `pnpm knowledge:convert`                       | (Default) High-fidelity extraction using IBM Docling OCR for complex medical textbooks.                         |
+| `pnpm knowledge:convert -- --engine=pymupdf`   | Fast, rule-based extraction (legacy fallback).                                                                  |
+| `pnpm knowledge:convert -- --pages=1,10`       | Converts only a specific page range (useful for testing quality).                                               |
+| `pnpm knowledge:ingest`                        | Ingests Markdown files from `data/markdowns/` into the Vector DB. (Default: naive chunking).                    |
+| `pnpm knowledge:ingest -- --semantic-chunking` | Uses **semantic chunking** for higher-quality retrieval. Requires paid API tier or multiple days of free quota. |
+| `pnpm knowledge:search "query"`                | Performs a semantic search across all ingested books.                                                           |
+| `pnpm knowledge:list`                          | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.                        |
+| `pnpm knowledge:update "ID" --options`         | Manually corrects or updates a book's metadata (title, author, volume, edition, year).                          |
+| `pnpm knowledge:clean "ID or filename.pdf"`    | Removes a specific book and its embeddings from the database to allow re-ingestion.                             |
+| `pnpm knowledge:backup`                        | Creates a timestamped SQL backup of the entire vector database in the `backups/` folder.                        |
+| `pnpm knowledge:restore "path/to/file.sql"`    | Restores the database from a backup file (Warning: Overwrites current data).                                    |
+| `pnpm knowledge:stats`                         | Displays technical database statistics (total chunks per book).                                                 |
+| `pnpm knowledge:wipe`                          | **DANGER**: Wipes all books and vectors from the database (useful before a clean import).                       |
 
 ### Migration & Data Protection
 
@@ -126,12 +182,41 @@ pnpm knowledge:restore
 
 ### Adding books to the library
 
-1. Place your PDF files in `apps/server/data/books/`.
-2. Ensure you have a valid `GOOGLE_API_KEY` in your `.env` file.
-3. Run the ingestion command:
-   ```bash
-   pnpm knowledge:ingest
-   ```
+1.  **Place PDFs**: Put your PDF files in `apps/server/data/pdfs/`.
+2.  **Convert**: Run the conversion script to generate Markdown.
+    ```bash
+    pnpm knowledge:convert
+    ```
+3.  **Review**: Check the generated files in `apps/server/data/markdowns/`. You can edit the YAML frontmatter (Title, Author, Year) if needed.
+4.  **Ingest**: Run the ingestion command to vectorize.
+
+    ```bash
+    # Default: Naive chunking
+    pnpm knowledge:ingest
+
+    # Optional: Semantic chunking
+    pnpm knowledge:ingest -- --semantic-chunking
+    ```
+
+### API Quota Considerations
+
+Google Gemini's free tier has strict limits:
+
+| Limit                     | Free Tier | Paid Tier |
+| ------------------------- | --------- | --------- |
+| Requests per minute (RPM) | 100       | 1,000+    |
+| Requests per day (RPD)    | 1,000     | Unlimited |
+
+**Important**: Gemini counts quota **per text embedded**, not per API call. Batching 100 texts in one request still consumes 100 quota units.
+
+#### Recommended Approach by Use Case
+
+| Use Case                         | Chunking Strategy | Quota Needed                 |
+| -------------------------------- | ----------------- | ---------------------------- |
+| Hobby project                    | Naive (default)   | ~800/book, fits free tier    |
+| Small clinic (1-2 books)         | Naive             | Free tier works              |
+| Large library (10+ books)        | Naive             | Free tier over multiple days |
+| Production with quality priority | Semantic          | Paid tier ($1-5/month)       |
 
 ### Managing the Library
 
@@ -177,7 +262,20 @@ If an ingestion is interrupted (e.g., due to rate limits or internet failure):
 - **Vector Storage**: PostgreSQL + [pgvector](https://github.com/pgvector/pgvector)
 - **Embeddings Model**: Google Gemini (`gemini-embedding-001` - Latest 2025 Model)
 - **Metadata Orchestration**: Google Gemini 3 (`gemini-3-flash-preview`)
-- **PDF Extraction**: [pdf-parse](https://www.npmjs.com/package/pdf-parse)
+- **Query Transformation**: HyDE (Hypothetical Document Embeddings) via Gemini 3 Flash
+- **PDF Extraction**: **IBM Docling** (Computer Vision & OCR) or **PyMuPDF4LLM** (Fast fallback)
 - **Database Layer**: Prisma (using `Unsupported("vector(768)")` for vector types)
 - **Indexing**: HNSW (Hierarchical Navigable Small World) for fast similarity searches.
 - **Optimization**: Matryoshka Representation Learning (MRL) for efficient 768-dim storage.
+- **Hybrid Search**: BM25 (PostgreSQL tsvector) + Dense vectors with RRF fusion
+- **Reranking**: Cohere Rerank API (**v4.0-pro**)
+
+## Environment Variables
+
+| Variable         | Required | Description                                                        |
+| ---------------- | -------- | ------------------------------------------------------------------ |
+| `GOOGLE_API_KEY` | Yes      | Google Gemini API key for embeddings and HyDE generation           |
+| `COHERE_API_KEY` | No       | Cohere API key for **v4.0-pro** reranking (highly recommended)     |
+| `ENABLE_HYDE`    | No       | Set to `true` to enable HyDE query transformation (default: false) |
+
+Without `COHERE_API_KEY`, the system falls back to RRF-only ranking. Without `ENABLE_HYDE`, the system uses the raw user query.

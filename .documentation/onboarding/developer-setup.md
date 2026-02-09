@@ -8,7 +8,7 @@ Before you begin, ensure you have the following installed:
 
 - **Node.js**: Version 20 or higher
 - **pnpm**: Version 10 or higher (install via `npm install -g pnpm` or Corepack)
-- **Docker & Docker Compose**: For running the database and infrastructure services
+- **Docker & Docker Compose**: For running database, infrastructure, and Docling PDF worker
 - **Git**: For version control
 
 ## 1. Quick Start (Docker-Native)
@@ -55,6 +55,30 @@ Run Prisma migrations to set up the database schema:
 ```bash
 pnpm --filter server exec npx prisma migrate dev
 ```
+
+### 2.4 Docling PDF Extraction (Zero Setup)
+
+Mamirri uses **Docling** for high-quality PDF extraction with automatic Docker management.
+
+**Zero Setup** - The system automatically:
+
+- Checks if Docker is available
+- Builds the `docling-worker` Docker image on first use (takes 3-5 minutes)
+- Uses the container for PDF extraction
+- Falls back to `pdf-parse` if Docker is unavailable
+
+**No manual Python setup required!** The Docker image includes all dependencies.
+
+When you run `pnpm knowledge:ingest` for the first time, you'll see:
+
+```
+Docling-worker image not found. Building... (this may take a few minutes)
+Building Docker image: docling-worker:latest
+```
+
+Subsequent runs will be fast since the image is cached.
+
+**Note**: The Docker image includes PyTorch and CUDA dependencies (~3GB), so first build may take several minutes. This is a one-time setup.
 
 ## 3. Running the Application
 

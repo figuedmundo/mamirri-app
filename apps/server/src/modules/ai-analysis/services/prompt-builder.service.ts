@@ -117,4 +117,46 @@ ${chunk.content}
 
     return `contraindicaciones ${pharmacologicalHistory}`.slice(0, 500);
   }
+
+  /**
+   * Builds a HyDE (Hypothetical Document Embeddings) prompt for diagnosis
+   * This generates a synthetic document that would ideally contain the information we're searching for
+   *
+   * @param symptoms - Patient symptoms and clinical presentation
+   * @returns A prompt that asks the LLM to generate clinical descriptions and differential diagnoses
+   */
+  buildHydeDiagnosisPrompt(symptoms: string): string {
+    return `Basado en los siguientes síntomas, genera un documento médico hipotético que describa en detalle:
+
+Síntomas del paciente: ${symptoms}
+
+Por favor, genera un texto que incluya:
+1. **Clinical Descriptions**: Descripciones clínicas detalladas de las posibles condiciones basadas en los síntomas
+2. **Differential Diagnoses**: Diagnósticos diferenciales considerados con sus características distintivas
+3. **Etiología y patogénesis**: Posibles causas y mecanismos de desarrollo
+4. **Manifestaciones clínicas**: Signos y síntomas típicos asociados
+
+El documento debe ser técnico, profesional y basarse en evidencia médica actual. No te limites a una única condición; explora múltiples posibilidades diagnósticas.`;
+  }
+
+  /**
+   * Builds a HyDE (Hypothetical Document Embeddings) prompt for treatment
+   * This generates a synthetic document that would ideally contain treatment information
+   *
+   * @param condition - The medical condition or diagnosis
+   * @returns A prompt that asks the LLM to generate clinical treatment descriptions
+   */
+  buildHydeTreatmentPrompt(condition: string): string {
+    return `Basado en la siguiente condición médica, genera un documento médico hipotético que describa en detalle:
+
+Condición: ${condition}
+
+Por favor, genera un texto que incluya:
+1. **Clinical Descriptions**: Descripciones clínicas del tratamiento fisioterapéutico recomendado
+2. **Estrategias de tratamiento**: Enfoques terapéuticos y sus fundamentos fisiopatológicos
+3. **Técnicas específicas**: Modalidades de intervención y su aplicación práctica
+4. **Evidencia científica**: Apoyo de la literatura científica para las intervenciones recomendadas
+
+El documento debe ser técnico, profesional y basarse en evidencia médica actual. Describe un abordaje completo de fisioterapia para esta condición.`;
+  }
 }

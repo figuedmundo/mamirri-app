@@ -7,6 +7,7 @@ import { TranslatorService } from './services/translator.service';
 import { PromptBuilderService } from './services/prompt-builder.service';
 import { DataAggregationService } from './services/data-aggregation.service';
 import { GoogleGenAI } from '@google/genai';
+import { CohereClientV2 } from 'cohere-ai';
 import { withRetry } from '../transcription/utils/retry';
 import {
   AnalysisResult,
@@ -19,9 +20,11 @@ import { CaseDataAggregate } from './interfaces/aggregation.interfaces';
 export class AiAnalysisService {
   private readonly logger = new Logger(AiAnalysisService.name);
   private readonly genAI: GoogleGenAI;
+  private readonly cohereClient: CohereClientV2 | null;
   private readonly model: string;
   private readonly temperature: number;
   private readonly maxTokens: number;
+  private readonly enableHyde: boolean;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -39,6 +42,16 @@ export class AiAnalysisService {
       );
     }
     this.genAI = new GoogleGenAI({ apiKey: apiKey || 'mock-key' });
+
+    // Initialize Cohere client
+    const cohereApiKey = this.configService.get<string>('COHERE_API_KEY');
+    if (cohereApiKey) {
+      this.cohereClient = new CohereClientV2({ token: cohereApiKey });
+    } else {
+      this.logger.warn('COHERE_API_KEY not set. Reranking will be skipped.');
+      this.cohereClient = null;
+    }
+
     this.model =
       this.configService.get<string>('AI_MODEL') || 'gemini-3-flash-preview';
     this.temperature = parseFloat(
@@ -48,6 +61,14 @@ export class AiAnalysisService {
       this.configService.get<string>('AI_MAX_TOKENS') || '4096',
       10,
     );
+
+    this.enableHyde = this.configService.get<string>('ENABLE_HYDE') === 'true';
+
+    if (this.enableHyde) {
+      this.logger.log('HyDE (Hypothetical Document Embeddings) enabled');
+    } else {
+      this.logger.log('HyDE disabled. Using standard RAG queries.');
+    }
   }
 
   async analyzeCase(
@@ -122,6 +143,60 @@ export class AiAnalysisService {
     };
   }
 
+  /**
+   * Reranks RAG chunks using Cohere Rerank v3 API
+   * Falls back to original order if API fails
+   *
+   * @param query - The search query
+   * @param chunks - Chunks to rerank (max 100 recommended)
+   * @param topN - Number of top results to return
+   * @returns Reranked chunks sorted by relevance
+   */
+  private async rerankChunks(
+    query: string,
+    chunks: RagChunk[],
+    topN: number = 5,
+  ): Promise<RagChunk[]> {
+    // Skip if no client or no chunks
+    if (!this.cohereClient || chunks.length === 0) {
+      return chunks.slice(0, topN);
+    }
+
+    try {
+      const documents = chunks.map((c) => c.content);
+
+      const response = await withRetry(
+        async () => {
+          return this.cohereClient!.rerank({
+            model: 'rerank-v4.0-pro',
+            query: query,
+            documents: documents,
+            topN: topN,
+          });
+        },
+        { maxRetries: 3 },
+        this.logger,
+      );
+
+      // Map results back to chunks
+      const rerankedChunks: RagChunk[] = response.results.map((result) => ({
+        ...chunks[result.index],
+        relevanceScore: result.relevanceScore,
+      }));
+
+      this.logger.debug(
+        `Reranked ${chunks.length} chunks to top ${rerankedChunks.length}`,
+      );
+
+      return rerankedChunks;
+    } catch (error) {
+      this.logger.error(
+        `Cohere reranking failed: ${error.message}. Using original order.`,
+      );
+      return chunks.slice(0, topN);
+    }
+  }
+
   private async executeMultiQueryRag(caseData: any): Promise<RagChunk[]> {
     const diagnosisQuery =
       this.promptBuilderService.buildDiagnosisQuery(caseData);
@@ -135,11 +210,50 @@ export class AiAnalysisService {
     this.logger.debug('Executing multi-query RAG strategy');
 
     try {
+      let finalDiagnosisQuery = diagnosisQuery;
+      let finalTreatmentQuery = treatmentQuery;
+
+      if (this.enableHyde) {
+        try {
+          this.logger.debug('Generating HyDE synthetic documents...');
+          const [hydeDiagnosisDoc, hydeTreatmentDoc] = await Promise.all([
+            this.generateHydeDocument(
+              this.promptBuilderService.buildHydeDiagnosisPrompt(
+                diagnosisQuery,
+              ),
+            ),
+            this.generateHydeDocument(
+              this.promptBuilderService.buildHydeTreatmentPrompt(
+                treatmentQuery,
+              ),
+            ),
+          ]);
+
+          if (hydeDiagnosisDoc) {
+            finalDiagnosisQuery = hydeDiagnosisDoc;
+            this.logger.debug(
+              `Using HyDE document for diagnosis (${hydeDiagnosisDoc.length} chars)`,
+            );
+          }
+          if (hydeTreatmentDoc) {
+            finalTreatmentQuery = hydeTreatmentDoc;
+            this.logger.debug(
+              `Using HyDE document for treatment (${hydeTreatmentDoc.length} chars)`,
+            );
+          }
+        } catch (hydeError) {
+          this.logger.warn(
+            `HyDE generation failed, falling back to standard queries: ${hydeError.message}`,
+          );
+        }
+      }
+
+      // Retrieve MORE candidates for reranking (was 5, 5, 3 - now 8, 8, 4)
       const [diagnosisResults, treatmentResults, contraindicationResults] =
         await Promise.all([
-          this.knowledgeBaseService.findSimilar(diagnosisQuery, 5),
-          this.knowledgeBaseService.findSimilar(treatmentQuery, 5),
-          this.knowledgeBaseService.findSimilar(contraindicationsQuery, 3),
+          this.knowledgeBaseService.findSimilar(finalDiagnosisQuery, 8),
+          this.knowledgeBaseService.findSimilar(finalTreatmentQuery, 8),
+          this.knowledgeBaseService.findSimilar(contraindicationsQuery, 4),
         ]);
 
       const allResults = [
@@ -154,7 +268,16 @@ export class AiAnalysisService {
         `RAG returned ${deduplicated.length} unique chunks from ${allResults.length} total`,
       );
 
-      return deduplicated;
+      // NEW: Rerank deduplicated results
+      // Build a combined query for reranking
+      const combinedQuery = `${finalDiagnosisQuery} ${finalTreatmentQuery}`;
+      const reranked = await this.rerankChunks(combinedQuery, deduplicated, 8);
+
+      this.logger.debug(
+        `After reranking: ${reranked.length} chunks (top relevance: ${reranked[0]?.relevanceScore?.toFixed(3) || 'N/A'})`,
+      );
+
+      return reranked;
     } catch (error) {
       this.logger.error(`RAG query failed: ${error.message}`);
       return [];
@@ -182,6 +305,34 @@ export class AiAnalysisService {
     }
 
     return unique.sort((a, b) => b.similarity - a.similarity);
+  }
+
+  private async generateHydeDocument(hydePrompt: string): Promise<string> {
+    const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
+    if (!apiKey) {
+      return '';
+    }
+
+    try {
+      const response = await this.genAI.models.generateContent({
+        model: this.model,
+        config: {
+          temperature: this.temperature,
+          maxOutputTokens: this.maxTokens,
+        },
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: hydePrompt }],
+          },
+        ],
+      });
+
+      return response.text || '';
+    } catch (error) {
+      this.logger.error(`HyDE document generation failed: ${error.message}`);
+      return '';
+    }
   }
 
   private async callLlm(

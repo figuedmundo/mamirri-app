@@ -79,4 +79,5 @@ export interface RagChunk {
   documentFilePath: string;
   documentMetadata: Record<string, unknown>;
   similarity: number;
+  relevanceScore?: number;
 }

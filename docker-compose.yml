@@ -89,6 +89,23 @@ services:
     networks:
       - physio_network
 
+  docling:
+    image: quay.io/docling-project/docling-serve:latest
+    container_name: physio_docling
+    ports:
+      - '5001:5001'
+    environment:
+      - DOCLING_SERVE_ENABLE_UI=true
+      - DOCLING_SERVE_MAX_SYNC_WAIT=1800
+    networks:
+      - physio_network
+    restart: unless-stopped
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '20m'
+        max-file: '3'
+
   # server:
   #   build:
   #     context: .
