@@ -38,7 +38,7 @@ yarn-error.log*
 *.pem
 
 .docs/
-
+*.pdf
 *.log
 
 playwright-report/
@@ -49,3 +49,11 @@ apps/server/data/books/
 backups/*.sql*
 apps/server/data/archive/
 *.sql.gz
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.cache/

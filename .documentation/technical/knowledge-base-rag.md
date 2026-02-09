@@ -18,16 +18,37 @@ The process is divided into two main phases: Ingestion and Retrieval.
 
 ### Phase 1: Ingestion (Building the Library)
 
-Before the AI can search books, they must be processed into a format it can understand:
+The ingestion process is decoupled into two steps to ensure high-quality data and allow for manual review.
 
-1. **Extraction**: Mamirri uses **Docling** (via a specialized worker) to read PDF files from `apps/server/data/books`. Unlike standard PDF parsers, Docling is layout-aware and handles tables and multi-column text with high precision.
-2. **Chunking**: Large books are broken down into smaller "chunks". Two strategies are available:
-   - **Naive Chunking** (default): Fixed-size chunks of ~500 words with 50-word overlap. Simple, fast, and quota-friendly.
-   - **Semantic Chunking** (opt-in): Uses sentence embeddings to detect topic boundaries, creating more coherent chunks. Requires significantly more API quota.
-3. **Embedding**: Each chunk is converted into a list of numbers called a "vector" using Google Gemini's latest `gemini-embedding-001` model (released in 2025).
-   - **Task Type**: We use `RETRIEVAL_DOCUMENT` during ingestion to optimize the vector for being searched.
-   - **Dimensionality**: We use **768 dimensions** (truncated from 3072). This utilizes Matryoshka Representation Learning (MRL) to save 75% database space with virtually no loss in search quality.
-4. **Storage**: These vectors are stored in a PostgreSQL database using the `pgvector` extension.
+#### Step 1: Conversion (PDF → Markdown)
+
+First, we convert raw PDF files into a clean, reviewable Markdown format.
+
+1.  **Input**: Place PDF files in `apps/server/data/pdfs/`.
+2.  **Extraction**: The system uses **PyMuPDF4LLM** to extract text from the PDF. This tool is optimized for RAG, preserving layout, tables, and headers better than standard extractors.
+3.  **Metadata Extraction**: **Gemini 3 Flash** analyzes the first few pages to extract:
+    - Title
+    - Author
+    - Volume / Edition
+    - Publication Year
+4.  **Staging**: The result is saved as a Markdown file in `apps/server/data/markdowns/`.
+    - **Frontmatter**: A YAML header containing the extracted metadata (which you can manually edit if needed).
+    - **Content**: The full text of the book in Markdown.
+5.  **Archive**: The original PDF is moved to `apps/server/data/archive/pdfs/`.
+
+#### Step 2: Ingestion (Markdown → Vector DB)
+
+Once the Markdown files are in the staging area (`data/markdowns/`), they are processed into vectors.
+
+1.  **Input**: Reads `.md` files from `apps/server/data/markdowns/`.
+2.  **Chunking**: Breaks the text into chunks.
+    - **Naive Chunking** (default): ~500 words with overlap.
+    - **Semantic Chunking** (opt-in): Uses embeddings to find topic boundaries.
+3.  **Embedding**: Converts chunks to vectors using **Google Gemini** (`gemini-embedding-001`, 768 dim).
+4.  **Storage**: Saves vectors to PostgreSQL (`pgvector`).
+5.  **Finalizing**:
+    - Moves the Markdown file to the final library folder: `apps/server/data/books/`.
+    - Creates an **Atomic Backup** (`.sql.gz`) of the newly ingested book in `backups/library/`.
 
 #### Chunking Strategy Comparison
 
@@ -72,18 +93,19 @@ Query: "dolor lumbar vago"
 
 You can manage the knowledge base using these commands from the project root:
 
-| Command                                        | Description                                                                                                       |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `pnpm knowledge:ingest`                        | Scans `apps/server/data/books/*.pdf` and generates embeddings using **naive chunking** (default, quota-friendly). |
-| `pnpm knowledge:ingest -- --semantic-chunking` | Uses **semantic chunking** for higher-quality retrieval. Requires paid API tier or multiple days of free quota.   |
-| `pnpm knowledge:search "query"`                | Performs a semantic search across all ingested books.                                                             |
-| `pnpm knowledge:list`                          | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.                          |
-| `pnpm knowledge:update "ID" --options`         | Manually corrects or updates a book's metadata (title, author, volume, edition, year).                            |
-| `pnpm knowledge:clean "ID or filename.pdf"`    | Removes a specific book and its embeddings from the database to allow re-ingestion.                               |
-| `pnpm knowledge:backup`                        | Creates a timestamped SQL backup of the entire vector database in the `backups/` folder.                          |
-| `pnpm knowledge:restore "path/to/file.sql"`    | Restores the database from a backup file (Warning: Overwrites current data).                                      |
-| `pnpm knowledge:stats`                         | Displays technical database statistics (total chunks per book).                                                   |
-| `pnpm knowledge:wipe`                          | **DANGER**: Wipes all books and vectors from the database (useful before a clean import).                         |
+| Command                                        | Description                                                                                                     |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `pnpm knowledge:convert`                       | Converts PDFs from `data/pdfs/` to Markdown in `data/markdowns/` and extracts metadata.                         |
+| `pnpm knowledge:ingest`                        | Ingests Markdown files from `data/markdowns/` into the Vector DB. (Default: naive chunking).                    |
+| `pnpm knowledge:ingest -- --semantic-chunking` | Uses **semantic chunking** for higher-quality retrieval. Requires paid API tier or multiple days of free quota. |
+| `pnpm knowledge:search "query"`                | Performs a semantic search across all ingested books.                                                           |
+| `pnpm knowledge:list`                          | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.                        |
+| `pnpm knowledge:update "ID" --options`         | Manually corrects or updates a book's metadata (title, author, volume, edition, year).                          |
+| `pnpm knowledge:clean "ID or filename.pdf"`    | Removes a specific book and its embeddings from the database to allow re-ingestion.                             |
+| `pnpm knowledge:backup`                        | Creates a timestamped SQL backup of the entire vector database in the `backups/` folder.                        |
+| `pnpm knowledge:restore "path/to/file.sql"`    | Restores the database from a backup file (Warning: Overwrites current data).                                    |
+| `pnpm knowledge:stats`                         | Displays technical database statistics (total chunks per book).                                                 |
+| `pnpm knowledge:wipe`                          | **DANGER**: Wipes all books and vectors from the database (useful before a clean import).                       |
 
 ### Migration & Data Protection
 
@@ -158,17 +180,21 @@ pnpm knowledge:restore
 
 ### Adding books to the library
 
-1. Place your PDF files in `apps/server/data/books/`.
-2. Ensure you have a valid `GOOGLE_API_KEY` in your `.env` file.
-3. Run the ingestion command:
+1.  **Place PDFs**: Put your PDF files in `apps/server/data/pdfs/`.
+2.  **Convert**: Run the conversion script to generate Markdown.
+    ```bash
+    pnpm knowledge:convert
+    ```
+3.  **Review**: Check the generated files in `apps/server/data/markdowns/`. You can edit the YAML frontmatter (Title, Author, Year) if needed.
+4.  **Ingest**: Run the ingestion command to vectorize.
 
-   ```bash
-   # Default: Naive chunking (~800 embeddings per book, fits free tier)
-   pnpm knowledge:ingest
+    ```bash
+    # Default: Naive chunking
+    pnpm knowledge:ingest
 
-   # Optional: Semantic chunking (~28K embeddings per book, needs paid tier)
-   pnpm knowledge:ingest -- --semantic-chunking
-   ```
+    # Optional: Semantic chunking
+    pnpm knowledge:ingest -- --semantic-chunking
+    ```
 
 ### API Quota Considerations
 
@@ -235,7 +261,7 @@ If an ingestion is interrupted (e.g., due to rate limits or internet failure):
 - **Embeddings Model**: Google Gemini (`gemini-embedding-001` - Latest 2025 Model)
 - **Metadata Orchestration**: Google Gemini 3 (`gemini-3-flash-preview`)
 - **Query Transformation**: HyDE (Hypothetical Document Embeddings) via Gemini 3 Flash
-- **PDF Extraction**: **Docling** (Layout-aware Python worker)
+- **PDF Extraction**: **PyMuPDF4LLM** (Python script)
 - **Database Layer**: Prisma (using `Unsupported("vector(768)")` for vector types)
 - **Indexing**: HNSW (Hierarchical Navigable Small World) for fast similarity searches.
 - **Optimization**: Matryoshka Representation Learning (MRL) for efficient 768-dim storage.

@@ -1,93 +1,120 @@
 #!/usr/bin/env python3
 """
-Docling PDF to Markdown converter worker.
+Docling PDF to Markdown converter with page markers.
 
-This script accepts a PDF file path as an argument and converts it to Markdown
-using the docling library for layout-aware parsing.
+Usage:
+    python main.py <pdf_path>
+
+Output:
+    JSON with keys: markdown, total_pages, pages_processed
 """
 
 import sys
-import argparse
+import json
 from pathlib import Path
-from docling.document_converter import DocumentConverter, PdfFormatOption
-from docling.datamodel.pipeline_options import PdfPipelineOptions
-from docling.backend.pypdfium2_backend import PyPdfiumDocumentBackend
+
+try:
+    import click
+    from docling.document_converter import DocumentConverter, PdfFormat
+    from docling.datamodel.base_models import InputFormat
+    from docling.datamodel.pipeline_options import PdfPipelineOptions
+except ImportError as e:
+    print(json.dumps({"error": f"Missing dependency: {str(e)}"}), file=sys.stderr)
+    sys.exit(1)
 
 
-def main():
-    """Main function to convert PDF to Markdown."""
-    parser = argparse.ArgumentParser(
-        description="Convert PDF to Markdown using Docling"
-    )
-    parser.add_argument("pdf_path", type=str, help="Path to the PDF file to convert")
-    parser.add_argument(
-        "-o",
-        "--output",
-        type=str,
-        help="Output file path (if not provided, prints to stdout)",
-    )
-    parser.add_argument(
-        "--table-mode",
-        type=str,
-        choices=["as_text", "as_html"],
-        default="as_text",
-        help="How to handle tables: as_text (default) or as_html",
-    )
-
-    args = parser.parse_args()
-
-    # Validate PDF path
-    pdf_path = Path(args.pdf_path)
-    if not pdf_path.exists():
-        print(f"Error: PDF file not found: {pdf_path}", file=sys.stderr)
-        sys.exit(1)
-
-    if not pdf_path.suffix.lower() == ".pdf":
-        print(f"Error: File must be a PDF: {pdf_path}", file=sys.stderr)
-        sys.exit(1)
+@click.command()
+@click.argument("pdf_path", type=click.Path(exists=True))
+def convert_pdf(pdf_path):
+    """Convert PDF to Markdown page-by-page using split-and-convert strategy."""
+    pdf_file = Path(pdf_path)
+    full_markdown = ""
+    processed_count = 0
+    total_pages = 0
 
     try:
-        # Configure pipeline options for better table and multi-column handling
+        # Initialize Docling converter once (heavy model load)
         pipeline_options = PdfPipelineOptions()
-        pipeline_options.table_structure_options.do_cell_matching = True
-        pipeline_options.table_structure_options.mode = args.table_mode
+        pipeline_options.do_ocr = True
+        pipeline_options.do_table_structure = True
 
-        # Initialize document converter with options
+        # Performance tweak: accelerated processing if available
+        # pipeline_options.accelerator_options.num_threads = 4
+
         converter = DocumentConverter(
             format_options={
-                "application/pdf": PdfFormatOption(
-                    pipeline_options=pipeline_options,
-                )
+                InputFormat.PDF: PdfFormat(pipeline_options=pipeline_options)
             }
         )
 
-        # Convert PDF to document
-        print(f"Converting {pdf_path} to Markdown...", file=sys.stderr)
-        result = converter.convert(str(pdf_path))
+        # Open PDF with pypdfium2 to get page count and split
+        import pypdfium2 as pdfium
+        import tempfile
+        import os
 
-        # Get Markdown content
-        markdown_content = result.document.export_to_markdown()
+        pdf = pdfium.PdfDocument(pdf_file)
+        total_pages = len(pdf)
 
-        # Output result
-        if args.output:
-            output_path = Path(args.output)
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-            output_path.write_text(markdown_content, encoding="utf-8")
-            print(f"Successfully converted to: {output_path}", file=sys.stderr)
-        else:
-            print(markdown_content)
+        print(f"DEBUG: Starting conversion of {total_pages} pages...", file=sys.stderr)
 
-        print(f"Conversion completed successfully.", file=sys.stderr)
-        sys.exit(0)
+        for i in range(total_pages):
+            page_num = i + 1
 
-    except ImportError as e:
-        print(f"Error: Missing required dependency. {e}", file=sys.stderr)
-        print("Please install docling: pip install docling", file=sys.stderr)
-        sys.exit(1)
+            # Progress log
+            print(
+                f"DEBUG: Processing page {page_num}/{total_pages}...", file=sys.stderr
+            )
+
+            # Create a new PDF with just this single page
+            single_page_pdf = pdfium.PdfDocument.new()
+            single_page_pdf.import_pages(pdf, [i])
+
+            # Save single page to a temporary file
+            with tempfile.NamedTemporaryFile(
+                suffix=f"_p{page_num}.pdf", delete=False
+            ) as tmp:
+                single_page_pdf.save(tmp)
+                tmp_path = tmp.name
+
+            try:
+                # Convert this single page
+                result = converter.convert(tmp_path)
+                page_md = result.document.export_to_markdown()
+
+                # Append with marker
+                full_markdown += f"\n\n<!-- PAGE_NUMBER: {page_num} -->\n\n"
+                full_markdown += page_md
+
+                processed_count += 1
+
+            except Exception as page_err:
+                print(
+                    f"ERROR: Failed to convert page {page_num}: {str(page_err)}",
+                    file=sys.stderr,
+                )
+                # We continue to next page instead of failing everything
+                full_markdown += f"\n\n<!-- PAGE_NUMBER: {page_num} -->\n\n[Conversion Failed for Page {page_num}]\n"
+
+            finally:
+                # Cleanup
+                if os.path.exists(tmp_path):
+                    os.unlink(tmp_path)
+                single_page_pdf.close()
+
+        # Output JSON result
+        output = {
+            "markdown": full_markdown,
+            "total_pages": total_pages,
+            "pages_processed": processed_count,
+        }
+
+        print(json.dumps(output, ensure_ascii=False))
+
     except Exception as e:
-        print(f"Error: Failed to convert PDF: {e}", file=sys.stderr)
+        error_output = {"error": str(e)}
+        print(json.dumps(error_output), file=sys.stderr)
         sys.exit(1)
 
 
 if __name__ == "__main__":
-    main()
+    convert_pdf()

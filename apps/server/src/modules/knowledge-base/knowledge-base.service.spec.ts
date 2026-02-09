@@ -63,9 +63,9 @@ describe('KnowledgeBaseService', () => {
       );
 
     // Mock private methods to avoid Docker and external API calls
-    (service as any).extractPdfWithDocling = jest
+    (service as any).extractPdfWithPyMuPDF = jest
       .fn()
-      .mockResolvedValue('Mocked PDF content from Docling');
+      .mockResolvedValue('Mocked PDF content from PyMuPDF4LLM');
 
     (service as any).extractMetadata = jest.fn().mockResolvedValue({
       title: 'Mock Title',

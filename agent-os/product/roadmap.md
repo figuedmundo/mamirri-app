@@ -340,6 +340,16 @@ Methodology: Agile Development (1-week Sprints).
 - [ ] **16.9** Add more books to knowledge base
 - [ ] **16.10** Vision prompt refinement
 
+### Week 16.5: OCR & High-Fidelity Extraction (Docling) ✅ COMPLETE
+
+> **Spec:** `agent-os/specs/2026-02-09-rag-pdf-ocr-docling/`
+> **Goal:** Upgrade PDF processing with high-fidelity OCR for better layout preservation.
+
+- [x] **16.5.1** Docling Worker — Implement Python-based PDF-to-Markdown engine
+- [x] **16.5.2** Page Marker Injection — Support precise page-level citations: `<!-- PAGE_NUMBER: X -->`
+- [x] **16.5.3** Multi-Engine Pipeline — Fallback to PyMuPDF if Docling worker is not initialized
+- [x] **16.5.4** CLI Integration — Update `pnpm knowledge:convert` to support `--engine=docling`
+
 **Expected Combined Improvement: 2-3x over current baseline**
 
 | Improvement       | Expected Gain           |

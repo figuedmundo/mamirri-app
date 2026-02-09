@@ -9,14 +9,84 @@ import { promisify } from 'util';
 
 const sleep = promisify(setTimeout);
 
+import { execSync, spawn } from 'child_process';
 import { PDFParse } from 'pdf-parse';
-import { exec as execAsync, execSync } from 'child_process';
 import { randomUUID } from 'crypto';
-
-const exec = promisify(execAsync);
 
 import { Prisma } from '@prisma/client';
 import { CohereClient } from 'cohere-ai';
+
+/**
+ * Token bucket for rate limiting with a rolling window.
+ * Tracks tokens consumed over the last 60 seconds.
+ */
+class TokenRateLimiter {
+  private readonly windowMs = 60_000; // 60 seconds
+  private readonly maxTokens: number;
+  private readonly safetyMargin = 0.85; // Use 85% of limit for safety
+  private tokenLog: { timestamp: number; tokens: number }[] = [];
+
+  constructor(maxTokensPerMinute: number) {
+    this.maxTokens = maxTokensPerMinute * this.safetyMargin;
+  }
+
+  /**
+   * Estimate tokens for a text using word count * 1.3 factor
+   */
+  estimateTokens(text: string): number {
+    const words = text.split(/\s+/).filter((w) => w.length > 0).length;
+    return Math.ceil(words * 1.3);
+  }
+
+  /**
+   * Get tokens consumed in the current rolling window
+   */
+  private getTokensInWindow(): number {
+    const now = Date.now();
+    const windowStart = now - this.windowMs;
+
+    // Clean old entries
+    this.tokenLog = this.tokenLog.filter((e) => e.timestamp > windowStart);
+
+    return this.tokenLog.reduce((sum, e) => sum + e.tokens, 0);
+  }
+
+  /**
+   * Record tokens consumed
+   */
+  recordTokens(tokens: number): void {
+    this.tokenLog.push({ timestamp: Date.now(), tokens });
+  }
+
+  /**
+   * Calculate delay needed before consuming more tokens.
+   * Returns 0 if we can proceed immediately.
+   */
+  getRequiredDelay(tokensNeeded: number): number {
+    const currentTokens = this.getTokensInWindow();
+    const availableTokens = this.maxTokens - currentTokens;
+
+    if (tokensNeeded <= availableTokens) {
+      // We have capacity, add minimal delay to spread requests
+      return 500;
+    }
+
+    // Need to wait for tokens to expire from window
+    // Find oldest entry that would free enough tokens
+    const tokensToFree = tokensNeeded - availableTokens;
+    let tokensFreed = 0;
+    let waitUntil = Date.now();
+
+    for (const entry of this.tokenLog) {
+      tokensFreed += entry.tokens;
+      waitUntil = entry.timestamp + this.windowMs;
+      if (tokensFreed >= tokensToFree) break;
+    }
+
+    const delay = Math.max(0, waitUntil - Date.now() + 100); // +100ms buffer
+    return delay;
+  }
+}
 
 export interface BM25Result {
   id: string;
@@ -41,6 +111,7 @@ export class KnowledgeBaseService {
   private readonly genAI: GoogleGenAI;
   private readonly cohere: CohereClient;
   private readonly chunksPerParent = 5;
+  private readonly rateLimiter = new TokenRateLimiter(30_000);
 
   constructor(
     private readonly prisma: PrismaService,
@@ -61,108 +132,130 @@ export class KnowledgeBaseService {
     this.cohere = new CohereClient({ token: cohereKey || 'mock-key' });
   }
 
-  private async isDockerAvailable(): Promise<boolean> {
-    try {
-      const { stdout } = await exec('docker --version', { timeout: 5000 });
-      return stdout.includes('Docker');
-    } catch {
-      this.logger.warn('Docker is not available or not running');
-      return false;
-    }
-  }
+  /**
+   * Extract text from PDF using the specified engine.
+   * @param filePath Path to the PDF file
+   * @param engine 'pymupdf' (default) or 'docling'
+   */
+  async extractPdf(
+    filePath: string,
+    engine: 'pymupdf' | 'docling' = 'pymupdf',
+  ): Promise<string> {
+    const isDocling = engine === 'docling';
 
-  private async dockerImageExists(imageName: string): Promise<boolean> {
-    try {
-      const { stdout } = await exec(`docker images -q ${imageName}`, {
-        timeout: 10000,
-      });
-      return stdout.trim().length > 0;
-    } catch {
-      return false;
-    }
-  }
+    // Choose script and python path
+    // For Docling, we assume a specific venv path in apps/workers/docling/.venv/bin/python
+    // For PyMuPDF, we use the system python or the one available in PATH
 
-  private async buildDockerImage(imageName: string): Promise<void> {
-    this.logger.log(`Building Docker image: ${imageName}`);
-    const doclingDir = path.join(process.cwd(), '..', 'workers', 'docling');
+    let pythonCommand = 'python3';
+    let scriptPath = '';
+    let args: string[] = [];
 
-    if (!fs.existsSync(doclingDir)) {
-      this.logger.warn(`Docling directory not found: ${doclingDir}`);
-      throw new Error('Docling worker directory not found');
-    }
+    if (isDocling) {
+      // Path to Docling worker's venv python
+      // Adjust this path relative to the server execution context
+      const workerDir = path.resolve(__dirname, '../../../../workers/docling');
+      pythonCommand = path.join(workerDir, '.venv/bin/python');
+      scriptPath = path.join(workerDir, 'main.py');
+      args = [filePath];
 
-    try {
-      const { stderr } = await exec(
-        `docker build -t ${imageName} "${doclingDir}"`,
-        { timeout: 300000 }, // 5 minutes timeout for building
-      );
-
-      if (
-        stderr &&
-        !stderr.includes('Sending build context') &&
-        !stderr.includes('Step')
-      ) {
-        this.logger.warn(`Docker build warnings: ${stderr}`);
+      // Verify worker exists
+      if (!fs.existsSync(pythonCommand)) {
+        this.logger.warn(
+          `Docling venv not found at ${pythonCommand}. Falling back to system python (might fail if deps missing).`,
+        );
+        pythonCommand = 'python3';
       }
-
-      this.logger.log(`Docker image built successfully: ${imageName}`);
-    } catch (error) {
-      this.logger.error(`Failed to build Docker image: ${error.message}`);
-      throw error;
+    } else {
+      // Legacy PyMuPDF script
+      scriptPath = path.resolve(__dirname, '../../../scripts/extract-pdf.py');
+      // Arguments for PyMuPDF script: file --json
+      args = [filePath, '--json'];
     }
+
+    return new Promise((resolve, reject) => {
+      const process = spawn(pythonCommand, [scriptPath, ...args]);
+
+      let stdoutData = '';
+      let stderrData = '';
+
+      process.stdout.on('data', (data) => {
+        stdoutData += data.toString();
+      });
+
+      process.stderr.on('data', (data) => {
+        stderrData += data.toString();
+      });
+
+      process.on('close', (code) => {
+        if (code !== 0) {
+          this.logger.error(
+            `PDF extraction failed with code ${code}. Error: ${stderrData}`,
+          );
+          // Fallback logic could go here, but for now we throw
+          return reject(new Error(`PDF extraction failed: ${stderrData}`));
+        }
+
+        try {
+          // Both scripts output JSON now
+          const result = JSON.parse(stdoutData);
+          if (result.error) {
+            reject(new Error(result.error));
+          } else {
+            resolve(result.markdown);
+          }
+        } catch (e) {
+          // Fallback for raw output (legacy support if script changed)
+          // But we aligned both to JSON.
+          this.logger.error(`Failed to parse extraction output: ${e.message}`);
+          // If JSON parse fails, maybe it was raw text?
+          // For safety, return raw stdout if it looks like markdown?
+          // No, safer to fail.
+          reject(new Error(`Failed to parse PDF extraction output`));
+        }
+      });
+    });
   }
 
   /**
-   * Extract text from PDF using Docling Docker container.
-   * Automatically builds the image if needed.
-   * Falls back to pdf-parse if Docker is not available.
+   * Legacy method wrapper for backward compatibility
    */
-  private async extractPdfWithDocling(filePath: string): Promise<string> {
-    const imageName = 'docling-worker:latest';
-    const absolutePath = path.resolve(filePath);
+  async extractPdfWithPyMuPDF(filePath: string): Promise<string> {
+    return this.extractPdf(filePath, 'pymupdf');
+  }
 
-    const dockerAvailable = await this.isDockerAvailable();
-    if (!dockerAvailable) {
-      this.logger.warn('Docker not available, falling back to pdf-parse');
-      return this.extractPdfWithPdfParse(filePath);
-    }
+  private runPythonScript(scriptPath: string, args: string[]): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const pythonProcess = spawn('python3', [scriptPath, ...args]);
+      let stdout = '';
+      let stderr = '';
 
-    const imageExists = await this.dockerImageExists(imageName);
-    if (!imageExists) {
-      this.logger.log(
-        'Docling-worker image not found. Building... (this may take a few minutes)',
-      );
-      try {
-        await this.buildDockerImage(imageName);
-      } catch (_error) {
-        this.logger.warn(
-          `Failed to build Docker image: ${_error.message}. Falling back to pdf-parse`,
-        );
-        return this.extractPdfWithPdfParse(filePath);
-      }
-    }
+      pythonProcess.stdout.on('data', (data) => {
+        stdout += data.toString();
+      });
 
-    try {
-      this.logger.log(`Extracting PDF using Docling Docker: ${filePath}`);
-      const { stdout, stderr } = await exec(
-        `docker run --rm -v "${absolutePath}:/input.pdf" ${imageName} /input.pdf`,
-        { encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024, timeout: 120000 }, // 120MB buffer, 2 min timeout
-      );
+      pythonProcess.stderr.on('data', (data) => {
+        stderr += data.toString();
+      });
 
-      if (stderr && stderr.toLowerCase().includes('error')) {
-        this.logger.warn(
-          `Docling execution error: ${stderr}. Falling back to pdf-parse`,
-        );
-        return this.extractPdfWithPdfParse(filePath);
-      }
+      pythonProcess.on('close', (code) => {
+        if (code !== 0) {
+          reject(
+            new Error(`Python script exited with code ${code}: ${stderr}`),
+          );
+          return;
+        }
+        const jsonStart = stdout.indexOf('{');
+        if (jsonStart > 0) {
+          stdout = stdout.substring(jsonStart);
+        }
+        resolve(stdout.trim());
+      });
 
-      return stdout;
-    } catch (_error) {
-      this.logger.warn(
-        `Failed to run Docling container: ${_error.message}. Falling back to pdf-parse`,
-      );
-      return this.extractPdfWithPdfParse(filePath);
-    }
+      pythonProcess.on('error', (err) => {
+        reject(new Error(`Failed to start Python process: ${err.message}`));
+      });
+    });
   }
 
   /**
@@ -171,9 +264,9 @@ export class KnowledgeBaseService {
   private async extractPdfWithPdfParse(filePath: string): Promise<string> {
     const dataBuffer = fs.readFileSync(filePath);
     const parser = new PDFParse({ data: dataBuffer });
-    const pdfData = await parser.getText();
+    const textResult = await parser.getText();
     await parser.destroy();
-    return pdfData.text;
+    return textResult.text;
   }
 
   async ingestFile(
@@ -195,7 +288,7 @@ export class KnowledgeBaseService {
     }
 
     this.logger.log(`Ingesting file: ${filePath}`);
-    const pdfText = await this.extractPdfWithDocling(absolutePath);
+    const pdfText = await this.extractPdfWithPyMuPDF(absolutePath);
 
     const firstPageText = pdfText.substring(0, 2000);
 
@@ -277,8 +370,6 @@ export class KnowledgeBaseService {
               `Processed ${i + 1}/${parentChunks.length} parent chunks`,
             );
           }
-
-          await sleep(1500);
         }
         this.logger.log(`Inserted ${parentChunks.length} parent chunks`);
       }
@@ -316,13 +407,157 @@ export class KnowledgeBaseService {
             `Processed ${i + 1}/${chunks.length} chunks for ${meta.title}`,
           );
         }
-
-        await sleep(1500);
       }
       this.logger.log(`Successfully ingested ${meta.title}`);
     } catch (error) {
       this.logger.error(
         `Failed to ingest chunks for ${meta.title}. Cleaning up partial data...`,
+      );
+      await (this.prisma as any).document.delete({
+        where: { id: document.id },
+      });
+      throw error;
+    }
+  }
+
+  async ingestMarkdown(
+    markdown: string,
+    metadata: {
+      title: string;
+      author: string;
+      volume?: string;
+      edition?: string;
+      year?: string;
+    },
+    filePath: string,
+    useSemanticChunking: boolean = false,
+  ): Promise<void> {
+    const existingDoc = await (this.prisma as any).document.findUnique({
+      where: { filePath },
+    });
+
+    if (existingDoc) {
+      this.logger.log(`File already ingested: ${filePath}`);
+      return;
+    }
+
+    this.logger.log(`Ingesting markdown: ${metadata.title}`);
+
+    const document = await (this.prisma as any).document.create({
+      data: {
+        title: metadata.title,
+        author: metadata.author,
+        filePath,
+        metadata: {
+          volume: metadata.volume,
+          edition: metadata.edition,
+          year: metadata.year,
+        },
+      },
+    });
+
+    try {
+      let chunks: string[] = [];
+      let parentChunks: string[] = [];
+
+      if (useSemanticChunking) {
+        try {
+          const result = await this.semanticChunk(markdown);
+          chunks = result.chunks;
+          parentChunks = result.parentChunks;
+        } catch (error) {
+          this.logger.warn(
+            `Semantic chunking failed: ${error.message}. Falling back to naive chunking.`,
+          );
+          chunks = this.chunkText(markdown);
+          for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
+            parentChunks.push(
+              chunks.slice(i, i + this.chunksPerParent).join(' '),
+            );
+          }
+        }
+      } else {
+        chunks = this.chunkText(markdown);
+        for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
+          parentChunks.push(
+            chunks.slice(i, i + this.chunksPerParent).join(' '),
+          );
+        }
+      }
+
+      this.logger.log(
+        `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${metadata.title}`,
+      );
+
+      const parentIds: string[] = [];
+
+      if (parentChunks.length > 0) {
+        this.logger.log(
+          `Generating embeddings for ${parentChunks.length} parent chunks...`,
+        );
+
+        for (let i = 0; i < parentChunks.length; i++) {
+          const content = parentChunks[i];
+          const vector = await this.generateEmbedding(
+            content,
+            'RETRIEVAL_DOCUMENT',
+          );
+          const vectorString = `[${vector.join(',')}]`;
+          const parentId = randomUUID();
+          parentIds.push(parentId);
+
+          await (this.prisma as any).$executeRaw`
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
+            VALUES (${parentId}::uuid, ${content}, 1, ${document.id}, ${vectorString}::vector, ${content})
+          `;
+
+          if ((i + 1) % 10 === 0) {
+            this.logger.log(
+              `Processed ${i + 1}/${parentChunks.length} parent chunks`,
+            );
+          }
+        }
+        this.logger.log(`Inserted ${parentChunks.length} parent chunks`);
+      }
+
+      this.logger.log(
+        `Generating embeddings for ${chunks.length} child chunks...`,
+      );
+
+      for (let i = 0; i < chunks.length; i++) {
+        const content = chunks[i];
+        const vector = await this.generateEmbedding(
+          content,
+          'RETRIEVAL_DOCUMENT',
+        );
+        const vectorString = `[${vector.join(',')}]`;
+
+        let parentId: string | null = null;
+        let parentContent: string | null = null;
+
+        if (parentChunks.length > 0) {
+          const parentIndex = Math.floor(i / this.chunksPerParent);
+          if (parentIndex < parentIds.length) {
+            parentId = parentIds[parentIndex];
+            parentContent = parentChunks[parentIndex];
+          }
+        }
+
+        await (this.prisma as any).$executeRaw`
+          INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
+          VALUES (gen_random_uuid(), ${content}, 1, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
+        `;
+
+        if ((i + 1) % 10 === 0) {
+          this.logger.log(
+            `Processed ${i + 1}/${chunks.length} chunks for ${metadata.title}`,
+          );
+        }
+      }
+      this.logger.log(`Successfully ingested ${metadata.title}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to ingest chunks for ${metadata.title}. Cleaning up partial data...`,
       );
       await (this.prisma as any).document.delete({
         where: { id: document.id },
@@ -655,7 +890,7 @@ export class KnowledgeBaseService {
     this.logger.log(`Updated metadata for: ${doc.title}`);
   }
 
-  private async extractMetadata(
+  public async extractMetadata(
     text: string,
     fallback: string,
   ): Promise<{
@@ -859,9 +1094,20 @@ export class KnowledgeBaseService {
       return vector;
     }
 
-    return await withRetry(
+    const estimatedTokens = this.rateLimiter.estimateTokens(text);
+    const delay = this.rateLimiter.getRequiredDelay(estimatedTokens);
+
+    if (delay > 1000) {
+      this.logger.debug(
+        `Rate limit: waiting ${Math.round(delay / 1000)}s before embedding (${estimatedTokens} tokens)`,
+      );
+    }
+
+    await sleep(delay);
+
+    const result = await withRetry(
       async () => {
-        const result = await this.genAI.models.embedContent({
+        const res = await this.genAI.models.embedContent({
           model: 'gemini-embedding-001',
           contents: [{ role: 'user', parts: [{ text }] }],
           config: {
@@ -871,17 +1117,20 @@ export class KnowledgeBaseService {
         });
 
         if (
-          !result.embeddings ||
-          result.embeddings.length === 0 ||
-          !result.embeddings[0].values
+          !res.embeddings ||
+          res.embeddings.length === 0 ||
+          !res.embeddings[0].values
         ) {
           throw new Error('No embedding returned');
         }
-        return result.embeddings[0].values;
+        return res.embeddings[0].values;
       },
       { maxRetries: 5 },
       this.logger,
     );
+
+    this.rateLimiter.recordTokens(estimatedTokens);
+    return result;
   }
 
   /**
