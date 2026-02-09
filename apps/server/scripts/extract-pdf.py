@@ -15,8 +15,13 @@ Examples:
 import sys
 import json
 import argparse
+import logging
 import pymupdf
 import pymupdf4llm
+
+# Suppress pymupdf logging to stdout
+logging.getLogger("pymupdf").setLevel(logging.ERROR)
+logging.getLogger("pymupdf4llm").setLevel(logging.ERROR)
 
 
 def extract_pdf(

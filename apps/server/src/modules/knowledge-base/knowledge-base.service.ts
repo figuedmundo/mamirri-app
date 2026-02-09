@@ -134,32 +134,44 @@ export class KnowledgeBaseService {
 
   /**
    * Extract text from PDF using the specified engine.
-   * @param filePath Path to the PDF file
-   * @param engine 'pymupdf' (default) or 'docling'
+   *
+   * This method orchestrates external Python scripts to handle PDF processing.
+   * It supports two engines:
+   * - 'pymupdf': Fast, rule-based extraction (legacy/default).
+   * - 'docling': High-fidelity computer vision based extraction (best for complex layouts).
+   *
+   * @param filePath - Absolute path to the PDF file.
+   * @param engine - The extraction engine to use ('pymupdf' | 'docling').
+   * @param options - Optional configuration for partial extraction.
+   * @param options.startPage - Start page (1-indexed, inclusive).
+   * @param options.endPage - End page (1-indexed, inclusive).
+   * @returns A promise resolving to the extracted Markdown string.
    */
   async extractPdf(
     filePath: string,
     engine: 'pymupdf' | 'docling' = 'pymupdf',
+    options: { startPage?: number; endPage?: number } = {},
   ): Promise<string> {
     const isDocling = engine === 'docling';
-
-    // Choose script and python path
-    // For Docling, we assume a specific venv path in apps/workers/docling/.venv/bin/python
-    // For PyMuPDF, we use the system python or the one available in PATH
 
     let pythonCommand = 'python3';
     let scriptPath = '';
     let args: string[] = [];
 
     if (isDocling) {
-      // Path to Docling worker's venv python
-      // Adjust this path relative to the server execution context
       const workerDir = path.resolve(__dirname, '../../../../workers/docling');
       pythonCommand = path.join(workerDir, '.venv/bin/python');
       scriptPath = path.join(workerDir, 'main.py');
       args = [filePath];
 
-      // Verify worker exists
+      if (options.startPage !== undefined && options.endPage !== undefined) {
+        args.push(
+          '--pages',
+          options.startPage.toString(),
+          options.endPage.toString(),
+        );
+      }
+
       if (!fs.existsSync(pythonCommand)) {
         this.logger.warn(
           `Docling venv not found at ${pythonCommand}. Falling back to system python (might fail if deps missing).`,
@@ -171,6 +183,18 @@ export class KnowledgeBaseService {
       scriptPath = path.resolve(__dirname, '../../../scripts/extract-pdf.py');
       // Arguments for PyMuPDF script: file --json
       args = [filePath, '--json'];
+
+      if (options.startPage !== undefined && options.endPage !== undefined) {
+        // PyMuPDF script is 0-indexed in code but often scripts are 1-indexed for users.
+        // Looking at extract-pdf.py, it says "0-indexed, inclusive" in docstring.
+        // We will keep it consistent with what convert-books passes (1-indexed based on user input usually).
+        // Let's adjust to 0-indexed for the script.
+        args.push(
+          '--pages',
+          (options.startPage - 1).toString(),
+          (options.endPage - 1).toString(),
+        );
+      }
     }
 
     return new Promise((resolve, reject) => {
@@ -184,7 +208,11 @@ export class KnowledgeBaseService {
       });
 
       process.stderr.on('data', (data) => {
-        stderrData += data.toString();
+        const str = data.toString();
+        stderrData += str;
+        if (str.includes('Processing page') || str.includes('DEBUG:')) {
+          console.log(str.trim());
+        }
       });
 
       process.on('close', (code) => {
@@ -192,25 +220,35 @@ export class KnowledgeBaseService {
           this.logger.error(
             `PDF extraction failed with code ${code}. Error: ${stderrData}`,
           );
-          // Fallback logic could go here, but for now we throw
           return reject(new Error(`PDF extraction failed: ${stderrData}`));
         }
 
         try {
-          // Both scripts output JSON now
-          const result = JSON.parse(stdoutData);
+          // Robust JSON parsing: Find the first '{' and last '}'
+          const jsonStart = stdoutData.indexOf('{');
+          const jsonEnd = stdoutData.lastIndexOf('}');
+
+          if (jsonStart === -1 || jsonEnd === -1 || jsonEnd < jsonStart) {
+            this.logger.error(
+              `No valid JSON found in extraction output. Raw stdout: ${stdoutData}`,
+            );
+            return reject(
+              new Error(`Failed to parse PDF extraction output: No JSON found`),
+            );
+          }
+
+          const jsonStr = stdoutData.substring(jsonStart, jsonEnd + 1);
+          const result = JSON.parse(jsonStr);
+
           if (result.error) {
             reject(new Error(result.error));
           } else {
             resolve(result.markdown);
           }
         } catch (e) {
-          // Fallback for raw output (legacy support if script changed)
-          // But we aligned both to JSON.
-          this.logger.error(`Failed to parse extraction output: ${e.message}`);
-          // If JSON parse fails, maybe it was raw text?
-          // For safety, return raw stdout if it looks like markdown?
-          // No, safer to fail.
+          this.logger.error(
+            `Failed to parse extraction output: ${e.message}. Raw stdout: ${stdoutData}`,
+          );
           reject(new Error(`Failed to parse PDF extraction output`));
         }
       });

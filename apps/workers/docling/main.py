@@ -15,9 +15,14 @@ from pathlib import Path
 
 try:
     import click
-    from docling.document_converter import DocumentConverter, PdfFormat
+    from docling.document_converter import DocumentConverter, PdfFormatOption
     from docling.datamodel.base_models import InputFormat
-    from docling.datamodel.pipeline_options import PdfPipelineOptions
+    from docling.datamodel.pipeline_options import (
+        PdfPipelineOptions,
+        OcrOptions,
+        OcrMacOptions,
+        RapidOcrOptions,
+    )
 except ImportError as e:
     print(json.dumps({"error": f"Missing dependency: {str(e)}"}), file=sys.stderr)
     sys.exit(1)
@@ -25,8 +30,24 @@ except ImportError as e:
 
 @click.command()
 @click.argument("pdf_path", type=click.Path(exists=True))
-def convert_pdf(pdf_path):
-    """Convert PDF to Markdown page-by-page using split-and-convert strategy."""
+@click.option(
+    "--pages",
+    nargs=2,
+    type=int,
+    help="Page range (start end, 1-indexed). Example: --pages 1 10",
+)
+def convert_pdf(pdf_path, pages):
+    """
+    Convert a PDF file to high-fidelity Markdown using Docling.
+
+    This script splits the PDF into individual pages, processes each using
+    IBM's Docling DocumentConverter, and injects custom PAGE_NUMBER markers.
+    The result is printed to stdout as a JSON object.
+
+    Args:
+        pdf_path: Path to the input PDF file.
+        pages: Optional tuple of (start, end) pages to process (1-indexed).
+    """
     pdf_file = Path(pdf_path)
     full_markdown = ""
     processed_count = 0
@@ -38,32 +59,48 @@ def convert_pdf(pdf_path):
         pipeline_options.do_ocr = True
         pipeline_options.do_table_structure = True
 
-        # Performance tweak: accelerated processing if available
-        # pipeline_options.accelerator_options.num_threads = 4
+        # Configure OCR engine for high quality
+        import platform
+
+        if platform.system() == "Darwin":
+            # Use macOS native Vision framework via ocrmac
+            pipeline_options.ocr_options = OcrMacOptions(force_full_page_ocr=True)
+        else:
+            # Fallback for other systems
+            pipeline_options.ocr_options = RapidOcrOptions(force_full_page_ocr=True)
 
         converter = DocumentConverter(
             format_options={
-                InputFormat.PDF: PdfFormat(pipeline_options=pipeline_options)
+                InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
             }
         )
 
-        # Open PDF with pypdfium2 to get page count and split
         import pypdfium2 as pdfium
         import tempfile
         import os
 
         pdf = pdfium.PdfDocument(pdf_file)
-        total_pages = len(pdf)
+        actual_total_pages = len(pdf)
 
-        print(f"DEBUG: Starting conversion of {total_pages} pages...", file=sys.stderr)
+        start_page = 1
+        end_page = actual_total_pages
 
-        for i in range(total_pages):
+        if pages:
+            start_page = max(1, pages[0])
+            end_page = min(actual_total_pages, pages[1])
+
+        total_pages = end_page - start_page + 1
+
+        print(
+            f"DEBUG: Starting conversion of pages {start_page} to {end_page}...",
+            file=sys.stderr,
+        )
+
+        for i in range(start_page - 1, end_page):
             page_num = i + 1
 
             # Progress log
-            print(
-                f"DEBUG: Processing page {page_num}/{total_pages}...", file=sys.stderr
-            )
+            print(f"DEBUG: Processing page {page_num}/{end_page}...", file=sys.stderr)
 
             # Create a new PDF with just this single page
             single_page_pdf = pdfium.PdfDocument.new()
@@ -107,6 +144,9 @@ def convert_pdf(pdf_path):
             "total_pages": total_pages,
             "pages_processed": processed_count,
         }
+
+        # Explicitly close the main PDF document to avoid pdfium memory leak warning
+        pdf.close()
 
         print(json.dumps(output, ensure_ascii=False))
 

@@ -61,19 +61,32 @@ async function bootstrap() {
   const files = fs.readdirSync(pdfsDir).filter((f) => f.endsWith('.pdf'));
   console.log(`Found ${files.length} new PDF files in ${pdfsDir}`);
 
-  // Parse args for engine
+  // Parse args for engine and pages
   const args = process.argv.slice(2);
-  let engine: 'pymupdf' | 'docling' = 'pymupdf'; // default
+  let engine: 'pymupdf' | 'docling' = 'docling'; // Docling is now the default
+  let pageRange: { start: number; end: number } | undefined;
 
   const engineArgIndex = args.findIndex((a) => a.startsWith('--engine='));
   if (engineArgIndex !== -1) {
     const engineValue = args[engineArgIndex].split('=')[1];
-    if (engineValue === 'docling') {
-      engine = 'docling';
+    if (engineValue === 'pymupdf') {
+      engine = 'pymupdf';
+    }
+  }
+
+  const pagesArgIndex = args.findIndex((a) => a.startsWith('--pages='));
+  if (pagesArgIndex !== -1) {
+    const pagesValue = args[pagesArgIndex].split('=')[1]; // e.g., "1,10"
+    const [start, end] = pagesValue.split(',').map(Number);
+    if (!isNaN(start) && !isNaN(end)) {
+      pageRange = { start, end };
     }
   }
 
   console.log(`🚀 Using extraction engine: ${engine.toUpperCase()}`);
+  if (pageRange) {
+    console.log(`   📄 Page range: ${pageRange.start} to ${pageRange.end}`);
+  }
   if (engine === 'docling') {
     console.log(
       '   (Note: Docling is slower but handles layouts/images better)',
@@ -96,6 +109,7 @@ async function bootstrap() {
       const markdown = await knowledgeBaseService.extractPdf(
         absFilePath,
         engine,
+        pageRange ? { startPage: pageRange.start, endPage: pageRange.end } : {},
       );
 
       // 2. Extract Metadata

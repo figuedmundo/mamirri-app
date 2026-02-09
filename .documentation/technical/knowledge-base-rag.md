@@ -95,7 +95,9 @@ You can manage the knowledge base using these commands from the project root:
 
 | Command                                        | Description                                                                                                     |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `pnpm knowledge:convert`                       | Converts PDFs from `data/pdfs/` to Markdown in `data/markdowns/` and extracts metadata.                         |
+| `pnpm knowledge:convert`                       | (Default) High-fidelity extraction using IBM Docling OCR for complex medical textbooks.                         |
+| `pnpm knowledge:convert -- --engine=pymupdf`   | Fast, rule-based extraction (legacy fallback).                                                                  |
+| `pnpm knowledge:convert -- --pages=1,10`       | Converts only a specific page range (useful for testing quality).                                               |
 | `pnpm knowledge:ingest`                        | Ingests Markdown files from `data/markdowns/` into the Vector DB. (Default: naive chunking).                    |
 | `pnpm knowledge:ingest -- --semantic-chunking` | Uses **semantic chunking** for higher-quality retrieval. Requires paid API tier or multiple days of free quota. |
 | `pnpm knowledge:search "query"`                | Performs a semantic search across all ingested books.                                                           |
@@ -261,7 +263,7 @@ If an ingestion is interrupted (e.g., due to rate limits or internet failure):
 - **Embeddings Model**: Google Gemini (`gemini-embedding-001` - Latest 2025 Model)
 - **Metadata Orchestration**: Google Gemini 3 (`gemini-3-flash-preview`)
 - **Query Transformation**: HyDE (Hypothetical Document Embeddings) via Gemini 3 Flash
-- **PDF Extraction**: **PyMuPDF4LLM** (Python script)
+- **PDF Extraction**: **IBM Docling** (Computer Vision & OCR) or **PyMuPDF4LLM** (Fast fallback)
 - **Database Layer**: Prisma (using `Unsupported("vector(768)")` for vector types)
 - **Indexing**: HNSW (Hierarchical Navigable Small World) for fast similarity searches.
 - **Optimization**: Matryoshka Representation Learning (MRL) for efficient 768-dim storage.

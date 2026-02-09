@@ -15,11 +15,27 @@ pip install -r requirements.txt
 
 ### 2. Test the script
 
+Convert a full PDF:
+
 ```bash
 python main.py path/to/file.pdf
 ```
 
-Expected output:
+Convert a specific page range (e.g., pages 1-10):
+
+```bash
+python main.py path/to/file.pdf --pages 1 10
+```
+
+### 3. CLI Integration
+
+The main application calls this worker via:
+
+```bash
+pnpm knowledge:convert -- --engine=docling --pages=1,10
+```
+
+Expected output is a JSON object:
 
 ```json
 {
