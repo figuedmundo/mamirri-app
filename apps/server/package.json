@@ -23,6 +23,7 @@
     "db:deploy": "prisma migrate deploy",
     "seed": "ts-node prisma/seed.ts",
     "knowledge:ingest": "ts-node scripts/ingest.ts",
+    "knowledge:verify": "ts-node scripts/verify-ingestion.ts",
     "knowledge:convert": "ts-node scripts/convert-books.ts",
     "knowledge:search": "ts-node scripts/test-search.ts",
     "knowledge:clean": "ts-node scripts/clean-book.ts",

@@ -57,9 +57,12 @@ export class PromptBuilderService {
     }
 
     const formattedChunks = chunks.map((chunk, index) => {
+      const pageInfo = chunk.pageNumber
+        ? `\n**Página:** ${chunk.pageNumber}`
+        : '';
       return `### Fuente ${index + 1}
 **Documento:** ${chunk.documentTitle}
-**Autor:** ${chunk.documentAuthor}
+**Autor:** ${chunk.documentAuthor}${pageInfo}
 **Relevancia:** ${(chunk.similarity * 100).toFixed(1)}%
 
 ${chunk.content}

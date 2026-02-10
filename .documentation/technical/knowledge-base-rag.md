@@ -200,14 +200,21 @@ pnpm knowledge:restore
 
 ### API Quota Considerations
 
-Google Gemini's free tier has strict limits:
+Google Gemini's free tier has strict limits. Mamirri now includes a **Dual Rate Limiter** to protect against these limits automatically.
 
 | Limit                     | Free Tier | Paid Tier |
 | ------------------------- | --------- | --------- |
 | Requests per minute (RPM) | 100       | 1,000+    |
+| Tokens per minute (TPM)   | 30,000    | Unlimited |
 | Requests per day (RPD)    | 1,000     | Unlimited |
 
-**Important**: Gemini counts quota **per text embedded**, not per API call. Batching 100 texts in one request still consumes 100 quota units.
+**How the System Protects You:**
+
+1.  **RPM Protection**: Tracks the number of requests (including batches) and enforces a delay if you approach 100 requests/minute.
+2.  **TPM Protection**: Tracks token usage and pauses ingestion if you approach 30,000 tokens/minute.
+3.  **Adaptive Batching**: For batch operations (like Semantic Chunking), the system automatically adds delays (approx. 7-8s) between batches to stay safely within the 100 RPM limit.
+
+**Note on Speed**: Ingestion may feel slower due to these safety delays, but it ensures the process completes without crashing.
 
 #### Recommended Approach by Use Case
 

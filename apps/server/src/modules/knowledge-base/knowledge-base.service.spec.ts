@@ -84,7 +84,8 @@ describe('KnowledgeBaseService', () => {
       const chunks = (service as any).chunkText(text, 50, 10);
 
       expect(chunks.length).toBeGreaterThan(1);
-      expect(chunks[0].split(' ').length).toBe(50);
+      expect(chunks[0].content.split(' ').length).toBe(50);
+      expect(chunks[0].pageNumber).toBe(1);
     });
   });
 
@@ -323,7 +324,8 @@ describe('KnowledgeBaseService', () => {
       });
 
       expect(result.chunks.length).toBeGreaterThan(0);
-      expect(result.chunks[0]).toContain('First sentence.');
+      expect(result.chunks[0].content).toContain('First sentence.');
+      expect(result.chunks[0].pageNumber).toBe(1);
     });
 
     it('should respect paragraph boundaries', async () => {
@@ -348,8 +350,8 @@ describe('KnowledgeBaseService', () => {
       // If `isParagraphStart`, start new chunk.
       // So yes, paragraph boundaries should force new chunk.
       expect(result.chunks.length).toBeGreaterThanOrEqual(2);
-      expect(result.chunks[0]).toContain('Paragraph one.');
-      expect(result.chunks[1]).toContain('Paragraph two.');
+      expect(result.chunks[0].content).toContain('Paragraph one.');
+      expect(result.chunks[1].content).toContain('Paragraph two.');
     });
 
     it('should group similar sentences together', async () => {
@@ -376,8 +378,8 @@ describe('KnowledgeBaseService', () => {
       });
 
       expect(result.chunks.length).toBeGreaterThanOrEqual(2);
-      expect(result.chunks[0]).toContain('Cat');
-      expect(result.chunks[1]).toContain('Car');
+      expect(result.chunks[0].content).toContain('Cat');
+      expect(result.chunks[1].content).toContain('Car');
     });
 
     it('should create parent chunks', async () => {
