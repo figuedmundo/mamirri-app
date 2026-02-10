@@ -411,32 +411,27 @@ export class VoyageEmbeddingService {
       );
     }
 
-    if (tokensInWindow + estimatedTokens > this.rateLimitTpm) {
-      const waitTime = 60000;
-      this.logger.warn(
-        `   ⏳ TPM window nearly full (${tokensInWindow}/${this.rateLimitTpm}). Waiting ${waitTime / 1000}s before sending...`,
-      );
-      await new Promise((resolve) => setTimeout(resolve, waitTime));
+    const projectedTotal = tokensInWindow + estimatedTokens;
+    const isNearLimit = projectedTotal > this.rateLimitTpm * 0.9;
 
-      const newTokensInWindow = this.getTokensInWindow();
-      this.logger.log(
-        `   📊 After wait: Tokens in rolling window: ${newTokensInWindow}/${this.rateLimitTpm}`,
-      );
-    }
+    if (isNearLimit && tokensInWindow > this.rateLimitTpm * 0.5) {
+      const oldestEntry = this.tokenUsageWindow[0];
+      if (oldestEntry) {
+        const age = Date.now() - oldestEntry.timestamp;
+        const waitTime = Math.max(0, 60000 - age);
 
-    // Check if TPM window is full and wait if necessary
-    if (tokensInWindow + estimatedTokens > this.rateLimitTpm) {
-      const waitTime = 60000;
-      this.logger.warn(
-        `   ⏳ TPM window nearly full (${tokensInWindow}/${this.rateLimitTpm}). Waiting ${waitTime / 1000}s before sending...`,
-      );
-      await new Promise((resolve) => setTimeout(resolve, waitTime));
+        if (waitTime > 5000) {
+          this.logger.warn(
+            `   ⏳ TPM window at ${Math.round((tokensInWindow / this.rateLimitTpm) * 100)}%. Waiting ${Math.round(waitTime / 1000)}s for oldest entry to expire...`,
+          );
+          await new Promise((resolve) => setTimeout(resolve, waitTime));
 
-      // Recalculate after wait
-      const newTokensInWindow = this.getTokensInWindow();
-      this.logger.log(
-        `   📊 After wait: Tokens in rolling window: ${newTokensInWindow}/${this.rateLimitTpm}`,
-      );
+          const newTokensInWindow = this.getTokensInWindow();
+          this.logger.log(
+            `   📊 After wait: Window at ${Math.round((newTokensInWindow / this.rateLimitTpm) * 100)}%`,
+          );
+        }
+      }
     }
 
     await this.enforceRateLimit();
