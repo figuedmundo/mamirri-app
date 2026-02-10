@@ -19,6 +19,21 @@ export async function withRetry<T>(
 
       let delay = Math.min(initialDelay * Math.pow(2, attempt - 1), 16000);
 
+      // Smart 429 handling: If rate limited, wait a full minute to clear quota window
+      // Check for Google's specific error structure or generic 429 status
+      const isRateLimit =
+        error.status === 429 ||
+        (error.error && error.error.code === 429) ||
+        error.code === 429;
+
+      if (isRateLimit) {
+        if (logger)
+          logger.warn(
+            `Rate limit hit (429). Waiting 60s to clear quota window...`,
+          );
+        delay = 60000;
+      }
+
       const retryAfterHeader = error?.headers?.['retry-after'];
       if (retryAfterHeader) {
         const retryAfter = parseInt(retryAfterHeader, 10);

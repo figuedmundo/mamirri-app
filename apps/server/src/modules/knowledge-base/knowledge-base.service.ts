@@ -23,19 +23,23 @@ import { CohereClient } from 'cohere-ai';
 class TokenRateLimiter {
   private readonly windowMs = 60_000; // 60 seconds
   private readonly maxTokens: number;
+  private readonly maxRequests: number;
   private readonly safetyMargin = 0.85; // Use 85% of limit for safety
-  private tokenLog: { timestamp: number; tokens: number }[] = [];
 
-  constructor(maxTokensPerMinute: number) {
+  private tokenLog: { timestamp: number; tokens: number }[] = [];
+  private requestLog: number[] = []; // Timestamps of requests
+
+  constructor(maxTokensPerMinute: number, maxRequestsPerMinute: number = 100) {
     this.maxTokens = maxTokensPerMinute * this.safetyMargin;
+    this.maxRequests = maxRequestsPerMinute * this.safetyMargin; // ~85 RPM
   }
 
   /**
-   * Estimate tokens for a text using word count * 1.3 factor
+   * Estimate tokens for a text using word count * 1.6 factor (conservative for medical text)
    */
   estimateTokens(text: string): number {
     const words = text.split(/\s+/).filter((w) => w.length > 0).length;
-    return Math.ceil(words * 1.3);
+    return Math.ceil(words * 1.6);
   }
 
   /**
@@ -44,47 +48,96 @@ class TokenRateLimiter {
   private getTokensInWindow(): number {
     const now = Date.now();
     const windowStart = now - this.windowMs;
-
-    // Clean old entries
     this.tokenLog = this.tokenLog.filter((e) => e.timestamp > windowStart);
-
     return this.tokenLog.reduce((sum, e) => sum + e.tokens, 0);
   }
 
   /**
-   * Record tokens consumed
+   * Get requests made in the current rolling window
    */
-  recordTokens(tokens: number): void {
-    this.tokenLog.push({ timestamp: Date.now(), tokens });
+  private getRequestsInWindow(): number {
+    const now = Date.now();
+    const windowStart = now - this.windowMs;
+    this.requestLog = this.requestLog.filter((ts) => ts > windowStart);
+    return this.requestLog.length;
   }
 
   /**
-   * Calculate delay needed before consuming more tokens.
-   * Returns 0 if we can proceed immediately.
+   * Record tokens and requests consumed
    */
-  getRequiredDelay(tokensNeeded: number): number {
+  recordUsage(tokens: number, requestCount: number = 1): void {
+    const now = Date.now();
+    this.tokenLog.push({ timestamp: now, tokens });
+    for (let i = 0; i < requestCount; i++) {
+      this.requestLog.push(now);
+    }
+  }
+
+  // Deprecated alias for backward compatibility if needed, but we should use recordUsage
+  recordTokens(tokens: number): void {
+    this.recordUsage(tokens, 1);
+  }
+
+  /**
+   * Calculate delay needed before consuming more resources.
+   * If a delay is needed, it effectively "reserves" the spot by return.
+   * NOTE: For strict limiting, you should call recordUsage() immediately after calculating delay
+   * or implement a separate reservation method.
+   *
+   * In this implementation, we will trust the caller to call recordUsage()
+   * OR we can add a 'reserve' boolean to auto-record?
+   * Let's stick to explicit recordUsage for now but ensure it's called BEFORE API call.
+   */
+  getRequiredDelay(tokensNeeded: number, requestsNeeded: number = 1): number {
+    const now = Date.now();
+
+    // Check Request Limit
+    const currentRequests = this.getRequestsInWindow();
+    const availableRequests = this.maxRequests - currentRequests;
+
+    let requestDelay = 0;
+    if (requestsNeeded > availableRequests) {
+      const requestsToFree = requestsNeeded - availableRequests;
+      // Find timestamp of the Nth oldest request that needs to expire
+      if (this.requestLog.length >= requestsToFree) {
+        const oldestRelevantRequest = this.requestLog[requestsToFree - 1];
+        requestDelay = Math.max(
+          0,
+          oldestRelevantRequest + this.windowMs - now + 100,
+        );
+      } else {
+        // Should not happen if logic is correct, but safe fallback
+        requestDelay = 1000;
+      }
+    }
+
+    // Check Token Limit
     const currentTokens = this.getTokensInWindow();
     const availableTokens = this.maxTokens - currentTokens;
 
-    if (tokensNeeded <= availableTokens) {
-      // We have capacity, add minimal delay to spread requests
-      return 500;
+    let tokenDelay = 0;
+    if (tokensNeeded > availableTokens) {
+      const tokensToFree = tokensNeeded - availableTokens;
+      let tokensFreed = 0;
+      let waitUntil = now;
+
+      for (const entry of this.tokenLog) {
+        tokensFreed += entry.tokens;
+        waitUntil = entry.timestamp + this.windowMs;
+        if (tokensFreed >= tokensToFree) break;
+      }
+      tokenDelay = Math.max(0, waitUntil - now + 100);
     }
 
-    // Need to wait for tokens to expire from window
-    // Find oldest entry that would free enough tokens
-    const tokensToFree = tokensNeeded - availableTokens;
-    let tokensFreed = 0;
-    let waitUntil = Date.now();
+    // Return the longer of the two delays
+    const maxDelay = Math.max(requestDelay, tokenDelay);
 
-    for (const entry of this.tokenLog) {
-      tokensFreed += entry.tokens;
-      waitUntil = entry.timestamp + this.windowMs;
-      if (tokensFreed >= tokensToFree) break;
+    if (maxDelay === 0 && (requestsNeeded > 0 || tokensNeeded > 0)) {
+      // Minimal spacing to prevent burst issues
+      return 200;
     }
 
-    const delay = Math.max(0, waitUntil - Date.now() + 100); // +100ms buffer
-    return delay;
+    return maxDelay;
   }
 }
 
@@ -349,34 +402,40 @@ export class KnowledgeBaseService {
     });
 
     try {
-      let chunks: string[] = [];
-      let parentChunks: string[] = [];
+      let chunks: { content: string; pageNumber: number }[] = [];
+      let parentChunks: { content: string; pageNumber: number }[] = [];
 
       if (useSemanticChunking) {
         try {
-          const result = await this.semanticChunk(pdfText);
+          const pages = this.splitByPages(pdfText);
+          const result = await this.semanticChunk(pages);
           chunks = result.chunks;
           parentChunks = result.parentChunks;
         } catch (error) {
           this.logger.warn(
             `Semantic chunking failed: ${error.message}. Falling back to naive chunking.`,
           );
-          chunks = this.chunkText(pdfText);
+          const pages = this.splitByPages(pdfText);
+          chunks = this.chunkText(pages);
           for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
-            parentChunks.push(
-              chunks.slice(i, i + this.chunksPerParent).join(' '),
-            );
+            const batch = chunks.slice(i, i + this.chunksPerParent);
+            parentChunks.push({
+              content: batch.map((c) => c.content).join(' '),
+              pageNumber: batch[0].pageNumber, // Use start page of the parent chunk
+            });
           }
         }
       } else {
-        chunks = this.chunkText(pdfText);
+        const pages = this.splitByPages(pdfText);
+        chunks = this.chunkText(pages);
         for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
-          parentChunks.push(
-            chunks.slice(i, i + this.chunksPerParent).join(' '),
-          );
+          const batch = chunks.slice(i, i + this.chunksPerParent);
+          parentChunks.push({
+            content: batch.map((c) => c.content).join(' '),
+            pageNumber: batch[0].pageNumber,
+          });
         }
       }
-
       this.logger.log(
         `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${meta.title}`,
       );
@@ -385,13 +444,13 @@ export class KnowledgeBaseService {
 
       if (parentChunks.length > 0) {
         this.logger.log(
-          `Generating embeddings for ${parentChunks.length} parent chunks...`,
+          `Processing ${parentChunks.length} parent chunks (Sequentially 1-by-1)...`,
         );
 
         for (let i = 0; i < parentChunks.length; i++) {
           const content = parentChunks[i];
           const vector = await this.generateEmbedding(
-            content,
+            content.content,
             'RETRIEVAL_DOCUMENT',
           );
           const vectorString = `[${vector.join(',')}]`;
@@ -400,10 +459,10 @@ export class KnowledgeBaseService {
 
           await (this.prisma as any).$executeRaw`
             INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
-            VALUES (${parentId}::uuid, ${content}, 1, ${document.id}, ${vectorString}::vector, ${content})
+            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${content.content})
           `;
 
-          if ((i + 1) % 10 === 0) {
+          if ((i + 1) % 5 === 0) {
             this.logger.log(
               `Processed ${i + 1}/${parentChunks.length} parent chunks`,
             );
@@ -413,13 +472,13 @@ export class KnowledgeBaseService {
       }
 
       this.logger.log(
-        `Generating embeddings for ${chunks.length} child chunks...`,
+        `Processing ${chunks.length} child chunks (Sequentially 1-by-1)...`,
       );
 
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
         const vector = await this.generateEmbedding(
-          content,
+          content.content,
           'RETRIEVAL_DOCUMENT',
         );
         const vectorString = `[${vector.join(',')}]`;
@@ -431,13 +490,13 @@ export class KnowledgeBaseService {
           const parentIndex = Math.floor(i / this.chunksPerParent);
           if (parentIndex < parentIds.length) {
             parentId = parentIds[parentIndex];
-            parentContent = parentChunks[parentIndex];
+            parentContent = parentChunks[parentIndex].content;
           }
         }
 
         await (this.prisma as any).$executeRaw`
           INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-          VALUES (gen_random_uuid(), ${content}, 1, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
+          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
         `;
 
         if ((i + 1) % 10 === 0) {
@@ -495,31 +554,38 @@ export class KnowledgeBaseService {
     });
 
     try {
-      let chunks: string[] = [];
-      let parentChunks: string[] = [];
+      let chunks: { content: string; pageNumber: number }[] = [];
+      let parentChunks: { content: string; pageNumber: number }[] = [];
 
       if (useSemanticChunking) {
         try {
-          const result = await this.semanticChunk(markdown);
+          const pages = this.splitByPages(markdown);
+          const result = await this.semanticChunk(pages);
           chunks = result.chunks;
           parentChunks = result.parentChunks;
         } catch (error) {
           this.logger.warn(
             `Semantic chunking failed: ${error.message}. Falling back to naive chunking.`,
           );
-          chunks = this.chunkText(markdown);
+          const pages = this.splitByPages(markdown);
+          chunks = this.chunkText(pages);
           for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
-            parentChunks.push(
-              chunks.slice(i, i + this.chunksPerParent).join(' '),
-            );
+            const batch = chunks.slice(i, i + this.chunksPerParent);
+            parentChunks.push({
+              content: batch.map((c) => c.content).join(' '),
+              pageNumber: batch[0].pageNumber,
+            });
           }
         }
       } else {
-        chunks = this.chunkText(markdown);
+        const pages = this.splitByPages(markdown);
+        chunks = this.chunkText(pages);
         for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
-          parentChunks.push(
-            chunks.slice(i, i + this.chunksPerParent).join(' '),
-          );
+          const batch = chunks.slice(i, i + this.chunksPerParent);
+          parentChunks.push({
+            content: batch.map((c) => c.content).join(' '),
+            pageNumber: batch[0].pageNumber,
+          });
         }
       }
 
@@ -531,13 +597,13 @@ export class KnowledgeBaseService {
 
       if (parentChunks.length > 0) {
         this.logger.log(
-          `Generating embeddings for ${parentChunks.length} parent chunks...`,
+          `Processing ${parentChunks.length} parent chunks (Sequentially 1-by-1)...`,
         );
 
         for (let i = 0; i < parentChunks.length; i++) {
           const content = parentChunks[i];
           const vector = await this.generateEmbedding(
-            content,
+            content.content,
             'RETRIEVAL_DOCUMENT',
           );
           const vectorString = `[${vector.join(',')}]`;
@@ -546,10 +612,10 @@ export class KnowledgeBaseService {
 
           await (this.prisma as any).$executeRaw`
             INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
-            VALUES (${parentId}::uuid, ${content}, 1, ${document.id}, ${vectorString}::vector, ${content})
+            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${content.content})
           `;
 
-          if ((i + 1) % 10 === 0) {
+          if ((i + 1) % 5 === 0) {
             this.logger.log(
               `Processed ${i + 1}/${parentChunks.length} parent chunks`,
             );
@@ -559,13 +625,13 @@ export class KnowledgeBaseService {
       }
 
       this.logger.log(
-        `Generating embeddings for ${chunks.length} child chunks...`,
+        `Processing ${chunks.length} child chunks (Sequentially 1-by-1)...`,
       );
 
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
         const vector = await this.generateEmbedding(
-          content,
+          content.content,
           'RETRIEVAL_DOCUMENT',
         );
         const vectorString = `[${vector.join(',')}]`;
@@ -577,13 +643,13 @@ export class KnowledgeBaseService {
           const parentIndex = Math.floor(i / this.chunksPerParent);
           if (parentIndex < parentIds.length) {
             parentId = parentIds[parentIndex];
-            parentContent = parentChunks[parentIndex];
+            parentContent = parentChunks[parentIndex].content;
           }
         }
 
         await (this.prisma as any).$executeRaw`
           INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-          VALUES (gen_random_uuid(), ${content}, 1, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
+          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
         `;
 
         if ((i + 1) % 10 === 0) {
@@ -1002,36 +1068,53 @@ export class KnowledgeBaseService {
   }
 
   private async semanticChunk(
-    text: string,
+    textOrPages: string | { pageNumber: number; content: string }[],
     options: {
       similarityThreshold?: number;
       targetChunkSize?: number;
       maxChunkSize?: number;
     } = {},
-  ): Promise<{ chunks: string[]; parentChunks: string[] }> {
+  ): Promise<{
+    chunks: { content: string; pageNumber: number }[];
+    parentChunks: { content: string; pageNumber: number }[];
+  }> {
     const {
       similarityThreshold = 0.85,
       targetChunkSize = 400,
       maxChunkSize = 512,
     } = options;
 
-    // 1. Split text into paragraphs first to respect boundaries
-    const paragraphs = text.split(/\n\n+/);
-    const refinedSentences: { text: string; isParagraphStart: boolean }[] = [];
+    // Normalize input to Page[]
+    const pages =
+      typeof textOrPages === 'string'
+        ? [{ pageNumber: 1, content: textOrPages }]
+        : textOrPages;
 
-    for (const para of paragraphs) {
-      const paraSentences = para.match(/(?<=[.!?])\s+/g)
-        ? para.split(/(?<=[.!?])\s+/)
-        : [para];
+    const refinedSentences: {
+      text: string;
+      isParagraphStart: boolean;
+      pageNumber: number;
+    }[] = [];
 
-      paraSentences.forEach((s, i) => {
-        if (s.trim().length > 0) {
-          refinedSentences.push({
-            text: s.trim(),
-            isParagraphStart: i === 0,
-          });
-        }
-      });
+    // 1. Split text into paragraphs respecting page boundaries
+    for (const page of pages) {
+      const paragraphs = page.content.split(/\n\n+/);
+
+      for (const para of paragraphs) {
+        const paraSentences = para.match(/(?<=[.!?])\s+/g)
+          ? para.split(/(?<=[.!?])\s+/)
+          : [para];
+
+        paraSentences.forEach((s, i) => {
+          if (s.trim().length > 0) {
+            refinedSentences.push({
+              text: s.trim(),
+              isParagraphStart: i === 0,
+              pageNumber: page.pageNumber,
+            });
+          }
+        });
+      }
     }
 
     if (refinedSentences.length === 0) {
@@ -1045,9 +1128,10 @@ export class KnowledgeBaseService {
     );
 
     // 3. Group sentences into chunks
-    const chunks: string[] = [];
+    const chunks: { content: string; pageNumber: number }[] = [];
     let currentChunkSentences: string[] = [];
     let currentChunkTokens = 0;
+    let currentChunkStartPage = refinedSentences[0].pageNumber;
 
     for (let i = 0; i < refinedSentences.length; i++) {
       const sentence = refinedSentences[i];
@@ -1057,6 +1141,7 @@ export class KnowledgeBaseService {
       if (currentChunkSentences.length === 0) {
         currentChunkSentences.push(sentence.text);
         currentChunkTokens += sentenceTokens;
+        currentChunkStartPage = sentence.pageNumber;
         continue;
       }
 
@@ -1071,15 +1156,23 @@ export class KnowledgeBaseService {
         currentChunkTokens + sentenceTokens > maxChunkSize;
       const isParagraphStart = sentence.isParagraphStart;
 
+      // Page boundary check: If sentence is on a new page, consider breaking
+      // But we allow semantic chunks to cross pages if meaning is continuous
+      // We will assign page number based on the START of the chunk
+
       // Decision to start new chunk
       if (
         isParagraphStart ||
         (currentChunkTokens >= targetChunkSize && isSimilarityDrop) ||
         isMaxChunkSizeExceeded
       ) {
-        chunks.push(currentChunkSentences.join(' '));
+        chunks.push({
+          content: currentChunkSentences.join(' '),
+          pageNumber: currentChunkStartPage,
+        });
         currentChunkSentences = [sentence.text];
         currentChunkTokens = sentenceTokens;
+        currentChunkStartPage = sentence.pageNumber;
       } else {
         currentChunkSentences.push(sentence.text);
         currentChunkTokens += sentenceTokens;
@@ -1087,35 +1180,104 @@ export class KnowledgeBaseService {
     }
 
     if (currentChunkSentences.length > 0) {
-      chunks.push(currentChunkSentences.join(' '));
+      chunks.push({
+        content: currentChunkSentences.join(' '),
+        pageNumber: currentChunkStartPage,
+      });
     }
 
     // 4. Create parent chunks
     // Combine 4-5 regular chunks
-    const parentChunks: string[] = [];
+    const parentChunks: { content: string; pageNumber: number }[] = [];
 
     for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
-      const parentChunk = chunks.slice(i, i + this.chunksPerParent).join(' ');
-      parentChunks.push(parentChunk);
+      const batch = chunks.slice(i, i + this.chunksPerParent);
+      const parentChunk = batch.map((c) => c.content).join(' ');
+      parentChunks.push({
+        content: parentChunk,
+        pageNumber: batch[0].pageNumber,
+      });
     }
 
     return { chunks, parentChunks };
   }
 
-  private chunkText(
+  private splitByPages(
     text: string,
+  ): { pageNumber: number; content: string }[] {
+    const pages: { pageNumber: number; content: string }[] = [];
+    const pageRegex = /<!-- PAGE_NUMBER: (\d+) -->/g;
+    let match;
+    let lastIndex = 0;
+
+    // Handle content before the first page marker (if any)
+    // Usually metadata or frontmatter, treat as page 0 or 1
+    match = pageRegex.exec(text);
+    if (match && match.index > 0) {
+      const preContent = text.substring(0, match.index).trim();
+      if (preContent) {
+        pages.push({ pageNumber: 1, content: preContent });
+      }
+    }
+
+    // Reset regex to start
+    pageRegex.lastIndex = 0;
+
+    while ((match = pageRegex.exec(text)) !== null) {
+      const pageNumber = parseInt(match[1], 10);
+      const startIndex = match.index + match[0].length;
+
+      // Look ahead for next page marker
+      const nextMatch = /<!-- PAGE_NUMBER: (\d+) -->/g.exec(
+        text.slice(startIndex),
+      );
+      const endIndex = nextMatch ? startIndex + nextMatch.index : text.length;
+
+      const content = text.substring(startIndex, endIndex).trim();
+      if (content) {
+        pages.push({ pageNumber, content });
+      }
+
+      // Adjust lastIndex to avoid infinite loop if regex is sticky/global
+      if (match.index === pageRegex.lastIndex) {
+        pageRegex.lastIndex++;
+      }
+    }
+
+    // If no page markers found, return whole text as page 1
+    if (pages.length === 0) {
+      pages.push({ pageNumber: 1, content: text });
+    }
+
+    return pages;
+  }
+
+  private chunkText(
+    textOrPages: string | { pageNumber: number; content: string }[],
     wordsPerChunk: number = 500,
     overlap: number = 50,
-  ): string[] {
-    const words = text.split(/\s+/).filter((w) => w.length > 0);
-    const chunks: string[] = [];
+  ): { content: string; pageNumber: number }[] {
+    const chunks: { content: string; pageNumber: number }[] = [];
 
-    if (words.length === 0) return [];
+    // Normalize input to Page[]
+    const pages =
+      typeof textOrPages === 'string'
+        ? [{ pageNumber: 1, content: textOrPages }]
+        : textOrPages;
 
-    for (let i = 0; i < words.length; i += wordsPerChunk - overlap) {
-      const chunk = words.slice(i, i + wordsPerChunk).join(' ');
-      chunks.push(chunk);
-      if (i + wordsPerChunk >= words.length) break;
+    for (const page of pages) {
+      const words = page.content.split(/\s+/).filter((w) => w.length > 0);
+      if (words.length === 0) continue;
+
+      for (let i = 0; i < words.length; i += wordsPerChunk - overlap) {
+        const chunkContent = words.slice(i, i + wordsPerChunk).join(' ');
+        chunks.push({
+          content: chunkContent,
+          pageNumber: page.pageNumber,
+        });
+
+        if (i + wordsPerChunk >= words.length) break;
+      }
     }
 
     return chunks;
@@ -1133,7 +1295,10 @@ export class KnowledgeBaseService {
     }
 
     const estimatedTokens = this.rateLimiter.estimateTokens(text);
-    const delay = this.rateLimiter.getRequiredDelay(estimatedTokens);
+    const delay = this.rateLimiter.getRequiredDelay(estimatedTokens, 1);
+
+    // Reserve usage BEFORE waiting/calling API to prevent race conditions
+    this.rateLimiter.recordUsage(estimatedTokens, 1);
 
     if (delay > 1000) {
       this.logger.debug(
@@ -1167,7 +1332,6 @@ export class KnowledgeBaseService {
       this.logger,
     );
 
-    this.rateLimiter.recordTokens(estimatedTokens);
     return result;
   }
 
@@ -1198,13 +1362,59 @@ export class KnowledgeBaseService {
       return [];
     }
 
-    // Small batches to stay under 100 RPM free tier limit
-    const MAX_BATCH_SIZE = 10;
-    const BATCH_DELAY_MS = 1500;
+    // Small batches to stay under limits
+    // Gemini Free Tier: 100 RPM.
+    // Batch size 10 means we consume 10 requests per call.
+    // Safe RPM target: 80 RPM -> 0.75s per request.
+    // Delay for 10 reqs = 7.5s.
+    // Reduced max batch size to 5 for safety with large parent chunks
+    const MAX_BATCH_SIZE = 5;
+    // Target max tokens per batch to leave room for error
+    const TARGET_BATCH_TOKENS = 5000;
+
     const allEmbeddings: number[][] = [];
 
-    for (let i = 0; i < texts.length; i += MAX_BATCH_SIZE) {
-      const batch = texts.slice(i, i + MAX_BATCH_SIZE);
+    let currentIndex = 0;
+
+    while (currentIndex < texts.length) {
+      // Dynamic Batch Sizing: Fill batch until MAX_SIZE or Token Limit
+      const batch: string[] = [];
+      let batchTokens = 0;
+
+      while (batch.length < MAX_BATCH_SIZE && currentIndex < texts.length) {
+        const text = texts[currentIndex];
+        const tokens = this.rateLimiter.estimateTokens(text);
+
+        // If adding this text exceeds target tokens (and batch is not empty), stop here
+        if (batch.length > 0 && batchTokens + tokens > TARGET_BATCH_TOKENS) {
+          break;
+        }
+
+        batch.push(text);
+        batchTokens += tokens;
+        currentIndex++;
+      }
+
+      // Calculate delay based on BOTH tokens and request count (batch size)
+      const delay = this.rateLimiter.getRequiredDelay(
+        batchTokens,
+        batch.length,
+      );
+
+      // Reserve usage BEFORE waiting/calling API
+      this.rateLimiter.recordUsage(batchTokens, batch.length);
+
+      if (delay > 1000) {
+        this.logger.debug(
+          `Batch rate limit: waiting ${Math.round(delay / 1000)}s for ${batchTokens} tokens (${batch.length} docs). Word counts: [${batch.map((t) => t.split(/\s+/).length).join(', ')}]`,
+        );
+      } else {
+        this.logger.debug(
+          `Sending batch: ${batchTokens} tokens (${batch.length} docs). Word counts: [${batch.map((t) => t.split(/\s+/).length).join(', ')}]`,
+        );
+      }
+
+      await sleep(delay);
 
       const batchEmbeddings = await withRetry(
         async () => {
@@ -1236,19 +1446,9 @@ export class KnowledgeBaseService {
 
       allEmbeddings.push(...batchEmbeddings);
 
-      // Log progress every 100 chunks
-      if (
-        (i + MAX_BATCH_SIZE) % 100 === 0 ||
-        i + MAX_BATCH_SIZE >= texts.length
-      ) {
-        this.logger.log(
-          `Embedding progress: ${Math.min(i + MAX_BATCH_SIZE, texts.length)}/${texts.length}`,
-        );
-      }
-
-      // 1.5s delay between batches to stay under 100 RPM
-      if (i + MAX_BATCH_SIZE < texts.length) {
-        await sleep(BATCH_DELAY_MS);
+      // Log progress
+      if (currentIndex % 50 === 0 || currentIndex >= texts.length) {
+        this.logger.log(`Embedding progress: ${currentIndex}/${texts.length}`);
       }
     }
 
