@@ -30,7 +30,12 @@ async function bootstrap() {
       const vol = res.documentMetadata?.volume
         ? ` (${res.documentMetadata.volume})`
         : '';
-      console.log(`[${i + 1}] Similarity: ${res.similarity.toFixed(4)}`);
+
+      const score = res.rerankScore
+        ? `Rerank: ${res.rerankScore.toFixed(4)}`
+        : `Sim: ${res.similarity?.toFixed(4) || 'N/A'}`;
+
+      console.log(`[${i + 1}] ${score}`);
       console.log(
         `Source: ${res.documentTitle}${vol} (Page ${res.pageNumber})`,
       );

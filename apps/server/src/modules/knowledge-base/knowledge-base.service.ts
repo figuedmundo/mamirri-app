@@ -412,26 +412,44 @@ export class KnowledgeBaseService {
     filePath: string,
     useSemanticChunking: boolean = false,
     useBatchApi: boolean = false,
+    dryRun: boolean = false,
   ): Promise<{ id: string }> {
     const existingDoc = await (this.prisma as any).document.findFirst({
       where: { title: metadata.title },
     });
 
     if (existingDoc) {
-      this.logger.warn(
-        `Document "${metadata.title}" already exists. Skipping.`,
-      );
-      return { id: existingDoc.id };
+      if (dryRun) {
+        this.logger.warn(
+          `[DRY RUN] Document "${metadata.title}" exists in DB. Proceeding with simulation...`,
+        );
+      } else {
+        this.logger.warn(
+          `Document "${metadata.title}" already exists. Skipping.`,
+        );
+        return { id: existingDoc.id };
+      }
     }
 
-    const document = await (this.prisma as any).document.create({
-      data: {
-        title: metadata.title,
-        author: metadata.author,
-        filePath: filePath,
-        metadata: metadata,
-      },
-    });
+    let documentId = existingDoc?.id || randomUUID();
+
+    if (!dryRun) {
+      if (!existingDoc) {
+        const document = await (this.prisma as any).document.create({
+          data: {
+            title: metadata.title,
+            author: metadata.author,
+            filePath: filePath,
+            metadata: metadata,
+          },
+        });
+        documentId = document.id;
+      }
+    } else {
+      this.logger.log(
+        `[DRY RUN] Simulating document creation (ID: ${documentId})`,
+      );
+    }
 
     this.logger.log(`Ingesting markdown: ${metadata.title}`);
 
@@ -512,10 +530,12 @@ export class KnowledgeBaseService {
           parentIds.push(id);
           batchInputs.push({ id, text: chunk.content });
 
-          await (this.prisma as any).$executeRaw`
+          if (!dryRun) {
+            await (this.prisma as any).$executeRaw`
             INSERT INTO embeddings (id, content, "pageNumber", "documentId", "parentContent", vector)
-            VALUES (${id}::uuid, ${chunk.content}, ${chunk.pageNumber}, ${document.id}, ${chunk.content}, ${placeholderVector}::vector)
+            VALUES (${id}::uuid, ${chunk.content}, ${chunk.pageNumber}, ${documentId}, ${chunk.content}, ${placeholderVector}::vector)
           `;
+          }
         }
 
         for (let i = 0; i < chunks.length; i++) {
@@ -535,10 +555,21 @@ export class KnowledgeBaseService {
 
           batchInputs.push({ id, text: chunk.content });
 
-          await (this.prisma as any).$executeRaw`
+          if (!dryRun) {
+            await (this.prisma as any).$executeRaw`
             INSERT INTO embeddings (id, content, "pageNumber", "documentId", "parentId", "parentContent", vector)
-            VALUES (${id}::uuid, ${chunk.content}, ${chunk.pageNumber}, ${document.id}, ${parentId ? parentId : null}::uuid, ${parentContent}, ${placeholderVector}::vector)
+            VALUES (${id}::uuid, ${chunk.content}, ${chunk.pageNumber}, ${documentId}, ${parentId ? parentId : null}::uuid, ${parentContent}, ${placeholderVector}::vector)
           `;
+          }
+        }
+
+        if (dryRun) {
+          this.logger.log(
+            `[DRY RUN] Simulating batch job submission for ${batchInputs.length} inputs...`,
+          );
+          this.logger.log(`[DRY RUN] Would submit batch job to Voyage API`);
+          this.logger.log(`[DRY RUN] Would track job in batch-jobs.json`);
+          return { id: documentId };
         }
 
         const batchId = await this.voyageEmbeddingService.createBatchJob(
@@ -581,7 +612,7 @@ export class KnowledgeBaseService {
         fs.writeFileSync(batchJobsFile, JSON.stringify(batchJobs, null, 2));
 
         this.logger.log(`Batch job tracked in ${batchJobsFile}`);
-        return { id: document.id };
+        return { id: documentId };
       }
 
       const parentIds: string[] = [];
@@ -595,6 +626,7 @@ export class KnowledgeBaseService {
         const parentEmbeddings =
           await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
             parentTexts,
+            dryRun,
           );
 
         this.logger.log(
@@ -608,10 +640,12 @@ export class KnowledgeBaseService {
           const parentId = randomUUID();
           parentIds.push(parentId);
 
-          await (this.prisma as any).$executeRaw`
+          if (!dryRun) {
+            await (this.prisma as any).$executeRaw`
             INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
-            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${content.content})
+            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${documentId}, ${vectorString}::vector, ${content.content})
           `;
+          }
 
           if ((i + 1) % 10 === 0 || i === parentChunks.length - 1) {
             this.logger.log(
@@ -630,6 +664,7 @@ export class KnowledgeBaseService {
       const chunkEmbeddings =
         await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
           chunkTexts,
+          dryRun,
         );
 
       this.logger.log(
@@ -652,10 +687,12 @@ export class KnowledgeBaseService {
           }
         }
 
-        await (this.prisma as any).$executeRaw`
+        if (!dryRun) {
+          await (this.prisma as any).$executeRaw`
           INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
+          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${documentId}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
         `;
+        }
 
         if ((i + 1) % 50 === 0 || i === chunks.length - 1) {
           this.logger.log(
@@ -664,14 +701,17 @@ export class KnowledgeBaseService {
         }
       }
       this.logger.log(`Successfully ingested ${metadata.title}`);
-      return { id: document.id };
+      return { id: documentId };
     } catch (error) {
       this.logger.error(
         `Failed to ingest chunks for ${metadata.title}. Cleaning up partial data...`,
       );
-      await (this.prisma as any).document.delete({
-        where: { id: document.id },
-      });
+      if (!dryRun && existingDoc === null) {
+        // Only delete if we created it
+        await (this.prisma as any).document.delete({
+          where: { id: documentId },
+        });
+      }
       throw error;
     }
   }

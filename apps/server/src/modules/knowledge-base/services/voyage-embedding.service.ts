@@ -258,8 +258,14 @@ export class VoyageEmbeddingService {
   /**
    * Generates an embedding for a document chunk using voyage-4-large (1024 dims)
    */
-  async generateDocumentEmbedding(text: string): Promise<number[]> {
-    if (!this.voyageClient) {
+  async generateDocumentEmbedding(
+    text: string,
+    dryRun: boolean = false,
+  ): Promise<number[]> {
+    if (dryRun || !this.voyageClient) {
+      if (dryRun) {
+        this.logger.log('🔍 [DRY RUN] Generating mock document embedding');
+      }
       return this.generateMockEmbedding(text);
     }
 
@@ -288,8 +294,14 @@ export class VoyageEmbeddingService {
   /**
    * Generates an embedding for a query using voyage-4 (1024 dims, compatible space)
    */
-  async generateQueryEmbedding(text: string): Promise<number[]> {
-    if (!this.voyageClient) {
+  async generateQueryEmbedding(
+    text: string,
+    dryRun: boolean = false,
+  ): Promise<number[]> {
+    if (dryRun || !this.voyageClient) {
+      if (dryRun) {
+        this.logger.log('🔍 [DRY RUN] Generating mock query embedding');
+      }
       return this.generateMockEmbedding(text);
     }
 
@@ -368,26 +380,38 @@ export class VoyageEmbeddingService {
     batchNum: number,
     totalBatches: number,
     isRetry: boolean = false,
+    dryRun: boolean = false,
   ): Promise<number[][]> {
     const estimatedTokens = this.calculateBatchTokens(batch);
     const tokensInWindow = this.getTokensInWindow();
 
+    const dryRunPrefix = dryRun ? '🔍 [DRY RUN] ' : '';
+
     this.logger.log(
-      `📦 BATCH ${batchNum}/${totalBatches}${isRetry ? ' (RETRY)' : ''}:`,
+      `${dryRunPrefix}📦 BATCH ${batchNum}/${totalBatches}${isRetry ? ' (RETRY)' : ''}:`,
     );
     this.logger.log(`   📊 Items: ${batch.length} chunks`);
     this.logger.log(
       `   📝 Estimated tokens: ~${estimatedTokens} (limit: ${this.rateLimitTpm})`,
     );
-    this.logger.log(
-      `   📊 Tokens in rolling window: ${tokensInWindow}/${this.rateLimitTpm}`,
-    );
+    if (!dryRun) {
+      this.logger.log(
+        `   📊 Tokens in rolling window: ${tokensInWindow}/${this.rateLimitTpm}`,
+      );
+    }
 
     if (batch.length > 0) {
       const sample = batch[0].substring(0, 100).replace(/\n/g, ' ');
       this.logger.log(
         `   📝 Sample chunk[0]: "${sample}${batch[0].length > 100 ? '...' : ''}" (${batch[0].length} chars)`,
       );
+    }
+
+    if (dryRun) {
+      this.logger.log(
+        `${dryRunPrefix}⏭️  SKIPPING API call - returning mock embeddings`,
+      );
+      return batch.map((text) => this.generateMockEmbedding(text));
     }
 
     // Check if any single chunk exceeds TPM limit
@@ -409,6 +433,7 @@ export class VoyageEmbeddingService {
         batchNum,
         totalBatches,
         isRetry,
+        dryRun,
       );
     }
 
@@ -463,6 +488,7 @@ export class VoyageEmbeddingService {
           batchNum,
           totalBatches,
           true,
+          dryRun,
         );
 
         this.logger.log(
@@ -473,6 +499,7 @@ export class VoyageEmbeddingService {
           batchNum,
           totalBatches,
           true,
+          dryRun,
         );
 
         return [...firstResults, ...secondResults];
@@ -489,6 +516,7 @@ export class VoyageEmbeddingService {
           batchNum,
           totalBatches,
           true,
+          dryRun,
         );
       }
 
@@ -510,15 +538,20 @@ export class VoyageEmbeddingService {
     }
   }
 
-  async generateDocumentEmbeddingsBatch(chunks: string[]): Promise<number[][]> {
+  async generateDocumentEmbeddingsBatch(
+    chunks: string[],
+    dryRun: boolean = false,
+  ): Promise<number[][]> {
     if (chunks.length === 0) return [];
     if (!this.voyageClient) {
       return chunks.map((c) => this.generateMockEmbedding(c));
     }
 
     const batches = this.createTpmAwareBatches(chunks);
+
+    const dryRunPrefix = dryRun ? '🔍 [DRY RUN] ' : '';
     this.logger.log(
-      `📦 Split ${chunks.length} chunks into ${batches.length} TPM-aware batches`,
+      `${dryRunPrefix}📦 Split ${chunks.length} chunks into ${batches.length} TPM-aware batches`,
     );
 
     const results: number[][] = [];
@@ -529,6 +562,8 @@ export class VoyageEmbeddingService {
         batch,
         batchIndex + 1,
         batches.length,
+        false,
+        dryRun,
       );
       results.push(...batchResult);
     }
@@ -539,9 +574,15 @@ export class VoyageEmbeddingService {
   /**
    * Generates embeddings for a batch of queries
    */
-  async generateQueryEmbeddingsBatch(texts: string[]): Promise<number[][]> {
+  async generateQueryEmbeddingsBatch(
+    texts: string[],
+    dryRun: boolean = false,
+  ): Promise<number[][]> {
     if (texts.length === 0) return [];
-    if (!this.voyageClient) {
+    if (dryRun || !this.voyageClient) {
+      if (dryRun) {
+        this.logger.log('🔍 [DRY RUN] Generating mock query embeddings');
+      }
       return texts.map((t) => this.generateMockEmbedding(t));
     }
 

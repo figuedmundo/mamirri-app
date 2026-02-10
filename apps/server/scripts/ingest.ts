@@ -20,6 +20,14 @@ import { Module } from '@nestjs/common';
 const args = process.argv.slice(2);
 const useSemanticChunking = args.includes('--semantic-chunking');
 const useBatchApi = args.includes('--batch');
+const dryRun = args.includes('--dry-run');
+
+if (dryRun) {
+  console.log('🔍 DRY RUN MODE ENABLED');
+  console.log('   - No API calls will be made');
+  console.log('   - Mock embeddings will be generated');
+  console.log('   - Batching logic and token estimation will be tested\n');
+}
 
 if (useSemanticChunking) {
   console.log(
@@ -119,6 +127,7 @@ async function bootstrap() {
         `data/markdowns/${file}`, // Use staging path as the "file path" reference
         useSemanticChunking,
         useBatchApi,
+        dryRun,
       );
 
       if (!useBatchApi) {
