@@ -19,6 +19,7 @@ import { Module } from '@nestjs/common';
 
 const args = process.argv.slice(2);
 const useSemanticChunking = args.includes('--semantic-chunking');
+const useBatchApi = args.includes('--batch');
 
 if (useSemanticChunking) {
   console.log(
@@ -29,7 +30,21 @@ if (useSemanticChunking) {
   console.log('📄 Using naive chunking (quota-friendly)\n');
 }
 
+if (useBatchApi) {
+  console.log(
+    '📦 Batch API Mode ENABLED (Async ingestion with 12h turnaround)',
+  );
+  console.log('   - Bypasses per-minute rate limits');
+  console.log('   - 33% cost discount');
+  console.log('   - Requires subsequent status check\n');
+} else {
+  console.log('⚡ Real-time Ingestion Mode (Default)');
+  console.log('   - Subject to 3 RPM / 10k TPM limits on Free Tier\n');
+}
+
 import voyageConfig from '../src/config/voyage.config';
+import { PrismaModule } from '../src/prisma/prisma.module';
+import { PrismaService } from '../src/prisma/prisma.service';
 
 @Module({
   imports: [
@@ -39,6 +54,7 @@ import voyageConfig from '../src/config/voyage.config';
       load: [voyageConfig],
     }),
     KnowledgeBaseModule,
+    PrismaModule,
   ],
 })
 class IngestionAppModule {}
@@ -46,6 +62,7 @@ class IngestionAppModule {}
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(IngestionAppModule);
   const knowledgeBaseService = app.get(KnowledgeBaseService);
+  const prisma = app.get(PrismaService);
 
   const serverDir = path.resolve(__dirname, '..');
   const markdownsDir = path.join(serverDir, 'data/markdowns');
@@ -96,37 +113,46 @@ async function bootstrap() {
       }
 
       // Call the service with parsed content and metadata
-      await knowledgeBaseService.ingestMarkdown(
+      const { id: docId } = await knowledgeBaseService.ingestMarkdown(
         parsed.content,
         metadata,
         `data/markdowns/${file}`, // Use staging path as the "file path" reference
         useSemanticChunking,
+        useBatchApi,
       );
 
-      // Create backup
-      const safeTitle = metadata.title.replace(/[^a-z0-9]/gi, '_');
-      const backupPath = path.join(backupsDir, `${safeTitle}.sql.gz`);
+      if (!useBatchApi) {
+        const safeTitle = metadata.title.replace(/[^a-z0-9]/gi, '_');
+        const backupPath = path.join(backupsDir, `${safeTitle}.sql.gz`);
 
-      await knowledgeBaseService
-        .exportDocument(metadata.title, backupPath)
-        .catch((err) => {
-          // If export by title fails (maybe ID needed?), try looking up by filePath
-          // But exportDocument takes idOrPath. The service uses "filePath" stored in DB.
-          // We passed `data/markdowns/${file}` as filePath.
-          return knowledgeBaseService.exportDocument(
-            `data/markdowns/${file}`,
-            backupPath,
-          );
-        });
+        await knowledgeBaseService
+          .exportDocument(metadata.title, backupPath)
+          .catch((err) => {
+            return knowledgeBaseService.exportDocument(
+              `data/markdowns/${file}`,
+              backupPath,
+            );
+          });
 
-      console.log(
-        `   💾 Atomic backup saved to: backups/library/${safeTitle}.sql.gz`,
-      );
+        console.log(
+          `   💾 Atomic backup saved to: backups/library/${safeTitle}.sql.gz`,
+        );
+      } else {
+        console.log(
+          `   ⏳ Batch job submitted. Skipping atomic backup until completion.`,
+        );
+      }
 
       // Archive the markdown file
       const newAbsPath = path.join(booksDir, file);
       fs.renameSync(filePath, newAbsPath);
       console.log(`   📦 Archived MD to: data/books/${file}`);
+
+      await prisma.document.update({
+        where: { id: docId },
+        data: { filePath: `data/books/${file}` },
+      });
+      console.log(`   🗂️ Updated Document path in database`);
 
       successCount++;
     } catch (error) {

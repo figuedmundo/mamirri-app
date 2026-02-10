@@ -390,6 +390,7 @@ export class VoyageEmbeddingService {
       );
     }
 
+    // Check if any single chunk exceeds TPM limit
     if (batch.length === 1 && estimatedTokens > this.rateLimitTpm) {
       this.logger.warn(
         `   ⚠️  Single chunk has ${estimatedTokens} tokens, exceeding TPM limit of ${this.rateLimitTpm}. Truncating to fit...`,
@@ -409,29 +410,6 @@ export class VoyageEmbeddingService {
         totalBatches,
         isRetry,
       );
-    }
-
-    const projectedTotal = tokensInWindow + estimatedTokens;
-    const isNearLimit = projectedTotal > this.rateLimitTpm * 0.9;
-
-    if (isNearLimit && tokensInWindow > this.rateLimitTpm * 0.5) {
-      const oldestEntry = this.tokenUsageWindow[0];
-      if (oldestEntry) {
-        const age = Date.now() - oldestEntry.timestamp;
-        const waitTime = Math.max(0, 60000 - age);
-
-        if (waitTime > 5000) {
-          this.logger.warn(
-            `   ⏳ TPM window at ${Math.round((tokensInWindow / this.rateLimitTpm) * 100)}%. Waiting ${Math.round(waitTime / 1000)}s for oldest entry to expire...`,
-          );
-          await new Promise((resolve) => setTimeout(resolve, waitTime));
-
-          const newTokensInWindow = this.getTokensInWindow();
-          this.logger.log(
-            `   📊 After wait: Window at ${Math.round((newTokensInWindow / this.rateLimitTpm) * 100)}%`,
-          );
-        }
-      }
     }
 
     await this.enforceRateLimit();

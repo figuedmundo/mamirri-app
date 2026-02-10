@@ -3,6 +3,7 @@ import { KnowledgeBaseService } from './knowledge-base.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { CohereClient } from 'cohere-ai';
+import { VoyageEmbeddingService } from './services/voyage-embedding.service';
 
 describe('KnowledgeBaseService - Rerank with Cohere v4.0', () => {
   let service: KnowledgeBaseService;
@@ -25,6 +26,11 @@ describe('KnowledgeBaseService - Rerank with Cohere v4.0', () => {
       };
       return config[key];
     }),
+  };
+
+  const mockVoyageService = {
+    generateDocumentEmbedding: jest.fn(),
+    generateQueryEmbedding: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -50,6 +56,7 @@ describe('KnowledgeBaseService - Rerank with Cohere v4.0', () => {
         KnowledgeBaseService,
         { provide: PrismaService, useValue: mockPrisma },
         { provide: ConfigService, useValue: mockConfig },
+        { provide: VoyageEmbeddingService, useValue: mockVoyageService },
       ],
     }).compile();
 

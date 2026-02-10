@@ -313,15 +313,22 @@ export class KnowledgeBaseService {
 
       if (parentChunks.length > 0) {
         this.logger.log(
-          `Processing ${parentChunks.length} parent chunks (Sequentially 1-by-1)...`,
+          `Generating embeddings for ${parentChunks.length} parent chunks in batches...`,
+        );
+
+        const parentTexts = parentChunks.map((p) => p.content);
+        const parentEmbeddings =
+          await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
+            parentTexts,
+          );
+
+        this.logger.log(
+          `Inserting ${parentChunks.length} parent chunks into database...`,
         );
 
         for (let i = 0; i < parentChunks.length; i++) {
           const content = parentChunks[i];
-          const vector =
-            await this.voyageEmbeddingService.generateDocumentEmbedding(
-              content.content,
-            );
+          const vector = parentEmbeddings[i];
           const vectorString = `[${vector.join(',')}]`;
           const parentId = randomUUID();
           parentIds.push(parentId);
@@ -331,9 +338,9 @@ export class KnowledgeBaseService {
             VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${content.content})
           `;
 
-          if ((i + 1) % 5 === 0) {
+          if ((i + 1) % 10 === 0 || i === parentChunks.length - 1) {
             this.logger.log(
-              `Processed ${i + 1}/${parentChunks.length} parent chunks`,
+              `Inserted ${i + 1}/${parentChunks.length} parent chunks`,
             );
           }
         }
@@ -341,15 +348,22 @@ export class KnowledgeBaseService {
       }
 
       this.logger.log(
-        `Processing ${chunks.length} child chunks (Sequentially 1-by-1)...`,
+        `Generating embeddings for ${chunks.length} child chunks in batches...`,
+      );
+
+      const chunkTexts = chunks.map((c) => c.content);
+      const chunkEmbeddings =
+        await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
+          chunkTexts,
+        );
+
+      this.logger.log(
+        `Inserting ${chunks.length} child chunks into database...`,
       );
 
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
-        const vector =
-          await this.voyageEmbeddingService.generateDocumentEmbedding(
-            content.content,
-          );
+        const vector = chunkEmbeddings[i];
         const vectorString = `[${vector.join(',')}]`;
 
         let parentId: string | null = null;
@@ -368,9 +382,9 @@ export class KnowledgeBaseService {
           VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
         `;
 
-        if ((i + 1) % 10 === 0) {
+        if ((i + 1) % 50 === 0 || i === chunks.length - 1) {
           this.logger.log(
-            `Processed ${i + 1}/${chunks.length} chunks for ${meta.title}`,
+            `Inserted ${i + 1}/${chunks.length} chunks for ${meta.title}`,
           );
         }
       }
@@ -397,30 +411,29 @@ export class KnowledgeBaseService {
     },
     filePath: string,
     useSemanticChunking: boolean = false,
-  ): Promise<void> {
-    const existingDoc = await (this.prisma as any).document.findUnique({
-      where: { filePath },
+    useBatchApi: boolean = false,
+  ): Promise<{ id: string }> {
+    const existingDoc = await (this.prisma as any).document.findFirst({
+      where: { title: metadata.title },
     });
 
     if (existingDoc) {
-      this.logger.log(`File already ingested: ${filePath}`);
-      return;
+      this.logger.warn(
+        `Document "${metadata.title}" already exists. Skipping.`,
+      );
+      return { id: existingDoc.id };
     }
-
-    this.logger.log(`Ingesting markdown: ${metadata.title}`);
 
     const document = await (this.prisma as any).document.create({
       data: {
         title: metadata.title,
         author: metadata.author,
-        filePath,
-        metadata: {
-          volume: metadata.volume,
-          edition: metadata.edition,
-          year: metadata.year,
-        },
+        filePath: filePath,
+        metadata: metadata,
       },
     });
+
+    this.logger.log(`Ingesting markdown: ${metadata.title}`);
 
     try {
       let chunks: { content: string; pageNumber: number }[] = [];
@@ -462,19 +475,135 @@ export class KnowledgeBaseService {
         `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${metadata.title}`,
       );
 
+      // DEBUG: Log sample chunks to verify quality
+      if (chunks.length > 0) {
+        this.logger.log('--- SAMPLE CHUNKS (Top 5) ---');
+        chunks.slice(0, 5).forEach((c, i) => {
+          this.logger.log(
+            `Chunk ${i + 1} (Page ${c.pageNumber}, ~${c.content.split(/\s+/).length} words):\n"${c.content.substring(0, 150).replace(/\n/g, ' ')}..."`,
+          );
+        });
+      }
+
+      if (parentChunks.length > 0) {
+        this.logger.log('--- SAMPLE PARENTS (Top 5) ---');
+        parentChunks.slice(0, 5).forEach((p, i) => {
+          this.logger.log(
+            `Parent ${i + 1} (Page ${p.pageNumber}, ~${p.content.split(/\s+/).length} words):\n"${p.content.substring(0, 150).replace(/\n/g, ' ')}..."`,
+          );
+        });
+      }
+      this.logger.log('-----------------------------');
+
+      if (useBatchApi) {
+        this.logger.log(
+          `Submitting ${chunks.length + parentChunks.length} total chunks to Voyage Batch API...`,
+        );
+
+        const batchInputs: { id: string; text: string }[] = [];
+        const parentIds: string[] = [];
+
+        // Placeholder zero-vector (1024 dimensions) to satisfy NOT NULL constraint
+        // This will be overwritten by the batch status job later
+        const placeholderVector = `[${new Array(1024).fill(0).join(',')}]`;
+
+        for (const chunk of parentChunks) {
+          const id = randomUUID();
+          parentIds.push(id);
+          batchInputs.push({ id, text: chunk.content });
+
+          await (this.prisma as any).$executeRaw`
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", "parentContent", vector)
+            VALUES (${id}::uuid, ${chunk.content}, ${chunk.pageNumber}, ${document.id}, ${chunk.content}, ${placeholderVector}::vector)
+          `;
+        }
+
+        for (let i = 0; i < chunks.length; i++) {
+          const chunk = chunks[i];
+          const id = randomUUID();
+
+          let parentId: string | null = null;
+          let parentContent: string | null = null;
+
+          if (parentChunks.length > 0) {
+            const parentIndex = Math.floor(i / this.chunksPerParent);
+            if (parentIndex < parentIds.length) {
+              parentId = parentIds[parentIndex];
+              parentContent = parentChunks[parentIndex].content;
+            }
+          }
+
+          batchInputs.push({ id, text: chunk.content });
+
+          await (this.prisma as any).$executeRaw`
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", "parentId", "parentContent", vector)
+            VALUES (${id}::uuid, ${chunk.content}, ${chunk.pageNumber}, ${document.id}, ${parentId ? parentId : null}::uuid, ${parentContent}, ${placeholderVector}::vector)
+          `;
+        }
+
+        const batchId = await this.voyageEmbeddingService.createBatchJob(
+          batchInputs,
+          {
+            model: 'voyage-4-large',
+            inputType: 'document',
+          },
+        );
+
+        this.logger.log(
+          `Batch job submitted successfully. Batch ID: ${batchId}`,
+        );
+
+        const batchJobData = {
+          batchId,
+          bookTitle: metadata.title,
+          status: 'pending',
+          chunkCount: batchInputs.length,
+          timestamp: new Date().toISOString(),
+        };
+
+        const batchJobsFile = path.resolve(
+          __dirname,
+          '../../../../data/batch-jobs.json',
+        );
+        let batchJobs: any[] = [];
+
+        if (fs.existsSync(batchJobsFile)) {
+          try {
+            batchJobs = JSON.parse(fs.readFileSync(batchJobsFile, 'utf-8'));
+          } catch (e) {
+            this.logger.warn(
+              'Failed to parse existing batch-jobs.json, creating new one',
+            );
+          }
+        }
+
+        batchJobs.push(batchJobData);
+        fs.writeFileSync(batchJobsFile, JSON.stringify(batchJobs, null, 2));
+
+        this.logger.log(`Batch job tracked in ${batchJobsFile}`);
+        return { id: document.id };
+      }
+
       const parentIds: string[] = [];
 
       if (parentChunks.length > 0) {
         this.logger.log(
-          `Processing ${parentChunks.length} parent chunks (Sequentially 1-by-1)...`,
+          `Generating embeddings for ${parentChunks.length} parent chunks in batches...`,
+        );
+
+        const parentTexts = parentChunks.map((p) => p.content);
+        const parentEmbeddings =
+          await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
+            parentTexts,
+          );
+
+        this.logger.log(
+          `Inserting ${parentChunks.length} parent chunks into database...`,
         );
 
         for (let i = 0; i < parentChunks.length; i++) {
           const content = parentChunks[i];
-          const vector =
-            await this.voyageEmbeddingService.generateDocumentEmbedding(
-              content.content,
-            );
+          const vector = parentEmbeddings[i];
           const vectorString = `[${vector.join(',')}]`;
           const parentId = randomUUID();
           parentIds.push(parentId);
@@ -484,9 +613,9 @@ export class KnowledgeBaseService {
             VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${content.content})
           `;
 
-          if ((i + 1) % 5 === 0) {
+          if ((i + 1) % 10 === 0 || i === parentChunks.length - 1) {
             this.logger.log(
-              `Processed ${i + 1}/${parentChunks.length} parent chunks`,
+              `Inserted ${i + 1}/${parentChunks.length} parent chunks`,
             );
           }
         }
@@ -494,15 +623,22 @@ export class KnowledgeBaseService {
       }
 
       this.logger.log(
-        `Processing ${chunks.length} child chunks (Sequentially 1-by-1)...`,
+        `Generating embeddings for ${chunks.length} child chunks in batches...`,
+      );
+
+      const chunkTexts = chunks.map((c) => c.content);
+      const chunkEmbeddings =
+        await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
+          chunkTexts,
+        );
+
+      this.logger.log(
+        `Inserting ${chunks.length} child chunks into database...`,
       );
 
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
-        const vector =
-          await this.voyageEmbeddingService.generateDocumentEmbedding(
-            content.content,
-          );
+        const vector = chunkEmbeddings[i];
         const vectorString = `[${vector.join(',')}]`;
 
         let parentId: string | null = null;
@@ -521,13 +657,14 @@ export class KnowledgeBaseService {
           VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
         `;
 
-        if ((i + 1) % 10 === 0) {
+        if ((i + 1) % 50 === 0 || i === chunks.length - 1) {
           this.logger.log(
-            `Processed ${i + 1}/${chunks.length} chunks for ${metadata.title}`,
+            `Inserted ${i + 1}/${chunks.length} chunks for ${metadata.title}`,
           );
         }
       }
       this.logger.log(`Successfully ingested ${metadata.title}`);
+      return { id: document.id };
     } catch (error) {
       this.logger.error(
         `Failed to ingest chunks for ${metadata.title}. Cleaning up partial data...`,
@@ -1078,7 +1215,7 @@ export class KnowledgeBaseService {
     const pages: { pageNumber: number; content: string }[] = [];
     const pageRegex = /<!-- PAGE_NUMBER: (\d+) -->/g;
     let match;
-    let lastIndex = 0;
+    const lastIndex = 0;
 
     // Handle content before the first page marker (if any)
     // Usually metadata or frontmatter, treat as page 0 or 1

@@ -358,7 +358,7 @@ Methodology: Agile Development (1-week Sprints).
 - [x] **17.1** Voyage AI Integration — Implement VoyageEmbeddingService with SDK
 - [x] **17.2** Asymmetric Retrieval — Use voyage-4-large for docs, voyage-4 for queries
 - [x] **17.3** 1024-Dim Migration — Update pgvector schema to support new dimensions
-- [x] **17.4** Batch Optimization — Support up to 1000 texts per embedding request
+- [x] **17.4** Batch Optimization — Implemented Async Batch API to bypass rate limits
 
 **Expected Combined Improvement: 2-3x over current baseline**
 

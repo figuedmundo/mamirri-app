@@ -93,21 +93,21 @@ Query: "dolor lumbar vago"
 
 You can manage the knowledge base using these commands from the project root:
 
-| Command                                        | Description                                                                                                     |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `pnpm knowledge:convert`                       | (Default) High-fidelity extraction using IBM Docling OCR for complex medical textbooks.                         |
-| `pnpm knowledge:convert -- --engine=pymupdf`   | Fast, rule-based extraction (legacy fallback).                                                                  |
-| `pnpm knowledge:convert -- --pages=1,10`       | Converts only a specific page range (useful for testing quality).                                               |
-| `pnpm knowledge:ingest`                        | Ingests Markdown files from `data/markdowns/` into the Vector DB. (Default: naive chunking).                    |
-| `pnpm knowledge:ingest -- --semantic-chunking` | Uses **semantic chunking** for higher-quality retrieval. Requires paid API tier or multiple days of free quota. |
-| `pnpm knowledge:search "query"`                | Performs a semantic search across all ingested books.                                                           |
-| `pnpm knowledge:list`                          | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.                        |
-| `pnpm knowledge:update "ID" --options`         | Manually corrects or updates a book's metadata (title, author, volume, edition, year).                          |
-| `pnpm knowledge:clean "ID or filename.pdf"`    | Removes a specific book and its embeddings from the database to allow re-ingestion.                             |
-| `pnpm knowledge:backup`                        | Creates a timestamped SQL backup of the entire vector database in the `backups/` folder.                        |
-| `pnpm knowledge:restore "path/to/file.sql"`    | Restores the database from a backup file (Warning: Overwrites current data).                                    |
-| `pnpm knowledge:stats`                         | Displays technical database statistics (total chunks per book).                                                 |
-| `pnpm knowledge:wipe`                          | **DANGER**: Wipes all books and vectors from the database (useful before a clean import).                       |
+| Command                                      | Description                                                                                  |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `pnpm knowledge:convert`                     | (Default) High-fidelity extraction using IBM Docling OCR for complex medical textbooks.      |
+| `pnpm knowledge:convert -- --engine=pymupdf` | Fast, rule-based extraction (legacy fallback).                                               |
+| `pnpm knowledge:convert -- --pages=1,10`     | Converts only a specific page range (useful for testing quality).                            |
+| `pnpm knowledge:ingest`                      | Ingests Markdown files from `data/markdowns/` into the Vector DB. (Default: naive chunking). |
+| `pnpm knowledge:batch-status`                | Checks status of async batch ingestion jobs and downloads results when ready.                |
+| `pnpm knowledge:search "query"`              | Performs a semantic search across all ingested books.                                        |
+| `pnpm knowledge:list`                        | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.     |
+| `pnpm knowledge:update "ID" --options`       | Manually corrects or updates a book's metadata (title, author, volume, edition, year).       |
+| `pnpm knowledge:clean "ID or filename.pdf"`  | Removes a specific book and its embeddings from the database to allow re-ingestion.          |
+| `pnpm knowledge:backup`                      | Creates a timestamped SQL backup of the entire vector database in the `backups/` folder.     |
+| `pnpm knowledge:restore "path/to/file.sql"`  | Restores the database from a backup file (Warning: Overwrites current data).                 |
+| `pnpm knowledge:stats`                       | Displays technical database statistics (total chunks per book).                              |
+| `pnpm knowledge:wipe`                        | **DANGER**: Wipes all books and vectors from the database (useful before a clean import).    |
 
 ### Migration & Data Protection
 
@@ -191,39 +191,38 @@ pnpm knowledge:restore
 4.  **Ingest**: Run the ingestion command to vectorize.
 
     ```bash
-    # Default: Naive chunking
+    # Default: Naive chunking (Synchronous - use for small files)
     pnpm knowledge:ingest
 
-    # Optional: Semantic chunking
+    # Batch API Mode (Recommended for large libraries)
+    # Bypasses rate limits and uses 33% discount
+    pnpm knowledge:ingest -- --batch
+
+    # Optional: Semantic chunking (Can be combined with --batch)
     pnpm knowledge:ingest -- --semantic-chunking
+
+    # Power User: Batch Mode + Semantic Chunking (Best Quality & Reliability)
+    pnpm knowledge:ingest -- --batch --semantic-chunking
+    ```
+
+5.  **Check Batch Status**: If you used `--batch`, check progress later (processing can take up to 12 hours).
+    ```bash
+    pnpm knowledge:batch-status
     ```
 
 ### API Quota Considerations
 
-Google Gemini's free tier has strict limits. Mamirri now includes a **Dual Rate Limiter** to protect against these limits automatically.
+**Google Gemini** (LLM/Vision) uses the standard free tier limits.
+**Voyage AI** (Embeddings) offers a generous free tier but with distinct limits:
 
-| Limit                     | Free Tier | Paid Tier |
-| ------------------------- | --------- | --------- |
-| Requests per minute (RPM) | 100       | 1,000+    |
-| Tokens per minute (TPM)   | 30,000    | Unlimited |
-| Requests per day (RPD)    | 1,000     | Unlimited |
+| Limit                     | Free Tier (Sync) | Batch API (Async) | Paid Tier |
+| ------------------------- | ---------------- | ----------------- | --------- |
+| Requests per minute (RPM) | 3                | **Unlimited**     | 2,000+    |
+| Tokens per minute (TPM)   | 10,000           | **Unlimited**     | 3M+       |
+| Total Tokens (Life)       | 200 Million      | 200 Million       | Unlimited |
 
-**How the System Protects You:**
-
-1.  **RPM Protection**: Tracks the number of requests (including batches) and enforces a delay if you approach 100 requests/minute.
-2.  **TPM Protection**: Tracks token usage and pauses ingestion if you approach 30,000 tokens/minute.
-3.  **Adaptive Batching**: For batch operations (like Semantic Chunking), the system automatically adds delays (approx. 7-8s) between batches to stay safely within the 100 RPM limit.
-
-**Note on Speed**: Ingestion may feel slower due to these safety delays, but it ensures the process completes without crashing.
-
-#### Recommended Approach by Use Case
-
-| Use Case                         | Chunking Strategy | Quota Needed                 |
-| -------------------------------- | ----------------- | ---------------------------- |
-| Hobby project                    | Naive (default)   | ~800/book, fits free tier    |
-| Small clinic (1-2 books)         | Naive             | Free tier works              |
-| Large library (10+ books)        | Naive             | Free tier over multiple days |
-| Production with quality priority | Semantic          | Paid tier ($1-5/month)       |
+**Recommendation:**
+ALWAYS use `pnpm knowledge:ingest -- --batch` for ingesting books. This uses the Async Batch API which bypasses the strict 10k TPM limit and prevents "Rate Limit Exceeded" errors.
 
 ### Managing the Library
 
@@ -267,11 +266,11 @@ If an ingestion is interrupted (e.g., due to rate limits or internet failure):
 ## Technical Stack
 
 - **Vector Storage**: PostgreSQL + [pgvector](https://github.com/pgvector/pgvector)
-- **Embeddings Model**: Google Gemini (`gemini-embedding-001` - Latest 2025 Model)
+- **Embeddings Model**: Voyage AI (`voyage-4-large` 1024-dim for docs, `voyage-4` for queries)
 - **Metadata Orchestration**: Google Gemini 3 (`gemini-3-flash-preview`)
 - **Query Transformation**: HyDE (Hypothetical Document Embeddings) via Gemini 3 Flash
 - **PDF Extraction**: **IBM Docling** (Computer Vision & OCR) or **PyMuPDF4LLM** (Fast fallback)
-- **Database Layer**: Prisma (using `Unsupported("vector(768)")` for vector types)
+- **Database Layer**: Prisma (using `Unsupported("vector(1024)")` for vector types)
 - **Indexing**: HNSW (Hierarchical Navigable Small World) for fast similarity searches.
 - **Optimization**: Matryoshka Representation Learning (MRL) for efficient 768-dim storage.
 - **Hybrid Search**: BM25 (PostgreSQL tsvector) + Dense vectors with RRF fusion
@@ -280,9 +279,19 @@ If an ingestion is interrupted (e.g., due to rate limits or internet failure):
 ## Environment Variables
 
 | Variable         | Required | Description                                                        |
-| ---------------- | -------- | ------------------------------------------------------------------ |
-| `GOOGLE_API_KEY` | Yes      | Google Gemini API key for embeddings and HyDE generation           |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `VOYAGE_API_KEY` | Yes      | Voyage AI API key for embeddings and batch ingestion               |
 | `COHERE_API_KEY` | No       | Cohere API key for **v4.0-pro** reranking (highly recommended)     |
 | `ENABLE_HYDE`    | No       | Set to `true` to enable HyDE query transformation (default: false) |
+
+### Advanced Configuration (Voyage AI)
+
+These variables control how the system batches requests to Voyage AI.
+
+| Variable                      | Default  | Description                                                                                                                                                  |
+| :---------------------------- | :------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VOYAGE_REALTIME_BATCH_LIMIT` | `1000`   | **Sync API Limit**: Max chunks per single HTTP request to `/v1/embeddings`.<br>_(Note: System automatically reduces this dynamically to respect TPM limits)_ |
+| `VOYAGE_JOB_FILE_LIMIT`       | `100000` | **Async Batch Limit**: Max chunks per JSONL file uploaded to `/v1/batches`.<br>Used only when running with `--batch`.                                        |
+| `VOYAGE_RATE_LIMIT_TPM`       | `10000`  | **Safety Cap**: Max Tokens Per Minute for Sync API.<br>Used to throttle real-time ingestion on Free Tier.                                                    |
 
 Without `COHERE_API_KEY`, the system falls back to RRF-only ranking. Without `ENABLE_HYDE`, the system uses the raw user query.

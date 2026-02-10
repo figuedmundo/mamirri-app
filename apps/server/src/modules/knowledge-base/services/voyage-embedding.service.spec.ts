@@ -83,7 +83,10 @@ describe('VoyageEmbeddingService', () => {
   describe('generateDocumentEmbeddingsBatch', () => {
     it('should handle batch processing for documents', async () => {
       const texts = ['doc1', 'doc2'];
-      const mockVectors = [new Array(1024).fill(0.1), new Array(1024).fill(0.2)];
+      const mockVectors = [
+        new Array(1024).fill(0.1),
+        new Array(1024).fill(0.2),
+      ];
       mockEmbed.mockResolvedValue({
         data: mockVectors.map((v) => ({ embedding: v })),
         usage: { total_tokens: 20 },
@@ -116,21 +119,24 @@ describe('VoyageEmbeddingService', () => {
           return 'mock-value';
         }),
       };
-      
+
       const moduleNoKey: TestingModule = await Test.createTestingModule({
         providers: [
           VoyageEmbeddingService,
           { provide: ConfigService, useValue: mockConfigNoKey },
         ],
       }).compile();
-      
-      const serviceNoKey = moduleNoKey.get<VoyageEmbeddingService>(VoyageEmbeddingService);
-      
-      const result = await serviceNoKey.generateDocumentEmbedding('test content');
-      
+
+      const serviceNoKey = moduleNoKey.get<VoyageEmbeddingService>(
+        VoyageEmbeddingService,
+      );
+
+      const result =
+        await serviceNoKey.generateDocumentEmbedding('test content');
+
       expect(result).toHaveLength(1024);
       expect(mockEmbed).not.toHaveBeenCalled();
-      expect(result.some(v => v !== 0)).toBe(true);
+      expect(result.some((v) => v !== 0)).toBe(true);
     });
 
     it('should produce consistent mock embeddings for same text', async () => {
@@ -141,7 +147,9 @@ describe('VoyageEmbeddingService', () => {
           { provide: ConfigService, useValue: mockConfigNoKey },
         ],
       }).compile();
-      const serviceNoKey = moduleNoKey.get<VoyageEmbeddingService>(VoyageEmbeddingService);
+      const serviceNoKey = moduleNoKey.get<VoyageEmbeddingService>(
+        VoyageEmbeddingService,
+      );
 
       const text = 'consistent text';
       const result1 = await serviceNoKey.generateDocumentEmbedding(text);
