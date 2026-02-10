@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
-import { GoogleGenAI } from '@google/genai';
+import { VoyageEmbeddingService } from './services/voyage-embedding.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { withRetry } from '../transcription/utils/retry';
@@ -12,134 +12,11 @@ const sleep = promisify(setTimeout);
 import { execSync, spawn } from 'child_process';
 import { PDFParse } from 'pdf-parse';
 import { randomUUID } from 'crypto';
+import { TokenRateLimiter } from './utils/token-rate-limiter';
 
 import { Prisma } from '@prisma/client';
 import { CohereClient } from 'cohere-ai';
-
-/**
- * Token bucket for rate limiting with a rolling window.
- * Tracks tokens consumed over the last 60 seconds.
- */
-class TokenRateLimiter {
-  private readonly windowMs = 60_000; // 60 seconds
-  private readonly maxTokens: number;
-  private readonly maxRequests: number;
-  private readonly safetyMargin = 0.85; // Use 85% of limit for safety
-
-  private tokenLog: { timestamp: number; tokens: number }[] = [];
-  private requestLog: number[] = []; // Timestamps of requests
-
-  constructor(maxTokensPerMinute: number, maxRequestsPerMinute: number = 100) {
-    this.maxTokens = maxTokensPerMinute * this.safetyMargin;
-    this.maxRequests = maxRequestsPerMinute * this.safetyMargin; // ~85 RPM
-  }
-
-  /**
-   * Estimate tokens for a text using word count * 1.6 factor (conservative for medical text)
-   */
-  estimateTokens(text: string): number {
-    const words = text.split(/\s+/).filter((w) => w.length > 0).length;
-    return Math.ceil(words * 1.6);
-  }
-
-  /**
-   * Get tokens consumed in the current rolling window
-   */
-  private getTokensInWindow(): number {
-    const now = Date.now();
-    const windowStart = now - this.windowMs;
-    this.tokenLog = this.tokenLog.filter((e) => e.timestamp > windowStart);
-    return this.tokenLog.reduce((sum, e) => sum + e.tokens, 0);
-  }
-
-  /**
-   * Get requests made in the current rolling window
-   */
-  private getRequestsInWindow(): number {
-    const now = Date.now();
-    const windowStart = now - this.windowMs;
-    this.requestLog = this.requestLog.filter((ts) => ts > windowStart);
-    return this.requestLog.length;
-  }
-
-  /**
-   * Record tokens and requests consumed
-   */
-  recordUsage(tokens: number, requestCount: number = 1): void {
-    const now = Date.now();
-    this.tokenLog.push({ timestamp: now, tokens });
-    for (let i = 0; i < requestCount; i++) {
-      this.requestLog.push(now);
-    }
-  }
-
-  // Deprecated alias for backward compatibility if needed, but we should use recordUsage
-  recordTokens(tokens: number): void {
-    this.recordUsage(tokens, 1);
-  }
-
-  /**
-   * Calculate delay needed before consuming more resources.
-   * If a delay is needed, it effectively "reserves" the spot by return.
-   * NOTE: For strict limiting, you should call recordUsage() immediately after calculating delay
-   * or implement a separate reservation method.
-   *
-   * In this implementation, we will trust the caller to call recordUsage()
-   * OR we can add a 'reserve' boolean to auto-record?
-   * Let's stick to explicit recordUsage for now but ensure it's called BEFORE API call.
-   */
-  getRequiredDelay(tokensNeeded: number, requestsNeeded: number = 1): number {
-    const now = Date.now();
-
-    // Check Request Limit
-    const currentRequests = this.getRequestsInWindow();
-    const availableRequests = this.maxRequests - currentRequests;
-
-    let requestDelay = 0;
-    if (requestsNeeded > availableRequests) {
-      const requestsToFree = requestsNeeded - availableRequests;
-      // Find timestamp of the Nth oldest request that needs to expire
-      if (this.requestLog.length >= requestsToFree) {
-        const oldestRelevantRequest = this.requestLog[requestsToFree - 1];
-        requestDelay = Math.max(
-          0,
-          oldestRelevantRequest + this.windowMs - now + 100,
-        );
-      } else {
-        // Should not happen if logic is correct, but safe fallback
-        requestDelay = 1000;
-      }
-    }
-
-    // Check Token Limit
-    const currentTokens = this.getTokensInWindow();
-    const availableTokens = this.maxTokens - currentTokens;
-
-    let tokenDelay = 0;
-    if (tokensNeeded > availableTokens) {
-      const tokensToFree = tokensNeeded - availableTokens;
-      let tokensFreed = 0;
-      let waitUntil = now;
-
-      for (const entry of this.tokenLog) {
-        tokensFreed += entry.tokens;
-        waitUntil = entry.timestamp + this.windowMs;
-        if (tokensFreed >= tokensToFree) break;
-      }
-      tokenDelay = Math.max(0, waitUntil - now + 100);
-    }
-
-    // Return the longer of the two delays
-    const maxDelay = Math.max(requestDelay, tokenDelay);
-
-    if (maxDelay === 0 && (requestsNeeded > 0 || tokensNeeded > 0)) {
-      // Minimal spacing to prevent burst issues
-      return 200;
-    }
-
-    return maxDelay;
-  }
-}
+import { GoogleGenAI } from '@google/genai';
 
 export interface BM25Result {
   id: string;
@@ -148,7 +25,7 @@ export interface BM25Result {
   documentTitle: string;
   documentAuthor: string;
   documentFilePath: string;
-  documentMetadata: Record<string, unknown>;
+  documentMetadata: any;
   bm25Score: number;
 }
 
@@ -164,25 +41,17 @@ export class KnowledgeBaseService {
   private readonly genAI: GoogleGenAI;
   private readonly cohere: CohereClient;
   private readonly chunksPerParent = 5;
-  private readonly rateLimiter = new TokenRateLimiter(30_000);
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
+    private readonly voyageEmbeddingService: VoyageEmbeddingService,
   ) {
     const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
-    if (!apiKey) {
-      this.logger.warn(
-        'GOOGLE_API_KEY is not set. Using MOCK embeddings for verification.',
-      );
-    }
     this.genAI = new GoogleGenAI({ apiKey: apiKey || 'mock-key' });
 
-    const cohereKey = this.configService.get<string>('COHERE_API_KEY');
-    if (!cohereKey) {
-      this.logger.warn('COHERE_API_KEY is not set. Reranking will be skipped.');
-    }
-    this.cohere = new CohereClient({ token: cohereKey || 'mock-key' });
+    const cohereApiKey = this.configService.get<string>('COHERE_API_KEY');
+    this.cohere = new CohereClient({ token: cohereApiKey || 'mock-key' });
   }
 
   /**
@@ -449,10 +318,10 @@ export class KnowledgeBaseService {
 
         for (let i = 0; i < parentChunks.length; i++) {
           const content = parentChunks[i];
-          const vector = await this.generateEmbedding(
-            content.content,
-            'RETRIEVAL_DOCUMENT',
-          );
+          const vector =
+            await this.voyageEmbeddingService.generateDocumentEmbedding(
+              content.content,
+            );
           const vectorString = `[${vector.join(',')}]`;
           const parentId = randomUUID();
           parentIds.push(parentId);
@@ -477,10 +346,10 @@ export class KnowledgeBaseService {
 
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
-        const vector = await this.generateEmbedding(
-          content.content,
-          'RETRIEVAL_DOCUMENT',
-        );
+        const vector =
+          await this.voyageEmbeddingService.generateDocumentEmbedding(
+            content.content,
+          );
         const vectorString = `[${vector.join(',')}]`;
 
         let parentId: string | null = null;
@@ -602,10 +471,10 @@ export class KnowledgeBaseService {
 
         for (let i = 0; i < parentChunks.length; i++) {
           const content = parentChunks[i];
-          const vector = await this.generateEmbedding(
-            content.content,
-            'RETRIEVAL_DOCUMENT',
-          );
+          const vector =
+            await this.voyageEmbeddingService.generateDocumentEmbedding(
+              content.content,
+            );
           const vectorString = `[${vector.join(',')}]`;
           const parentId = randomUUID();
           parentIds.push(parentId);
@@ -630,10 +499,10 @@ export class KnowledgeBaseService {
 
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
-        const vector = await this.generateEmbedding(
-          content.content,
-          'RETRIEVAL_DOCUMENT',
-        );
+        const vector =
+          await this.voyageEmbeddingService.generateDocumentEmbedding(
+            content.content,
+          );
         const vectorString = `[${vector.join(',')}]`;
 
         let parentId: string | null = null;
@@ -803,7 +672,8 @@ export class KnowledgeBaseService {
     limit: number = 5,
     filters?: SearchFilters,
   ): Promise<any[]> {
-    const vector = await this.generateEmbedding(query, 'RETRIEVAL_QUERY');
+    const vector =
+      await this.voyageEmbeddingService.generateQueryEmbedding(query);
     const vectorString = `[${vector.join(',')}]`;
 
     // Base query parts
@@ -1122,10 +992,10 @@ export class KnowledgeBaseService {
     }
 
     const sentenceTexts = refinedSentences.map((s) => s.text);
-    const embeddings = await this.generateEmbeddingsBatch(
-      sentenceTexts,
-      'RETRIEVAL_DOCUMENT',
-    );
+    const embeddings =
+      await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
+        sentenceTexts,
+      );
 
     // 3. Group sentences into chunks
     const chunks: { content: string; pageNumber: number }[] = [];
@@ -1281,177 +1151,5 @@ export class KnowledgeBaseService {
     }
 
     return chunks;
-  }
-
-  private async generateEmbedding(
-    text: string,
-    taskType: 'RETRIEVAL_DOCUMENT' | 'RETRIEVAL_QUERY' = 'RETRIEVAL_QUERY',
-  ): Promise<number[]> {
-    const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
-    if (!apiKey) {
-      const vector = new Array(768).fill(0);
-      vector[0] = text.length / 1000;
-      return vector;
-    }
-
-    const estimatedTokens = this.rateLimiter.estimateTokens(text);
-    const delay = this.rateLimiter.getRequiredDelay(estimatedTokens, 1);
-
-    // Reserve usage BEFORE waiting/calling API to prevent race conditions
-    this.rateLimiter.recordUsage(estimatedTokens, 1);
-
-    if (delay > 1000) {
-      this.logger.debug(
-        `Rate limit: waiting ${Math.round(delay / 1000)}s before embedding (${estimatedTokens} tokens)`,
-      );
-    }
-
-    await sleep(delay);
-
-    const result = await withRetry(
-      async () => {
-        const res = await this.genAI.models.embedContent({
-          model: 'gemini-embedding-001',
-          contents: [{ role: 'user', parts: [{ text }] }],
-          config: {
-            taskType: taskType,
-            outputDimensionality: 768,
-          },
-        });
-
-        if (
-          !res.embeddings ||
-          res.embeddings.length === 0 ||
-          !res.embeddings[0].values
-        ) {
-          throw new Error('No embedding returned');
-        }
-        return res.embeddings[0].values;
-      },
-      { maxRetries: 5 },
-      this.logger,
-    );
-
-    return result;
-  }
-
-  /**
-   * Generate embeddings for multiple texts in batches.
-   * Uses small batches (10 texts) with 1.5s delay to stay under 100 RPM free tier limit.
-   *
-   * @param texts - Array of texts to embed
-   * @param taskType - Type of embedding task
-   * @returns Array of embedding vectors in the same order as input texts
-   */
-  async generateEmbeddingsBatch(
-    texts: string[],
-    taskType: 'RETRIEVAL_DOCUMENT' | 'RETRIEVAL_QUERY' = 'RETRIEVAL_QUERY',
-  ): Promise<number[][]> {
-    const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
-
-    // Return mock embeddings if no API key
-    if (!apiKey) {
-      return texts.map((text) => {
-        const vector = new Array(768).fill(0);
-        vector[0] = text.length / 1000;
-        return vector;
-      });
-    }
-
-    if (texts.length === 0) {
-      return [];
-    }
-
-    // Small batches to stay under limits
-    // Gemini Free Tier: 100 RPM.
-    // Batch size 10 means we consume 10 requests per call.
-    // Safe RPM target: 80 RPM -> 0.75s per request.
-    // Delay for 10 reqs = 7.5s.
-    // Reduced max batch size to 5 for safety with large parent chunks
-    const MAX_BATCH_SIZE = 5;
-    // Target max tokens per batch to leave room for error
-    const TARGET_BATCH_TOKENS = 5000;
-
-    const allEmbeddings: number[][] = [];
-
-    let currentIndex = 0;
-
-    while (currentIndex < texts.length) {
-      // Dynamic Batch Sizing: Fill batch until MAX_SIZE or Token Limit
-      const batch: string[] = [];
-      let batchTokens = 0;
-
-      while (batch.length < MAX_BATCH_SIZE && currentIndex < texts.length) {
-        const text = texts[currentIndex];
-        const tokens = this.rateLimiter.estimateTokens(text);
-
-        // If adding this text exceeds target tokens (and batch is not empty), stop here
-        if (batch.length > 0 && batchTokens + tokens > TARGET_BATCH_TOKENS) {
-          break;
-        }
-
-        batch.push(text);
-        batchTokens += tokens;
-        currentIndex++;
-      }
-
-      // Calculate delay based on BOTH tokens and request count (batch size)
-      const delay = this.rateLimiter.getRequiredDelay(
-        batchTokens,
-        batch.length,
-      );
-
-      // Reserve usage BEFORE waiting/calling API
-      this.rateLimiter.recordUsage(batchTokens, batch.length);
-
-      if (delay > 1000) {
-        this.logger.debug(
-          `Batch rate limit: waiting ${Math.round(delay / 1000)}s for ${batchTokens} tokens (${batch.length} docs). Word counts: [${batch.map((t) => t.split(/\s+/).length).join(', ')}]`,
-        );
-      } else {
-        this.logger.debug(
-          `Sending batch: ${batchTokens} tokens (${batch.length} docs). Word counts: [${batch.map((t) => t.split(/\s+/).length).join(', ')}]`,
-        );
-      }
-
-      await sleep(delay);
-
-      const batchEmbeddings = await withRetry(
-        async () => {
-          const result = await this.genAI.models.embedContent({
-            model: 'gemini-embedding-001',
-            contents: batch,
-            config: {
-              taskType: taskType,
-              outputDimensionality: 768,
-            },
-          });
-
-          if (!result.embeddings || result.embeddings.length !== batch.length) {
-            throw new Error(
-              `Expected ${batch.length} embeddings, got ${result.embeddings?.length || 0}`,
-            );
-          }
-
-          return result.embeddings.map((e) => {
-            if (!e.values) {
-              throw new Error('Embedding missing values');
-            }
-            return e.values;
-          });
-        },
-        { maxRetries: 5 },
-        this.logger,
-      );
-
-      allEmbeddings.push(...batchEmbeddings);
-
-      // Log progress
-      if (currentIndex % 50 === 0 || currentIndex >= texts.length) {
-        this.logger.log(`Embedding progress: ${currentIndex}/${texts.length}`);
-      }
-    }
-
-    return allEmbeddings;
   }
 }

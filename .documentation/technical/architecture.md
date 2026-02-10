@@ -7,8 +7,11 @@ PhysioCopilot uses a modular monolith architecture built with:
 - **Frontend:** React + Vite + Shadcn/UI
 - **Backend:** NestJS + Prisma ORM
 - **Database:** PostgreSQL (with pgvector extension)
-- **AI Infrastructure:** Google Gemini 3 Flash (Embeddings + Vision + Orchestration)
-- **Knowledge Base:** RAG-based literature retrieval with pgvector
+- **AI Infrastructure:**
+  - **LLM/Vision:** Google Gemini 3 Flash
+  - **Embeddings:** Voyage AI (Voyage-4 series, 1024 dimensions)
+  - **Reranking:** Cohere Rerank v4.0-pro
+- **Knowledge Base:** RAG-based literature retrieval with pgvector (1024 dims)
 - **Anonymization:** Reversible PII-stripping service
 - **Translation:** Bidirectional EN-ES medical terminology service
 - **Storage:** MinIO (S3-compatible)

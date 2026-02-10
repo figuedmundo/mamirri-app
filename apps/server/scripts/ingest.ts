@@ -29,11 +29,14 @@ if (useSemanticChunking) {
   console.log('📄 Using naive chunking (quota-friendly)\n');
 }
 
+import voyageConfig from '../src/config/voyage.config';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: envPath,
+      load: [voyageConfig],
     }),
     KnowledgeBaseModule,
   ],

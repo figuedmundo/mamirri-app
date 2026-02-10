@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { KnowledgeBaseService } from './knowledge-base.service';
+import { VoyageEmbeddingService } from './services/voyage-embedding.service';
 import { AiAnalysisService } from '../ai-analysis/ai-analysis.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
@@ -291,6 +292,18 @@ describe('RAG Evaluation Framework', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         KnowledgeBaseService,
+        {
+          provide: VoyageEmbeddingService,
+          useValue: {
+            generateDocumentEmbedding: jest
+              .fn()
+              .mockResolvedValue(new Array(1024).fill(0)),
+            generateQueryEmbedding: jest
+              .fn()
+              .mockResolvedValue(new Array(1024).fill(0)),
+            generateDocumentEmbeddingsBatch: jest.fn().mockResolvedValue([]),
+          },
+        },
         {
           provide: AiAnalysisService,
           useValue: {},

@@ -25,7 +25,7 @@ The ingestion process is decoupled into two steps to ensure high-quality data an
 First, we convert raw PDF files into a clean, reviewable Markdown format.
 
 1.  **Input**: Place PDF files in `apps/server/data/pdfs/`.
-2.  **Extraction**: The system uses **PyMuPDF4LLM** to extract text from the PDF. This tool is optimized for RAG, preserving layout, tables, and headers better than standard extractors.
+2.  **Extraction**: The system uses **IBM Docling** to extract text from the PDF. This tool uses computer vision to preserve complex layouts, tables, and headers.
 3.  **Metadata Extraction**: **Gemini 3 Flash** analyzes the first few pages to extract:
     - Title
     - Author
@@ -44,7 +44,7 @@ Once the Markdown files are in the staging area (`data/markdowns/`), they are pr
 2.  **Chunking**: Breaks the text into chunks.
     - **Naive Chunking** (default): ~500 words with overlap.
     - **Semantic Chunking** (opt-in): Uses embeddings to find topic boundaries.
-3.  **Embedding**: Converts chunks to vectors using **Google Gemini** (`gemini-embedding-001`, 768 dim).
+3.  **Embedding**: Converts chunks to vectors using **Voyage AI** (`voyage-4-large`, 1024 dim).
 4.  **Storage**: Saves vectors to PostgreSQL (`pgvector`).
 5.  **Finalizing**:
     - Moves the Markdown file to the final library folder: `apps/server/data/books/`.
@@ -63,17 +63,17 @@ Once the Markdown files are in the staging area (`data/markdowns/`), they are pr
 
 When a therapist needs a suggestion or searches the library:
 
-1. **Query Transformation (HyDE)**: If `ENABLE_HYDE=true`, the system uses **Gemini 3 Flash** to generate a hypothetical "ideal" clinical description based on the query. This improves retrieval for vague symptom descriptions.
-   - **Diagnosis & Treatment**: Both use HyDE for expanded context.
-   - **Contraindications**: Always uses the original query to ensure strict keyword matching for safety.
-2. **Query Embedding**: Mamirri converts the search query (or the HyDE synthetic document) into a vector.
-   - **Task Type**: We use `RETRIEVAL_QUERY` for the search term to ensure the best semantic match against indexed documents.
-3. **Hybrid Search**: Combines two retrieval methods for better results:
-   - **Dense (Vector) Search**: Finds semantically similar chunks using cosine similarity.
-   - **Sparse (BM25) Search**: Finds exact keyword matches using PostgreSQL full-text search.
-4. **Reciprocal Rank Fusion (RRF)**: Merges results from both methods using the formula `score = 1/(k + rank)` where k=60.
-5. **Reranking**: If `COHERE_API_KEY` is configured, results are reranked using **Cohere Rerank v4.0-pro**. This model is specifically trained for cross-encoder reranking, providing a massive boost in precision by evaluating the actual relationship between the query and each chunk.
-6. **Context**: The top-ranked chunks are provided to the AI to generate a grounded response with citations (title and page number).
+1.  **Query Transformation (HyDE)**: If `ENABLE_HYDE=true`, the system uses **Gemini 3 Flash** to generate a hypothetical "ideal" clinical description based on the query. This improves retrieval for vague symptom descriptions.
+    - **Diagnosis & Treatment**: Both use HyDE for expanded context.
+    - **Contraindications**: Always uses the original query to ensure strict keyword matching for safety.
+2.  **Query Embedding**: Mamirri converts the search query (or the HyDE synthetic document) into a vector using **Voyage AI** (`voyage-4`, 1024 dim).
+    - **Asymmetric Retrieval**: We use a higher-quality model (`voyage-4-large`) for indexing documents and a cost-optimized, compatible model (`voyage-4`) for user queries.
+3.  **Hybrid Search**: Combines two retrieval methods for better results:
+    - **Dense (Vector) Search**: Finds semantically similar chunks using cosine similarity.
+    - **Sparse (BM25) Search**: Finds exact keyword matches using PostgreSQL full-text search.
+4.  **Reciprocal Rank Fusion (RRF)**: Merges results from both methods using the formula `score = 1/(k + rank)` where k=60.
+5.  **Reranking**: If `COHERE_API_KEY` is configured, results are reranked using **Cohere Rerank v4.0-pro**. This model is specifically trained for cross-encoder reranking, providing a massive boost in precision by evaluating the actual relationship between the query and each chunk.
+6.  **Context**: The top-ranked chunks are provided to the AI to generate a grounded response with citations (title and page number).
 
 #### Search Architecture
 
