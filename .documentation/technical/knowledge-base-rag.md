@@ -48,7 +48,7 @@ Once the Markdown files are in the staging area (`data/markdowns/`), they are pr
 4.  **Storage**: Saves vectors to PostgreSQL (`pgvector`).
 5.  **Finalizing**:
     - Moves the Markdown file to the final library folder: `apps/server/data/books/`.
-    - Creates an **Atomic Backup** (`.sql.gz`) of the newly ingested book in `backups/library/`.
+    - Updates the document's file path in the database.
 
 #### Chunking Strategy Comparison
 
@@ -93,92 +93,75 @@ Query: "dolor lumbar vago"
 
 You can manage the knowledge base using these commands from the project root:
 
-| Command                                      | Description                                                                                  |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `pnpm knowledge:convert`                     | (Default) High-fidelity extraction using IBM Docling OCR for complex medical textbooks.      |
-| `pnpm knowledge:convert -- --engine=pymupdf` | Fast, rule-based extraction (legacy fallback).                                               |
-| `pnpm knowledge:convert -- --pages=1,10`     | Converts only a specific page range (useful for testing quality).                            |
-| `pnpm knowledge:ingest`                      | Ingests Markdown files from `data/markdowns/` into the Vector DB. (Default: naive chunking). |
-| `pnpm knowledge:batch-status`                | Checks status of async batch ingestion jobs and downloads results when ready.                |
-| `pnpm knowledge:search "query"`              | Performs a semantic search across all ingested books.                                        |
-| `pnpm knowledge:list`                        | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.     |
-| `pnpm knowledge:update "ID" --options`       | Manually corrects or updates a book's metadata (title, author, volume, edition, year).       |
-| `pnpm knowledge:clean "ID or filename.pdf"`  | Removes a specific book and its embeddings from the database to allow re-ingestion.          |
-| `pnpm knowledge:backup`                      | Creates a timestamped SQL backup of the entire vector database in the `backups/` folder.     |
-| `pnpm knowledge:restore "path/to/file.sql"`  | Restores the database from a backup file (Warning: Overwrites current data).                 |
-| `pnpm knowledge:stats`                       | Displays technical database statistics (total chunks per book).                              |
-| `pnpm knowledge:wipe`                        | **DANGER**: Wipes all books and vectors from the database (useful before a clean import).    |
+| Command                                      | Description                                                                                               |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `pnpm knowledge:convert`                     | (Default) High-fidelity extraction using IBM Docling OCR for complex medical textbooks.                   |
+| `pnpm knowledge:convert -- --engine=pymupdf` | Fast, rule-based extraction (legacy fallback).                                                            |
+| `pnpm knowledge:convert -- --pages=1,10`     | Converts only a specific page range (useful for testing quality).                                         |
+| `pnpm knowledge:ingest`                      | Ingests Markdown files from `data/markdowns/` into the Vector DB. (Default: naive chunking).              |
+| `pnpm knowledge:batch-status`                | Checks status of async batch ingestion jobs and downloads results when ready.                             |
+| `pnpm knowledge:search "query"`              | Performs a semantic search across all ingested books.                                                     |
+| `pnpm knowledge:list`                        | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.                  |
+| `pnpm knowledge:update "ID" --options`       | Manually corrects or updates a book's metadata (title, author, volume, edition, year).                    |
+| `pnpm knowledge:clean "ID or filename.pdf"`  | Removes a specific book and its embeddings from the database to allow re-ingestion.                       |
+| `pnpm knowledge:backup`                      | **Full System Backup**: Creates a timestamped SQL dump of the entire database (Patients, Users, Library). |
+| `pnpm knowledge:export`                      | **Library Export**: Polymorphic command to export all books or a single book (see Migration section).     |
+| `pnpm knowledge:restore "path/to/file.sql"`  | Restores the database from a backup file (Warning: Overwrites current data).                              |
+
+| `pnpm knowledge:stats` | Displays technical database statistics (total chunks per book). |
+| `pnpm knowledge:wipe` | **DANGER**: Wipes all books and vectors from the database (useful before a clean import). |
 
 ### Migration & Data Protection
 
-Mamirri uses a high-performance, atomic backup strategy to protect expensive vector data while minimizing disk usage.
+Mamirri uses a multi-tiered backup strategy to protect expensive vector data and ensure system-wide recoverability.
 
-#### 1. Individual "Atomic" Book Backups
+#### 1. Full System Backup
 
-When you run `pnpm knowledge:ingest`, the system automatically creates a compressed `.sql.gz` file for **each specific book** in `backups/library/`.
-
-- **Benefit**: You only back up each book once. If you add 1,000 books, you have 1,000 small files instead of one giant 10GB file.
-
-#### 2. Full System Backup
-
-Saves everything (Library + Patients + Users) into a compressed file.
+Saves the entire application state, including Patient records, Clinical Cases, User profiles, and the entire Medical Library. Use this for disaster recovery.
 
 ```bash
 pnpm knowledge:backup
 ```
 
-#### 3. Selective Multi-Book Export
+_Creates: `backups/full_db_[TIMESTAMP].sql.gz`_
 
-Saves **all** currently ingested books into one compressed file.
+#### 2. Library-wide Export (Migration)
+
+Saves **only** the vectorized books (documents and embeddings). This is ideal for moving your medical knowledge base to a different environment (e.g., from dev to production) without including sensitive patient data.
 
 ```bash
 pnpm knowledge:export
 ```
+
+_Creates: `backups/library/library_all_[TIMESTAMP].sql.gz`_
+
+#### 3. Atomic Book Backups (Standalone)
+
+Creates a standalone backup of a **single book** and its associated embeddings. This is the most granular level of backup, allowing you to share or move individual textbooks.
+
+```bash
+# Export using the Document ID
+pnpm knowledge:export 550e8400-e29b-41d4-a716-446655440000
+
+# Export using the original File Path
+pnpm knowledge:export data/books/anatomy_atlas.md
+```
+
+_Creates: `backups/library/[Book_Title].sql.gz`_
 
 #### 4. Smart Restore / Import
 
-The `knowledge:import` command automatically handles both compressed (`.gz`) and standard SQL files.
+The `knowledge:import` (or `knowledge:restore`) command automatically handles both full system backups and library-only exports, including support for compressed (`.gz`) files.
 
 ```bash
+# To list available backups
+pnpm knowledge:restore
+
+# To restore a specific file
 pnpm knowledge:import "backups/library/Anatomia_Tomo1.sql.gz"
 ```
 
-#### 2. Export Library Only (Migration)
-
-Saves **only** the vectorized books and metadata. Perfect for moving your library to production.
-
-```bash
-pnpm knowledge:export
-```
-
-#### 3. Import Library
-
-**Crucial**: Always ensure your database schema is up to date before importing data.
-
-```bash
-# 1. Sync the schema (Migrations)
-pnpm db:deploy
-
-# 2. Import the data
-pnpm knowledge:import "backups/your_file.sql"
-```
-
-If you use a `library_only_...` file, it will append those books to your database without touching existing patients/users.
-
-#### 4. Clean Slate Import
-
-If you want to replace your current library with a new one:
-
-```bash
-pnpm knowledge:wipe
-pnpm knowledge:import "backups/your_file.sql"
-```
-
-To see a list of available backups:
-
-```bash
-pnpm knowledge:restore
-```
+_Note: Full restores will overwrite current data, while library-only imports will append to the existing library if IDs do not conflict._
 
 ### Adding books to the library
 

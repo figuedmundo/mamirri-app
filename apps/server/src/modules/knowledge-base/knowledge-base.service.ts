@@ -460,7 +460,7 @@ export class KnowledgeBaseService {
       if (useSemanticChunking) {
         try {
           const pages = this.splitByPages(markdown);
-          const result = await this.semanticChunk(pages);
+          const result = await this.semanticChunk(pages, { dryRun });
           chunks = result.chunks;
           parentChunks = result.parentChunks;
         } catch (error) {
@@ -557,8 +557,8 @@ export class KnowledgeBaseService {
 
           if (!dryRun) {
             await (this.prisma as any).$executeRaw`
-            INSERT INTO embeddings (id, content, "pageNumber", "documentId", "parentId", "parentContent", vector)
-            VALUES (${id}::uuid, ${chunk.content}, ${chunk.pageNumber}, ${documentId}, ${parentId ? parentId : null}::uuid, ${parentContent}, ${placeholderVector}::vector)
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
+            VALUES (gen_random_uuid(), ${chunk.content}, ${chunk.pageNumber}, ${documentId}, ${placeholderVector}::vector, ${parentId}::uuid, ${parentContent})
           `;
           }
         }
@@ -567,6 +567,67 @@ export class KnowledgeBaseService {
           this.logger.log(
             `[DRY RUN] Simulating batch job submission for ${batchInputs.length} inputs...`,
           );
+
+          // LOGGING LOGIC START
+          const logData = {
+            document: metadata.title,
+            timestamp: new Date().toISOString(),
+            mode: 'batch',
+            config: { useSemanticChunking, useBatchApi },
+            stats: {
+              totalChunks: chunks.length,
+              parentChunks: parentChunks.length,
+              totalBatchInputs: batchInputs.length,
+            },
+            chunks: chunks.map((c) => ({
+              ...c,
+              length: c.content.length,
+              preview: c.content.substring(0, 50),
+            })),
+            parentChunks: parentChunks.map((p) => ({
+              ...p,
+              length: p.content.length,
+              preview: p.content.substring(0, 50),
+            })),
+            voyagePayload: batchInputs,
+          };
+
+          const logDir = path.resolve(process.cwd(), 'data/ingestion-logs');
+          if (!fs.existsSync(logDir)) {
+            fs.mkdirSync(logDir, { recursive: true });
+          }
+
+          const sanitizedTitle = metadata.title
+            .replace(/[^a-z0-9]/gi, '_')
+            .toLowerCase();
+          const logFile = path.join(
+            logDir,
+            `${sanitizedTitle}_batch_dry_run_${Date.now()}.json`,
+          );
+
+          fs.writeFileSync(logFile, JSON.stringify(logData, null, 2));
+          this.logger.log(
+            `[DRY RUN] Detailed ingestion log written to: ${logFile}`,
+          );
+          // LOGGING LOGIC END
+
+          // Also generate the JSONL file that would be uploaded
+          const jsonlDir = path.resolve(process.cwd(), 'data/batch-payloads');
+          if (!fs.existsSync(jsonlDir)) {
+            fs.mkdirSync(jsonlDir, { recursive: true });
+          }
+          const jsonlFile = path.join(
+            jsonlDir,
+            `${sanitizedTitle}_batch_payload_${Date.now()}.jsonl`,
+          );
+          const jsonlContent = batchInputs
+            .map((item) => JSON.stringify(item))
+            .join('\n');
+          fs.writeFileSync(jsonlFile, jsonlContent, 'utf-8');
+          this.logger.log(
+            `[DRY RUN] Batch payload (JSONL) written to: ${jsonlFile}`,
+          );
+
           this.logger.log(`[DRY RUN] Would submit batch job to Voyage API`);
           this.logger.log(`[DRY RUN] Would track job in batch-jobs.json`);
           return { id: documentId };
@@ -593,10 +654,15 @@ export class KnowledgeBaseService {
         };
 
         const batchJobsFile = path.resolve(
-          __dirname,
-          '../../../../data/batch-jobs.json',
+          process.cwd(),
+          'data/batch-jobs.json',
         );
         let batchJobs: any[] = [];
+
+        const batchJobsFileDir = path.dirname(batchJobsFile);
+        if (!fs.existsSync(batchJobsFileDir)) {
+          fs.mkdirSync(batchJobsFileDir, { recursive: true });
+        }
 
         if (fs.existsSync(batchJobsFile)) {
           try {
@@ -613,6 +679,51 @@ export class KnowledgeBaseService {
 
         this.logger.log(`Batch job tracked in ${batchJobsFile}`);
         return { id: documentId };
+      }
+
+      if (dryRun) {
+        const logData = {
+          document: metadata.title,
+          timestamp: new Date().toISOString(),
+          mode: 'real-time',
+          config: { useSemanticChunking, useBatchApi },
+          stats: {
+            totalChunks: chunks.length,
+            parentChunks: parentChunks.length,
+          },
+          chunks: chunks.map((c) => ({
+            ...c,
+            length: c.content.length,
+            preview: c.content.substring(0, 50),
+          })),
+          parentChunks: parentChunks.map((p) => ({
+            ...p,
+            length: p.content.length,
+            preview: p.content.substring(0, 50),
+          })),
+          voyagePayload: {
+            parentTexts: parentChunks.map((p) => p.content),
+            chunkTexts: chunks.map((c) => c.content),
+          },
+        };
+
+        const logDir = path.resolve(process.cwd(), 'data/ingestion-logs');
+        if (!fs.existsSync(logDir)) {
+          fs.mkdirSync(logDir, { recursive: true });
+        }
+
+        const sanitizedTitle = metadata.title
+          .replace(/[^a-z0-9]/gi, '_')
+          .toLowerCase();
+        const logFile = path.join(
+          logDir,
+          `${sanitizedTitle}_realtime_dry_run_${Date.now()}.json`,
+        );
+
+        fs.writeFileSync(logFile, JSON.stringify(logData, null, 2));
+        this.logger.log(
+          `[DRY RUN] Detailed ingestion log written to: ${logFile}`,
+        );
       }
 
       const parentIds: string[] = [];
@@ -1120,6 +1231,7 @@ export class KnowledgeBaseService {
       similarityThreshold?: number;
       targetChunkSize?: number;
       maxChunkSize?: number;
+      dryRun?: boolean;
     } = {},
   ): Promise<{
     chunks: { content: string; pageNumber: number }[];
@@ -1129,6 +1241,7 @@ export class KnowledgeBaseService {
       similarityThreshold = 0.85,
       targetChunkSize = 400,
       maxChunkSize = 512,
+      dryRun = false,
     } = options;
 
     // Normalize input to Page[]
@@ -1172,6 +1285,7 @@ export class KnowledgeBaseService {
     const embeddings =
       await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
         sentenceTexts,
+        dryRun,
       );
 
     // 3. Group sentences into chunks

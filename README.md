@@ -156,6 +156,26 @@ Automated daily backups are configured using cron jobs.
 ./scripts/restore-postgres.sh <backup-file.gpg>
 ```
 
+### Knowledge Base Export
+
+You can export the entire library or a single book (Atomic Backup) for portability.
+
+**Export Entire Library:**
+
+```bash
+pnpm --filter server knowledge:export
+```
+
+**Export Single Book (Atomic Backup):**
+
+```bash
+# Using Document ID
+pnpm --filter server knowledge:export 550e8400-e29b-41d4-a716-446655440000
+
+# Using File Path
+pnpm --filter server knowledge:export data/books/anatomy_atlas.md
+```
+
 ### CI/CD Pipelines
 
 GitHub Actions workflows are configured for automated testing and deployment:

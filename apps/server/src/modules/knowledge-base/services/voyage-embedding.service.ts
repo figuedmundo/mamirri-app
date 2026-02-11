@@ -13,19 +13,6 @@ export interface VoyageBatchInput {
   text: string;
 }
 
-export interface VoyageBatchCreateRequest {
-  endpoint: string;
-  input_file_id: string;
-  requests_params: {
-    model: string;
-    input_type?: 'document' | 'query';
-    output_dimension?: number;
-    output_dtype?: 'float32' | 'uint8';
-  };
-  completion_window?: string;
-  metadata?: Record<string, any>;
-}
-
 export interface VoyageBatchResponse {
   id: string;
   object: 'batch';
@@ -84,7 +71,7 @@ export interface BatchJobResult {
 export interface VoyageBatchCreateRequest {
   endpoint: string; // "/v1/embeddings"
   input_file_id: string;
-  requests_params: {
+  request_params: {
     model: string;
     input_type?: 'document' | 'query';
     output_dimension?: number;
@@ -638,8 +625,16 @@ export class VoyageEmbeddingService {
       completionWindow?: string;
       outputDimension?: number;
       outputDtype?: 'float32' | 'uint8';
+      dryRun?: boolean;
     } = {},
   ): Promise<string> {
+    if (options.dryRun) {
+      this.logger.log(
+        `[DRY RUN] Creating batch job for ${inputs.length} items.`,
+      );
+      return 'mock-batch-id';
+    }
+
     if (!this.voyageClient) {
       throw new Error('Voyage API key not configured');
     }
@@ -655,7 +650,7 @@ export class VoyageEmbeddingService {
       fs.writeFileSync(filePath, jsonlContent, 'utf-8');
 
       const formData = new FormData();
-      formData.append('file', fs.createReadStream(filePath), {
+      formData.append('file', fs.readFileSync(filePath), {
         filename: fileName,
         contentType: 'application/jsonl',
       });
@@ -695,7 +690,7 @@ export class VoyageEmbeddingService {
       const batchRequest: VoyageBatchCreateRequest = {
         endpoint: '/v1/embeddings',
         input_file_id: uploadResponse.id,
-        requests_params: {
+        request_params: {
           model: options.model || this.documentModel,
           input_type: options.inputType || 'document',
           output_dimension: options.outputDimension || this.outputDimension,

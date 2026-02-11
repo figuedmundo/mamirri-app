@@ -75,7 +75,6 @@ async function bootstrap() {
   const serverDir = path.resolve(__dirname, '..');
   const markdownsDir = path.join(serverDir, 'data/markdowns');
   const booksDir = path.join(serverDir, 'data/books');
-  const backupsDir = path.join(serverDir, '../../backups/library');
 
   if (!fs.existsSync(markdownsDir)) {
     console.log(`Creating markdown staging directory at ${markdownsDir}`);
@@ -85,11 +84,6 @@ async function bootstrap() {
   if (!fs.existsSync(booksDir)) {
     console.log(`Creating books library directory at ${booksDir}`);
     fs.mkdirSync(booksDir, { recursive: true });
-  }
-
-  if (!fs.existsSync(backupsDir)) {
-    console.log(`Creating backups directory at ${backupsDir}`);
-    fs.mkdirSync(backupsDir, { recursive: true });
   }
 
   const files = fs.readdirSync(markdownsDir).filter((f) => f.endsWith('.md'));
@@ -130,38 +124,29 @@ async function bootstrap() {
         dryRun,
       );
 
-      if (!useBatchApi) {
-        const safeTitle = metadata.title.replace(/[^a-z0-9]/gi, '_');
-        const backupPath = path.join(backupsDir, `${safeTitle}.sql.gz`);
-
-        await knowledgeBaseService
-          .exportDocument(metadata.title, backupPath)
-          .catch((err) => {
-            return knowledgeBaseService.exportDocument(
-              `data/markdowns/${file}`,
-              backupPath,
-            );
-          });
-
-        console.log(
-          `   💾 Atomic backup saved to: backups/library/${safeTitle}.sql.gz`,
-        );
-      } else {
+      if (useBatchApi) {
         console.log(
           `   ⏳ Batch job submitted. Skipping atomic backup until completion.`,
         );
+      } else if (dryRun) {
+        console.log(`   [DRY RUN] Skipping atomic backup creation`);
       }
 
       // Archive the markdown file
       const newAbsPath = path.join(booksDir, file);
-      fs.renameSync(filePath, newAbsPath);
-      console.log(`   📦 Archived MD to: data/books/${file}`);
+      if (!dryRun) {
+        fs.renameSync(filePath, newAbsPath);
+        console.log(`   📦 Archived MD to: data/books/${file}`);
 
-      await prisma.document.update({
-        where: { id: docId },
-        data: { filePath: `data/books/${file}` },
-      });
-      console.log(`   🗂️ Updated Document path in database`);
+        await prisma.document.update({
+          where: { id: docId },
+          data: { filePath: `data/books/${file}` },
+        });
+        console.log(`   🗂️ Updated Document path in database`);
+      } else {
+        console.log(`   [DRY RUN] Would archive MD to: data/books/${file}`);
+        console.log(`   [DRY RUN] Would update Document path in database`);
+      }
 
       successCount++;
     } catch (error) {
