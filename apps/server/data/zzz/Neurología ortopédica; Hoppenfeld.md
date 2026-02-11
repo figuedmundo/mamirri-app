@@ -8,7 +8,6 @@ original_file: Neurología ortopédica; Hoppenfeld.pdf
 extraction_date: '2026-02-09T23:54:40.955Z'
 ---
 
-
 <!-- PAGE_NUMBER: 1 -->
 
 ## NEUROLOGÍA ORTOPEDICA
@@ -54,8 +53,6 @@ Ilastraciones médicas de Hugh Thomas y Bernie Kida
 Philadelphia · Baltimore · New York · London Buenos Aires · Hong Kong · Sydney · Tokyo
 
 <!-- PAGE_NUMBER: 3 -->
-
-
 
 <!-- PAGE_NUMBER: 4 -->
 
@@ -245,8 +242,6 @@ Nivel neurológico L3 (L3 intacto) Nivel neurológico L4 (L4 intacto) Nivel neur
 
 <!-- PAGE_NUMBER: 14 -->
 
-
-
 <!-- PAGE_NUMBER: 15 -->
 
 ## Introducción
@@ -272,7 +267,7 @@ FIGURA I-1 Haces corticoespinal y espinotalámico.
 ## TABLA I-1 CALIFICACIÓN DE LA FUERZA MUSCULAR
 
 | CALIFICACIÓNM                    | DESCRIPCIÓN                                                            |
-|----------------------------------|------------------------------------------------------------------------|
+| -------------------------------- | ---------------------------------------------------------------------- |
 | 5: normal                        | Arco de movimientos completo contra la gravedad, con resistencia plena |
 | 4: buena                         | Arco de movimientos completo contra gravedad con cierta resistencia    |
 | 3: regular                       | Arco de movimientos completos contra gravedad                          |
@@ -312,11 +307,7 @@ Obsérvese que la diferencia en las manifestaciones entre las enfermedades de la
 
 <!-- PAGE_NUMBER: 19 -->
 
-
-
 <!-- PAGE_NUMBER: 20 -->
-
-
 
 <!-- PAGE_NUMBER: 21 -->
 
@@ -325,8 +316,6 @@ Obsérvese que la diferencia en las manifestaciones entre las enfermedades de la
 <!-- image -->
 
 <!-- PAGE_NUMBER: 22 -->
-
-
 
 <!-- PAGE_NUMBER: 23 -->
 
@@ -364,7 +353,7 @@ Abductores primarios del hombro (fig. 1-4):
 
 1. Supraespinoso.
 2. C5, C6 (nervio supraescapular).
-2. Deltoides (parte media).
+3. Deltoides (parte media).
 4. C5, C6 (nervio axilar).
 
 Abductores secundarios del hombro:
@@ -1051,13 +1040,13 @@ La exploración física muestra los resultados evidentes: con la pérdida de la 
 
 TABLA 1-1 PARA ENTENDER LOS DISCOS HERNIADOS Y LA OSTEOARTRITIS DE LA COLUMNA CERVICAL
 
-|     |       | RAÍZ DISCO MÚSCULOS REFLEJO                            | SENSIBILIDAD                                                  | EMG                                                                  | MIELOGRAMA UNCIFORMES                   | APÓFISIS   |
-|-----|-------|--------------------------------------------------------|---------------------------------------------------------------|----------------------------------------------------------------------|-----------------------------------------|------------|
-| C5  | C4-C5 | Deltoides Bíceps                                       | Bíceps Brazo cara lateral Nervio axilar                       | Fibrilación u ondas agudas en deltoides, bicepst                     | Abultamiento en la médula espinal C4-C5 | C5         |
-| C6* | C5-C6 | Bíceps Extensores de la muñeca                         | Braquiorradial Antebrazo cara lateral Nervio muscu- locutáneo | Fibrilación u ondas agudas en el biceps*                             | Abultamiento en la médula espinal C5-C6 | C6         |
-| C7  | C6-C7 | Bíceps Extensores de la muñeca Extensores de los dedos | Tríceps Dedo medio                                            | Fibrilación u ondas agudas en el tríceps'                            | Abultamiento en la médula espinal C6-C7 | C7         |
-| C8  | C7-T1 | Intrínsecos de la mano Flexores de los dedos           | Antebrazo cara medial Nervio antebra- quial-cutáneo medial    | Fibrilación u ondas agudas en los múscu- los intrínsecos de la manol | Abultamiento en la médula espinal C7-T1 |            |
-| T1  | T1-T2 | Intrínsecos de la mano                                 | Brazo cara medial Nervio bra- quial-cutáneo medial            | Fibrilación u ondas agudas en los múscu- los de la mano              |                                         |            |
+|      |       | RAÍZ DISCO MÚSCULOS REFLEJO                            | SENSIBILIDAD                                                  | EMG                                                                  | MIELOGRAMA UNCIFORMES                   | APÓFISIS |
+| ---- | ----- | ------------------------------------------------------ | ------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------- | -------- |
+| C5   | C4-C5 | Deltoides Bíceps                                       | Bíceps Brazo cara lateral Nervio axilar                       | Fibrilación u ondas agudas en deltoides, bicepst                     | Abultamiento en la médula espinal C4-C5 | C5       |
+| C6\* | C5-C6 | Bíceps Extensores de la muñeca                         | Braquiorradial Antebrazo cara lateral Nervio muscu- locutáneo | Fibrilación u ondas agudas en el biceps\*                            | Abultamiento en la médula espinal C5-C6 | C6       |
+| C7   | C6-C7 | Bíceps Extensores de la muñeca Extensores de los dedos | Tríceps Dedo medio                                            | Fibrilación u ondas agudas en el tríceps'                            | Abultamiento en la médula espinal C6-C7 | C7       |
+| C8   | C7-T1 | Intrínsecos de la mano Flexores de los dedos           | Antebrazo cara medial Nervio antebra- quial-cutáneo medial    | Fibrilación u ondas agudas en los múscu- los intrínsecos de la manol | Abultamiento en la médula espinal C7-T1 |          |
+| T1   | T1-T2 | Intrínsecos de la mano                                 | Brazo cara medial Nervio bra- quial-cutáneo medial            | Fibrilación u ondas agudas en los múscu- los de la mano              |                                         |          |
 
 EMG, electromiografía.
 
@@ -1645,11 +1634,11 @@ FIGURA 2-35 Hernia de disco L4/L5 que comprime el nervio L5.
 
 TABLA 2-1 PARA COMPRENDER LAS HERNIAS LUMBARES
 
-| RAÍZ   | DISCO   | MUSCULOS                      | REFLEJO           | SENSIBILIDAD                                              | EMG                                                               | MIELOGRAMA                                                       |
-|--------|---------|-------------------------------|-------------------|-----------------------------------------------------------|-------------------------------------------------------------------|------------------------------------------------------------------|
-| L4     | L3-L4   | Tibial anterior               | Rotuliano         | Cara interna de la pierna                                 | Fibrilación u on- das agudas en el tibial anterior                | Imagen abultada sobre la médula espinal adyacente a L3-L4        |
-| L5     | L4-L5   | Extensor largo del dedo gordo | posterior)        | Ninguno (tibial Cara externa de la pierna y dorso del pie | Fibrilación u on- das agudas en el extensor largo del dedo gordot | Imagen abultada sobre la médula espinal adyacente al disco L4-L5 |
-|        | L5-S1*  | Peroneos largo y corto        | Tendón de Aquiles | Cara externa del pie                                      | Fibrilación u ondas agudas en los músculos peroneo largo y corto* | Imagen abultada sobre la médula espinal adyacente al disco L5-S1 |
+| RAÍZ | DISCO   | MUSCULOS                      | REFLEJO           | SENSIBILIDAD                                              | EMG                                                                | MIELOGRAMA                                                       |
+| ---- | ------- | ----------------------------- | ----------------- | --------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| L4   | L3-L4   | Tibial anterior               | Rotuliano         | Cara interna de la pierna                                 | Fibrilación u on- das agudas en el tibial anterior                 | Imagen abultada sobre la médula espinal adyacente a L3-L4        |
+| L5   | L4-L5   | Extensor largo del dedo gordo | posterior)        | Ninguno (tibial Cara externa de la pierna y dorso del pie | Fibrilación u on- das agudas en el extensor largo del dedo gordot  | Imagen abultada sobre la médula espinal adyacente al disco L4-L5 |
+|      | L5-S1\* | Peroneos largo y corto        | Tendón de Aquiles | Cara externa del pie                                      | Fibrilación u ondas agudas en los músculos peroneo largo y corto\* | Imagen abultada sobre la médula espinal adyacente al disco L5-S1 |
 
 <!-- PAGE_NUMBER: 124 -->
 
@@ -1741,25 +1730,25 @@ La espondilólisis y espondilolistesis son causas frecuentes de dolor de espalda
 
 <!-- PAGE_NUMBER: 133 -->
 
-| MUSCULO                                    | NIVEL NEUROLÓGICO*   | NIVEL NEUROLÓGICO*   | NERVIO                             |
-|--------------------------------------------|----------------------|----------------------|------------------------------------|
-| Flexores de la cadera                      | L1, L2, L3           | L1, L2, L3           |                                    |
-| Aductores de la cadera                     | L2, L3, L4           | L2, L3, L4           | Nervio obturador                   |
-| Cuádriceps                                 | L2, L3, L4           | L2, L3, L4           | Nervio femoral                     |
-| Tibial anterior                            | L4, L5               | L4, L5               | Nervio peroneo profundo            |
-| Tibial posterior                           | L4, L5               | L4, L5               | Nervio tibial posterior            |
-| Glúteo medio                               | L4, L5               | S1                   | Nervio glúteo superior             |
-| Región interna de los tendones de la corva | L4, L5               |                      | Nervio ciático, porción tibial     |
-| Extensor largo de los dedos de los pies    | L5                   |                      | Nervio peroneo profundo            |
-| Extensor largo del dedo gordo              | L5                   | S1                   | Nervio tibial anterior             |
-| Peroneo                                    | L5                   | S1, 52               | Nervio musculocutáneo              |
-| Pantorrilla                                | L5                   | S1,52                | Nervio tibial                      |
-| Región lateral de los tendones de la corva |                      | S1, 52               | Nervio ciático, porción tibial     |
-| Glúteo mayor                               | L5                   | S1, S2               | Nervio glúteo inferior             |
-| Flexor largo del dedo gordo                | S1,52                | S1,52                | Nervio tibial                      |
-| Flexor largo de los dedos del pie          | S1, 52               | S1, 52               | Nervio tibial                      |
-| Intrínsecos de los dedos de los pies       | 52, 53               | 52, 53               | Nervios plantares lateral y medial |
-| Perineo                                    | S2-54                | S2-54                |                                    |
+| MUSCULO                                    | NIVEL NEUROLÓGICO\* | NIVEL NEUROLÓGICO\* | NERVIO                             |
+| ------------------------------------------ | ------------------- | ------------------- | ---------------------------------- |
+| Flexores de la cadera                      | L1, L2, L3          | L1, L2, L3          |                                    |
+| Aductores de la cadera                     | L2, L3, L4          | L2, L3, L4          | Nervio obturador                   |
+| Cuádriceps                                 | L2, L3, L4          | L2, L3, L4          | Nervio femoral                     |
+| Tibial anterior                            | L4, L5              | L4, L5              | Nervio peroneo profundo            |
+| Tibial posterior                           | L4, L5              | L4, L5              | Nervio tibial posterior            |
+| Glúteo medio                               | L4, L5              | S1                  | Nervio glúteo superior             |
+| Región interna de los tendones de la corva | L4, L5              |                     | Nervio ciático, porción tibial     |
+| Extensor largo de los dedos de los pies    | L5                  |                     | Nervio peroneo profundo            |
+| Extensor largo del dedo gordo              | L5                  | S1                  | Nervio tibial anterior             |
+| Peroneo                                    | L5                  | S1, 52              | Nervio musculocutáneo              |
+| Pantorrilla                                | L5                  | S1,52               | Nervio tibial                      |
+| Región lateral de los tendones de la corva |                     | S1, 52              | Nervio ciático, porción tibial     |
+| Glúteo mayor                               | L5                  | S1, S2              | Nervio glúteo inferior             |
+| Flexor largo del dedo gordo                | S1,52               | S1,52               | Nervio tibial                      |
+| Flexor largo de los dedos del pie          | S1, 52              | S1, 52              | Nervio tibial                      |
+| Intrínsecos de los dedos de los pies       | 52, 53              | 52, 53              | Nervios plantares lateral y medial |
+| Perineo                                    | S2-54               | S2-54               |                                    |
 
 Obsérvese que la espondilólisis tiene un aspecto característico en las radiografías (figs. 2-41 y 2-42).
 
@@ -1794,8 +1783,6 @@ Las lesiones de la médula espinal pueden ocurrir a cualquier nivel. Cada nivel 
 de las extremidades inferiores. La revisión que se presenta a continuación toma en consideración estas tres zonas con métodos de exploración que ayudan establecer el nivel preciso de afección neural.
 
 <!-- PAGE_NUMBER: 137 -->
-
-
 
 <!-- PAGE_NUMBER: 138 -->
 
@@ -2494,7 +2481,7 @@ ligamentos simplemente no es lo bastante fuerte para asegurar la estabilidad esp
 FIGURA 4-10 El complejo ligamentoso posterior.
 
 | RELATO DEL MECANISMO DE LESIÓN                  | EXPLORACIÓN FÍSICA Y NEUROLÓGICA                                                         | CRITERIOS ESPECIFICOS EN EL EXAMEN RADIOGRÁFICO                                |
-|-------------------------------------------------|------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | Flexión-rotación Flexión excesiva               | Defecto espinal palpable Alteración motora, refleja o sensitiva Abrasiones en la espalda | Separación de apófisis espinosas Luxación y/o fractura de apófisis articulares |
 | Interrupción del complejo ligamentoso posterior | Interrupción del complejo ligamentoso posterior                                          | Interrupción del complejo ligamentoso posterior                                |
 
@@ -2550,13 +2537,13 @@ En las lesiones por compresión, el complejo ligamentoso posterior y los ligamen
 
 FIGURA 4-15 Anatomía de una lesión inestable por flexión-rotación.
 
-|                                |                                          | INTEGRIDAD DEL COMPLEJO LIGAMENTOSO   | EXPLORACIÓN FÍSICA          | EXPLORACIÓN FÍSICA   | HALLAZGOS                                       |
-|--------------------------------|------------------------------------------|---------------------------------------|-----------------------------|----------------------|-------------------------------------------------|
-| RELATO DEL MECANISMO DE LESIÓN | ESTABILIDAD                              | LONGITUDINAL POSTERIOR                | HALLAZGOS NEUROLÓGICOS (HN) | DEFECTO ESPINAL      | PALPABLE RADIOGRAFICOS                          |
-| Flexión                        | Estable                                  | Intacto                               | HN ocasionales              | PSD                  | Aplastamiento o luxa- ción del cuerpo vertebral |
-| Flexión excesiva Inestable     |                                          | No intacto                            | HN ocasionales              |                      |                                                 |
-| Extensión                      | Estable                                  | Intacto                               | HN ocasionales              | Ninguno              | Ninguno                                         |
-| Flexión-rotación               | Unilateral: estable Bilateral: inestable | No intacto                            | HN                          | PSD                  | Luxación facetaria                              |
+|                                |                                          | INTEGRIDAD DEL COMPLEJO LIGAMENTOSO | EXPLORACIÓN FÍSICA          | EXPLORACIÓN FÍSICA | HALLAZGOS                                       |
+| ------------------------------ | ---------------------------------------- | ----------------------------------- | --------------------------- | ------------------ | ----------------------------------------------- |
+| RELATO DEL MECANISMO DE LESIÓN | ESTABILIDAD                              | LONGITUDINAL POSTERIOR              | HALLAZGOS NEUROLÓGICOS (HN) | DEFECTO ESPINAL    | PALPABLE RADIOGRAFICOS                          |
+| Flexión                        | Estable                                  | Intacto                             | HN ocasionales              | PSD                | Aplastamiento o luxa- ción del cuerpo vertebral |
+| Flexión excesiva Inestable     |                                          | No intacto                          | HN ocasionales              |                    |                                                 |
+| Extensión                      | Estable                                  | Intacto                             | HN ocasionales              | Ninguno            | Ninguno                                         |
+| Flexión-rotación               | Unilateral: estable Bilateral: inestable | No intacto                          | HN                          | PSD                | Luxación facetaria                              |
 
 <!-- image -->
 
@@ -2572,30 +2559,30 @@ FIGURA 4-16 Fractura-luxación toracolumbar.
 
 TABLA 4-3 CRITERIOS DE ESTABILIDAD DE LA COLUMNA TORACOLUMBAR Y LUMBAR
 
-|                      |                       | INTEGRIDAD                                   | EXPLORACIÓN FÍSICA   | EXPLORACIÓN FÍSICA   |           |
-|----------------------|-----------------------|----------------------------------------------|----------------------|----------------------|-----------|
-| RELATO DEL MECANISMO |                       | DEL COMPLEJO                                 |                      | DEFECTO              |           |
-|                      |                       | LIGAMENTOSO HALLAZGOS                        |                      | ESPINAL              |           |
-|                      |                       | LONGITUDINAL NEUROLÓGICOS PALPABLE HALLAZGOS |                      |                      |           |
-| DE LESIÓN            | ESTABILIDAD POSTERIOR | (HN) RADIOGRÁFICOS Ninguno                   |                      | (DEP) Ninguno        | Flexión   |
-| Flexión              |                       |                                              |                      |                      |           |
-|                      | Inestable             | No intacto                                   |                      |                      |           |
-|                      |                       | HN Luxación pura del cuerpo ver-             |                      | DEP                  |           |
-| excesiva             |                       |                                              |                      |                      |           |
-| Flexión-             | Inestable             | HN Separación de apófisis                    |                      |                      |           |
-|                      |                       | No intacto                                   |                      |                      |           |
-| rotación*            |                       | espinosas; luxación y                        |                      | DEP                  |           |
-|                      | La más inesta-        |                                              |                      |                      |           |
-|                      | ble de todas          |                                              |                      |                      |           |
-|                      | las lesiones          |                                              |                      |                      |           |
-|                      | vertebrales           |                                              |                      | Ninguno              |           |
-| Compresión           | Estable Intacto       | HN raros Vértebras estalladas; apófi-        |                      |                      |           |
-|                      | Estable               |                                              |                      |                      |           |
-|                      |                       | Ninguno                                      |                      | Ninguno              | Extensión |
-|                      |                       | Intacto, lesión HN                           |                      |                      |           |
-|                      |                       | rara (más fre-                               |                      |                      |           |
-|                      |                       | cuente en la co-                             |                      |                      |           |
-|                      |                       | lumna cervical)                              |                      |                      |           |
+|                      |                       | INTEGRIDAD                                   | EXPLORACIÓN FÍSICA | EXPLORACIÓN FÍSICA |           |
+| -------------------- | --------------------- | -------------------------------------------- | ------------------ | ------------------ | --------- |
+| RELATO DEL MECANISMO |                       | DEL COMPLEJO                                 |                    | DEFECTO            |           |
+|                      |                       | LIGAMENTOSO HALLAZGOS                        |                    | ESPINAL            |           |
+|                      |                       | LONGITUDINAL NEUROLÓGICOS PALPABLE HALLAZGOS |                    |                    |           |
+| DE LESIÓN            | ESTABILIDAD POSTERIOR | (HN) RADIOGRÁFICOS Ninguno                   |                    | (DEP) Ninguno      | Flexión   |
+| Flexión              |                       |                                              |                    |                    |           |
+|                      | Inestable             | No intacto                                   |                    |                    |           |
+|                      |                       | HN Luxación pura del cuerpo ver-             |                    | DEP                |           |
+| excesiva             |                       |                                              |                    |                    |           |
+| Flexión-             | Inestable             | HN Separación de apófisis                    |                    |                    |           |
+|                      |                       | No intacto                                   |                    |                    |           |
+| rotación\*           |                       | espinosas; luxación y                        |                    | DEP                |           |
+|                      | La más inesta-        |                                              |                    |                    |           |
+|                      | ble de todas          |                                              |                    |                    |           |
+|                      | las lesiones          |                                              |                    |                    |           |
+|                      | vertebrales           |                                              |                    | Ninguno            |           |
+| Compresión           | Estable Intacto       | HN raros Vértebras estalladas; apófi-        |                    |                    |           |
+|                      | Estable               |                                              |                    |                    |           |
+|                      |                       | Ninguno                                      |                    | Ninguno            | Extensión |
+|                      |                       | Intacto, lesión HN                           |                    |                    |           |
+|                      |                       | rara (más fre-                               |                    |                    |           |
+|                      |                       | cuente en la co-                             |                    |                    |           |
+|                      |                       | lumna cervical)                              |                    |                    |           |
 
 <!-- PAGE_NUMBER: 184 -->
 
@@ -2681,18 +2668,18 @@ ausente
 
 ## TABLA 5-1 PRUEBA MOTORA POR NIVEL NEUROLÓGICO
 
-| ARTICULACIÓN ACCIÓN   |                                                | NIVEL      |
-|-----------------------|------------------------------------------------|------------|
-| Cadera                | Flexión                                        | T12, L1-L3 |
-|                       | Extensión                                      | S1         |
-|                       | Aducción                                       | L2-L4      |
-|                       | Abducción                                      | L5         |
-| Rodilla               | Elensión                                       | L2-L4      |
-|                       |                                                | L5, S1     |
-| Tobillo               | Dorsiflexión (exten- L4, L5 sión del tobillo)  |            |
-|                       | Flexión plantar (fle- S1, S2 xión del tobillo) |            |
-|                       | Inversión                                      |            |
-|                       | Eversión                                       |            |
+| ARTICULACIÓN ACCIÓN |                                                | NIVEL      |
+| ------------------- | ---------------------------------------------- | ---------- |
+| Cadera              | Flexión                                        | T12, L1-L3 |
+|                     | Extensión                                      | S1         |
+|                     | Aducción                                       | L2-L4      |
+|                     | Abducción                                      | L5         |
+| Rodilla             | Elensión                                       | L2-L4      |
+|                     |                                                | L5, S1     |
+| Tobillo             | Dorsiflexión (exten- L4, L5 sión del tobillo)  |            |
+|                     | Flexión plantar (fle- S1, S2 xión del tobillo) |            |
+|                     | Inversión                                      |            |
+|                     | Eversión                                       |            |
 
 Eversión:
 
@@ -3176,7 +3163,7 @@ FIGURA 5-13 La contracción del músculo del tendón de la corva medial indica i
 
 4. Es mucho más fácil examinar la función en niños pequeños si se juega con ellos que si se hace una exploración formal.
 5. Hay que asegurarse que el paciente no tenga frío y esté cómodo durante la
-3. exploración.
+6. exploración.
 
 <!-- PAGE_NUMBER: 207 -->
 
@@ -3500,34 +3487,22 @@ Tendón, reflejo de Aquiles, 52-53, 54f rotuliano, 44, 44f Tetraplejía, 65-80 a
 
 <!-- PAGE_NUMBER: 225 -->
 
-
-
 <!-- PAGE_NUMBER: 226 -->
-
-
 
 <!-- PAGE_NUMBER: 227 -->
 
-
-
 <!-- PAGE_NUMBER: 228 -->
-
-
 
 <!-- PAGE_NUMBER: 229 -->
 
-
-
 <!-- PAGE_NUMBER: 230 -->
-
-
 
 <!-- PAGE_NUMBER: 231 -->
 
 ## Índice
 
 | Title Page                                                                                               | 2   |
-|----------------------------------------------------------------------------------------------------------|-----|
+| -------------------------------------------------------------------------------------------------------- | --- |
 | Copyright                                                                                                | 4   |
 | Dedicatoria                                                                                              | 6   |
 | Prólogo                                                                                                  |     |
@@ -3563,7 +3538,7 @@ Tendón, reflejo de Aquiles, 52-53, 54f rotuliano, 44, 44f Tetraplejía, 65-80 a
 99
 
 | Nivel neurológico L5                                                      |     |
-|---------------------------------------------------------------------------|-----|
+| ------------------------------------------------------------------------- | --- |
 | Nivel neurológico S1                                                      | 105 |
 | Niveles neurológicos S2-S4                                                | 117 |
 | Resumen                                                                   | 118 |
@@ -3606,7 +3581,7 @@ Tendón, reflejo de Aquiles, 52-53, 54f rotuliano, 44, 44f Tetraplejía, 65-80 a
 213
 
 | Nivel neurológico L5 (L5 intacto)                                                           |     |
-|---------------------------------------------------------------------------------------------|-----|
+| ------------------------------------------------------------------------------------------- | --- |
 | Nivel neurológico S1 (S1 intacto)                                                           | 166 |
 | Reflejos de la neurona motora superior                                                      | 167 |
 | Reflejos patológicos                                                                        | 167 |
@@ -3640,4 +3615,3 @@ Tendón, reflejo de Aquiles, 52-53, 54f rotuliano, 44, 44f Tetraplejía, 65-80 a
 | Índice                                                                                      |     |
 
 <!-- PAGE_NUMBER: 234 -->
-

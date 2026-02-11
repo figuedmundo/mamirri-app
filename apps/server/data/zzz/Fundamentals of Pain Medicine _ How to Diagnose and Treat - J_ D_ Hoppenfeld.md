@@ -10,7 +10,6 @@ original_file: >-
 extraction_date: '2026-02-09T23:04:47.176Z'
 ---
 
-
 <!-- PAGE_NUMBER: 1 -->
 
 Includes interactive ebook with complete content
@@ -255,7 +254,7 @@ Pain on the Side of the Big Toe / 56
 
 - Hallux Valgus (Bunion) / 56
 
-Pain Between 3RD &amp; 4*" Toe / 57
+Pain Between 3RD &amp; 4\*" Toe / 57
 
 - Morton's Neuroma / 57
 
@@ -579,8 +578,6 @@ Index / 269
 
 <!-- PAGE_NUMBER: 13 -->
 
-
-
 <!-- PAGE_NUMBER: 14 -->
 
 <!-- image -->
@@ -601,8 +598,8 @@ PART I
 
 <!-- image -->
 
-| PAIN IN THE SHOULDER • Bursitis • Arthritis • Rotator Cuff Injury • Adhesive Capsulitis PAIN IN THE ELBOW • Tendinitis • Olecranon Bursitis • Traumatic Arthritis PAIN IN THE NECK (CERVICAL SPINE)   | PAIN IN THE LOWER BACK (LUMBAR SPINE) • Muscles and Ligaments • Vertebral Bodies • Facet Joints • Vertebral Discs PAIN IN THE HIP • Arthritis • Ischemic (Avascular) Necrosis • Fractures   | PAIN IN THE BUTTOCK • The Sacroiliac Joint • Greater Trochanteric Bursitis • Ischiogluteal Bursitis PAIN IN THE KNEE • Arthritis • Meniscal Tear • Patellar Tendonitis • Osteochondritis   |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| PAIN IN THE SHOULDER • Bursitis • Arthritis • Rotator Cuff Injury • Adhesive Capsulitis PAIN IN THE ELBOW • Tendinitis • Olecranon Bursitis • Traumatic Arthritis PAIN IN THE NECK (CERVICAL SPINE) | PAIN IN THE LOWER BACK (LUMBAR SPINE) • Muscles and Ligaments • Vertebral Bodies • Facet Joints • Vertebral Discs PAIN IN THE HIP • Arthritis • Ischemic (Avascular) Necrosis • Fractures | PAIN IN THE BUTTOCK • The Sacroiliac Joint • Greater Trochanteric Bursitis • Ischiogluteal Bursitis PAIN IN THE KNEE • Arthritis • Meniscal Tear • Patellar Tendonitis • Osteochondritis |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 ## PAIN IN THE SHOULDER
 
@@ -790,7 +787,7 @@ Treatment includes weight loss, along with strengthening and stretching the supp
 
 <!-- image -->
 
-deep and achy in nature. When the patient extends and rotates at the same time toward the painful side, the pain may worsen (Fig. 1-14). Some physicians use this maneuver as a mechanism to stress the facet joints to test for facet pathology. From a mechanical point of view, extension and extension rotation stress facet joints but also probably stress discs and ligaments more.? Computed tomography (CT) or MRI can reveal which facet joints have arthropathy. In general, the last three joints (L3/L4, L4/L5, and L5/S1) tend to be affected, because the maximum amount of lumbar motion and axial force is located there (Fig. 1-15). It is necessary to keep in mind that imaging alone showing facet arthropathy is a poor predictor of response to diagnostic blocks.* The combination of facet pain on history and examination, combined with imaging that corresponds to the pain, is a much more reliable predictor.
+deep and achy in nature. When the patient extends and rotates at the same time toward the painful side, the pain may worsen (Fig. 1-14). Some physicians use this maneuver as a mechanism to stress the facet joints to test for facet pathology. From a mechanical point of view, extension and extension rotation stress facet joints but also probably stress discs and ligaments more.? Computed tomography (CT) or MRI can reveal which facet joints have arthropathy. In general, the last three joints (L3/L4, L4/L5, and L5/S1) tend to be affected, because the maximum amount of lumbar motion and axial force is located there (Fig. 1-15). It is necessary to keep in mind that imaging alone showing facet arthropathy is a poor predictor of response to diagnostic blocks.\* The combination of facet pain on history and examination, combined with imaging that corresponds to the pain, is a much more reliable predictor.
 
 <!-- PAGE_NUMBER: 24 -->
 
@@ -860,7 +857,7 @@ Figure 1-22 Anatomy of the sacroiliac joint, where the spine and the pelvis conn
 
 <!-- image -->
 
-occur in people with osteoporosis as well as in young women with amenorrhea.* In 1996, of the 340,000 hospitalizations for hip fractures, 80% were women. Anteroposterior views of the pelvis and hip, as well as a cross-table lateral view, are usually sufficient to show femoral neck stress fractures. If the x-rays are not conclusive, a bone scan can sufficiently rule out fractures.
+occur in people with osteoporosis as well as in young women with amenorrhea.\* In 1996, of the 340,000 hospitalizations for hip fractures, 80% were women. Anteroposterior views of the pelvis and hip, as well as a cross-table lateral view, are usually sufficient to show femoral neck stress fractures. If the x-rays are not conclusive, a bone scan can sufficiently rule out fractures.
 
 Femoral neck fractures usually require surgical stabilization.
 
@@ -1084,7 +1081,7 @@ Patients describe a burning pain, electric in nature with exquisite sensitivity 
 
 ## Treatment
 
-Aggressive treatment during the acute outbreak can sometimes prevent progression to PHN. Acyclovir is effective in reducing the length of time of the acute outbreak of lesions and in decreasing pain and promoting healing. 23 Antiseizure and antidepressant medications used for neuropathic pain are first-line treatment. A 5% Lidoderm (lidocaine) patch over the area is a reasonable treatment option with a low-side-effect profile. Epidural steroid injections may be effective. (The author often performs a series of three epidural steroid injections, 1 to 2 weeks apart.) In Forrest's study, the use of epidural steroid injections at weekly intervals for people who have had PHN for more than 6 months provided 89% of the patients complete relief from their pain at 1 year. This study did not have a control group.* For patients who do not respond to medications and injections, a spinal cord stimulator trial is a reasonable next step.
+Aggressive treatment during the acute outbreak can sometimes prevent progression to PHN. Acyclovir is effective in reducing the length of time of the acute outbreak of lesions and in decreasing pain and promoting healing. 23 Antiseizure and antidepressant medications used for neuropathic pain are first-line treatment. A 5% Lidoderm (lidocaine) patch over the area is a reasonable treatment option with a low-side-effect profile. Epidural steroid injections may be effective. (The author often performs a series of three epidural steroid injections, 1 to 2 weeks apart.) In Forrest's study, the use of epidural steroid injections at weekly intervals for people who have had PHN for more than 6 months provided 89% of the patients complete relief from their pain at 1 year. This study did not have a control group.\* For patients who do not respond to medications and injections, a spinal cord stimulator trial is a reasonable next step.
 
 ## PAIN IN THE BACK OR NECK AND DOWN THE LEG OR ARM: RADICULAR PAIN
 
@@ -1242,7 +1239,7 @@ Correction of the underlying cause, if possible, is important. It is essential t
 
 Pain in a stump following amputation is common. Roughly 50% of amputees have stump pain, which may occur upon postsurgical healing. Patients often describe this as a burning, sharp pain made worse by compression. Neuroma formation at the site is a frequent cause. Stump pain, unlike phantom limb pain, occurs in a still-intact body part.
 
-After amputation, patients may experience both phantom sensation and phantom limb pain. Phantom sensation is any nonpainful sensation of an absent limb. Phantom limb pain is the sensation of pain in an absent limb. Postoperative studies have shown that 85% to 90% of patients experience phantom limb pain in the first month postamputation."* At 1-year followup, 60% of patients continue to have pain. However, only 5% to 10% of those 60% have severe pain at 1 year." Phantom limb pain is often undiagnosed and therefore is undertreated. Even when diagnosed, practitioners often underestimate the severity of pain and do not offer treatment. In one study, 61% of amputees with phantom pain discussed the problem with their physicians, who offered treatment to only 17%. 12
+After amputation, patients may experience both phantom sensation and phantom limb pain. Phantom sensation is any nonpainful sensation of an absent limb. Phantom limb pain is the sensation of pain in an absent limb. Postoperative studies have shown that 85% to 90% of patients experience phantom limb pain in the first month postamputation."\* At 1-year followup, 60% of patients continue to have pain. However, only 5% to 10% of those 60% have severe pain at 1 year." Phantom limb pain is often undiagnosed and therefore is undertreated. Even when diagnosed, practitioners often underestimate the severity of pain and do not offer treatment. In one study, 61% of amputees with phantom pain discussed the problem with their physicians, who offered treatment to only 17%. 12
 
 Severe preamputation pain may be a risk factor for phantom limb pain. In some but not all surveys, chronic pain in the body part to be amputated was a risk factor for phantom limb pain. It is hypothesized that high preoperative pain levels may sensitize the central nervous system. However, phantom limb pain has occurred in amputations secondary to acute trauma when the patient had no history of preamputation pain. Conversely, some patients with a history of severe chronic pain in an extremity before amputation never develop phantom limb pain.
 
@@ -1359,14 +1356,16 @@ On examination, the patient has full strength, and his sensation to light touch 
 ## REFERENCES
 
 1. Gelberman, RH, Aronson D, Weisman MH. Carpal-tunnel syndrome: Results of a prospective trial of steroid injecting and splinting. J Bone Joint Surg Am. 1980:62:1181-1184.
-3. McKendrick MW, McGill JI, White JE, et al. Oral acyclovir in acute herpes zoster. BMJ Neurology. 1989;39(suppl 1):327.
-2. Peterslund NA, Seyer-Hansen K, Ipsen J, et al. Acyclovir in herpes zoster. Lancet. 1981;2(8251):827-830.
+2. McKendrick MW, McGill JI, White JE, et al. Oral acyclovir in acute herpes zoster. BMJ Neurology. 1989;39(suppl 1):327.
+3. Peterslund NA, Seyer-Hansen K, Ipsen J, et al. Acyclovir in herpes zoster. Lancet. 1981;2(8251):827-830.
 4. Forrest JB. The response to epidural steroid injections in chronic dorsal root pain. Can Anaesth Soc J. 1980;27(1):40-46.
 5. Saal JS. The role of inflammation in lumbar pain. Phys Med Rehab: State Art Rev. 1990;4:191-199.
 6. novidio J. reemom to. Javson Mi. Julervercold lorae enous obstruction. A cause of periradicular fibrosis? Spin 1989;14(6):558-568.
-8. Slipman CW, Plastaras CT, Palmitier RA, et al. Symptom provocation of fluoroscopically guided cervical nerve root stimulation. Are dynatomal maps identical to dermatomal maps? Spine. 1998:23 (20):2235-2242.
-7. Smyth MJ, Wright V. Sciatica and the intervertebral disc; an experimental study. J Bone Joint Surg Am. 1958;40-A:1401-1418.
+7. Slipman CW, Plastaras CT, Palmitier RA, et al. Symptom provocation of fluoroscopically guided cervical nerve root stimulation. Are dynatomal maps identical to dermatomal maps? Spine. 1998:23 (20):2235-2242.
+8. Smyth MJ, Wright V. Sciatica and the intervertebral disc; an experimental study. J Bone Joint Surg Am. 1958;40-A:1401-1418.
+
 - Bogduk N, Govinda J. Medical management of acute lumba adicular pain: An evidence based approach. Newcastle, Austra na: Newcastle bone and Jomt Insutute; 1999.
+
 10. Parkes CM. Factors determining the persistence of phantom pain in the amputee. J Psychosom Res. 1973;17(2):97-108.
 11. Nikolajsen L, Ilkjaer S, Kroner K, et al. The influence of preamputation pain on postamputation stump and phantom pain. Pain. 1997;72:393-405.
 
@@ -1377,11 +1376,14 @@ of the ring finger. At this point, carpal tunnel syndrome CTS is your working di
 You send the patient for a nerve conduction study and prescribe a splint for the right wrist. It is to be worn at night to keep the wrist in the neutral position, which should relieve pressure on the median nerve. The nerve conduction study comes back positive for CTS and negative for radiculopathy. When you call the patient with the results of the nerve conduction study, he reports that the wrist splint is already starting to help. The patient is scheduled for a follow-up visit in 1 month, at which time if the symptoms have not resolved you are considering a carpal tunnel injection.
 
 - Sherman RA, Glenda GM. Concurrent variation of burning phantom limb and stump pain with near surface blood flow in the stump. Orthopedics. 1987;(10):1395-1402.
+
 14. Ephraim PL, Wegener ST, MacKenzie EJ, et al. Phantom pain, residual limb pain, and back pain in amputees: national survey. Arch Phys Med Rehabil. 2005;86(10):1910-
+
 - Wilkins KL, McGrath PJ, Finley GA, et al. Phantom limb sensations and phantom limb pain in child and adolescent amputees. Pain. 1998;78(1):7-12.
+
 15. Kanner R. Postsurgical pain syndromes. In: Foley KM, ed. Management of cancer pain. Syllabus of the postgraduate course of Memo rial Sloan-Kettering Cancer Center. New York, NY; 1985:65-72.
-17. Obata H, Saito S, Fujita N, et al. Epidural block with mepivacaine before surgery reduces long term post-thoracotomy pain. can I Anesth. 1799.401 121.1121-11521
-16. Perkins FM, Kehlet H. Chronic pain as an outcome of surgery. Anesthesiology. 2000;93(4):1123-1133.
+16. Obata H, Saito S, Fujita N, et al. Epidural block with mepivacaine before surgery reduces long term post-thoracotomy pain. can I Anesth. 1799.401 121.1121-11521
+17. Perkins FM, Kehlet H. Chronic pain as an outcome of surgery. Anesthesiology. 2000;93(4):1123-1133.
 18. Gotoda Y, Kambara N, Sakai T, et al. The morbidity, time course and predictive factors for persistent post-thoracotomy pain. Eur J Pain. 4UU| 10'0-0.
 19. Perttunen K, Tasmuth T, Kalso E. Chronic pain after thoracic surgery: A follow up study. Acta Anaesthesiol Scand. 1999;43:
 20. Senturk M, Ozcan PE, Talu GK, et al. The effects of three different analgesia techniques on long-term posthoracotomy pain. Anesth Analg. 2002;94(1):11-15.
@@ -1470,7 +1472,7 @@ and mechanical compression, with direct neural injury to the cord, as well as va
 
 ## Pain Caused by Surgery for Cancer
 
-Pain after Thoracotomy: A thoracotomy is a chest incision to gain access to the lungs, heart, esophagus, aorta, or thoracic spine. A thoracotomy may be needed for tumor debulking. Damage to the intercostal nerves may occur as a result of retractors, sutures, wires, or cutting (Fig. 3-7). It is not uncommon for the nerve to be totally severed or included in a suture when closing the chest. The incidence of severe pain is 3% to 5% one year post of, and pain that interferes with activities of daily living is reported by about 50% of patients.* Pain is described as electric and lancinating. Pain can be elicited on examination by touching the skin. It usually develops 1 to 2 months after the procedure.
+Pain after Thoracotomy: A thoracotomy is a chest incision to gain access to the lungs, heart, esophagus, aorta, or thoracic spine. A thoracotomy may be needed for tumor debulking. Damage to the intercostal nerves may occur as a result of retractors, sutures, wires, or cutting (Fig. 3-7). It is not uncommon for the nerve to be totally severed or included in a suture when closing the chest. The incidence of severe pain is 3% to 5% one year post of, and pain that interferes with activities of daily living is reported by about 50% of patients.\* Pain is described as electric and lancinating. Pain can be elicited on examination by touching the skin. It usually develops 1 to 2 months after the procedure.
 
 Pain after Mastectomy: A mastectomy is surgical removal of all or part of the breast. One in eight women will develop breast cancer; approximately 60% are treated surgically for axillary node staging and primary breast tumor resection. It is estimated
 
@@ -1512,7 +1514,7 @@ TABLE 3-1 Three-step Analgesic Ladder for Cancer Pain
 
 2. A nonsteroidal anti-inflammatory drug (NSAID), which may include Celebrex 100 twice a day as needed or ibuprofen 400 mg every 6 h as needed
 1. Acetaminophen (Tylenol) 650 mg every 6 h as needed
-3. If nerve pain is present: A neuropathic pain medication for a burning, electric pain (see Chapter 13, Antidepressant Medications Used for Neuropathic Pain; or Chapter 14, Antiseizure Medications Used for Neuropathic Pain)
+1. If nerve pain is present: A neuropathic pain medication for a burning, electric pain (see Chapter 13, Antidepressant Medications Used for Neuropathic Pain; or Chapter 14, Antiseizure Medications Used for Neuropathic Pain)
 
 ## Step 2: Short-acting opioid medication, procedures &amp; radiation
 
@@ -1574,11 +1576,11 @@ Treatment for spinal cord compression includes highdose corticosteroids and radi
 
 TABLE 3-2 Chance of Remaining Ambulatory with Treatment for Spinal Cord Compression
 
-| Point of Intervention                                   | Chance of Remaining Ambulatory   |
-|---------------------------------------------------------|----------------------------------|
-| If treatment starts while patient is still able to walk | 75%                              |
-| If treatment starts with partial or incomplete weakness | 30-50%                           |
-| If patient is already paralyzed                         | 10-20%                           |
+| Point of Intervention                                   | Chance of Remaining Ambulatory |
+| ------------------------------------------------------- | ------------------------------ |
+| If treatment starts while patient is still able to walk | 75%                            |
+| If treatment starts with partial or incomplete weakness | 30-50%                         |
+| If patient is already paralyzed                         | 10-20%                         |
 
 <!-- PAGE_NUMBER: 56 -->
 
@@ -1603,10 +1605,11 @@ The patient is taking a short-acting opioid around the clock and is still in pai
 A month later, the patient returns stating that the medication adjustments as well as the kyphoplasty have been very helpful for his pain. You see him 1 month later and he is still stable. You see him 2 months later and his pleuritic pain has increased as well as his tumor burden. You start OxyContin 10 mg every 8 hours and leave him on Celebrex, Cymbalta, and Percocet at their current doses. Hospice is contacted; eventually the patient dies in hospice.
 
 - Cancer Center. 1985 Nov 14-16. New York, NY: Memorial SloanKettering Cancer Center; 1985:65-72.
+
 7. Fallon M, Hanks G, Cherny N. Principles of control of cancer pain. RM.. 4000'15/' 1011—1014.
-6. Lau B, Blyth F, Cousins M. Persistent pain after breast cancer surgery. Pain Med. 2007;8(7):611.
-8. Brown DL, Bulley CK, Quiel EL. Neurolytic celiac plexus block for pancreatic cancer pain. Anesth Analg. 1987;66:869-873.
-9. de Leon-Casasola OA, Kent E, Lema MJ. Neurolytic superior hypogastric plexus block for chronic pain associated with cancer. Pain. 1993;54(2):145-151.
+8. Lau B, Blyth F, Cousins M. Persistent pain after breast cancer surgery. Pain Med. 2007;8(7):611.
+9. Brown DL, Bulley CK, Quiel EL. Neurolytic celiac plexus block for pancreatic cancer pain. Anesth Analg. 1987;66:869-873.
+10. de Leon-Casasola OA, Kent E, Lema MJ. Neurolytic superior hypogastric plexus block for chronic pain associated with cancer. Pain. 1993;54(2):145-151.
 
 <!-- image -->
 
@@ -1771,7 +1774,7 @@ You have no diagnosis for the cause of the patient's pain, but based on the symp
 - Somatic Pelvic Pain
 - Neuropathic Pelvic Pain
 
-This chapter presents the most common causes of chronic pelvic pain (CPP). CPP is a prevalent and challenging disorder to manage. CPP is a noncyclic pain of 6 or more months' duration that localizes to the anatomic pelvic, anterior abdominal wall at or below the umbilicus, the lumbosacral back, or the buttocks and is of sufficient severity to cause functional disability or lead to care. Roughly 38 of 1,000 visits in the primary care setting among women aged 15 to 73 is for CPP, comparable to the incidence of asthma visits.' CPP is the most common reason for referral to gynecology clinics, accounting for 20% of all appointments." In one-third to one-half of these cases, the pathology cannot be identified. To make treatment even more challenging, CPP may occur in 50% of patients with a historv of physical or sexual abuse.*
+This chapter presents the most common causes of chronic pelvic pain (CPP). CPP is a prevalent and challenging disorder to manage. CPP is a noncyclic pain of 6 or more months' duration that localizes to the anatomic pelvic, anterior abdominal wall at or below the umbilicus, the lumbosacral back, or the buttocks and is of sufficient severity to cause functional disability or lead to care. Roughly 38 of 1,000 visits in the primary care setting among women aged 15 to 73 is for CPP, comparable to the incidence of asthma visits.' CPP is the most common reason for referral to gynecology clinics, accounting for 20% of all appointments." In one-third to one-half of these cases, the pathology cannot be identified. To make treatment even more challenging, CPP may occur in 50% of patients with a historv of physical or sexual abuse.\*
 
 This chapter covers diagnosis and treatment modalities for the most common causes of CPP. Treatment for known diagnoses is explored first. These common causes of CPP, for which the diagnosis is known, are described in Table 5-1. It is important to remember that patients with CPP may have more than one disease that may lead to pain.
 
@@ -1810,7 +1813,7 @@ Nerves send sensory impulses to the brain for interpretation. These impulses tra
 TABLE 5-1 Most Common High-yield Causes of CPP and their Pathology and Presentation
 
 | Diagnosis                                   | Pathology and Presentation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-|---------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Postoperative pelvic adhesions              | Abnormal bands of scar tissue. Typically, adhesions show no symptoms. Adhesions may cause visceral pain by impairing organ mobility. Of open gynecologic procedures, ovarian surgery carries the highest risk of readmissions directly related to adhesions (7.5/100). When symptomatic they can present as deep, dull, achy pain. Adhesions involving the vagina or uterus may cause pain during intercourse.                                                                                                                                                                                                                                                                                                          |
 | Endometriosis                               | Collection of endometrial cells that develop remote from the uterus. During hormonal stimulation, the endometrial tissue triggers an inflammatory response. This is a surgical diagnosis confirmed by pathology. The degree of visible endometriosis has no correlation with the degree of pain, because location is more predictive than total volume. Increased pain usually occurs a few days before menses and begins to resolve 1-2 d into the menses. Pain during or after sex is common with endometriosis and usually predictive of deep rectovaginal endometriosis. Sonographic findings may include cysts in the ovaries, referred to as endometriomas. Patients may present with problems becoming pregnant. |
 | Pelvic congestion syndrome (pelvic varices) | Overfilling of the pelvic venous system. This can be a result of pregnancy or of unknown origin. This pain is not related to the menstrual cycle. Pain is constant and worse with standing; patients may get some relief when they lie down. Pain is worse as the day goes on. Patients often complain of postcoital ache and may have heavy vaginal discharge.                                                                                                                                                                                                                                                                                                                                                         |
@@ -1822,13 +1825,13 @@ TABLE 5-1 Most Common High-yield Causes of CPP and their Pathology and Presentat
 
 fires aberrantly. Injured nerves develop pathologic activity, manifesting as abnormal excitability. They have an elevated sensitivity to normal chemical, thermal, and mechanical stimuli that would not typically trigger a
 
-| TABLE 5-2 Evaluation of Pain History   | TABLE 5-2 Evaluation of Pain History                                                   |
-|----------------------------------------|----------------------------------------------------------------------------------------|
-|                                        | Palliative or Provoking factors.                                                       |
-|                                        | Qualities-burning, electric, sharp, dull.                                              |
-|                                        | kadlanoni                                                                              |
-|                                        | Severity-usually done on a visual analog scale 0 to 10.                                |
-|                                        | Temporal events associated with the pain: Is the pain constant or does it come and go? |
+| TABLE 5-2 Evaluation of Pain History | TABLE 5-2 Evaluation of Pain History                                                   |
+| ------------------------------------ | -------------------------------------------------------------------------------------- |
+|                                      | Palliative or Provoking factors.                                                       |
+|                                      | Qualities-burning, electric, sharp, dull.                                              |
+|                                      | kadlanoni                                                                              |
+|                                      | Severity-usually done on a visual analog scale 0 to 10.                                |
+|                                      | Temporal events associated with the pain: Is the pain constant or does it come and go? |
 
 nerve to fire. This aberrant nerve firing is interpreted by the brain as neuropathic pain. Nerves can be damaged in a number of ways: Mechanically, via infection, from metabolic conditions, toxins, radiation, and idiopathically. In neuropathic pain, the patient usually reports an electric, shooting, burning pain rather than an achy, dull pain.
 
@@ -1857,7 +1860,7 @@ Interventionally, there are minimally invasive procedures that can be used to he
 TABLE 5-3 Treatment of the Most Common High-yield Causes of CPP
 
 | Diagnosis                                   | Treatment                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-|---------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Postoperative pelvic adhesions              | Laparoscopy is commonly used for adhesiolysis because of the elective nature of the procedure and shorter recovery time. The value of adhesiolysis for pain is unclear. It has been shown that patients have had resolution of their pain after a laparoscopy where no adhesions were found. In addition, some patients who have undergone a successful adhesiolysis reported no change or worsening of their pain.                                                                                                                                                                  |
 | Endometriosis                               | Oral contraceptives which have been shown to reduce menstrual pain associated with endometriosis. Progesterone counteracts estrogen and inhibits the growth of the endometrium. NSAIDs can also be very helpful. Surgery for endometriosis-associated pain is a more invasive option but is used for both diagnosis and treatment.                                                                                                                                                                                                                                                   |
 | Pelvic congestion syndrome (pelvic varices) | Estrogen which is a venous dilator. In cases of venous congestion, pelvic varices, a hypoestrogenic state may result in resolution of symptoms. In a study in which patients with lower abdominal pain caused by pelvic congestion received either a GnRH agonist or placebo, 73% of subjects reported at least a 50% improvement compared to placebo." Interventional radiologic techniques can be used for pelvic congestion syndrome. A percutaneous catheter is placed into the vein and the vein is embolized. This has shown to provide relief of pain in 50- 80% of patients? |
@@ -1879,7 +1882,7 @@ pelvic wall pain from a neuroma. An injection into the area using a local anesth
 
 ## Surgery
 
-For pain thought to be visceral in nature, removing the offending agent has been explored as a treatment modality. Removing the pelvic organs that may be the pain generators remains a very controversial topic in obstetrics and gynecology. Some 10% to 19% of hysterectomies and 40% of laparoscopies are done for nononcologic CPP.l3 Overall, the expected probability of success in the absence of obvious pathology is 60%. The success rate rises to 80% to 90% when pelvic lesions are present. The most common findings after hysterectomy and bilateral salpingo-oophorectomy are adhesions, endometriosis, and adnexal remnants.'* A small percentage (3% to 5%) will experience worsening of pain or will develop new symptoms after surgery. I5
+For pain thought to be visceral in nature, removing the offending agent has been explored as a treatment modality. Removing the pelvic organs that may be the pain generators remains a very controversial topic in obstetrics and gynecology. Some 10% to 19% of hysterectomies and 40% of laparoscopies are done for nononcologic CPP.l3 Overall, the expected probability of success in the absence of obvious pathology is 60%. The success rate rises to 80% to 90% when pelvic lesions are present. The most common findings after hysterectomy and bilateral salpingo-oophorectomy are adhesions, endometriosis, and adnexal remnants.'\* A small percentage (3% to 5%) will experience worsening of pain or will develop new symptoms after surgery. I5
 
 Pelvic wall injections can be beneficial for suspected pelvic wall pain, somatic pain, of unclear etiology or
 
@@ -1902,14 +1905,14 @@ has had imaging, blood work, and cystoscopy, all of which were negative. She com
 3. Reiter RC, Gambone JC. Nongynecologic somatic pathology romen with chronic pelvic pain and negative laparoscop J кергоа меа. 1991;36(4):253-259.
 4. Toomey TC, Hernandez JT, Gittelman DF, et al. Relationship of physical and sexual abuse to pain and psychological assessment variables in chronic pelvic pain patients. Pain. 1993;53(1): 105-109.
 5. Lower AM, Hawthorn RJ, Ellis H, et al. The impact of adhesions on hospital readmissions over ten years after 8849 open gynaecological operations: An assessment from the Surgical and Clinical Adhesions Research Study. BJOG. 2000;107 (7):855-862.
-7. Kim HS, Malhorta AD, Rowe PC, et al. Embolotherapy for pelvic congestion syndrome: Long-term results. J Vasc Interv Radiol. 2006;17(2 Pt 1):289-297.
-6. Vercellini P, Daguati R, Abbiati A. Chronic pelvic pain. In: Arici 1. pel c. cos. Non musive monacemen or avrecouse Usor ders. London: Informa Healthcare; 2008:33-51.
+6. Kim HS, Malhorta AD, Rowe PC, et al. Embolotherapy for pelvic congestion syndrome: Long-term results. J Vasc Interv Radiol. 2006;17(2 Pt 1):289-297.
+7. Vercellini P, Daguati R, Abbiati A. Chronic pelvic pain. In: Arici 1. pel c. cos. Non musive monacemen or avrecouse Usor ders. London: Informa Healthcare; 2008:33-51.
 8. Hanno PM, Buehler J, Wein AJ. Use of amitriptyline in the treatment of interstitial cystitis. J Urol. 1989;141 (4):846-848.
-10. Pratt RB, Plancarte R. Superior hypogastric plexus block: A new therapeutic approach for pelvic pain. In: Waldman SD, Winne A, eds. Interventional Pain Management. Philadelphia, PA: Saunders; 1996:387-391.
-9. Lee RB, Stone K, Magelseen D, et al. Presacral neurectomy for chronic pelvic pain. Obstet Gynecol. 1986;68:517-521.
+9. Pratt RB, Plancarte R. Superior hypogastric plexus block: A new therapeutic approach for pelvic pain. In: Waldman SD, Winne A, eds. Interventional Pain Management. Philadelphia, PA: Saunders; 1996:387-391.
+10. Lee RB, Stone K, Magelseen D, et al. Presacral neurectomy for chronic pelvic pain. Obstet Gynecol. 1986;68:517-521.
 11. de Leon-Casasola OA, Kent E, Lema MJ. Neurolytic superior hypogastric plexus block for chronic pain associated with cancer. Pain. 1993;54(2):145-151.
-13. Peterson HB, Hulka JF, Phillips JM. American Association of Gynecologic Laparoscopists' 1988 membership survey on operative laparoscopy. J Reprod Med. 1990;35:587-589.
-12. Devor M, Govrin-Lipmann R, Raber P. Corticosteroids suppress ectopic neural discharge originating in experimental neuromas. Pain. 1985;22(2):127-137.
+12. Peterson HB, Hulka JF, Phillips JM. American Association of Gynecologic Laparoscopists' 1988 membership survey on operative laparoscopy. J Reprod Med. 1990;35:587-589.
+13. Devor M, Govrin-Lipmann R, Raber P. Corticosteroids suppress ectopic neural discharge originating in experimental neuromas. Pain. 1985;22(2):127-137.
 14. Behera M, Vilos GA, Hollett-Caines J, et al. Laparoscopic findings, histopathologic evaluation, and clinical outcomes in women with chronic pelvic pain after hysterectomy and bilateral salpingooophorectomy. J Minim Invasive Gynecol. 2006;13:431-435.
 15. Hillis SD, Marchbanks PA, Peterson HB. The effectiveness of hysterectomy for chronic pelvic pain. Obstet Gynecol. 1995:86(6): 941-945.
 
@@ -2116,6 +2119,7 @@ You diagnose plantar fasciitis and prescribe night splints, explaining how they 
 the foot. The patient has been taking ibuprofen daily for the pain. On examination, the pain can be reproduced by pushing on the tarsal tunnel. You diagnose the patient with tarsal tunnel syndrome. After treatment options are reviewed with the patient, he decides to go forward with tarsal tunnel injections. He also makes a change in his footwear to a more comfortable supportive show. At 1 month follow-up, the patient reports a 70% reduction in his pain; the injection is repeated to see if further pain reduction can be achieved.
 
 - nephropathy in a population-based cohort: The Rochester Diabetic Neuropathy Study. Neurology. 1993;43(4):817-824.
+
 3. Batt ME, Tanji JL, Skattum N. Plantar fasciitis: A prospective randomized clinical trial of the tension night splint. Clin J Sport Med. 1996;6(3):158-162.
 
 <!-- PAGE_NUMBER: 74 -->
@@ -2150,7 +2154,7 @@ Eventually this leads to both peripheral and central nervous system (CNS) change
 
 ## History and Examination
 
-On history, CRPS sufferers often describe a constant burning pain in a limb, sometimes also described as an aching pain. Symptoms usually progress in a stepwise fashion, though not in every instance, with pain and decreased function always present. Hallmarks of CRPS are hyperalgesia (an exaggerated response to painful stimuli) and when the disease advances, allodynia (the sensation of pain to nonpainful stimuli, e.g., merely touching the skin). Initially there may be signs of increased sympathetic tone, such as increased sweating in the limb and temperature changes.? Vasomotor changes cause skin discoloration, including various hues of red and purple. Sudomotor changes in skin range from hyperhidrosis to bone-dry skin. It is important to note that vasomotor and sudomotor changes vary not only among individuals but also within individuals over time.* physical trophic changes such as glossy skin, brittle hysier rophic changes nail growth, altered hair growth, and muscle atrophy. These changes usually develop months after the pain begins (Fig. 7-2).
+On history, CRPS sufferers often describe a constant burning pain in a limb, sometimes also described as an aching pain. Symptoms usually progress in a stepwise fashion, though not in every instance, with pain and decreased function always present. Hallmarks of CRPS are hyperalgesia (an exaggerated response to painful stimuli) and when the disease advances, allodynia (the sensation of pain to nonpainful stimuli, e.g., merely touching the skin). Initially there may be signs of increased sympathetic tone, such as increased sweating in the limb and temperature changes.? Vasomotor changes cause skin discoloration, including various hues of red and purple. Sudomotor changes in skin range from hyperhidrosis to bone-dry skin. It is important to note that vasomotor and sudomotor changes vary not only among individuals but also within individuals over time.\* physical trophic changes such as glossy skin, brittle hysier rophic changes nail growth, altered hair growth, and muscle atrophy. These changes usually develop months after the pain begins (Fig. 7-2).
 
 CRPS may remain stable affecting the same area or may spread in three distinct patterns: Contiguous, independent, and mirror image. In contiguous spread, there
 
@@ -2215,7 +2219,7 @@ Patients with fibromyalgia describe diffuse musculoskeletal aches. The pain is e
 TABLE 7-1 Differential Diagnosis for Fibromyalgia
 
 | Conditions to be Ruled out   | Laboratory Test                      |
-|------------------------------|--------------------------------------|
+| ---------------------------- | ------------------------------------ |
 | Hypothyroidism               | TSH (thyroid stimulating hormone)    |
 | Polymyalgia rheumatica       | ESR (erythrocyte sedimentation rate) |
 | Systemic lupus erythematosus | ANA (antinuclear antibody)           |
@@ -2248,7 +2252,7 @@ Savella: In the study that helped Savella gain FDA approval for fibromyalgia, pa
 
 Cymbalta: In the study that helped Cymbalta gain FDA approval for fibromyalgia, patients were randomized into two groups, one receiving Cymbalta 60 mg twice a day and the other receiving a placebo. All patients in the study were female. A 50% improvement from baseline function as measured by the Fibromyalgia Impact Questionnaire scores was seen in 30% of patients in the Cymbalta group as compared to 16% in the placebo group. The Cymbalta group reported fewer tender points on examination and less pain interference compared with the placebo group. 13 See the chapter on antidepressant medication used for neuropathic pain, Chapter 13, which reviews the starting doses of Cymbalta, titration schedule, and side effects.
 
-Lyrica: In the study that helped Lyrica gain FDA approval for fibromyalgia, patients with fibromyalgia were randomized into four groups: Lyrica at 150 mg/day, 300 mg/day, or 450 mg/day, or placebo. A 50% pain reduction was reported in 29% of those treated with Lyrica 450 mg/day, 18.9% in the 300-mg/day group, and 13% in the 150-mg/day group. These values compared with 13% of patients in the placebo group. There was no difference in clinical response between patients in the 150-mg/day group and the placebo group. * Lyrica is ineffective for fibromyalgia if not titrated to therapeutic doses. The mean sleep quality scores improved significantly in the 300- and 450-mg/day Lyrica groups as compared to those on placebo.
+Lyrica: In the study that helped Lyrica gain FDA approval for fibromyalgia, patients with fibromyalgia were randomized into four groups: Lyrica at 150 mg/day, 300 mg/day, or 450 mg/day, or placebo. A 50% pain reduction was reported in 29% of those treated with Lyrica 450 mg/day, 18.9% in the 300-mg/day group, and 13% in the 150-mg/day group. These values compared with 13% of patients in the placebo group. There was no difference in clinical response between patients in the 150-mg/day group and the placebo group. \* Lyrica is ineffective for fibromyalgia if not titrated to therapeutic doses. The mean sleep quality scores improved significantly in the 300- and 450-mg/day Lyrica groups as compared to those on placebo.
 
 Tramadol: Tramadol is not approved by the FDA for fibromyalgia. There are no clear and definitive studies showing its effectiveness. This may stem from the lack of private financial support to fund the magnitude of studies needed for the generic drug. Tramadol versus placebo in a double-blind study for 6 weeks showed that the tramadol patients were more likely to continue treatment as compared to placebo.'5 Tramadol can decrease uptake of both serotonin and norepinephrine, thus should be used with caution with medications that have a similar mechanism of action, such as Savella and Cymbalta.
 
@@ -2336,8 +2340,8 @@ You decide to add a long-acting pain medication. You start him on a fentanyl pat
 2. Bonica JJ. Causalgia and other reflex sympathetic dystrophies. Postgrad Med. 1973;53(6):143-148.
 3. Harden RN. Complex regional pain syndrome. Br J Anaesth. 2001;87: 00.
 4. Birklein F, Riedl B, Neudörfer B. Handwerker HO: Sympathetic vasoconstrictor retlex pattern in patients with comolex regional pain syndrome. Pain. 1998;75:93-100.
-6. AbuRahma AF, Robinson PA, Powell M, et al. Sympathectomy for reflex sympathetic dystrophy: Factors affecting outcome. Ann Vasc Surg. 1994;8(4):372-379.
-5. Cepeda MS, Lau J, Carr DB. Defining the therapeutic role of local anestheue sympateue Diockade In complex regional pain synarome. A narrative and systematic review. Clin J Pain. 2002;18(4): 216-233.
+5. AbuRahma AF, Robinson PA, Powell M, et al. Sympathectomy for reflex sympathetic dystrophy: Factors affecting outcome. Ann Vasc Surg. 1994;8(4):372-379.
+6. Cepeda MS, Lau J, Carr DB. Defining the therapeutic role of local anestheue sympateue Diockade In complex regional pain synarome. A narrative and systematic review. Clin J Pain. 2002;18(4): 216-233.
 7. Taylor RS, Van Buyten JP, Buchser E. Spinal cord stimulation for complex regional pain syndrome: A systematic review of the clinical and cost-effectiveness literature and assessment of prognostic factors. Eur J Pain. 2006;10(2):91-101.
 8. Harke H, Gretenkort P, Ladleif HU, et al. Spinal cord stimulation in sympathetically maintained complex regional pain syndrome Type 1 with severe disability: A prospective clinical study. Eur J Pain. 2005;9(4):363-373.
 9. Gracely RH, Petzke F, Wolf JM, et al. Functional magnetic resonance imaging evidence of augmented pain processing in fibromyalgia. Arthritis Rheum. 2002;46(5):1333-1343.
@@ -2345,8 +2349,8 @@ You decide to add a long-acting pain medication. You start him on a fentanyl pat
 change the Percocet dose to once a day as needed. In addition, you order an MRI of the right hip because of suspected AVN. He had x-rays of his right hip 5 years ago. On follow-up, his pain is slightly better but it still affects him on a daily basis. The MRI reveals advanced AVN of his right hip. You advise a right hip replacement, but the patient does not agree to this. You increase the fentanyl patch to 50 ug every 3 days, keep him on Percocet once a day. You start him on a bisphosphonate to prevent progressive bone resorption, collapse of bone, and edema at the site of AVN.
 
 10. Arnold LM, Hudson JI, Hess EV, et al. Family study of fibromyalgia. Arthritis Rheum. 2004;50(3):944-952.
-12. Clauw DJ, Mease P, Palmer RH, et al. Milnacipran for the treatment of fibromyalgia in adults: A 15 week, multicenter, randomized, double-blind, placebo-controlled, multiple-dose clinical trial. Clin Ther. 2008:30(]]):1988-2004
-11. Weir PT, Harlan GA, Nkoy Fl, et al. The incidence of fibromyalgia and its associated comorbidities: A population-based retrospective cohort study based on International Classication of Diseases, 9th Revision codes. J Clin Rheumatol. 2006:12(3):124128.
+11. Clauw DJ, Mease P, Palmer RH, et al. Milnacipran for the treatment of fibromyalgia in adults: A 15 week, multicenter, randomized, double-blind, placebo-controlled, multiple-dose clinical trial. Clin Ther. 2008:30(]]):1988-2004
+12. Weir PT, Harlan GA, Nkoy Fl, et al. The incidence of fibromyalgia and its associated comorbidities: A population-based retrospective cohort study based on International Classication of Diseases, 9th Revision codes. J Clin Rheumatol. 2006:12(3):124128.
 13. Arnold LM, Lu Y, Crofford LJ, et al. A double-blind, multicenter trial comparing duloxetine with placebo in the treatment of fibromyalgia patients with or without depressive disorder. Arthritis Rheum. 2004;50(9):2974-2984.
 14. Crofford LJ, Rowbotham MC, Mease PJ, et al. Pregabalin for the treatment of fibromyalgia syndrome: Results of a randomized, double-blind, placebo-controlled trial. Arthritis Rheum. 2005;52(4):12641273.
 15. Russell IJ, Kamin M, Bennett RM, et al. Efficacy of tramadol in treatment of pain in fibromyalgia. J Clin Rheumatol. 2000;6:250-
@@ -2499,8 +2503,8 @@ At a 10-day follow-up, the patient is doing well and is starting physical therap
 ## REFERENCES
 
 1. Sorkin LS, Xiao WH, Wagner R, et al. Tumor necrosis factor-alpha induces ectopic activity in nociceptive primary afterent fibres. Neuroscience. 1997;81 (1):255-262.
-3. Samad TA, Moore KA, Sapirstein A, et al. Interleukin-1 beta-mediated induction of Cox-2 in the CNS contributes to inflammatory pain hypersensitivity. Nature. 2001;410(6827):471-475.
-2. Kehlet H, Jensen TS, Woolf CJ. Persistent postsurgical pain: risk factors and prevention. Lancet. 2006;367 (9522):1618-1625.
+2. Samad TA, Moore KA, Sapirstein A, et al. Interleukin-1 beta-mediated induction of Cox-2 in the CNS contributes to inflammatory pain hypersensitivity. Nature. 2001;410(6827):471-475.
+3. Kehlet H, Jensen TS, Woolf CJ. Persistent postsurgical pain: risk factors and prevention. Lancet. 2006;367 (9522):1618-1625.
 4. Harvey RJ, Depner UB, Wässle H, et al. GlyR alpha3: An essential target for spinal PGE2-mediated inflammatory pain sensitization. Science. 2004;304(5672):884-887.
 
 After surgery, the patient remains on PCA and Toradol for 2 days; during this period, his pain is well controlled. He has some nausea, however, and is given an antiemetic. After 2 days, you begin the patient on a clear diet. The PCA is discontinued postop day 3. The patient is then switched back to Percocet. His bowel function returns completely and he is discharged with follow-up.
@@ -2511,8 +2515,6 @@ After surgery, the patient remains on PCA and Toradol for 2 days; during this pe
 6. Logan DE, Rose JB. Is postoperative pain a self-fulfilling prophecy? Expectancy effects on postoperative pain and patient-controlled analgesia among adolescent surgical patients. J Pediatr Psychol. 2005;30(2):187-196.
 
 <!-- PAGE_NUMBER: 87 -->
-
-
 
 <!-- PAGE_NUMBER: 88 -->
 
@@ -2567,7 +2569,7 @@ Centrally, NSAIDs work by direct action on the CNS, altering spinal nociceptive 
 TABLE 9-1 Titration of Nonselective NSAIDs
 
 | Medication                | Koute    | Starting Dose        | Max Dose             | Available Forms    |
-|---------------------------|----------|----------------------|----------------------|--------------------|
+| ------------------------- | -------- | -------------------- | -------------------- | ------------------ |
 | Ibuprofen (Advil, Motrin) | po       | 200 po q6 p.r.n      | 800 q6 p.r.n         | 200, 400, 600, 800 |
 | Naproxen (Naprosyn)       | po       | 250 po bid p.r.n     | 500 bid p.r.n        | 250, 375, 500      |
 | Meloxicam (Mobic)         | po       | 7.5 po qd p.r.n      | 15 bid p.r.n         | 7.5, 15            |
@@ -2590,9 +2592,9 @@ As previously discussed NSAIDs for practical application can be divided into thr
 
 TABLE 9-2 Titration of COX-2 Selective NSAID
 
-| Medication           | Route   | Starting Dose   | Max Dose      | Available Forms   |
-|----------------------|---------|-----------------|---------------|-------------------|
-| Celebrex (celecoxib) | po      | 100 po qd p.r.n | 200 bid p.r.n | 100, 200          |
+| Medication           | Route | Starting Dose   | Max Dose      | Available Forms |
+| -------------------- | ----- | --------------- | ------------- | --------------- |
+| Celebrex (celecoxib) | po    | 100 po qd p.r.n | 200 bid p.r.n | 100, 200        |
 
 peak plasma concentration is faster when administered via the IV route. Toradol (the intravenous NSAID) is most commonly used to control pain in patients after surgery or in those who cannot take oral medication. In a postoperative study, in which all patients received morphine by a patient-controlled analgesia (PCA) device, patients treated with Toradol at fixed intermittent boluses required 26% less morphine than the placebo group (PCA alone). Because of its potency, Toradol is limited to 5 days of use. Celebrex is the only selective COX-2 inhibitor available in the United States (see Table 9-2 for titration guidelines).
 
@@ -2608,7 +2610,7 @@ NSAIDs have a low abuse potential compared to other pain medication. The three m
 
 The inhibition of the COX-1 isoform of cyclooxygenase reduces the levels of protective GI prostaglandins. These homeostatic gastric prostaglandins maintain blood flow to the gastric mucosa, promote the secretion of cytoprotective mucus, and decrease gastric acid secretion. NSAIDs also cause direct irritation to the GI tract.
 
-NSAIDs studied as a class are associated with a three- to five-fold increase in upper GI complications (peptic ulcer, bleeding, or perforation).* Generally, if oral NSAIDs are taken for at least 2 months on a regular basis, the risk of an endoscopically detectable ulcer is 1 in 5; for a symptomatic ulcer, about 1 in 70; for a bleeding ulcer, about 1 in 150; and for death from bleeding ulcer, about 1 in 1,300. Risk for serious GI bleeding complications from an NSAID ranges from 1 in 2,100 in adults under age 45 to 1 in 110 for adults over age 75. Risk of GI complications increases with using NSAIDs at higher dose and with the duration of therapy. Therefore, it is essential that these medications should be used at the lowest effective dose for the shortest amount of time to treat pain. Commonly, it is possible to reduce adverse GI effects with the use of a proton pump inhibitor. NSAIDs should be avoided in people with a history of bowel disease, such as Crohn's disease and ulcerative colitis.
+NSAIDs studied as a class are associated with a three- to five-fold increase in upper GI complications (peptic ulcer, bleeding, or perforation).\* Generally, if oral NSAIDs are taken for at least 2 months on a regular basis, the risk of an endoscopically detectable ulcer is 1 in 5; for a symptomatic ulcer, about 1 in 70; for a bleeding ulcer, about 1 in 150; and for death from bleeding ulcer, about 1 in 1,300. Risk for serious GI bleeding complications from an NSAID ranges from 1 in 2,100 in adults under age 45 to 1 in 110 for adults over age 75. Risk of GI complications increases with using NSAIDs at higher dose and with the duration of therapy. Therefore, it is essential that these medications should be used at the lowest effective dose for the shortest amount of time to treat pain. Commonly, it is possible to reduce adverse GI effects with the use of a proton pump inhibitor. NSAIDs should be avoided in people with a history of bowel disease, such as Crohn's disease and ulcerative colitis.
 
 ## Renal
 
@@ -2633,8 +2635,8 @@ and more significant in the right knee than the left. The pain is worse with mov
 ## REFERENCES
 
 1. ADAPT Research Group. Cardiovascular and cerebrovascular events in the randomized. controlled Alzheimer's disease anti-intlammatory prevention trial (ADAPT). PLOS Clin Trials. 2006;1 (7):e33.
-3. Jirarattanaphochai K, Jung S. Nonsteroidal antiinflammatory drugs for postoperative pain management after lumbar spine surgery: A meta analysis of randomized controlled trials. J Neurosurg Spine. 2008;9(1):22-31.
-2. Bennett JS, Daughtery A, Herrington D, et al. The use of nonsteroidal anti-inflammatory drugs (NSAIDs): A science advisory from the American Heart Association. Circulation. 2005;111 (13):1713-1716.
+2. Jirarattanaphochai K, Jung S. Nonsteroidal antiinflammatory drugs for postoperative pain management after lumbar spine surgery: A meta analysis of randomized controlled trials. J Neurosurg Spine. 2008;9(1):22-31.
+3. Bennett JS, Daughtery A, Herrington D, et al. The use of nonsteroidal anti-inflammatory drugs (NSAIDs): A science advisory from the American Heart Association. Circulation. 2005;111 (13):1713-1716.
 
 Five years pass and the patient reports that her knee pain over the last 4 months has increased. She finds she needs to take naproxen every day, usually twice a day. You send her for reimaging, which shows progression of her knee osteoarthritis. With the increased use of NSAIDs, you switch the patient to Celebrex 100 mg po bid p.r.n. In addition, you perform bilateral knee injections using the steroid Kenalog and the local anesthetic bupivacaine to help reduce pain and pain medication use.
 
@@ -2696,7 +2698,7 @@ WHEN TO USE HOW TO USE
 
 Local anesthetics, nonsteroidal anti-inflammatory drugs (NSAIDs), and the neurolytic substance capsaicin are three commonly used topical pain medications. These topical medications provide localized relief, targeting tissue on which they are directly applied.'
 
-The local anesthetic Lidocaine is approved by the Food and Drug Administration (FDA) in both patch and jelly form. When applied to the skin, it numbs the area underneath it. Lidocaine blocks sodium-gated channels, which have been shown to play a critical role in the initiation and maintenance of many types of pain. Pain models have demonstrated an upregulation of abnormal sodium channels in damaged peripheral sensory nerves? In animal studies, inflammatory conditions such as osteoarthritis have also reported abnormal sodium channels that when antagonized reduce pain." Roughly 1% to 5% of lidocaine from the patch (a very safe amount) has been shown to be systemically absorbed in healthy patients.*
+The local anesthetic Lidocaine is approved by the Food and Drug Administration (FDA) in both patch and jelly form. When applied to the skin, it numbs the area underneath it. Lidocaine blocks sodium-gated channels, which have been shown to play a critical role in the initiation and maintenance of many types of pain. Pain models have demonstrated an upregulation of abnormal sodium channels in damaged peripheral sensory nerves? In animal studies, inflammatory conditions such as osteoarthritis have also reported abnormal sodium channels that when antagonized reduce pain." Roughly 1% to 5% of lidocaine from the patch (a very safe amount) has been shown to be systemically absorbed in healthy patients.\*
 
 The NSAID diclofenac was approved by the FDA in both patch and gel form. NSAIDs function peripherally by blocking the enzyme cyclooxygenase, which converts arachidonic acid to inflammatory prostaglandins. The inflammatory prostaglandins sensitize nerve endings to the action of bradykinin, histamine, and other inflammatory factors, making them more likely to transmit pain. Peripherally, NSAIDs halt this inflammatory cascade. After application directly to the knee nine times over a 5-day period, detectable concentrations of diclofenac are seen in the synovial fluid of the knee. Patients with osteoarthritis of the knee and hand treated with topical diclofenac gel reported pain reduction of 51% and 46%, respectively. The amount of diclofenac systemically absorbed from the gel preparation is on average 93% less than that of the systemic exposure from oral diclofenac.
 
@@ -2720,14 +2722,14 @@ Capsaicin is FDA approved for the treatment of PHN. Studies have shown it to be 
 
 TABLE 11-1 Topical Analgesics-Forms, Strengths, and Application
 
-| Medication            | Form   | Strength (%)    | Application Instructions   |
-|-----------------------|--------|-----------------|----------------------------|
-| Lidocaine             | Patch  |                 | Apply once a day           |
-| Lidocaine             | Jelly  |                 | Apply four times a day PRN |
-| Diclofenac (Flector)  | Patch  | 1.3             | Apply once every 12 h PRN  |
-| Diclofenac (Voltaren) | Gel    |                 | Apply four times a day PRN |
-| Capsaicin             | Cream  | 0.025 and 0.075 | Apply four times a day PRN |
-| Capsaicin (Qutenza)   | Patch  |                 | Applied once in the office |
+| Medication            | Form  | Strength (%)    | Application Instructions   |
+| --------------------- | ----- | --------------- | -------------------------- |
+| Lidocaine             | Patch |                 | Apply once a day           |
+| Lidocaine             | Jelly |                 | Apply four times a day PRN |
+| Diclofenac (Flector)  | Patch | 1.3             | Apply once every 12 h PRN  |
+| Diclofenac (Voltaren) | Gel   |                 | Apply four times a day PRN |
+| Capsaicin             | Cream | 0.025 and 0.075 | Apply four times a day PRN |
+| Capsaicin (Qutenza)   | Patch |                 | Applied once in the office |
 
 ## HOW TO USE
 
@@ -2772,8 +2774,8 @@ patient that there are a number of options that can be used to treat the pain fr
 6. Voltaren gel [prescription information. Parsippany, NJ: Novartis Consumer Health/Endo Pharmaceuticals; 2007].
 7. Moore RA, Tramer MR, Carroll D, et al. Quantitative systemic review of topically applied non-steroidal anti-inflammatory drugs. BMJ. 1998;316(7128):333-338.
 8. Recommendations for the medical management of osteoarthritis of the hip and knee: 2000 update. American College of Rheumatology Subcommittee on Osteoarthritis Guidelines. Arthritis Rheum. 2000:43 (9):1905-1915.
-10. Bernstein JE, Korman NJ, Bickers DR, et al. Topical capsaicin treatment of chronic postherpetic neuralgia. J Am Acad Dermatol. 1989;21 (2 Pt 1):265-270.
-9. Gammaitoni AR, Alvarez NA, Galer BS. Safety and tolerability of the lidocaine patch 5%, a targeted peripheral analgesic: A review of the literature. J Clin Pharmacol. 2003;43:111-117.
+9. Bernstein JE, Korman NJ, Bickers DR, et al. Topical capsaicin treatment of chronic postherpetic neuralgia. J Am Acad Dermatol. 1989;21 (2 Pt 1):265-270.
+10. Gammaitoni AR, Alvarez NA, Galer BS. Safety and tolerability of the lidocaine patch 5%, a targeted peripheral analgesic: A review of the literature. J Clin Pharmacol. 2003;43:111-117.
 11. Watson CP, Evans RJ. The postmastectomy pain syndrome and topical capsaicin: A randomized trial. Pain. 1992;5(3):375-
 
 <!-- PAGE_NUMBER: 98 -->
@@ -2797,7 +2799,7 @@ Centrally acting muscle relaxants are used to reduce spasticity and alleviate pa
 TABLE 12-1 Methods of Action of the Most Commonly Administered Centrally Acting Muscle Relaxants
 
 | Medication                 | Method of Action                                                                                                                                             |
-|----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Baclofen (Lioresal)        | GABA agonist in the brain and spinal cord                                                                                                                    |
 | Zanaflex (Tizanidine)      | Centrally acting 02 adrenergic agonist that inhibits excitatory amino acid release from spinal interneurons                                                  |
 | Flexeril (Cyclobenzaprine) | Structurally related to tricyclic antidepressants (TCAs). The mechanism of action is unknown but thought to decrease a-motor neuron firing in the brain stem |
@@ -2838,11 +2840,11 @@ The use of muscle relaxants is usually limited to the treatment of spasticity fr
 
 TABLE 12-2 Dosing Information for the Most Commonly Used Muscle Relaxants for Pain Management
 
-| Medication                 | Route   | Starting Dose   | Max Dose   | Available Forms (mg)   |
-|----------------------------|---------|-----------------|------------|------------------------|
-| Baclofen (Lioresal)        | PO      | 5 mg tid p.r.n  | 20 mg tid  | 10, 20                 |
-| Zanaflex (Tizanidine)      | PO      | 2 mg tid p.r.n  | 8 mg qid   | 2, 4, 6                |
-| Flexeril (Cyclobenzaprine) | PO      | 5 mg tid p.r.n  | 20 mg tid  | 5, 10                  |
+| Medication                 | Route | Starting Dose  | Max Dose  | Available Forms (mg) |
+| -------------------------- | ----- | -------------- | --------- | -------------------- |
+| Baclofen (Lioresal)        | PO    | 5 mg tid p.r.n | 20 mg tid | 10, 20               |
+| Zanaflex (Tizanidine)      | PO    | 2 mg tid p.r.n | 8 mg qid  | 2, 4, 6              |
+| Flexeril (Cyclobenzaprine) | PO    | 5 mg tid p.r.n | 20 mg tid | 5, 10                |
 
 There is an extended release form of Flexeril called Amrix (Cyclobenzaprine hydrochloride extended release). The recommended dose is 15 mg daily. It is usually given &amp; nours delore beaume. some patients may require up to su mg/day.
 
@@ -2851,7 +2853,7 @@ There is an extended release form of Flexeril called Amrix (Cyclobenzaprine hydr
 TABLE 12-3 Side Effects for the Most Common Muscle Relaxants
 
 | Medication                 | Side Effects                        |
-|----------------------------|-------------------------------------|
+| -------------------------- | ----------------------------------- |
 | Baclofen (Lioresal)        | Weakness                            |
 | Zanaflex (Tizanidine)      | Sedation                            |
 | Flexeril (Cyclobenzaprine) | Dry mouth (anticholinergic effects) |
@@ -2935,7 +2937,7 @@ of diabetic peripheral neuropathy. It is a treatment for the same types of neuro
 
 ## Neuropathic Pain
 
-Nerve damage may occur in several ways. Uncontrolled diabetes, HIV, or alcohol abuse commonly injures distal peripheral nerves. The rate of diabetes, and thus diabetic peripheral neuropathy, in the United States is growing rapidly. One study looked at the rate of neuropathy in patients with newly diagnosed noninsulindependent diabetes who were followed for 10 years. On diagnosis, 8.3% of patients had neuropathy; at 10 years the rate of neuropathy grew to 41.9%.* Nerves can also be damaged by medications, such as ethambutol, which is used to treat tuberculosis. Nerves can be entrapped, such as in carpal tunnel syndrome, as well as entrapped by a herniated disc, such as in cervical and lumbar radiculopathy. Other common neuropathies include postherpetic neuralgia, trigeminal neuralgia, intercostal neuralgia, and stump neuromas. Sometimes a definitive diagnosis is not possible, but if the patient describes the pain as electric and burning in nature it is reasonable to try a neuropathic pain medication.
+Nerve damage may occur in several ways. Uncontrolled diabetes, HIV, or alcohol abuse commonly injures distal peripheral nerves. The rate of diabetes, and thus diabetic peripheral neuropathy, in the United States is growing rapidly. One study looked at the rate of neuropathy in patients with newly diagnosed noninsulindependent diabetes who were followed for 10 years. On diagnosis, 8.3% of patients had neuropathy; at 10 years the rate of neuropathy grew to 41.9%.\* Nerves can also be damaged by medications, such as ethambutol, which is used to treat tuberculosis. Nerves can be entrapped, such as in carpal tunnel syndrome, as well as entrapped by a herniated disc, such as in cervical and lumbar radiculopathy. Other common neuropathies include postherpetic neuralgia, trigeminal neuralgia, intercostal neuralgia, and stump neuromas. Sometimes a definitive diagnosis is not possible, but if the patient describes the pain as electric and burning in nature it is reasonable to try a neuropathic pain medication.
 
 The most common neuropathic conditions are covered in this book in Chapter 2, Neuropathic Pain. Always keep in mind that these medications are used for symptom control. Every effort should be made to detect and treat the underlying cause. Symptomatic treatment should begin while the underlying cause is being investigated. By curbing alcohol use, controlling blood glucose rates, and regulating thyroid level, further nerve damage can be prevented.
 
@@ -2947,11 +2949,11 @@ One miscellaneous condition that responds to antidepressant medications used for
 
 TABLE 13-1 Recommendations for Use of Neuropathic Pain Medication
 
-| Drug                    | Starting Dose                             | Titration (days)   | Usual Pain Range (mg/day)   | Usual Depression Range (mg/day)   | Available Forms (mg)     |
-|-------------------------|-------------------------------------------|--------------------|-----------------------------|-----------------------------------|--------------------------|
-| Amitriptyline (Elavil)  | 10 mg qhs (geriatrics) 25 mg qhs (adults) |                    | 10-150                      | 50-300                            | 10, 25, 50, 75, 100, 150 |
-| Nortriptyline (Pamelor) | 10 mg qhs (geriatrics) 25 mg qhs (adults) |                    | 50-125                      | 75-125                            | 10, 25, 50, 75           |
-| Duloxetine (Cymbalta)   | 30 mg a day                               |                    | 60                          | 20-60                             | 20, 30, 60               |
+| Drug                    | Starting Dose                             | Titration (days) | Usual Pain Range (mg/day) | Usual Depression Range (mg/day) | Available Forms (mg)     |
+| ----------------------- | ----------------------------------------- | ---------------- | ------------------------- | ------------------------------- | ------------------------ |
+| Amitriptyline (Elavil)  | 10 mg qhs (geriatrics) 25 mg qhs (adults) |                  | 10-150                    | 50-300                          | 10, 25, 50, 75, 100, 150 |
+| Nortriptyline (Pamelor) | 10 mg qhs (geriatrics) 25 mg qhs (adults) |                  | 50-125                    | 75-125                          | 10, 25, 50, 75           |
+| Duloxetine (Cymbalta)   | 30 mg a day                               |                  | 60                        | 20-60                           | 20, 30, 60               |
 
 of fibromyalgia. Although other medications may be helpful, the research to support their efficacy is insufficient.
 
@@ -2963,7 +2965,7 @@ Savella: Savella is the newest medication approved by the FDA for fibromyalgia, 
 
 The starting doses and titration schedule of these medications for neuropathic pain are listed in Table 13-1.
 
-One of the most common mistakes in using neuropathic medications is not titrating them. The medication dose for amitriptyline that works for pain is 10 to 150 mg per day. It has been shown that 73% of treated patients were prescribed 50 mg or less per day.* These medications can be effective only with proper titration. At 20 mg per day, the effectiveness of Cymbalta is questionable, but at 60 mg per day 51% of patients treated for diabetic peripheral neuropathy reported at least a 30% sustained reduction in pain.
+One of the most common mistakes in using neuropathic medications is not titrating them. The medication dose for amitriptyline that works for pain is 10 to 150 mg per day. It has been shown that 73% of treated patients were prescribed 50 mg or less per day.\* These medications can be effective only with proper titration. At 20 mg per day, the effectiveness of Cymbalta is questionable, but at 60 mg per day 51% of patients treated for diabetic peripheral neuropathy reported at least a 30% sustained reduction in pain.
 
 These medications should be titrated for meaningful clinical pain relief. The medication should not be considered clinically ineffective if it is discontinued before the maximum dose is reached or the patient has side effects. A patient may report that Cymbalta was not effective for the pain; upon inquiry you may learn that the dosage was only 20 mg per day. If the patient has only partial pain relief, it may be necessary to add a second neuropathic pain medication.' This is referred to as rational polypharmacy. The second neuropathic pain medication added is usually from the other class of neuropathic pain medications; so an antiseizure medication used for neuropathic pain is added. Table 13-2 presents antidepressant dosage recommendations for treatment of fibromyalgia.
 
@@ -2971,10 +2973,10 @@ Savella is usually titrated over a 2-week period: 25 mg once a day for 4 days, f
 
 TABLE 13-2 Recommendations for Use of Neuropathic Pain Medicaton in Fibromyalgia
 
-| Drug                  |   Starting Dose (mg/day) | Titration (days)   | Usual Pain Range (mg/day)   | Usual Depression Range (mg/day)   | Available Forms (mg)   |
-|-----------------------|--------------------------|--------------------|-----------------------------|-----------------------------------|------------------------|
-| Duloxetine (Cymbalta) |                       30 |                    | 60-120                      | 20-60                             | 20, 30, 60             |
-| Milnacipran (Savella) |                       25 |                    | 100-200                     | Not used for depression           | 12.5, 25, 50, 100      |
+| Drug                  | Starting Dose (mg/day) | Titration (days) | Usual Pain Range (mg/day) | Usual Depression Range (mg/day) | Available Forms (mg) |
+| --------------------- | ---------------------- | ---------------- | ------------------------- | ------------------------------- | -------------------- |
+| Duloxetine (Cymbalta) | 30                     |                  | 60-120                    | 20-60                           | 20, 30, 60           |
+| Milnacipran (Savella) | 25                     |                  | 100-200                   | Not used for depression         | 12.5, 25, 50, 100    |
 
 algia: Cymbalta: In the study that led to the approval of Cymbalta for fibromyalgia, researchers randomized patients into two groups. One received Cymbalta 60 mg twice a day, and the other received a placebo. All patients in the study were female. A 50% improvement from baseline function as measured by the Fibromyalgia Impact Questionnaire scores occurred in 30% of patients in the Cymbalta group compared with 16% in the placebo group. Patients in the Cymbalta group reported fewer tender points on examination and less pain interference compared with those in the placebo group.'
 
@@ -2989,7 +2991,7 @@ All of the medications mentioned in Table 13-3 inhibit the reuptake of serotonin
 TABLE 13-3 Possible Side Effects of Antidepressants in the Treatment of Neuropathic Pain
 
 | Drug                    | Most Common Side Effects                                                                                                                                             |
-|-------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Amitriptyline (Elavil)  | Anticholinergic effects (dry mouth, blurred vision, constipation, urinary retention). Contraindicated in people with cardiac conducton asturbances or arrnyumias.    |
 | Nortriptyline (Pamelor) | Anticholinergic effects (dry mouth, blurred vision, constipation, urinary retention). Contraindicated in people with cardiac conduction disturbances or arrhythmias. |
 | Duloxetine (Cymbalta)   | Nausea, somnolence, dizziness.                                                                                                                                       |
@@ -3087,7 +3089,7 @@ Gabapentin is a generic drug that works well for neuropathic pain. The initial d
 TABLE 14-1 Antiseizure Medication Used for Neuropathic Pain
 
 | Drug                     | Starting Dose                                                       | Titration    | Max Daily Dose (mg/day)              | Available Forms (mg)            |
-|--------------------------|---------------------------------------------------------------------|--------------|--------------------------------------|---------------------------------|
+| ------------------------ | ------------------------------------------------------------------- | ------------ | ------------------------------------ | ------------------------------- |
 | Gabapentin (Neurontin)   | 300 mg bid                                                          | Every 5 days | 3,600                                | 100, 300, 400, 600, 800         |
 | Pregabalin (Lyrica)      | 25 mg (conservative) bid 50 mg (geriatric) bid 75 mg (standard) bid | Every 3 days | 300 for PN 600 for PHN 450 for Fibro | 25, 75, 100, 150, 200, 225, 300 |
 | Carbamazepine (Tegretol) | 200 mg bid                                                          | Every 2 days | 1,600                                | 100, 200, 300, 400              |
@@ -3107,7 +3109,7 @@ It should be noted that gabapentin and Lyrica may worsen vertigo in patients wit
 TABLE 14-2 Common Side Effects of Antiseizure Medications Used for Neuropathic Pain
 
 | Drug                     | Most Common Side Effects                         |
-|--------------------------|--------------------------------------------------|
+| ------------------------ | ------------------------------------------------ |
 | Gabapentin (Neurontin)   | Mild to moderate dizziness and sleepiness, edema |
 | Pregabalin (Lyrica)      | Mild to moderate dizziness and sleepiness, edema |
 | Carbamazepine (Tegretol) | Drowsiness, headaches                            |
@@ -3181,15 +3183,15 @@ All IV medications are short acting by definition. At equal analgesic doses, no 
 
 TABLE 15-1 The Seven Primary Opioids
 
-| Medication              | Intravenous   | Short Acting Form   | Long Acting Form   |
-|-------------------------|---------------|---------------------|--------------------|
-| Codeine                 |               |                     |                    |
-| Hydrocodone             |               |                     |                    |
-| Oxycodone               |               |                     |                    |
-| Morphine                |               |                     |                    |
-| Dilaudid (hydomorphone) |               |                     |                    |
-| Fentanyl                |               |                     |                    |
-| Methadone               |               |                     |                    |
+| Medication              | Intravenous | Short Acting Form | Long Acting Form |
+| ----------------------- | ----------- | ----------------- | ---------------- |
+| Codeine                 |             |                   |                  |
+| Hydrocodone             |             |                   |                  |
+| Oxycodone               |             |                   |                  |
+| Morphine                |             |                   |                  |
+| Dilaudid (hydomorphone) |             |                   |                  |
+| Fentanyl                |             |                   |                  |
+| Methadone               |             |                   |                  |
 
 analgesia ([PCA]; PCAs are covered in Chapter 16. Table 15-2 presents the equivalent doses for the three IV pain medications.
 
@@ -3207,18 +3209,18 @@ Acute pain conditions are dynamic with large fluctuations of pain levels over ti
 
 TABLE 15-2 Equal Analgesic Doses of Intravenous Pain Medications
 
-| Medication   | Equivalent Dose   | Starting Dose   | Onset Time      | Duration   |
-|--------------|-------------------|-----------------|-----------------|------------|
-| Morphine     | 10 mg             | 2-3 mg          | 5-10 mins       | 3-5 h      |
-| Dilaudid     | 1.5 mg            | 0.2-0.4 mg      | 5-20 mins       | 3-4 h      |
-| Fentanyl     | 100 ug            | 25 g            | Less than 1 min | 1-2 h      |
+| Medication | Equivalent Dose | Starting Dose | Onset Time      | Duration |
+| ---------- | --------------- | ------------- | --------------- | -------- |
+| Morphine   | 10 mg           | 2-3 mg        | 5-10 mins       | 3-5 h    |
+| Dilaudid   | 1.5 mg          | 0.2-0.4 mg    | 5-20 mins       | 3-4 h    |
+| Fentanyl   | 100 ug          | 25 g          | Less than 1 min | 1-2 h    |
 
 <!-- PAGE_NUMBER: 113 -->
 
 TABLE 15-3 Short-acting Oral Opioids and Pain Levels for Which They are Most Useful
 
 | Level of Pain           | Medication                                                                               |
-|-------------------------|------------------------------------------------------------------------------------------|
+| ----------------------- | ---------------------------------------------------------------------------------------- |
 | Less severe pain        | Codeine                                                                                  |
 | Moderate to severe pain | Hydrocodone (hydrocodone + Tylenol = Vicodin) Oxycodone (Oxycodone + Tylenol = Percocet) |
 | Severe pain             | Morphine Dilaudid (hydromorphone)                                                        |
@@ -3293,14 +3295,14 @@ The titration of methadone must proceed slowly. The metabolism of methadone occu
 
 TABLE 15-4 Analgesic Dose Conversions
 
-| Codeine         | 100 mg   |
-|-----------------|----------|
-| Hydrocodone     | 15 mg    |
-| Oxycodone       | 10 mg    |
-| Morphine (Oral) | 15 mg    |
-| Morphine (IV)   | 5 mg     |
-| Dilaudid (Oral) | 3.75 mg  |
-| Dilaudid (IV)   | 0.75 mg  |
+| Codeine         | 100 mg  |
+| --------------- | ------- |
+| Hydrocodone     | 15 mg   |
+| Oxycodone       | 10 mg   |
+| Morphine (Oral) | 15 mg   |
+| Morphine (IV)   | 5 mg    |
+| Dilaudid (Oral) | 3.75 mg |
+| Dilaudid (IV)   | 0.75 mg |
 
 <!-- PAGE_NUMBER: 116 -->
 
@@ -3324,23 +3326,23 @@ Nucynta (Tapentadol): A commonly used opioid, Nucynta is relatively new to the m
 
 TABLE 15-5 Short-acting Forms of Long-acting Pain Medications
 
-| Long-acting Pain Medication            | Duration of Action   | Short-acting Form                      |
-|----------------------------------------|----------------------|----------------------------------------|
-| Oxycodone extended release (OxyContin) | 8-12 h               | Oxycodone Oxycodone/Tylenol (Percocet) |
-| Morphine extended release (MS-Contin)  | 8-12 h               | Morphine (immediate release)           |
-| Exalgo (Dilaudid, extended release)    | 12-24 h              | Dilaudid                               |
-| Methadone                              | 8-12 h               | None                                   |
-| Fentanyl patch                         | 48-72 h              | None                                   |
+| Long-acting Pain Medication            | Duration of Action | Short-acting Form                      |
+| -------------------------------------- | ------------------ | -------------------------------------- |
+| Oxycodone extended release (OxyContin) | 8-12 h             | Oxycodone Oxycodone/Tylenol (Percocet) |
+| Morphine extended release (MS-Contin)  | 8-12 h             | Morphine (immediate release)           |
+| Exalgo (Dilaudid, extended release)    | 12-24 h            | Dilaudid                               |
+| Methadone                              | 8-12 h             | None                                   |
+| Fentanyl patch                         | 48-72 h            | None                                   |
 
 <!-- PAGE_NUMBER: 117 -->
 
 TABLE 15-6 Conversion Doses-Nucynta to Oxycodone
 
-| Nucynta Dose   | Equivalent Oxycodone Dose   |
-|----------------|-----------------------------|
-| 50 mg          | 5 mg                        |
-| 75 mg          | 10 mg                       |
-| 100 mg         | 15 mg                       |
+| Nucynta Dose | Equivalent Oxycodone Dose |
+| ------------ | ------------------------- |
+| 50 mg        | 5 mg                      |
+| 75 mg        | 10 mg                     |
+| 100 mg       | 15 mg                     |
 
 short-acting and long-acting oral (extended-release) form. At present, there are three IR tablet formulations of Nucynta available in the United States: 50, 75, and 100 mg.
 
@@ -3453,7 +3455,7 @@ The last of the four settings on the PCA device is the time-based cumulative dos
 TABLE 16-1 Standard Starting Demand Doses for Patient-controlled Analgesia
 
 | Drug                     | Demand Dose                      | Demand Dose        |
-|--------------------------|----------------------------------|--------------------|
+| ------------------------ | -------------------------------- | ------------------ |
 |                          | Little or No Previous Opioid Use | Chronic Opioid Use |
 | Morphine                 | 2 mg                             | 4 mg               |
 | Dilaudid (Hydromorphone) | 0.2 mg                           | 0.4 mg             |
@@ -3494,8 +3496,8 @@ A 39-year-old male on the medicine service Case 2 presents with an exacerbation 
 ## REFERENCES
 
 1. Ballantyne JC, Carr DB, Chalmers TC, et al. Postoperative patientcontrolled analgesia: Meta-analyses of initial randomized control trials. J Clin Anesth. 1993;5(3):182-193
-3. Parker RK, Holtmann B, White PF. Effects of a nighttime opioid infusion with PCA therapy on patient comfort and analgesic requirements after abdominal hysterectomy. Anesthesiology. 1992;76(3):362-367.
-2. Egbert AM, Parks LH, Short LM, et al. Randomized trial of postop rative patient-controlled analgesia vs. intramuscular narcotics in frail elderly men. Arch Intern Med. 1990;150(9):1897-1903
+2. Parker RK, Holtmann B, White PF. Effects of a nighttime opioid infusion with PCA therapy on patient comfort and analgesic requirements after abdominal hysterectomy. Anesthesiology. 1992;76(3):362-367.
+3. Egbert AM, Parks LH, Short LM, et al. Randomized trial of postop rative patient-controlled analgesia vs. intramuscular narcotics in frail elderly men. Arch Intern Med. 1990;150(9):1897-1903
 4. Macintyre PE, Ready LB. Acute Pain Management—A Practical Guide. 2nd ed. London: WB Saunders; 2001.
 5. Ginsberg B, Gil KM, Muir M, et al. The influence of lockout intervals and drug selection on patient-controlled analgesia following gynecological surgery. Pain. 1995;62(1):95-100.
 6. Macintyre PE. Safety and efficacy of patient-controlled analgesia. Br I Anaesth. 2001:87:36-46.
@@ -3540,12 +3542,12 @@ The first step in placing the catheter is choosing the proper location. The goal
 
 TABLE 17-1 Epidural Catheter Placement for Surgical Procedures
 
-| General Type of Surgery   | Level of Epidural Placement   |
-|---------------------------|-------------------------------|
-| Thoracic                  | T2-T9                         |
-| Upper abdominal           | T4-L1                         |
-| Lower abdominal           | T10-L3                        |
-| Lower extremity           | T12-L3                        |
+| General Type of Surgery | Level of Epidural Placement |
+| ----------------------- | --------------------------- |
+| Thoracic                | T2-T9                       |
+| Upper abdominal         | T4-L1                       |
+| Lower abdominal         | T10-L3                      |
+| Lower extremity         | T12-L3                      |
 
 information about proper epidural catheter placement location.
 
@@ -3649,23 +3651,23 @@ The second step is to choose settings on the PCEA machine. Every PCEA should hav
 
 TABLE 17-2 Standard Opioid Strengths for Epidural Use
 
-| Opioid   |   Opioid Strength (%) | Local Anesthetic and Opioid Premixed Bag    |
-|----------|-----------------------|---------------------------------------------|
-| Fentanyl |                 0.001 | Bupivacaine 0.125% and fentanyl 0.001 %     |
-| Morphine |                 0.01  | Bupivacaine 0.125% and morphine 0.01%       |
-| Dilaudid |                 0.005 | Bupivacaine 0.125% and hydromorphone 0.005% |
+| Opioid   | Opioid Strength (%) | Local Anesthetic and Opioid Premixed Bag    |
+| -------- | ------------------- | ------------------------------------------- |
+| Fentanyl | 0.001               | Bupivacaine 0.125% and fentanyl 0.001 %     |
+| Morphine | 0.01                | Bupivacaine 0.125% and morphine 0.01%       |
+| Dilaudid | 0.005               | Bupivacaine 0.125% and hydromorphone 0.005% |
 
 <!-- PAGE_NUMBER: 130 -->
 
 TABLE 17-3 Common Continuous Infusion Rates for Epidural Analgesia
 
-| General Type of Surgery   | Catheter Location   | Continuous Infusion Rate (mL/hr)   |
-|---------------------------|---------------------|------------------------------------|
-| Thoracic                  | T2-T9               | 4-10                               |
-| Upper abdominal           | T4-L1               | 4-10                               |
-| Lower abdominal           | T10-L3              | 8-18                               |
-| Lower extremity           | T12-L3              | 8-18                               |
-| Childbirth                | T10-L5              | 8-14                               |
+| General Type of Surgery | Catheter Location | Continuous Infusion Rate (mL/hr) |
+| ----------------------- | ----------------- | -------------------------------- |
+| Thoracic                | T2-T9             | 4-10                             |
+| Upper abdominal         | T4-L1             | 4-10                             |
+| Lower abdominal         | T10-L3            | 8-18                             |
+| Lower extremity         | T12-L3            | 8-18                             |
+| Childbirth              | T10-L5            | 8-14                             |
 
 It is common practice to deliver epidural analgesia with a continuous rate and no demand dose. However, some practitioners prefer the addition of a demand dose. The demand dose is a bolus that the patient selfadministers by pushing a button connected to the PCEA (Fig. 17-12) as with PCA. A lock-out period is used to prevent overdosing. The lock-out period is how long the machine will "lock" after a demand dose is delivered before it allows another demand dose, no matter how many times the patient pushes the button. The addition of a demand dose gives patients an enhanced sense of control. Patients who control their own level of pain by demand dosage have been shown to choose to
 
@@ -3703,7 +3705,7 @@ It is possible to advance the needle too far, causing dural puncture, which occu
 
 ## Other Effects
 
-Also, there is a risk of infection as well as a risk of epidural hematoma with epidural analgesia, although the catheter is small. The risk of clinically significant epidural hematoma in the obstetric population is approximately 1 in 168,000.*
+Also, there is a risk of infection as well as a risk of epidural hematoma with epidural analgesia, although the catheter is small. The risk of clinically significant epidural hematoma in the obstetric population is approximately 1 in 168,000.\*
 
 In addition, it is important to consider the analgesics used in PCEA. To a degree, all opioids have the ability to cause nausea, constipation, and pruritus. Although respiratory depression remains a rare complication of opioid use, it nonetheless is a significant concern. Data suggest that the overall incidence in patients using a PCEA is very small. If the epidural contains an opioid, the patient should be monitored for at least 12 hours after removal of the epidural catheter. (Catheter removal requires gentle traction.)
 
@@ -3806,11 +3808,11 @@ The key is early recognition of cord compression and addressing the condition as
 
 TABLE 18-1 Chance of Remaining Ambulatory with Treatment for Spinal Cord Compression
 
-| Point of Intervention                                   | Chance of Remaining Ambulatory   |
-|---------------------------------------------------------|----------------------------------|
-| If treatment starts while patient is still able to walk | 75 %                             |
-| If treatment starts with partial or incomplete weakness | 30-50%                           |
-| If patient is already paralyzed                         | 10-20%                           |
+| Point of Intervention                                   | Chance of Remaining Ambulatory |
+| ------------------------------------------------------- | ------------------------------ |
+| If treatment starts while patient is still able to walk | 75 %                           |
+| If treatment starts with partial or incomplete weakness | 30-50%                         |
+| If patient is already paralyzed                         | 10-20%                         |
 
 <!-- PAGE_NUMBER: 135 -->
 
@@ -3866,8 +3868,6 @@ A 78-year-old man with metastatic colon cancer. He is currently taking OxyContin
 therapy to help with the pain. The patient is worried about making the cancer worse with radiation. You explain that the radiation is targeted directly to where the painful spinal lesions are and that the increased risk of secondary malignancy is very small-if the patient lived to 93, at most he would have a 1 in 10 chance of developing a radiation-induced cancer. After a full discussion, the patient decides to proceed with treatment.
 
 <!-- PAGE_NUMBER: 137 -->
-
-
 
 <!-- PAGE_NUMBER: 138 -->
 
@@ -3931,11 +3931,11 @@ The pain from most disc herniations resolves on its own in around a year. Howeve
 
 TABLE 19-1 Equivalent Doses of Other Steroids to Kenalog 40 mg
 
-| Trade Name   | Generic Name               | Equivalent Dose to Kenalog   |
-|--------------|----------------------------|------------------------------|
-| Depo-Medrol  | Methylprednisolone acetate | 40 mg                        |
-| Celestone    | Betamethasone acetate      | 6 mg                         |
-| Decadron     | Dexamethasone acetate      | 8 mg                         |
+| Trade Name  | Generic Name               | Equivalent Dose to Kenalog |
+| ----------- | -------------------------- | -------------------------- |
+| Depo-Medrol | Methylprednisolone acetate | 40 mg                      |
+| Celestone   | Betamethasone acetate      | 6 mg                       |
+| Decadron    | Dexamethasone acetate      | 8 mg                       |
 
 In the past physicians performed epidural steroid injections blindly without fluoroscopy (x-ray guidance), and this necessitated injecting a substantial amount of medication. Now that the use of fluoroscopy with epidural steroid injections are routinely used, the doses used have dropped substantially. Patients currently on average can have four injections per year (not three injections in a lifetime, a common misconception) without disrupting the pituitary adrenal axis.
 
@@ -4133,7 +4133,7 @@ Blind Injections: Patients who have had epidural steroid injections in the past 
 
 Today we are able to confirm needle placement in the epidural space under fluoroscopy. We are able to target the needle not only to the epidural space but directly to the area of pathology within the space. We are able to make sure that adhesions within the epidural space do not block flow of medication to the desired target, and can monitor how the medication spreads.
 
-Use of only an intralaminar approach: The two most common forms of epidural steroid injection are the interlaminar and transforminal approaches. Studies have shown greater support for the transforminal approach as compared to the interlaminar approach, and that transforminal injections decrease the need for operative treatment of lumbar radicular pain. In one study, researchers divided patients with significant lumbar radicular pain who were deemed to be good surgical candidates into two groups. The first group received an interlaminar epidural steroid injection and in that group 25% of patients went on to have surgery. The second group received a transforminal epidural steroid injection and in that group only 10% went on to have surgery.* If a patient did not have a therapeutic response to a interlaminar injection under fluoroscopic guidance it is worth considering a transforminal epidural steroid injection.
+Use of only an intralaminar approach: The two most common forms of epidural steroid injection are the interlaminar and transforminal approaches. Studies have shown greater support for the transforminal approach as compared to the interlaminar approach, and that transforminal injections decrease the need for operative treatment of lumbar radicular pain. In one study, researchers divided patients with significant lumbar radicular pain who were deemed to be good surgical candidates into two groups. The first group received an interlaminar epidural steroid injection and in that group 25% of patients went on to have surgery. The second group received a transforminal epidural steroid injection and in that group only 10% went on to have surgery.\* If a patient did not have a therapeutic response to a interlaminar injection under fluoroscopic guidance it is worth considering a transforminal epidural steroid injection.
 
 Injections were tried before surgery: some patients have had an epidural steroid injection in the past that was not helpful and subsequently underwent surgery. If surgery did not help their pain or changed the kind of pain they have, these patients should be re-evaluated for an epidural steroid injection. The patient's anatomy is now different after surgery-the patient's original anatomic structure was not amenable to the injection treatment, whereas altered postoperative anatomy may respond well to the injection.
 
@@ -4252,7 +4252,7 @@ If you have targeted which facet joints are the pain generator, and the patient 
 
 If the patient and the patient's pain diary indicate a positive response, the patient undergoes a second diagnostic injection to ensure that the first response was not a false-positive result. Controlled studies have shown that single blocks carry a false-positive rate of 38%3 To confirm that the results are repeatable, it is necessary to perform second injection.
 
-selected group of patients using strict criteria and proper techniques, 87% of patients had a 60% pain reduction at 1 year.* If the symptoms return, a repeat procedure is done. There is no cumulative risk to repeating the RF procedure.
+selected group of patients using strict criteria and proper techniques, 87% of patients had a 60% pain reduction at 1 year.\* If the symptoms return, a repeat procedure is done. There is no cumulative risk to repeating the RF procedure.
 
 There are two common questions regarding facet joint procedures: Diagnostic injection versus diagnostic therapeutic injection and facet joint injections versus medial branch blocks. The following sections discuss these issues.
 
@@ -4512,7 +4512,7 @@ Figure 21-6 Proper contrast spread for an SI joint injection.
 
 <!-- image -->
 
-Nonfluoroscopic-guided injections, known as "blind injections," rarely place medication into the intra-articular portion of the joint.* The results of these injections should be interpreted with great caution.
+Nonfluoroscopic-guided injections, known as "blind injections," rarely place medication into the intra-articular portion of the joint.\* The results of these injections should be interpreted with great caution.
 
 Figure 21-5 Placement of needle through the "X" in a perpendicular fashion to the skin and parallel to the fluoroscope toward the inferior aspect of the Sl joint.
 
@@ -4555,7 +4555,7 @@ I use 1.5 mL of 0.5% bupivacaine per nerve: As four nerves are going to be anest
 
 ## CONTRAINDICATIONS AND POTENTIAL COMPLICATIONS
 
-Contraindications include systemic infection and infection on the skin where the needle is inserted. The procedure is contraindicated if the patient is or may be pregnant. Some doctors perform non fluoroscopicguides injections, known as "blind injections", which rarely place medication into the intra-articular portion of the joint.* The results of these injections should be interpreted with great caution. For the RF procedure, the possibility of motor weakness and sensory loss exists but in well-trained hands the procedure is safe.
+Contraindications include systemic infection and infection on the skin where the needle is inserted. The procedure is contraindicated if the patient is or may be pregnant. Some doctors perform non fluoroscopicguides injections, known as "blind injections", which rarely place medication into the intra-articular portion of the joint.\* The results of these injections should be interpreted with great caution. For the RF procedure, the possibility of motor weakness and sensory loss exists but in well-trained hands the procedure is safe.
 
 <!-- PAGE_NUMBER: 171 -->
 
@@ -4607,7 +4607,7 @@ Currently, there is no consensus on the benefit of injecting any of these soluti
 
 <!-- PAGE_NUMBER: 173 -->
 
-trigger point injections with lidocaine and participated in physical therapy had less pain at 4-week follow-up as compared with the control group that underwent trigger point injections with dry needling and also participated in physical therapy.* Using botulinum toxin type A in varying strengths showed no advantage over using a local anesthetic.* In clinical practice some doctors also include a steroid to cure any local inflamation contributing to the trigger point.
+trigger point injections with lidocaine and participated in physical therapy had less pain at 4-week follow-up as compared with the control group that underwent trigger point injections with dry needling and also participated in physical therapy._ Using botulinum toxin type A in varying strengths showed no advantage over using a local anesthetic._ In clinical practice some doctors also include a steroid to cure any local inflamation contributing to the trigger point.
 
 ## WHEN TO USE
 
@@ -4681,12 +4681,12 @@ Figure 23-1 How corticosteroids work to reduce pain and inflammation.
 
 TABLE 23-1 Primary Corticosteroids Currently Available and Their Equivalent Doses
 
-| Trade Name   | Generic Name               | Equivalent Dose (mg)   |
-|--------------|----------------------------|------------------------|
-| Kenalog      | Triamcinolone acetonide    | 40                     |
-| Depo-Medrol  | Methylprednisolone acetate | 40                     |
-| Celestone    | Betamethasone acetate      |                        |
-| Decadron     | Dexamethasone acetate      |                        |
+| Trade Name  | Generic Name               | Equivalent Dose (mg) |
+| ----------- | -------------------------- | -------------------- |
+| Kenalog     | Triamcinolone acetonide    | 40                   |
+| Depo-Medrol | Methylprednisolone acetate | 40                   |
+| Celestone   | Betamethasone acetate      |                      |
+| Decadron    | Dexamethasone acetate      |                      |
 
 The primary corticosteroids on the market are listed in Table 23-1. There is no particular steroid that is more appropriate over another. I use Kenalog (triamcinolone acetonide) for my injections; standard Kenalog doses are presented in the examples to follow. If you decide to use any other steroid, its proper dose can easily be calculated: For example, 40 mg of Kenalog is equivalent to 6 mg of Celestone (Table 23-1).
 
@@ -4698,16 +4698,16 @@ Two types of local anesthetics are primarily used for joint and bursa injections
 
 TABLE 23-2 Comparison of Action of Lidocaine and Bupivacaine
 
-| Local Anesthetic   | Onset of Action   | Duration of Action (h)   |
-|--------------------|-------------------|--------------------------|
-| Lidocaine          | 45-90 s           | 1-2                      |
-| Bupivacaine        | 1-5 min           | 2-6                      |
+| Local Anesthetic | Onset of Action | Duration of Action (h) |
+| ---------------- | --------------- | ---------------------- |
+| Lidocaine        | 45-90 s         | 1-2                    |
+| Bupivacaine      | 1-5 min         | 2-6                    |
 
 bupivacaine are equivalent to each other; however, they differ in their time of onset and length of duration (Table 23-2). I prefer bupivacaine because of its duration of action, but either local anesthetic is fine.
 
 The following guidelines should be followed for joint and associated bursa injections. The total volume injected into medium-size joints such as the elbow, can be 2 mL. The total volume injected into larger-size joints such as the shoulders, hips, or knees can be 5 mL. The most common ratio of local anesthetic to corticosteroid is 2:1 or 3:1.
 
-Repeated steroid injections for osteoarthritis are safe and do not accelerate disease progression.* Studies suggest that cartilage damage over time in patients with osteoarthritis is likely caused by the underlying disease rather than any deleterious effect of steroids. The recommended interval between intra-articular injections is 3 months.
+Repeated steroid injections for osteoarthritis are safe and do not accelerate disease progression.\* Studies suggest that cartilage damage over time in patients with osteoarthritis is likely caused by the underlying disease rather than any deleterious effect of steroids. The recommended interval between intra-articular injections is 3 months.
 
 Figure 23-2 Lidocaine and bupivacaine block fast voltage-gated sodium channels, preventing neuronal depolarization. This blocks the transmission of pain. A. Sodium channel triggered action potential. B. Sodium channel action potential being inhibited by a local anesthetic.
 
@@ -4933,13 +4933,13 @@ Intra-articular Knee Injection: The patient is seated. The leg is allowed to han
 
 TABLE 23-3 Viscosupplementation Guidelines
 
-| Injectable Hyaluronan Products   | Instructions         |
-|----------------------------------|----------------------|
-| Synvisc                          | Once a week for 3 wk |
-| Orthovisc                        | Once a week for 3 wk |
-| Hyalgan                          | Once a week for 5 wk |
-| Supartz                          | Once a week for 5 wk |
-| Euflexxa                         | Once a week for 3 wk |
+| Injectable Hyaluronan Products | Instructions         |
+| ------------------------------ | -------------------- |
+| Synvisc                        | Once a week for 3 wk |
+| Orthovisc                      | Once a week for 3 wk |
+| Hyalgan                        | Once a week for 5 wk |
+| Supartz                        | Once a week for 5 wk |
+| Euflexxa                       | Once a week for 3 wk |
 
 <!-- PAGE_NUMBER: 186 -->
 
@@ -4984,11 +4984,11 @@ A 53-year-old woman comes to the office complaining of right hip pain. It had be
 ## REFERENCES
 
 1. Caldwell JR. Intra-articular corticosteroids. Guide to selection and indications for use. Drugs. 1996;52(4):507-514.
-3. Wei AS, Callaci JJ, Juknelis D, et al. The effect of corticosteroid on collagen expression in injured rotator cuff tendon. J Bone Joint Surg Am. 2006;88(6):1331-1338.
-2. Lavelle W, Lavelle ED, Lavelle L. Intra-articular injections. Med Clin North Am. 2007;91 (2):241-250.
+2. Wei AS, Callaci JJ, Juknelis D, et al. The effect of corticosteroid on collagen expression in injured rotator cuff tendon. J Bone Joint Surg Am. 2006;88(6):1331-1338.
+3. Lavelle W, Lavelle ED, Lavelle L. Intra-articular injections. Med Clin North Am. 2007;91 (2):241-250.
 4. Bellamy N, Campbell J, Robinson V, et al. Intraarticular corticosteroid for treatment of osteoarthritis of the knee. Cochrane Database Syst Rev. 2006;(2):CD005328.
-6. Shbeeb MI, O'Duffy JD, Michet CJ Jr, et al. Evaluation of glucocorticosteroid injection for the treatment of trochanteric bursitis. J Rheumatol. 1996;23 (12):2104-2106.
-5. Raynauld JP, Buckland-Wright C, Ward R, et al. Safety and efficacy of long-term intraarticular steroid injections in osteoarthritis of the knee: A randomized, double-blind, placebo-controlled trial. Arthritis Rheum. 2003;48(2):370-377.
+5. Shbeeb MI, O'Duffy JD, Michet CJ Jr, et al. Evaluation of glucocorticosteroid injection for the treatment of trochanteric bursitis. J Rheumatol. 1996;23 (12):2104-2106.
+6. Raynauld JP, Buckland-Wright C, Ward R, et al. Safety and efficacy of long-term intraarticular steroid injections in osteoarthritis of the knee: A randomized, double-blind, placebo-controlled trial. Arthritis Rheum. 2003;48(2):370-377.
 
 when the pain is so bad. The pain is at the posterior lateral aspect of her hip, with no radiation into the groin or down the leg. The patient denies any trauma.
 
@@ -4997,8 +4997,8 @@ On examination, the patient has full range of motion of the hip and exquisite te
 7. Lievense A, Bierma-Zeinstra S, Schouten B, et al. Prognosis of trochanteric pain in primary care. Br J Gen Pract. 2005;55(512): 199-204.
 8. Smidt N, van der Windt DA, Assendelft WJ, et al. Corticosteroid injections, physiotherapy, or a wait-and-see policy for lateral epicondylitis: À randomised controlled trial. Lancet. 2002;359(9307): 05/-002.
 9. Bisset L, Beller E, Jull G, et al. Mobilisation with movement and exercise, corticosteroid injection, or wait and see for tennis elbow: Randomised trial. BMJ. 2006;333(7575):939.
-11. Watterson JR, Esdaile JM. Viscosupplementation: Therapeutic mechanisms and clinical potential in osteoarthritis of the knee. J Am Acad Orthop Surg. 2000;8(5):277-284.
-10. Cohen SP, Narvaez JC, Lebovits AH, et al. Corticosteroid injections for trochanteric bursitis: Is fluoroscopy necessary? A pilot study. Br J Anaesth. 2005;94(1):100-106.
+10. Watterson JR, Esdaile JM. Viscosupplementation: Therapeutic mechanisms and clinical potential in osteoarthritis of the knee. J Am Acad Orthop Surg. 2000;8(5):277-284.
+11. Cohen SP, Narvaez JC, Lebovits AH, et al. Corticosteroid injections for trochanteric bursitis: Is fluoroscopy necessary? A pilot study. Br J Anaesth. 2005;94(1):100-106.
 
 <!-- PAGE_NUMBER: 188 -->
 
@@ -5049,7 +5049,7 @@ patients deafferentation pain is not usually of concern, because by the time it 
 TABLE 24-1 Spinal Location of Sympathetic Chain in the Body and Body Part they are Associated With
 
 | Ganglion or Plexus                   | Spinal Level            | Body Part                   |
-|--------------------------------------|-------------------------|-----------------------------|
+| ------------------------------------ | ----------------------- | --------------------------- |
 | Stellate ganglion                    | C6-T1                   | Upper extremity, neck, head |
 | Celiac plexus                        | T12                     | Pancreas                    |
 | Lumbar sympathetic ganglion          | L2-L3                   | Lower extremities           |
@@ -5286,7 +5286,7 @@ Vertebroplasty and kyphoplasty are two minimally invasive procedures used to tre
 
 ## CONTRAINDICATIONS AND POTENTIAL COMPLICATIONS
 
-1984 and was introduced in the United States in 1993. Kyphoplasty was later introduced in 1998. Both procedures involve injecting a cement-like substance, polymethyl methacrylate, into a fractured vertebral body via a large bore needle under fluoroscopy (x-ray guidance). They significantly reduce pain and improve mobility in patients with VCFs.* Kyphoplasty, which is slightly more invasive than vertebroplasty, involves inflation of a balloon, creating a cavity prior to the injection of bone cement. Kyphoplasty also poses a lower risk of bone cement leakage. Both procedures
+1984 and was introduced in the United States in 1993. Kyphoplasty was later introduced in 1998. Both procedures involve injecting a cement-like substance, polymethyl methacrylate, into a fractured vertebral body via a large bore needle under fluoroscopy (x-ray guidance). They significantly reduce pain and improve mobility in patients with VCFs.\* Kyphoplasty, which is slightly more invasive than vertebroplasty, involves inflation of a balloon, creating a cavity prior to the injection of bone cement. Kyphoplasty also poses a lower risk of bone cement leakage. Both procedures
 
 Figure 25-1 Vertebral compression fracture.
 
@@ -5413,14 +5413,15 @@ On taking her medical history, you learn that the patient has hypertension and o
 3. Garfin SR, Yuan HA, Reiley MA. New technologies in spine: Kyphoplasty and vertebroplasty for the treatment of painful osteoporotic compression fractures. Spine (Phila Pa 1976). 2001;26(14):1511-1515.
 4. Taylor RS, Taylor RJ, Fritzell P. Balloon kyphoplasty and vertebroplasty for vertebral compression fractures: A comparative systemdul leview of efficacy and safety. Spine (Phila Pa 1976). 2006;31 (23):2747-2755.
 5. Cotton A, Boutry N, Cortet B, et al. Percutaneous vertebroplasty: State of the art. Radiographics. 1998;18:311-320.
+
 - G. Gilbert HA, Kagam AR, Nussbaum H, et al. Evaluation of radiation therapy for bone metastases: Pain relief and quality of life. AJR Am J Roentgenol. 1977;129:1095-1096.
 
 After discussing treatment options, you and the patient decide to treat the pain and stabilize the fracture with kyphoplasty. After the procedure, the patient is pain free. A medical regimen is put into place to treat the patient's osteoporosis to help prevent future fractures.
 
 7. Hiwatashi A, Westesson PL. Vertebroplasty for osteoporotic fractures with spinal canal compromise. AJNR Am J Neuroradiol. Ư/ O 4 '00—0.
 8. McGraw JK, Lippert JA, Minkus KD, et al. Prospective evaluation of pain relief in 100 patients undergoing percutaneous vertebroplasty: Results and follow-up. J Vasc Interv Radiol. 2002;13(9 Pt 1):883-886.
-10. Hulme PA, Krebs J, Ferguson SJ, et al. Vertebroplasty and kyphoplasty: A systematic review of 69 clinical studies. Spine (Phila Pa 1976). 2006;31 (17):1983-2001.
-9. Coumans JV, Reinhardt MK, Lieberman IH. Kyphoplasty for vertebral compression fractures: 1-year clinical outcomes from prospective study. J Neurosurg. 2003;99(suppl 1):44-50.
+9. Hulme PA, Krebs J, Ferguson SJ, et al. Vertebroplasty and kyphoplasty: A systematic review of 69 clinical studies. Spine (Phila Pa 1976). 2006;31 (17):1983-2001.
+10. Coumans JV, Reinhardt MK, Lieberman IH. Kyphoplasty for vertebral compression fractures: 1-year clinical outcomes from prospective study. J Neurosurg. 2003;99(suppl 1):44-50.
 11. Mathis JM, Wong W. Percutaneous vertebroplasty: Technical considerations. J Vasc Interv Radiol. 2003;14(8):953-960.
 12. Krane SM, Holick MF. Metabolic bone disease. In: Fauci AS, Braunwald E, Isselbacher KJ, eds. Harrison's Principles of Internal Medicine. 14th ed. New York, NY: McGraw-Hill; 1998:2247LL5y.
 
@@ -5504,11 +5505,11 @@ The US Food and Drug Administration (FDA) approved botulinum toxin type A, or Bo
 
 TABLE 26-1 The Three Primary Headache Types
 
-| Primary Headache Type   | Description                                                                                                                                                                                                                                                                                    |
-|-------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Migraine                | Headache lasting 4-72 h that has at least two of the following characteristics: Unilateral, pulsating, moderate to severe intensity, aggravated by physical activity. In addition, nausea or vomiting and/or photophobia and phonophobia should accompany it, and an aura may also precede it. |
-| Cluster                 | Unilateral headache lasting 15-180 min with a periodicity of one every other day to eight per day that has one or more of the following characteristics: Conjunctival injection, lacrimation, nasal congestion, rhinorrhea, forehead and facial sweating, miosis, ptosis, and eyelid edema.    |
-| Tension                 | Muscle contraction headache, usually holocephalic.                                                                                                                                                                                                                                             |
+| Primary Headache Type | Description                                                                                                                                                                                                                                                                                    |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Migraine              | Headache lasting 4-72 h that has at least two of the following characteristics: Unilateral, pulsating, moderate to severe intensity, aggravated by physical activity. In addition, nausea or vomiting and/or photophobia and phonophobia should accompany it, and an aura may also precede it. |
+| Cluster               | Unilateral headache lasting 15-180 min with a periodicity of one every other day to eight per day that has one or more of the following characteristics: Conjunctival injection, lacrimation, nasal congestion, rhinorrhea, forehead and facial sweating, miosis, ptosis, and eyelid edema.    |
+| Tension               | Muscle contraction headache, usually holocephalic.                                                                                                                                                                                                                                             |
 
 prophylactic medication therapy or simply do not want to take pills.
 
@@ -5541,7 +5542,7 @@ Using an 18-gauge needle, fill a 5-mL syringe with 4 mL of saline. Then puncture
 TABLE 26-2 Botox Areas of Injection and Recommended Doses
 
 | Area                              | Recommended Dose                                      |
-|-----------------------------------|-------------------------------------------------------|
+| --------------------------------- | ----------------------------------------------------- |
 | Frontalis (glabellar region)      | 20 units, divided into four sites                     |
 | Corrugator                        | 10 units, divided into two sites, one on each side    |
 | Procerus                          | 5 units into one site                                 |
@@ -5625,16 +5626,16 @@ On examination, she has tenderness along the path of the greater occipital nerve
 
 1. Bogduk N. Cervicogenic headache: Anatomic basis and pathophysiologic mechanisms. Curr Pain Headache Rep. 2001;5:382-
 2. Bartsch T, Goadsby PJ. Stimulation of the greater occipital nerve induces increased central excitability of dural afferent input. Brain. 2002;125:1496-1509.
-4. Goadsby PJ, Bartsch T. On the functional neuroanatomy of neck pain. Cephalalgia. 2008;28(suppl 1):1-7.
-3. Bartsch T, Goadsby PJ. Increased responses in trigeminocervical nociceptive neurons to cervical input after stimulation of the dura mater. Brain. 2003;126(Pt 8):1801-1813.
+3. Goadsby PJ, Bartsch T. On the functional neuroanatomy of neck pain. Cephalalgia. 2008;28(suppl 1):1-7.
+4. Bartsch T, Goadsby PJ. Increased responses in trigeminocervical nociceptive neurons to cervical input after stimulation of the dura mater. Brain. 2003;126(Pt 8):1801-1813.
 5. Kerr FWL. Structural relationship of the trigeminal spinal tract to upper cervical roots in the solitary nucleus in the cat. Exp Neurol.
 
 patient's neurologic examination is normal. After reviewing the diagnosis of occipital neuralgia with the patient, you talk about treatment options. You offer a neuropathic pain medication such as Lyrica (pregabalin) or Cymbalta (duloxetine hydrochloride) as well as a procedure such as an ONB. The patient asks how long she would have to take the medication if that is the treatment plan she chooses. You explain that you would probably keep her on the medication for at least 3 months to see how effective it is. The patient decides to have the nerve block rather than medication management.
 
 6. Caputi CA, Firetto V. Therapeutic blockade of greater occipital and supraorbital nerves in migraine patients. Headache. 1997;37(3):
 7. Peres MF, Stiles MA, Siow HC, et al. Greater occipital nerve blockade for cluster headache. Cephalalgia. 2002;22(7):520-522.
-9. Aurora SK, Dodick DW, Turkel CC, et al. OnabotulinumtoxinA for treatment of chronic migraine: Results from the double-blind, randomized, placebo-controlled phase of the PREEMPT 1 trial. Cephalalgia. 2010;30(7):793-803.
-4. Blitzer A, et al. Botulinum toxin type A (BOTOX) for treatment of migraine headaches: study. Otolaryngol Head Neck Surg. 2000;123(6):669-676.
+8. Aurora SK, Dodick DW, Turkel CC, et al. OnabotulinumtoxinA for treatment of chronic migraine: Results from the double-blind, randomized, placebo-controlled phase of the PREEMPT 1 trial. Cephalalgia. 2010;30(7):793-803.
+9. Blitzer A, et al. Botulinum toxin type A (BOTOX) for treatment of migraine headaches: study. Otolaryngol Head Neck Surg. 2000;123(6):669-676.
 
 <!-- PAGE_NUMBER: 213 -->
 
@@ -5681,12 +5682,12 @@ Figure 27-1 The physiological effects of steroids on injured nerves.
 
 TABLE 27-1 Primary Corticosteroids for and Equivalent Doses
 
-| Trade Name   | Generic Name               | Equivalent Dose (mg)   |
-|--------------|----------------------------|------------------------|
-| Kenalog      | Triamcinolone acetonide    | 40 (reference)         |
-| Depo-Medrol  | Methylprednisolone acelate | 40                     |
-| Celestone    | Betamethasone acetate      |                        |
-| Decadron     | Dexamethasone acetate      |                        |
+| Trade Name  | Generic Name               | Equivalent Dose (mg) |
+| ----------- | -------------------------- | -------------------- |
+| Kenalog     | Triamcinolone acetonide    | 40 (reference)       |
+| Depo-Medrol | Methylprednisolone acelate | 40                   |
+| Celestone   | Betamethasone acetate      |                      |
+| Decadron    | Dexamethasone acetate      |                      |
 
 example, 40 mg of Kenalog is equivalent to 6 mg of Celestone (Table 27-1).
 
@@ -5702,10 +5703,10 @@ Figure 27-2 Lidocaine and bupivicaine block fast voltage-gated sodium channels, 
 
 TABLE 27-2 Lidocaine Versus Bupivacaine Onset and Duration of Action
 
-| Local Anesthetic   | Onset of Action   | Duration of Action (h)   |
-|--------------------|-------------------|--------------------------|
-| Lidocaine 1%       | 49-90 S           | 1-2                      |
-| Bupivacaine 0.25%  | 1-5 min           | 2-6                      |
+| Local Anesthetic  | Onset of Action | Duration of Action (h) |
+| ----------------- | --------------- | ---------------------- |
+| Lidocaine 1%      | 49-90 S         | 1-2                    |
+| Bupivacaine 0.25% | 1-5 min         | 2-6                    |
 
 but differ in their time of onset and length of duration (Table 27-2).
 
@@ -6028,9 +6029,12 @@ On examination, the patient has full strength, with normal reflexes and sensatio
 - Marshall LL, Trethewie ER, Curtain CC. Chemical radiculitis: inical, pnysiological ana immunological stuay. Cun Urinop Kel Res. 1977;129:61-67.
 - percutaneous stereotactic radiotrequency thermal rhizotomy J Neurosurg. 1995;83 (6):989-993.
 - ·Gelberman KH, Aronson D, Weisman МН. Carpal-tunnel Sy role. resuls oi a orospecuve udi oi serole u ecuon anu soui ing. J Bone Joint Surg Am. 1980:62(7):1181-1184.
+
 3. Fraioli B, Esposito V, Guidetti B, et al. Treatment of trigeminal neuralgia by thermocoagulation, glycerolization, and percutaneous compression of the gasserian ganglion and/or retrogasserian seo 1989242239-24ulis and therapeutic protocol. Neurosur Neurosur. Hardo tal nerve Bia variatio 98,61():338-33f the proximal intercostal nerve. Br J Anaesth. 1988;61 (3):338-339.
-6. Rohof OJ. Pulsed radiofrequency of the suprascapular nerve in the treatment of chronic intractable shoulder pain. In: Raj PP, ed. 2nd World Congress of WIP. Istanbul: Blackwell Science;
+4. Rohof OJ. Pulsed radiofrequency of the suprascapular nerve in the treatment of chronic intractable shoulder pain. In: Raj PP, ed. 2nd World Congress of WIP. Istanbul: Blackwell Science;
+
 - Devor M. Govrin-Lioomann R. Raber P. Corticosteroids sudor opic neural discharge originating in experimental neuroma Pain. 1985;22:127-137.
+
 4. Taha JM, Tew JM Jr, Buncher CR. A prospective 15-year follow up of 154 consecutive patients with trigeminal neuralgia treated by
 
 <!-- PAGE_NUMBER: 230 -->
@@ -6172,11 +6176,11 @@ The patient receives a referral to a pain management specialist. After reviewing
 
 TABLE 28-1 Discogram Results for 61-year-old Male with Low Back Pain of 2 Years Duration
 
-| Disc Level   |   Opening Pressure (psi) | Pressure at Which Pain is Felt   | Pain Level at 50 psi   | Concordant   |
-|--------------|--------------------------|----------------------------------|------------------------|--------------|
-| L3/L4        |                       12 | None                             | None                   | No pain      |
-| L4/L5        |                       17 | 31                               | 9/10                   | Concordant   |
-| L5/S1        |                       15 | 28                               | 10/10                  | Concordant   |
+| Disc Level | Opening Pressure (psi) | Pressure at Which Pain is Felt | Pain Level at 50 psi | Concordant |
+| ---------- | ---------------------- | ------------------------------ | -------------------- | ---------- |
+| L3/L4      | 12                     | None                           | None                 | No pain    |
+| L4/L5      | 17                     | 31                             | 9/10                 | Concordant |
+| L5/S1      | 15                     | 28                             | 10/10                | Concordant |
 
 The postdiscography CT scan shows extensive annular tears at L4/5 and L5/S1. The patient plans to see a spine surgeon for an evaluation of a two-level fusion at L4/5 and L5/S1.
 
@@ -6334,12 +6338,12 @@ these checkpoints are confirmed, a spinal cord stimulator lead is fed through th
 
 TABLE 29-1 Proper Level for Lead Placement-Lower Body Pain
 
-| Area of Pain   | Common Lead Placement Target       |
-|----------------|------------------------------------|
-| Chest wall     | T1-T2                              |
-| Back and legs  | T7-T9                              |
-| Legs           | T10                                |
-| Pelvis         | L1 (A lower entry point is needed) |
+| Area of Pain  | Common Lead Placement Target       |
+| ------------- | ---------------------------------- |
+| Chest wall    | T1-T2                              |
+| Back and legs | T7-T9                              |
+| Legs          | T10                                |
+| Pelvis        | L1 (A lower entry point is needed) |
 
 During this process the patient is awake and alert. Once the leads are brought into position, the steering caps are removed from the leads. The leads are then connected to sterile connection box that has wires that are plugged into a computer. When stimulation is slowly turned on, the doctor asks the patient where the stimulation is felt. The amplitude, pulse width and frequency are adjusted till the patient verbally reports excellent coverage. The computer helps the interventionalist adjust the leads so that they are properly placed.
 
@@ -6363,10 +6367,10 @@ It is necessary to complete full implantation in the operating room.
 
 TABLE 29-2 Proper Level for Lead Placement-Upper Body Pain
 
-| Area of Pain   | Common Lead Placement Target   |
-|----------------|--------------------------------|
-| C2             | Neck and shoulder to hand      |
-| C4             | Forearm to hand                |
+| Area of Pain | Common Lead Placement Target |
+| ------------ | ---------------------------- |
+| C2           | Neck and shoulder to hand    |
+| C4           | Forearm to hand              |
 
 <!-- PAGE_NUMBER: 248 -->
 
@@ -7080,7 +7084,7 @@ Narcotic Agreement
 
 A fundamental principle in medicine is to do no harm. Practitioners need to know how to prescribe opioids without doing harm - how to treat pain without the fear of contributing to addiction and abuse, how to provide medical pain management in a proper setting that protects the patient, and how to establish an environment and treatment plan that protects the doctor and his or her practice.
 
-There is great demand in the medical community for guidelines on how to properly prescribe opioids and prevent abuse. A majority of this interest has come from the recognition that there is widespread opioid abuse. Substance abuse is a leading cause of preventable illness and death in the United States.' The prevailing perception is that substance abuse involves illegal drugs only; however, more Americans abuse medical prescriptions than use cocaine, heroin, hallucinogens, and inhalants combined.? Between 1997 and 2001, in the state of North Carolina, deaths from illegal drugs decreased whereas deaths involving prescription opioids increased 300% In 2002, in the entire United States, controlled prescription drugs played a role in 29.9% of drug-related emergency department deaths (opioids accounted for 18.9% of those deaths). In 2007, overdose because of opioids caused 11,499 deaths more than heroin and cocaine combined.* Currently, Americans face an opioid abuse epidemic. Americans constitute 4.6% of the world's population but consume 80% of the world's opioids. They use 99% of the world's supply of hydrocodone.'
+There is great demand in the medical community for guidelines on how to properly prescribe opioids and prevent abuse. A majority of this interest has come from the recognition that there is widespread opioid abuse. Substance abuse is a leading cause of preventable illness and death in the United States.' The prevailing perception is that substance abuse involves illegal drugs only; however, more Americans abuse medical prescriptions than use cocaine, heroin, hallucinogens, and inhalants combined.? Between 1997 and 2001, in the state of North Carolina, deaths from illegal drugs decreased whereas deaths involving prescription opioids increased 300% In 2002, in the entire United States, controlled prescription drugs played a role in 29.9% of drug-related emergency department deaths (opioids accounted for 18.9% of those deaths). In 2007, overdose because of opioids caused 11,499 deaths more than heroin and cocaine combined.\* Currently, Americans face an opioid abuse epidemic. Americans constitute 4.6% of the world's population but consume 80% of the world's opioids. They use 99% of the world's supply of hydrocodone.'
 
 Failing to treat pain is not the answer to preventing opioid prescription abuse. Opioids can be extremely beneficial and positively life altering for patients with intractable pain but are extremely dangerous in the hands of abusers. The goal is to curb abuse and diver-
 
@@ -7162,19 +7166,19 @@ It is important to remember that if the patient is on codeine it metabolizes to 
 
 TABLE 35-1 Illegal Substance Detection Window in Urine Drug Screen Tests
 
-| Illegal Substance   | Detection Window                       |
-|---------------------|----------------------------------------|
-| Amphetamine         | 1-4 d                                  |
-| Cocaine             | 2-3 d (7 d for heavy or long-term use) |
-| Marijuana           | 5 d (30 d for long-term use)           |
-| Phencyclidine       | 2-7 d (14 d for long-term use)         |
+| Illegal Substance | Detection Window                       |
+| ----------------- | -------------------------------------- |
+| Amphetamine       | 1-4 d                                  |
+| Cocaine           | 2-3 d (7 d for heavy or long-term use) |
+| Marijuana         | 5 d (30 d for long-term use)           |
+| Phencyclidine     | 2-7 d (14 d for long-term use)         |
 
 <!-- PAGE_NUMBER: 278 -->
 
 TABLE 35-2 Opioid Detection Window in Urine Drug Screen Tests
 
 | Opioid        | Detection Window (d)                 |
-|---------------|--------------------------------------|
+| ------------- | ------------------------------------ |
 | Methadone     | 2-4                                  |
 | Morphine      | 2-3 (possibly longer if chronic use) |
 | Oxycodone     | 1-3                                  |
@@ -7193,7 +7197,7 @@ On occasion a patient is not on a standing medication but uses the medication mo
 TABLE 35-3 Parent Drugs and Their Metabolites Monitored in Urine Drug Screens
 
 | Parent Drug   | Parent Drugs and Metabolites Found in the Urine                         |
-|---------------|-------------------------------------------------------------------------|
+| ------------- | ----------------------------------------------------------------------- |
 | Methadone     | Methadone and EDDP (2-ethylidene- 1,5-dimethyl-3,3-diphenylpyrrolidine) |
 | Morphine      | Morphine and hydromorphone                                              |
 | Oxycodone     | Oxycodone, oxymorphone, noroxycodone                                    |
@@ -7283,16 +7287,14 @@ practice at risk by providing opioids to patients who do not follow directions, 
 If you are going to discharge a patient from the practice, it is essential to promptly notify the patient of the termination of the provider-patient relationship. To cover all bases, it is good to both call patients and send them a letter to have paper documentation. When patients receive the call letting them know they are being discharged, most are very accepting and know why. However, a practitioner's involvement with the patient is not over; it is necessary try to find adequate care elsewhere for the discharged patient. Sending the patient a list of practices in the area as well as rehabilitationdetoxification programs suffices.
 
 5. Wang J, Christo PJ. The influence of prescription monitoring pro rams on chronic pain management. Pain Physician. 2009;12(3) 507-515.
-2. Under the counter: The diversion and abuse of controlled pre- 6. Webster LR, Webster RM. Predicting aberrant behaviors in opioidscription drugs in the U.S. National Center on Addiction and Subtreated patients: preliminary validation of the Opioid Risk Tool. stance Abuse at Columbia University (CASA), New York, NY; Pain Med. 2005;6(6):432-442. 1009.
-3. North Carolina Department of Health and Human Services. Findings and recommendations of the task force to prevent deaths from unintentional drug overdoses in North Carolina, 2003. Division of Public Health, Injury and Violence Prevention Branch, Raleigh, NC.
-4. Okie S. A flood of opioids, a rising tide of death. N Engl J Med. 2010;363 (21):1981-1985.
-8. Dunbar SA, Katz NP. Chronic opioid therapy for nonmalignant pain in patients with a history of substance abuse: report of 20 cases. J Pain Symptom Manage. 1996;11 (3):163-171.|
-7. Savage SR. Assessment for addiction in pain-treatment settings. Clin J Pain. 2002;18(4 Suppl):S28-S38.
-9. Atluri S, Sudarshan G. A screening tool to determine the risk of prescription opioid abuse among patients with chronic non-malignant pain (abstract]. Pain Physician. 2002;5 (4):447-448.
+6. Under the counter: The diversion and abuse of controlled pre- 6. Webster LR, Webster RM. Predicting aberrant behaviors in opioidscription drugs in the U.S. National Center on Addiction and Subtreated patients: preliminary validation of the Opioid Risk Tool. stance Abuse at Columbia University (CASA), New York, NY; Pain Med. 2005;6(6):432-442. 1009.
+7. North Carolina Department of Health and Human Services. Findings and recommendations of the task force to prevent deaths from unintentional drug overdoses in North Carolina, 2003. Division of Public Health, Injury and Violence Prevention Branch, Raleigh, NC.
+8. Okie S. A flood of opioids, a rising tide of death. N Engl J Med. 2010;363 (21):1981-1985.
+9. Dunbar SA, Katz NP. Chronic opioid therapy for nonmalignant pain in patients with a history of substance abuse: report of 20 cases. J Pain Symptom Manage. 1996;11 (3):163-171.|
+10. Savage SR. Assessment for addiction in pain-treatment settings. Clin J Pain. 2002;18(4 Suppl):S28-S38.
+11. Atluri S, Sudarshan G. A screening tool to determine the risk of prescription opioid abuse among patients with chronic non-malignant pain (abstract]. Pain Physician. 2002;5 (4):447-448.
 
 <!-- PAGE_NUMBER: 281 -->
-
-
 
 <!-- PAGE_NUMBER: 282 -->
 
@@ -7301,7 +7303,7 @@ If you are going to discharge a patient from the practice, it is essential to pr
 Note: Page number followed by f and t indicates figure and table respectively.
 
 | Abdominal adhesions, and pain, 45-46                                                                                                                                                                                                           |
-|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Abdominal pain, 44-45 abdominal wall neuroma and, 45 Carnett test in, 44, 45f case studies on, 47-48 chronic, 44-45 abdominal surgery and, 45-46 history examination in, 44 referred, 46, 46f somatic, 45, 45f stress and, 44 treatment of. 46 |
 | Abdominal strengthening exercises, 253 abdominal crunch, 253, 253f half V sit-ups, 253, 253f Acetaminophen, 80                                                                                                                                 |
 | case study on, 81 ceiling effect, 80 contraindications to, 80 indications for, 80 use of, 80                                                                                                                                                   |
@@ -7329,7 +7331,7 @@ Back pain, low. See Low back pain Baclofen, 87t action mechanism, 85, 85f, 85t d
 ## Index
 
 | Breakthrough pain, 37, 103. See also Cancer patents, pain In management of, 103, 103t Bunion. See Hallux valgus bupivacaine. 242                                                                                                                                                                                                                                                                                                                                                                                                            |
-|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Cancer patients, pain in, 37 brain tumors, and headache, 38-39, 39f case study on, 43 metastatic bone pain, 37-38, 37f neurolytic celiac plexus block for, 179-180 neurolytic ganglion impar block for, 184 neurolytic superior hypogastric block for, 183 neuropathic pain, 38 chemotherapy and, 38, 39f radiation and, 38, 39f preexisting painful condition, 41 programmable intrathecal pump for, 237 (see also Intrathecal pain pumps) spinal cord compression and, 39-40, 40f surgery and mastectomy, 40-41, 41f thoracotomy, 40, 40f |
 
 use of, 82-83
@@ -7339,7 +7341,7 @@ use of, 82-83
 ## 270 Index
 
 | Carbamazepine, 94                                                           | pathophysiology of, 61-62, 61f                                                   | Discography, 217                                                               |
-|-----------------------------------------------------------------------------|----------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | action mechanism, 94-95, 95f                                                | sympathetic blocks for, 175                                                      | case study on, 222, 223t                                                       |
 | dosage and titration schedule for, 96, 96t                                  | treatment for, 62                                                                | complications of, 222                                                          |
 | for neuropathic pain, 95                                                    | medication, 63                                                                   | contraindications to, 222                                                      |
@@ -7408,7 +7410,7 @@ use of, 82-83
 <!-- PAGE_NUMBER: 284 -->
 
 | use of in childbirth setting, 116, 116f, 117                                                                                 |
-|------------------------------------------------------------------------------------------------------------------------------|
+| ---------------------------------------------------------------------------------------------------------------------------- |
 | in surgical setting, 115-117                                                                                                 |
 | Epidural space, 110-111, 110f, 126, 127f, 226f                                                                               |
 | Epidural steroid injections, 22, 126                                                                                         |
@@ -7458,25 +7460,25 @@ use of, 82-83
 
 differential diagnosis for, 64t history and examination in, 64-65 Savella for, 91, 91t treatment of, 65 Flector. See Diclofenac Flexeril action mechanism, 85t, 86 dosing for, 86, 86t side effects of, 87, 87t uses of, 86 Foot and ankle pain, 54-60 case studies on, 60 diabetic peripheral neuropathy, 60 hallux valgus, 56-57, 56f, 57f Morton's neuroma, 57-58, 57f plantar fasciitis, 54-56, 54f, 55f tarsal tunnel syndrome, 58-59, 59f Fractures, hip, 13-14
 
-| Gabapentin, 94 action mechanism, 94, 94f dosage and titration schedule for, 95-96, 96t for neuropathic pain, 95   |
-|-------------------------------------------------------------------------------------------------------------------|
-| Ganglion impar block, 183-184, 184f                                                                               |
-| impar block                                                                                                       |
-| Ganglion of Walther block. See Ganglion                                                                           |
-| Gate control theory of pain, 224-225, 224f, 225f                                                                  |
-| Glenohumeral arthritis, 3-4, 4f Golfer's elbow, 167, 167f. See also Medial                                        |
-| epicondylitis injection, 167-168, 168f pain with, 167                                                             |
-| Greater trochanteric bursa injection, 170-171, 170f                                                               |
-| in examination room, 171, 171f 171f                                                                               |
-| under fluoroscopic guidance, 171-172, proper contrast spread for, 172, 172f                                       |
-| Groin pain, hip arthritis and, 12                                                                                 |
+| Gabapentin, 94 action mechanism, 94, 94f dosage and titration schedule for, 95-96, 96t for neuropathic pain, 95 |
+| --------------------------------------------------------------------------------------------------------------- |
+| Ganglion impar block, 183-184, 184f                                                                             |
+| impar block                                                                                                     |
+| Ganglion of Walther block. See Ganglion                                                                         |
+| Gate control theory of pain, 224-225, 224f, 225f                                                                |
+| Glenohumeral arthritis, 3-4, 4f Golfer's elbow, 167, 167f. See also Medial                                      |
+| epicondylitis injection, 167-168, 168f pain with, 167                                                           |
+| Greater trochanteric bursa injection, 170-171, 170f                                                             |
+| in examination room, 171, 171f 171f                                                                             |
+| under fluoroscopic guidance, 171-172, proper contrast spread for, 172, 172f                                     |
+| Groin pain, hip arthritis and, 12                                                                               |
 
 ## H
 
 Hallux valgus, 56-57, 56f cause of, 56 clinical presentation in, 56, 57f incidence of, 56 treatment for, 56-57, 57f cortisone injection, 57, 57f osteotomy, 57 Headache, brain tumors and, 38-39, 39f Headache, injections for, 192 anatomy related to, 192-193 greater and lesser occipital nerves, 192-193, 192f trigeminal cervical complex (TCC), 193, 193f botulinum toxin injections, 194 areas of injection and recommended doses, 196t indication for, 195 procedure for, 196-198, 196t, 197t, 198t
 
 | case studies on, 198-199                                                                |
-|-----------------------------------------------------------------------------------------|
+| --------------------------------------------------------------------------------------- |
 | contraindications to, 198 headache types and, 195t                                      |
 | occipital nerve blocks (ONBs), 193-194 indication for, 195 procedure for, 195-196, 196f |
 | Hepatotoxicity, acetaminophen and, 100                                                  |
@@ -7521,7 +7523,7 @@ Hallux valgus, 56-57, 56f cause of, 56 clinical presentation in, 56, 57f inciden
 ## 272 Index
 
 |                                                                                                    | Lateral femoral cutaneous neuropathy,                                     | Milnacipran                                                                  |
-|----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 |                                                                                                    | 29-30, 30f                                                                | dosages and titration schedule, 91                                           |
 | Jannetta procedure, 20                                                                             | anatomy related to, 29-30, 30f                                            | for fibromyalgia, 65, 9lt                                                    |
 | Joint and bursa injections, 162-163                                                                | causes of, 30                                                             | Mirror box manipulation, for phantom limb                                    |
@@ -7594,7 +7596,7 @@ NSAIDs. See Nonsteroidal antiinflammatory drugs (NSAIDs) Nucleoplasty, 244 Nucyn
 ## Index 273
 
 | Oxycodone detection window in urine drug screen                                    |
-|------------------------------------------------------------------------------------|
+| ---------------------------------------------------------------------------------- |
 | long-acting, time-release, 101 OxyContin, 101                                      |
 | Pamelor. See Nortriptyline Paravertebral block. See Lumbar                         |
 | Pancreatic pain, celiac plexus block for, 175                                      |
@@ -7641,7 +7643,7 @@ NSAIDs. See Nonsteroidal antiinflammatory drugs (NSAIDs) Nucleoplasty, 244 Nucyn
 ## 274 Index
 
 | Peripheral neuropathy, 30-31                                           | iliohypogastric nerve, 34, 34f                                           | contraindications to, 157                                               |
-|------------------------------------------------------------------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
 | clinical presentation, 30                                              | ilioinguinal nerve, 34, 34f                                              | diagnostic, 154-155, 154f, 155f                                         |
 | history and examination in, 31                                         | treatment of, 35                                                         | SI joint, anatomy of, 153, 153f, 154f                                   |
 | pain in, 30-31                                                         | Post-thoracotomy pain syndrome (PTPS),                                   | SI joint radiofrequency, 156-157, 156f                                  |
@@ -7711,57 +7713,57 @@ NSAIDs. See Nonsteroidal antiinflammatory drugs (NSAIDs) Nucleoplasty, 244 Nucyn
 
 <!-- PAGE_NUMBER: 288 -->
 
-| Stress Stretching, 252 Suprascapular nerve block, 6, 207-208, 179f 183 178f   | Tinel sign, 59, 59f                                                          |
-|-------------------------------------------------------------------------------|------------------------------------------------------------------------------|
-| definition of, 44                                                             | treatment for, 59                                                            |
-| effects of, on gut physiology, 44                                             | injection, 59, 59f                                                           |
-|                                                                               | surgery, 59                                                                  |
-| Stump pain, 31-33                                                             | Taut muscle bands, and low back pain, 8,                                     |
-| Subacromial bursa, 3, 3f                                                      |                                                                              |
-| Succinylcholine, 85                                                           | Tegretol. See Carbamazepine                                                  |
-| Superior hypogastric block, for pelvic                                        | Telescoping, 32                                                              |
-| cancer pain, 176                                                              | Tennis elbow, 167. See also Lateral                                          |
-| Superior hypogastric plexus block, 181-183,                                   | epicondylitis                                                                |
-| 182f, 183f                                                                    | injection, 167, 167f                                                         |
-| 207f, 208f                                                                    | Testosterone levels, low, opioids use and, 104                               |
-| Sympathetic blocks, 175                                                       | Tic douloureux. See Trigeminal neuralgia                                     |
-| case studies on, 185                                                          | Tinel sign, 21, 21f, 59, 59f                                                 |
-| complications of, 184-185                                                     | Tizanidine. See Zanaflex                                                     |
-| contraindications to, 184-185                                                 | Topical pain medications, 82, 83t. See also                                  |
-| indications 10r. 1/5.                                                         | Capsaicin; Diclofenac; Lidocaine                                             |
-| for ischemic syndrome of limb, 176                                            | application of, 83, 83t                                                      |
-| for pancreatic/pelvic/peritoneal pain,                                        | case studies on. 05-84 forms of, 82, 83t                                     |
-|                                                                               | indications for, 82                                                          |
-| for sympatneucally maintamnea pain,                                           | side effects of, 83                                                          |
-| procedures for, 176                                                           | strength of, 83t                                                             |
-| celiac plexus block, 178-179, 178f,                                           | Toradol, 77t with IV opioids, 99                                             |
-| ganglion impar block, 183-184, 184f                                           | Tramadol, 104                                                                |
-| lumbar sympathetic ganglion block, 180-181, 180f, 181f                        | contraindications to, 104 mode of action, 104                                |
-| neurolytic celiac plexus block, 179-180 neurolytic ganglion impar block, 184  | Transcutaneous electrical nerve stimulation (TENS), 254                      |
-| neurolytic superior hypogastric block,                                        | for phantom limb pain, 33                                                    |
-|                                                                               | Triamcinolone acetonide. See Kenalog                                         |
-| stellate ganglion block, 176-178, 177f,                                       |                                                                              |
-|                                                                               | Tricyclic antidepressants (TCAs), 87, 89, 90f. See also Antidepressants;     |
-| superior hypogastric plexus block,                                            | Nortriptyline                                                                |
-| 181-183, 182f, 183f                                                           | Trigeminal cervical complex (TCC), 193,                                      |
-| Sympathetic chain, 175. See also Sympathetic blocks                           | 193f Trigeminal neuralgia, 19-20, 20f anatomy related to, 19, 20f            |
-| anatomy of, 176f                                                              |                                                                              |
-| locations of, 176t                                                            | history and examination, 19-20                                               |
-|                                                                               | pain of, 19                                                                  |
-| Sympathetic nerve block, in complex regional pain syndrome, 62-63             |                                                                              |
-|                                                                               | treatment of, 20                                                             |
-| Synaptic plasticity, 102 methadone in, 102                                    | Trigger point injections case study on, 161                                  |
-|                                                                               | contraindications to, 160 dry needling, 159                                  |
-|                                                                               | indications for, 160                                                         |
-| Tapentadol. See Nucynta                                                       |                                                                              |
-| Tarsal tunnel, 58-59, 58f                                                     | for myofascial pain, 159-161 procedure for, 160, 160f solutions used in, 159 |
-| Tarsal tunnel syndrome, 58-59, 58f, 214 anatomy related to, 58-59, 58f        |                                                                              |
-|                                                                               | trigger points and, 159, 159f                                                |
-| cause of, 59                                                                  | Trigger points, 8 Tylenol. See Acetaminophen                                 |
-| pain in, 59                                                                   |                                                                              |
+| Stress Stretching, 252 Suprascapular nerve block, 6, 207-208, 179f 183 178f  | Tinel sign, 59, 59f                                                          |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| definition of, 44                                                            | treatment for, 59                                                            |
+| effects of, on gut physiology, 44                                            | injection, 59, 59f                                                           |
+|                                                                              | surgery, 59                                                                  |
+| Stump pain, 31-33                                                            | Taut muscle bands, and low back pain, 8,                                     |
+| Subacromial bursa, 3, 3f                                                     |                                                                              |
+| Succinylcholine, 85                                                          | Tegretol. See Carbamazepine                                                  |
+| Superior hypogastric block, for pelvic                                       | Telescoping, 32                                                              |
+| cancer pain, 176                                                             | Tennis elbow, 167. See also Lateral                                          |
+| Superior hypogastric plexus block, 181-183,                                  | epicondylitis                                                                |
+| 182f, 183f                                                                   | injection, 167, 167f                                                         |
+| 207f, 208f                                                                   | Testosterone levels, low, opioids use and, 104                               |
+| Sympathetic blocks, 175                                                      | Tic douloureux. See Trigeminal neuralgia                                     |
+| case studies on, 185                                                         | Tinel sign, 21, 21f, 59, 59f                                                 |
+| complications of, 184-185                                                    | Tizanidine. See Zanaflex                                                     |
+| contraindications to, 184-185                                                | Topical pain medications, 82, 83t. See also                                  |
+| indications 10r. 1/5.                                                        | Capsaicin; Diclofenac; Lidocaine                                             |
+| for ischemic syndrome of limb, 176                                           | application of, 83, 83t                                                      |
+| for pancreatic/pelvic/peritoneal pain,                                       | case studies on. 05-84 forms of, 82, 83t                                     |
+|                                                                              | indications for, 82                                                          |
+| for sympatneucally maintamnea pain,                                          | side effects of, 83                                                          |
+| procedures for, 176                                                          | strength of, 83t                                                             |
+| celiac plexus block, 178-179, 178f,                                          | Toradol, 77t with IV opioids, 99                                             |
+| ganglion impar block, 183-184, 184f                                          | Tramadol, 104                                                                |
+| lumbar sympathetic ganglion block, 180-181, 180f, 181f                       | contraindications to, 104 mode of action, 104                                |
+| neurolytic celiac plexus block, 179-180 neurolytic ganglion impar block, 184 | Transcutaneous electrical nerve stimulation (TENS), 254                      |
+| neurolytic superior hypogastric block,                                       | for phantom limb pain, 33                                                    |
+|                                                                              | Triamcinolone acetonide. See Kenalog                                         |
+| stellate ganglion block, 176-178, 177f,                                      |                                                                              |
+|                                                                              | Tricyclic antidepressants (TCAs), 87, 89, 90f. See also Antidepressants;     |
+| superior hypogastric plexus block,                                           | Nortriptyline                                                                |
+| 181-183, 182f, 183f                                                          | Trigeminal cervical complex (TCC), 193,                                      |
+| Sympathetic chain, 175. See also Sympathetic blocks                          | 193f Trigeminal neuralgia, 19-20, 20f anatomy related to, 19, 20f            |
+| anatomy of, 176f                                                             |                                                                              |
+| locations of, 176t                                                           | history and examination, 19-20                                               |
+|                                                                              | pain of, 19                                                                  |
+| Sympathetic nerve block, in complex regional pain syndrome, 62-63            |                                                                              |
+|                                                                              | treatment of, 20                                                             |
+| Synaptic plasticity, 102 methadone in, 102                                   | Trigger point injections case study on, 161                                  |
+|                                                                              | contraindications to, 160 dry needling, 159                                  |
+|                                                                              | indications for, 160                                                         |
+| Tapentadol. See Nucynta                                                      |                                                                              |
+| Tarsal tunnel, 58-59, 58f                                                    | for myofascial pain, 159-161 procedure for, 160, 160f solutions used in, 159 |
+| Tarsal tunnel syndrome, 58-59, 58f, 214 anatomy related to, 58-59, 58f       |                                                                              |
+|                                                                              | trigger points and, 159, 159f                                                |
+| cause of, 59                                                                 | Trigger points, 8 Tylenol. See Acetaminophen                                 |
+| pain in, 59                                                                  |                                                                              |
 
 | Ultram, for fibromyalgia, 65 Ultrasound, therapeutic, 254                                                                                                                                                                                                                                                                                                                                                                                                                                    |               |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
 | magnetic resonance imaging in, 187 pain in, 186 reasons for, 186 treatment of, 187-188 (see also Vertebroplasty and kyphoplasty) Vertebral disc, 11, 11f, 217, 217f, 243, 243f black disc on MRI, 11-12, 12f cracks in annulus fibrosus, 11, llf and low back pain, 11-12 management of pain in, 12 radial tears in, and low back pain, 217, 218f (see also Discography) Vertebroplasty and kyphoplasty, 9, 186-187, 187f case study on, 191 complications of, 191 contraindications to, 191 |               |
 | indications for, 187-188 procedure, 188-190, 188f-190f Vicodin, 80, 100, 100f, 100t Vioxx, 77 Visceral pain abdominal, 45 in cancer patients, 38, 38f Viscosupplementation                                                                                                                                                                                                                                                                                                                   |               |
 | dosing for, 86, 86t side effects for, 87, 87t uses of, 86 Ziconotide, 242                                                                                                                                                                                                                                                                                                                                                                                                                    |               |

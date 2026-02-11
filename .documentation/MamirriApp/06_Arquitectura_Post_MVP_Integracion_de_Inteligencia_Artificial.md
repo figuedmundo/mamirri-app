@@ -1,9 +1,8 @@
 # 🚀 06. Arquitectura Post-MVP: Integración de Inteligencia Artificial
 
 > Fase: 2.0 (Cognitive Layer)
-Objetivo: Convertir el gestor de datos en un "Segundo Cerebro" clínico.
-Enfoque: RAG (Retrieval-Augmented Generation) + Visión Computacional.
-> 
+> Objetivo: Convertir el gestor de datos en un "Segundo Cerebro" clínico.
+> Enfoque: RAG (Retrieval-Augmented Generation) + Visión Computacional.
 
 ---
 
@@ -27,19 +26,19 @@ El bloque "Backend" se expande. La base de datos PostgreSQL se vuelve híbrida (
 Code snippet
 
 `graph TD
-    subgraph "Tablet (Cliente)"
-        UI[React App]
-        Voice[Dictado]
-        Cam[Cámara]
-    end
+subgraph "Tablet (Cliente)"
+UI[React App]
+Voice[Dictado]
+Cam[Cámara]
+end
 
     subgraph "Backend (NestJS)"
         API[API Gateway]
-        
+
         %% Módulos MVP (Existentes)
         Pat[Patients Module]
         Clin[Clinical Module]
-        
+
         %% Módulos NUEVOS (IA)
         AI_Orch[Orquestador Agéntico]
         Vision[Servicio de Visión]
@@ -66,17 +65,17 @@ Code snippet
     %% Flujos
     UI --> API
     API --> AI_Orch
-    
+
     AI_Orch -->|1. Ver| Vision
     Vision -->|Imagen| LLM
-    
+
     AI_Orch -->|2. Buscar| RAG
     RAG -->|Query| Embed
     Embed -->|Vector| RAG
     RAG -->|Similitud| T_Vec
-    
+
     AI_Orch -->|3. Razonar| LLM
-    
+
     AI_Orch -->|Guarda Sugerencia| Clin`
 
 ---
@@ -89,15 +88,13 @@ No contrataremos una base de datos nueva (como Pinecone). Usaremos la extensión
 
 - **¿Qué guarda?** Fragmentos ("chunks") de los libros de fisioterapia convertidos a números (embeddings).
 - **Nueva Tabla:** `knowledge_library`SQL
-    
-    `CREATE TABLE knowledge_library (
-      id UUID PRIMARY KEY,
-      content TEXT,              -- El párrafo del libro
-      source_title TEXT,         -- "Biomecánica de Kapandji"
-      page_number INT,
-      embedding vector(1536)     -- La representación matemática
-    );`
-    
+  `CREATE TABLE knowledge_library (
+    id UUID PRIMARY KEY,
+    content TEXT,              -- El párrafo del libro
+    source_title TEXT,         -- "Biomecánica de Kapandji"
+    page_number INT,
+    embedding vector(1536)     -- La representación matemática
+  );`
 
 ### 3.2 Módulo RAG (Retrieval-Augmented Generation)
 
@@ -105,20 +102,20 @@ Es el bibliotecario.
 
 - **Tecnología:** LangChain.js (integrado en Node/NestJS).
 - **Función:**
-    1. Recibe una duda: *"Tratamiento fascitis plantar en camareros"*.
-    2. Convierte la duda a vector.
-    3. Hace una consulta semántica a PostgreSQL: `SELECT * FROM knowledge_library ORDER BY embedding <-> query_embedding LIMIT 3`.
-    4. Devuelve los 3 párrafos más relevantes.
+  1. Recibe una duda: _"Tratamiento fascitis plantar en camareros"_.
+  2. Convierte la duda a vector.
+  3. Hace una consulta semántica a PostgreSQL: `SELECT * FROM knowledge_library ORDER BY embedding <-> query_embedding LIMIT 3`.
+  4. Devuelve los 3 párrafos más relevantes.
 
 ### 3.3 Módulo de Visión (Hybrid Vision)
 
 Combina dos técnicas para máxima precisión:
 
 1. **Visión Determinista (OpenCV):**
-    - Se ejecuta en un microservicio de Python (o usando `opencv4nodejs`).
-    - **Tarea:** Corrección de perspectiva (Homografía). Toma la foto chueca del papel y la aplana perfecta ("Bird's eye view").
+   - Se ejecuta en un microservicio de Python (o usando `opencv4nodejs`).
+   - **Tarea:** Corrección de perspectiva (Homografía). Toma la foto chueca del papel y la aplana perfecta ("Bird's eye view").
 2. **Visión Generativa (GPT-4o Vision):**
-    - **Tarea:** Análisis cualitativo. *"Observo un arco longitudinal interno colapsado y callosidad en el quinto metatarso"*.
+   - **Tarea:** Análisis cualitativo. _"Observo un arco longitudinal interno colapsado y callosidad en el quinto metatarso"_.
 
 ---
 
@@ -127,19 +124,17 @@ Combina dos técnicas para máxima precisión:
 Cuando tu madre presiona el botón **"Analizar Caso"** en la Fase 2, ocurre esta secuencia interna:
 
 1. **Fase de Percepción (Input):**
-    - El Agente lee la transcripción del audio (del MVP).
-    - El Agente recibe la descripción visual de la huella.
+   - El Agente lee la transcripción del audio (del MVP).
+   - El Agente recibe la descripción visual de la huella.
 2. **Fase de Investigación (Retrieval):**
-    - Agente: *"El paciente tiene dolor de talón y pie plano. Buscador, dame literatura sobre esto".*
-    - RAG: *"Aquí tienes extractos del Libro A (pág 40) y Libro B (pág 120)".*
+   - Agente: _"El paciente tiene dolor de talón y pie plano. Buscador, dame literatura sobre esto"._
+   - RAG: _"Aquí tienes extractos del Libro A (pág 40) y Libro B (pág 120)"._
 3. **Fase de Razonamiento (Synthesis):**
-    - Agente envía todo al LLM con el **System Prompt Maestro**:
-        
-        > "Actúa como experto. Tienes este paciente y esta literatura. Genera una recomendación de plantilla. CITA TUS FUENTES."
-        > 
+   - Agente envía todo al LLM con el **System Prompt Maestro**:
+     > "Actúa como experto. Tienes este paciente y esta literatura. Genera una recomendación de plantilla. CITA TUS FUENTES."
 4. **Fase de Entrega (Output):**
-    - El sistema guarda un JSON en la base de datos con la sugerencia, pero marcado como `status: PENDING_REVIEW`.
-    - La Tablet muestra la tarjeta de sugerencia para que tu madre la apruebe.
+   - El sistema guarda un JSON en la base de datos con la sugerencia, pero marcado como `status: PENDING_REVIEW`.
+   - La Tablet muestra la tarjeta de sugerencia para que tu madre la apruebe.
 
 ---
 
@@ -148,14 +143,13 @@ Cuando tu madre presiona el botón **"Analizar Caso"** en la Fase 2, ocurre esta
 Para que la IA sepa de fisioterapia, hay que "entrenarla" (darle contexto) una sola vez.
 
 - **Script de Ingesta (`ingest_books.ts`):**
-    1. Colocas los PDFs de los libros en una carpeta segura.
-    2. El script usa `pdf-parse` para extraer texto.
-    3. Divide el texto en bloques de 500 palabras ("Chunks").
-    4. Envía cada bloque a OpenAI (`text-embedding-3-small`) para crear vectores.
-    5. Guarda texto + vector en PostgreSQL.
+  1. Colocas los PDFs de los libros en una carpeta segura.
+  2. El script usa `pdf-parse` para extraer texto.
+  3. Divide el texto en bloques de 500 palabras ("Chunks").
+  4. Envía cada bloque a OpenAI (`text-embedding-3-small`) para crear vectores.
+  5. Guarda texto + vector en PostgreSQL.
 
 > Nota: Este proceso es manual y lo haces tú como administrador cuando consigues un libro nuevo. Tu madre no ve esto.
-> 
 
 ---
 
@@ -164,12 +158,9 @@ Para que la IA sepa de fisioterapia, hay que "entrenarla" (darle contexto) una s
 Al introducir IA externa (OpenAI), debemos reforzar la privacidad (HIPAA compliance básico).
 
 - **Anonimización (PII Stripping):**
-Antes de enviar cualquier texto a GPT-4:
-    1. El Backend busca patrones de nombres o IDs.
-    2. Reemplaza "Juan Pérez" por "Paciente_X".
-    3. Envía el caso anonimizado.
+  Antes de enviar cualquier texto a GPT-4: 1. El Backend busca patrones de nombres o IDs. 2. Reemplaza "Juan Pérez" por "Paciente_X". 3. Envía el caso anonimizado.
 - **Cero Retención:**
-Configuramos la API de OpenAI con `zero data retention` (si aplica en la cuenta Enterprise) o simplemente confiamos en su política de no usar datos de API para entrenamiento (que es el estándar actual).
+  Configuramos la API de OpenAI con `zero data retention` (si aplica en la cuenta Enterprise) o simplemente confiamos en su política de no usar datos de API para entrenamiento (que es el estándar actual).
 
 ---
 

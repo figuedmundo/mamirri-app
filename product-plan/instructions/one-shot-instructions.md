@@ -5,6 +5,7 @@
 ## About These Instructions
 
 **What you're receiving:**
+
 - Finished UI designs (React components with full styling)
 - Data model definitions (TypeScript types and sample data)
 - UI/UX specifications (user flows, requirements, screenshots)
@@ -12,6 +13,7 @@
 - Test-writing instructions for each section (for TDD approach)
 
 **What you need to build:**
+
 - Backend API endpoints and database schema
 - Authentication and authorization
 - Data fetching and state management
@@ -19,6 +21,7 @@
 - Integration of the provided UI components with real data
 
 **Important guidelines:**
+
 - **DO NOT** redesign or restyle the provided components — use them as-is
 - **DO** wire up the callback props to your routing and API calls
 - **DO** replace sample data with real data from your backend
@@ -50,6 +53,7 @@ Una app de tablet o celulares para fisioterapeutas que captura datos por voz y f
 **Data Model:**
 
 **Core Entities:**
+
 - Paciente — La persona que recibe tratamiento, con su historial completo
 - Caso clínico — Un episodio de atención para una condición específica
 - Evaluación — Sesión de diagnóstico con fotos, videos y hallazgos iniciales
@@ -63,11 +67,13 @@ Una app de tablet o celulares para fisioterapeutas que captura datos por voz y f
 **Design System:**
 
 **Colors:**
+
 - Primary: Teal — Used for buttons, links, key accents
 - Secondary: Sky — Used for tags, highlights, secondary elements
 - Neutral: Slate — Used for backgrounds, text, borders
 
 **Typography:**
+
 - Heading: DM Sans
 - Body: DM Sans
 - Mono: IBM Plex Mono
@@ -106,11 +112,13 @@ Configure your styling system with these tokens:
 - See `product-plan/design-system/fonts.md` for Google Fonts setup
 
 **Colors:**
+
 - Primary: `teal` — Buttons, links, key accents
 - Secondary: `sky` — Tags, highlights, secondary elements
 - Neutral: `slate` — Backgrounds, text, borders
 
 **Typography:**
+
 - Heading: DM Sans
 - Body: DM Sans
 - Mono: IBM Plex Mono
@@ -123,6 +131,7 @@ Create TypeScript interfaces for your core entities:
 - See `product-plan/data-model/README.md` for entity relationships
 
 **Core Entities:**
+
 - Paciente — Patient with medical history
 - CasoClinico — Treatment episode for a specific condition
 - Evaluación — Diagnostic session with findings
@@ -165,6 +174,7 @@ Connect navigation to your routing:
 **User Menu:**
 
 The user menu expects:
+
 - User name
 - Avatar URL (optional)
 - Logout callback
@@ -215,6 +225,7 @@ Implement the Pacientes feature — Gestión de expedientes médicos con captura
 The Pacientes section acts as a central clinical records system — a "Professional Athlete Logbook" for managing patient history, evaluations, and progress tracking. It uses voice AI for structured clinical admission and presents a visual timeline of a 15-session intervention model for longitudinal tracking.
 
 **Key Functionality:**
+
 - View and manage all patients in card-based grid layout
 - Create new patients with voice dictation for clinical history (anamnesis)
 - Record treatment sessions with pain scales (END 0-10) and functional independence indices (Barthel 0-100)
@@ -229,11 +240,13 @@ The Pacientes section acts as a central clinical records system — a "Professio
 Before implementing this section, **write tests first** based on the test specifications provided.
 
 See `product-plan/sections/pacientes/tests.md` for detailed test-writing instructions including:
+
 - Key user flows to test (success and failure paths)
 - Specific UI elements, button labels, and interactions to verify
 - Expected behaviors and assertions
 
 **TDD Workflow:**
+
 1. Read `tests.md` and write failing tests for the key user flows
 2. Implement the feature to make tests pass
 3. Refactor while keeping tests green
@@ -260,46 +273,47 @@ The components expect these data shapes:
 ```typescript
 // Patient and clinical case structure
 interface Paciente {
-  id: string
-  nombre: string
-  edad: number
-  ocupacion: string
-  telefono: string
-  email?: string
-  fechaNacimiento: string
-  activo: boolean
-  casosClinicos: CasoClinico[]
+  id: string;
+  nombre: string;
+  edad: number;
+  ocupacion: string;
+  telefono: string;
+  email?: string;
+  fechaNacimiento: string;
+  activo: boolean;
+  casosClinicos: CasoClinico[];
 }
 
 interface CasoClinico {
-  id: string
-  pacienteId: string
-  titulo: string
-  estado: 'activo' | 'completado' | 'inactivo'
-  fechaInicio: string
-  motivoConsulta: string
-  evaluacion?: Evaluacion
-  sesionesTratamiento: SesionDeTratamiento[]
+  id: string;
+  pacienteId: string;
+  titulo: string;
+  estado: 'activo' | 'completado' | 'inactivo';
+  fechaInicio: string;
+  motivoConsulta: string;
+  evaluacion?: Evaluacion;
+  sesionesTratamiento: SesionDeTratamiento[];
 }
 
 interface Evaluacion {
-  posturograma: Posturograma
-  testOrtopedicos: TestOrtopedicos
-  escalaDolor: EscalaDolor
-  huellas: Huella[]
-  videosPostura: VideoDePostura[]
+  posturograma: Posturograma;
+  testOrtopedicos: TestOrtopedicos;
+  escalaDolor: EscalaDolor;
+  huellas: Huella[];
+  videosPostura: VideoDePostura[];
 }
 
 interface SesionDeTratamiento {
-  fecha: string
-  faseNumero: number
-  tecnicasAplicadas: string[]
-  respuestaPaciente: string
-  dolorFinal: number // 0-10 scale
+  fecha: string;
+  faseNumero: number;
+  tecnicasAplicadas: string[];
+  respuestaPaciente: string;
+  dolorFinal: number; // 0-10 scale
 }
 ```
 
 You'll need to:
+
 - Create API endpoints or data fetching logic for patients CRUD operations
 - Connect real data to the components
 - Implement voice transcription service for anamnesis and evolution notes
@@ -418,6 +432,7 @@ Implement the Análisis feature — Análisis visual de huellas plantares y vide
 Analysis section provides objective biomechanical evaluation tools: podoscopy (footprints), posturogram (static posture), video analysis (dynamic gait), and dashboard comparing initial vs. final state to track objective progress.
 
 **Key Functionality:**
+
 - Upload and analyze footprints with pressure heatmaps and arch classification (plano/cavo/normal)
 - Capture posturogram with 4 views (anterior, posterior, lateral) and mark anatomical deviations
 - Analyze gait/posture videos with slow-motion playback and angle detection
@@ -429,11 +444,13 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 Before implementing this section, **write tests first** based on the test specifications provided.
 
 See `product-plan/sections/analisis/tests.md` for detailed test-writing instructions including:
+
 - Key user flows to test (success and failure paths)
 - Specific UI elements, button labels, and interactions to verify
 - Expected behaviors and assertions
 
 **TDD Workflow:**
+
 1. Read `tests.md` and write failing tests for the key user flows
 2. Implement the feature to make tests pass
 3. Refactor while keeping tests green
@@ -460,50 +477,51 @@ The components expect these data shapes:
 ```typescript
 // Footprint analysis
 interface Huella {
-  id: string
-  evaluacionId: string
-  tipo: 'inicial' | 'final' | 'seguimiento'
-  fecha: string
-  url: string
+  id: string;
+  evaluacionId: string;
+  tipo: 'inicial' | 'final' | 'seguimiento';
+  fecha: string;
+  url: string;
   analisis?: {
-    arco: 'plano' | 'cavo' | 'normal'
-    presionTalon: string
-    desviacion: string
-  }
+    arco: 'plano' | 'cavo' | 'normal';
+    presionTalon: string;
+    desviacion: string;
+  };
 }
 
 // Posturogram structure
 interface Posturograma {
-  vistaAnterior?: VistaPostural
-  vistaPosterior?: VistaPostural
-  vistaSagitalLateral?: VistaPostural
-  marcha?: string
-  cabeza?: string
-  hombros?: string
-  columna?: string
-  pelvis?: string
-  rodillas?: string
-  pies?: string
+  vistaAnterior?: VistaPostural;
+  vistaPosterior?: VistaPostural;
+  vistaSagitalLateral?: VistaPostural;
+  marcha?: string;
+  cabeza?: string;
+  hombros?: string;
+  columna?: string;
+  pelvis?: string;
+  rodillas?: string;
+  pies?: string;
 }
 
 // Video analysis
 interface VideoDePostura {
-  id: string
-  evaluacionId: string
-  tipo: 'caminata' | 'postura-estatica'
-  fecha: string
-  url: string
-  duracion: number
-  observaciones: string
+  id: string;
+  evaluacionId: string;
+  tipo: 'caminata' | 'postura-estatica';
+  fecha: string;
+  url: string;
+  duracion: number;
+  observaciones: string;
   angulosDetectados?: {
-    genuFlexo: number
-    inclinacionTronco: number
+    genuFlexo: number;
+    inclinacionTronco: number;
     // ... other angle measurements
-  }
+  };
 }
 ```
 
 You'll need to:
+
 - Create API endpoints or data fetching logic for footprint, posturogram, and video data
 - Implement image/video upload with file validation
 - Connect real data to the components
@@ -619,6 +637,7 @@ Implement the Biblioteca Médica feature — Búsqueda inteligente en libros, ar
 Biblioteca Médica is a smart clinical research assistant with natural language search, structured category navigation, and AI-powered translation between medical languages (EN/ES). It helps clinicians find protocols, anatomical references, and evidence during patient evaluation.
 
 **Key Functionality:**
+
 - Natural language search for protocols and medical literature
 - Structured category navigation (Osteology, Myology, Elasticity Tests, etc.)
 - View detailed protocol cards (Ficha Explicativa) with definition, justification, and procedure steps
@@ -631,11 +650,13 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 Before implementing this section, **write tests first** based on the test specifications provided.
 
 See `product-plan/sections/biblioteca-medica/tests.md` for detailed test-writing instructions including:
+
 - Key user flows to test (success and failure paths)
 - Specific UI elements, button labels, and interactions to verify
 - Expected behaviors and assertions
 
 **TDD Workflow:**
+
 1. Read `tests.md` and write failing tests for the key user flows
 2. Implement the feature to make tests pass
 3. Refactor while keeping tests green
@@ -659,30 +680,31 @@ The components expect these data shapes:
 ```typescript
 // Protocol structure
 interface Protocol {
-  id: string
-  nombre: string
-  categoria: string
-  definicionES: string
-  definicionEN: string
-  justificacion: string
-  pasos: string[]
-  referencias: ReferenciaBibliografica[]
+  id: string;
+  nombre: string;
+  categoria: string;
+  definicionES: string;
+  definicionEN: string;
+  justificacion: string;
+  pasos: string[];
+  referencias: ReferenciaBibliografica[];
 }
 
 // Reference structure
 interface ReferenciaBibliografica {
-  id: string
-  protocoloId: string
-  autor: string
-  año: number
-  titulo: string
-  fuente: string
-  url?: string
-  idiomaOriginal?: string
+  id: string;
+  protocoloId: string;
+  autor: string;
+  año: number;
+  titulo: string;
+  fuente: string;
+  url?: string;
+  idiomaOriginal?: string;
 }
 ```
 
 You'll need to:
+
 - Create API endpoints or data fetching logic for protocol/library search
 - Implement natural language search with debouncing
 - Connect real data to the components
@@ -794,6 +816,7 @@ Implement the Plantillas feature — Sugerencias de diseño de plantillas ortop�
 Plantillas is a full-screen CAD-like workspace for designing custom orthopedic insoles with 3D modeling, AI automation, and biomechanical validation. It combines structural editing (sliders) with precise relief painting (brush) and integrates with patient diagnosis data.
 
 **Key Functionality:**
+
 - Import patient diagnosis data and auto-generate base insole model with suggested corrections
 - Edit insole structure via precision sliders (arch height, heel wedge, lateral wedge)
 - Paint relief zones on 3D model using brush tool (soft spots for pain points)
@@ -808,11 +831,13 @@ Plantillas is a full-screen CAD-like workspace for designing custom orthopedic i
 Before implementing this section, **write tests first** based on the test specifications provided.
 
 See `product-plan/sections/plantillas/tests.md` for detailed test-writing instructions including:
+
 - Key user flows to test (success and failure paths)
 - Specific UI elements, button labels, and interactions to verify
 - Expected behaviors and assertions
 
 **TDD Workflow:**
+
 1. Read `tests.md` and write failing tests for the key user flows
 2. Implement the feature to make tests pass
 3. Refactor while keeping tests green
@@ -837,41 +862,42 @@ The components expect these data shapes:
 ```typescript
 // Insole design
 interface Plantilla {
-  id: string
-  casoClinicoId: string
-  tipo: 'plantilla-ortopédica' | 'tobillera' | 'otro'
-  material: 'corcho' | 'neopreno' | 'eva' | 'otro'
+  id: string;
+  casoClinicoId: string;
+  tipo: 'plantilla-ortopédica' | 'tobillera' | 'otro';
+  material: 'corcho' | 'neopreno' | 'eva' | 'otro';
   caracteristicas?: {
-    realceInterno?: number
-    soporteArco?: string
-    talonera?: string
-    alturaTotal?: number
-    tipoFijacion?: string
-    nivelInmovilizacion?: string
-    altura?: number | string
-  }
+    realceInterno?: number;
+    soporteArco?: string;
+    talonera?: string;
+    alturaTotal?: number;
+    tipoFijacion?: string;
+    nivelInmovilizacion?: string;
+    altura?: number | string;
+  };
   diseño: {
-    alturaArco: number
-    inclinacionTalon: number
-    zonasAlivio: ZonaAlivio[]
-  }
-  materiales: MaterialPlanta[]
+    alturaArco: number;
+    inclinacionTalon: number;
+    zonasAlivio: ZonaAlivio[];
+  };
+  materiales: MaterialPlanta[];
 }
 
 interface ZonaAlivio {
-  ubicacion: { x: number; y: number }
-  radio: number
-  nivel: number // 1-5 (soft to firm)
+  ubicacion: { x: number; y: number };
+  radio: number;
+  nivel: number; // 1-5 (soft to firm)
 }
 
 interface MaterialPlanta {
-  capa: 'base' | 'media' | 'cubierta'
-  tipo: 'EVA_rigido' | 'EVA_medio' | 'EVA_suave'
-  espesor?: number
+  capa: 'base' | 'media' | 'cubierta';
+  tipo: 'EVA_rigido' | 'EVA_medio' | 'EVA_suave';
+  espesor?: number;
 }
 ```
 
 You'll need to:
+
 - Create API endpoints or data fetching logic for insole designs
 - Implement 3D model rendering and controls (rotate, zoom, pan)
 - Connect real patient diagnosis data to the editor

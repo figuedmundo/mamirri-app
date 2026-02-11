@@ -8,7 +8,6 @@ original_file: Fisiología Articular Tomo 1 6ta Edicion - Kapandji.pdf
 extraction_date: '2026-02-09T21:45:00.940Z'
 ---
 
-
 <!-- PAGE_NUMBER: 1 -->
 
 TOMO 1
@@ -83,7 +82,7 @@ ISBN: 84-9835-002-6
 
 1. Articulaciones. 2. Biomecánica
 
-612.75
+   612.75
 
 Título del original en francés
 
@@ -191,131 +190,131 @@ Esta edición marcará sin duda un nuevo nacimiento, ya que tanto el texto como 
 
 ## Índice
 
-| Capítulo 1 El hombro                                                     |    |
-|--------------------------------------------------------------------------|----|
-| Fisiología del hombro .                                                  |    |
-| La flexoextensión y la aducción                                          |    |
-| La abducción                                                             |    |
-| La rotación del brazo sobre su eje longitudinal                          | 10 |
-| Flexoentensión horizontal                                                | 12 |
-| El movimiento de circunducción                                           | 14 |
-| - Valoración de los movimientos del hombro                               |    |
-| La "paradoja" de Codman                                                  |    |
-| - Movimientos de exploración global del hombro                           | 20 |
-| El complejo articular del hombro                                         |    |
-| Las superficies articulares de la articulación glenohumeral              |    |
-| Cabeza humeral                                                           | 24 |
-| La cavidad glenoidea del omóplato                                        |    |
-| El rodete glenoideo .                                                    | 24 |
-| Centros instantáneos de rotación                                         | 26 |
-| El aparato capsulo-ligamentoso del hombro                                | 28 |
-| El tendón de la porción larga del músculo biceps braquial intraarticular |    |
-| Función del ligamento glenohumeral ....                                  | 32 |
-| Durante la abducción                                                     | 32 |
-| Durante la rotación sobre el eje longitudinal                            |    |
-| El ligamento coracohumeral en la flexoextensión                          |    |
-| La coaptación muscular del hombro ..                                     | 36 |
-| «La articulación subdeltoidea» ...                                       | 38 |
-| «La articulación escapulotorácica» .                                     |    |
-| Movimientos de la cintura escapular                                      |    |
-| Los movimientos reales de la articulación escapulotorácica               |    |
-| La articulación esternocostoclavicular                                   |    |
-| Los movimientos                                                          | 48 |
-| La articulación acromioclavicular                                        |    |
-| Función de los ligamentos coracoclaviculares                             |    |
-| Músculos motores de la cintura escapular                                 |    |
-| El músculo supraespinoso y la abducción                                  | 60 |
+| Capítulo 1 El hombro                                                     |     |
+| ------------------------------------------------------------------------ | --- |
+| Fisiología del hombro .                                                  |     |
+| La flexoextensión y la aducción                                          |     |
+| La abducción                                                             |     |
+| La rotación del brazo sobre su eje longitudinal                          | 10  |
+| Flexoentensión horizontal                                                | 12  |
+| El movimiento de circunducción                                           | 14  |
+| - Valoración de los movimientos del hombro                               |     |
+| La "paradoja" de Codman                                                  |     |
+| - Movimientos de exploración global del hombro                           | 20  |
+| El complejo articular del hombro                                         |     |
+| Las superficies articulares de la articulación glenohumeral              |     |
+| Cabeza humeral                                                           | 24  |
+| La cavidad glenoidea del omóplato                                        |     |
+| El rodete glenoideo .                                                    | 24  |
+| Centros instantáneos de rotación                                         | 26  |
+| El aparato capsulo-ligamentoso del hombro                                | 28  |
+| El tendón de la porción larga del músculo biceps braquial intraarticular |     |
+| Función del ligamento glenohumeral ....                                  | 32  |
+| Durante la abducción                                                     | 32  |
+| Durante la rotación sobre el eje longitudinal                            |     |
+| El ligamento coracohumeral en la flexoextensión                          |     |
+| La coaptación muscular del hombro ..                                     | 36  |
+| «La articulación subdeltoidea» ...                                       | 38  |
+| «La articulación escapulotorácica» .                                     |     |
+| Movimientos de la cintura escapular                                      |     |
+| Los movimientos reales de la articulación escapulotorácica               |     |
+| La articulación esternocostoclavicular                                   |     |
+| Los movimientos                                                          | 48  |
+| La articulación acromioclavicular                                        |     |
+| Función de los ligamentos coracoclaviculares                             |     |
+| Músculos motores de la cintura escapular                                 |     |
+| El músculo supraespinoso y la abducción                                  | 60  |
 
 <!-- PAGE_NUMBER: 8 -->
 
-| Fisiología de la abducción                              | 62   |
-|---------------------------------------------------------|------|
-| Función del músculo deltoides .                         |      |
-| Función de los músculos rotadores                       |      |
-| Función del músculo supraespinoso                       |      |
-| Las tres fases de la abducción                          | 66   |
-| Primera fase de la abducción: de 0° à 60°               | 66   |
-| Segunda fase de la abducción: de 60 ° à 120°            | 66   |
-| Tercera fase de la abducción: de 120° à 180°            | 66   |
-| Las tres fases de la flexión                            | 68   |
-| Primera fase de la flexión: de 0° à 50-60°              | 68   |
-| Segunda fase de la flexión: de 60 ° à 120°              | 68   |
-| Tercera fase de la flexión: de 120° à 180°              |      |
-| Músculos rotadores .                                    | 70   |
-| La aducción y la extensión                              | 72   |
-| La medida "hipocrática" de la flexión y de la abducción | 74   |
-| Capítulo 2 El codo                                      | 76   |
-| La articulación de flexoextensión                       |      |
-| Función de separación y aproximación de la mano         |      |
-| Las superficies articulares                             |      |
-| La paleta humeral ..                                    |      |
-| Las ligamentos del codo                                 | 84   |
-| La cabeza radial                                        | 86   |
-| La tróclea humeral                                      | 88   |
-| Caso más frecuente                                      | 88   |
-| Caso menos frecuente                                    | 88   |
-| Caso muy raro                                           | 88   |
-| Las limitaciones de la flexoextensión                   | 90   |
-| Las músculos motores de la flexión .                    | 92   |
-| Los músculos motores de la extensión                    | 94   |
-| Los factores de coaptación articular ..                 | 96   |
-| Resistencia a la tracción longitudinal                  | 96   |
-| Resistencia a la presión longitudinal                   | 96   |
-| Coaptación en flexión ........                          | 96   |
-| El Síndrome de Essex-Lopestri                           | 96   |
-| La amplitud de los movimientos del codo .               | 98   |
-| Las referencias clínicas de la articulación del codo    | 100  |
-| Eficacia de los grupos flexor y extensor                | 102  |
-| Posición funcional y posición de inmovilización         | 102  |
-| Fuerza relativa de los músculos                         | 102  |
+| Fisiología de la abducción                              | 62  |
+| ------------------------------------------------------- | --- |
+| Función del músculo deltoides .                         |     |
+| Función de los músculos rotadores                       |     |
+| Función del músculo supraespinoso                       |     |
+| Las tres fases de la abducción                          | 66  |
+| Primera fase de la abducción: de 0° à 60°               | 66  |
+| Segunda fase de la abducción: de 60 ° à 120°            | 66  |
+| Tercera fase de la abducción: de 120° à 180°            | 66  |
+| Las tres fases de la flexión                            | 68  |
+| Primera fase de la flexión: de 0° à 50-60°              | 68  |
+| Segunda fase de la flexión: de 60 ° à 120°              | 68  |
+| Tercera fase de la flexión: de 120° à 180°              |     |
+| Músculos rotadores .                                    | 70  |
+| La aducción y la extensión                              | 72  |
+| La medida "hipocrática" de la flexión y de la abducción | 74  |
+| Capítulo 2 El codo                                      | 76  |
+| La articulación de flexoextensión                       |     |
+| Función de separación y aproximación de la mano         |     |
+| Las superficies articulares                             |     |
+| La paleta humeral ..                                    |     |
+| Las ligamentos del codo                                 | 84  |
+| La cabeza radial                                        | 86  |
+| La tróclea humeral                                      | 88  |
+| Caso más frecuente                                      | 88  |
+| Caso menos frecuente                                    | 88  |
+| Caso muy raro                                           | 88  |
+| Las limitaciones de la flexoextensión                   | 90  |
+| Las músculos motores de la flexión .                    | 92  |
+| Los músculos motores de la extensión                    | 94  |
+| Los factores de coaptación articular ..                 | 96  |
+| Resistencia a la tracción longitudinal                  | 96  |
+| Resistencia a la presión longitudinal                   | 96  |
+| Coaptación en flexión ........                          | 96  |
+| El Síndrome de Essex-Lopestri                           | 96  |
+| La amplitud de los movimientos del codo .               | 98  |
+| Las referencias clínicas de la articulación del codo    | 100 |
+| Eficacia de los grupos flexor y extensor                | 102 |
+| Posición funcional y posición de inmovilización         | 102 |
+| Fuerza relativa de los músculos                         | 102 |
 
 <!-- PAGE_NUMBER: 9 -->
 
-| Capítulo 3 La pronosupinación                                                      | .104   |
-|------------------------------------------------------------------------------------|--------|
-| Condiciones para medir la pronosupinación                                          | 106    |
-| Utilidad de la pronosupinación .                                                   | 108    |
-| El marco radiocubital                                                              | . 110  |
-| Disposición general                                                                | 110    |
-| La membrana interósea .                                                            | 112    |
-| Anatomía fisiológica de la articulación radiocubital superior                      | .116   |
-| Anatomía fisiológica de la articulación radiocubital distal ..                     | 118    |
-| Arquitectura y constitución mecánica del extremo inferior del cúbito               | 118    |
-| Constitución de la articulación radiocubital distal ........                       | 120    |
-| Dinámica de la articulación radiocubital proximal y el I.R.C.D.                    | 122    |
-| Dinámica de la articulación radiocubital distal                                    | 124    |
-| El eje de pronosupinación ...........                                              | 128    |
-| La congruencia simultánea de las dos articulaciones radiocubitales .               | 132    |
-| Los músculos motores de la pronosupinación                                         | 134    |
-| Músculos motores de la supinación ...                                              | 134    |
-| Músculos motores de la pronación ..                                                | 134    |
-| ¿Por qué el antebrazo contiene dos huesos? ..                                      | 136    |
-| Las alteraciones mecánicas de la pronosupinación                                   | 140    |
-| Fracturas de los dos huesos del antebrazo ...                                      | 140    |
-| Luxaciones de las articulaciones radiocubitales                                    | 140    |
-| Efectos del acortamiento relativo del radio                                        | 140    |
-| Compensaciones y posición funcional                                                | 144    |
-| Posición funcional                                                                 | 144    |
-| Prueba del camarero                                                                | 144    |
-| Capítulo 4 La muñeca                                                               | 146    |
-| Definición de los movimientos de la muñeca                                         | 148    |
-| Amplitud de los movimientos de la muñeca                                           | 150    |
-| Movimiento de abducción-aducción                                                   | 150    |
-| Movimiento de flexoextensión ...                                                   | 150    |
-| Movimientos pasivos de flexoextensión                                              | 150    |
-| El movimiento de circunducción                                                     | 152    |
-| El complejo articular de la muñeca                                                 | 154    |
-| La articulación radiocarpiana                                                      |        |
-| La articulación mediocarpiana                                                      |        |
-| Los ligamentos de la articulación radiocarpiana y de la articulación mediocarpiana |        |
-| Función estabilizadora de los ligamentos ..                                        |        |
-| Estabilización en el plano frontal .                                               |        |
-| Estabilización en el plano sagital .                                               |        |
+| Capítulo 3 La pronosupinación                                                      | .104  |
+| ---------------------------------------------------------------------------------- | ----- |
+| Condiciones para medir la pronosupinación                                          | 106   |
+| Utilidad de la pronosupinación .                                                   | 108   |
+| El marco radiocubital                                                              | . 110 |
+| Disposición general                                                                | 110   |
+| La membrana interósea .                                                            | 112   |
+| Anatomía fisiológica de la articulación radiocubital superior                      | .116  |
+| Anatomía fisiológica de la articulación radiocubital distal ..                     | 118   |
+| Arquitectura y constitución mecánica del extremo inferior del cúbito               | 118   |
+| Constitución de la articulación radiocubital distal ........                       | 120   |
+| Dinámica de la articulación radiocubital proximal y el I.R.C.D.                    | 122   |
+| Dinámica de la articulación radiocubital distal                                    | 124   |
+| El eje de pronosupinación ...........                                              | 128   |
+| La congruencia simultánea de las dos articulaciones radiocubitales .               | 132   |
+| Los músculos motores de la pronosupinación                                         | 134   |
+| Músculos motores de la supinación ...                                              | 134   |
+| Músculos motores de la pronación ..                                                | 134   |
+| ¿Por qué el antebrazo contiene dos huesos? ..                                      | 136   |
+| Las alteraciones mecánicas de la pronosupinación                                   | 140   |
+| Fracturas de los dos huesos del antebrazo ...                                      | 140   |
+| Luxaciones de las articulaciones radiocubitales                                    | 140   |
+| Efectos del acortamiento relativo del radio                                        | 140   |
+| Compensaciones y posición funcional                                                | 144   |
+| Posición funcional                                                                 | 144   |
+| Prueba del camarero                                                                | 144   |
+| Capítulo 4 La muñeca                                                               | 146   |
+| Definición de los movimientos de la muñeca                                         | 148   |
+| Amplitud de los movimientos de la muñeca                                           | 150   |
+| Movimiento de abducción-aducción                                                   | 150   |
+| Movimiento de flexoextensión ...                                                   | 150   |
+| Movimientos pasivos de flexoextensión                                              | 150   |
+| El movimiento de circunducción                                                     | 152   |
+| El complejo articular de la muñeca                                                 | 154   |
+| La articulación radiocarpiana                                                      |       |
+| La articulación mediocarpiana                                                      |       |
+| Los ligamentos de la articulación radiocarpiana y de la articulación mediocarpiana |       |
+| Función estabilizadora de los ligamentos ..                                        |       |
+| Estabilización en el plano frontal .                                               |       |
+| Estabilización en el plano sagital .                                               |       |
 
 <!-- PAGE_NUMBER: 10 -->
 
 | La dinámica del carpo ......                                             | 168    |
-|--------------------------------------------------------------------------|--------|
+| ------------------------------------------------------------------------ | ------ |
 | Columna del similunar ..                                                 | 168    |
 | Columna del escafoides                                                   | .. 170 |
 | Dinámica del escafoides                                                  | . 172  |
@@ -359,43 +358,43 @@ Esta edición marcará sin duda un nuevo nacimiento, ya que tanto el texto como 
 
 <!-- PAGE_NUMBER: 11 -->
 
-| La articulación trapezometacarpiana                                                   | . 258   |
-|---------------------------------------------------------------------------------------|---------|
-| Topografía de las superficies                                                         | 258     |
-| Captación                                                                             | . 260   |
-| Función de los ligamentos                                                             | 262     |
-| Geometría de las superficies                                                          | 264     |
-| La rotación sobre el eje longitudinal ..                                              | 268     |
-| Los movimientos del primer metacarpiano                                               | 268     |
-| Valoración de los movimientos del primer metacarpiano                                 | 272     |
-| La radiografía de la articulación trapezometacarpiana y el sistema trapezoide         | 274     |
-| Las características morfológicas y funcionales de la articulación trapezometacarpiana | 276     |
-| La articulación metacarpofalángica del pulgar ..                                      | 278     |
-| Los movimientos en la articulación metacarpofalángica del pulgar                      | 282     |
-| Los movimientos de inclinación-rotación de la articulación metacarpofalángica         | 284     |
-| La articulación interfalángica del pulgar                                             | 286     |
-| Los músculos motores del pulgar                                                       | 288     |
-| Las acciones de los músculos extrínsecos del pulgar                                   | 292     |
-| Acciones del grupo interno de los músculos tenares o músculos sesamoideos internos    | 294     |
-| Acciones del grupo externo de los músculos tenares                                    | 296     |
-| La oposición del pulgar                                                               | .298    |
-| El componente de pronación                                                            | .302    |
-| La oposición y la contraposición                                                      | . 304   |
-| Tipos de prensión ...                                                                 | . 308   |
-| La prensión propiamente dicha                                                         | 308     |
-| Las presas con la gravedad.                                                           | 322     |
-| Las presas con acción ..                                                              | 324     |
-| Las percusiones-el contacto-la expresión gestual                                      |         |
-| Posiciones funcionales y de inmovilización                                            |         |
-| Manos amputadas y manos-ficción                                                       | 332     |
-| Motricidad y sensibilidad del miembro superior                                        | 334     |
-| Pruebas motoras y territorios sensitivos del miembro superior                         | 336     |
-| El pulpejo de los dedos                                                               | 336     |
-| Tres pruebas motoras de la mano .                                                     | 338     |
-| La mano del hombre                                                                    | 340     |
-| Índice analítico                                                                      | 342     |
-| Bibliografía                                                                          | 346     |
-| Modelo mecánico de la mano para recortar y montar                                     | 349     |
+| La articulación trapezometacarpiana                                                   | . 258 |
+| ------------------------------------------------------------------------------------- | ----- |
+| Topografía de las superficies                                                         | 258   |
+| Captación                                                                             | . 260 |
+| Función de los ligamentos                                                             | 262   |
+| Geometría de las superficies                                                          | 264   |
+| La rotación sobre el eje longitudinal ..                                              | 268   |
+| Los movimientos del primer metacarpiano                                               | 268   |
+| Valoración de los movimientos del primer metacarpiano                                 | 272   |
+| La radiografía de la articulación trapezometacarpiana y el sistema trapezoide         | 274   |
+| Las características morfológicas y funcionales de la articulación trapezometacarpiana | 276   |
+| La articulación metacarpofalángica del pulgar ..                                      | 278   |
+| Los movimientos en la articulación metacarpofalángica del pulgar                      | 282   |
+| Los movimientos de inclinación-rotación de la articulación metacarpofalángica         | 284   |
+| La articulación interfalángica del pulgar                                             | 286   |
+| Los músculos motores del pulgar                                                       | 288   |
+| Las acciones de los músculos extrínsecos del pulgar                                   | 292   |
+| Acciones del grupo interno de los músculos tenares o músculos sesamoideos internos    | 294   |
+| Acciones del grupo externo de los músculos tenares                                    | 296   |
+| La oposición del pulgar                                                               | .298  |
+| El componente de pronación                                                            | .302  |
+| La oposición y la contraposición                                                      | . 304 |
+| Tipos de prensión ...                                                                 | . 308 |
+| La prensión propiamente dicha                                                         | 308   |
+| Las presas con la gravedad.                                                           | 322   |
+| Las presas con acción ..                                                              | 324   |
+| Las percusiones-el contacto-la expresión gestual                                      |       |
+| Posiciones funcionales y de inmovilización                                            |       |
+| Manos amputadas y manos-ficción                                                       | 332   |
+| Motricidad y sensibilidad del miembro superior                                        | 334   |
+| Pruebas motoras y territorios sensitivos del miembro superior                         | 336   |
+| El pulpejo de los dedos                                                               | 336   |
+| Tres pruebas motoras de la mano .                                                     | 338   |
+| La mano del hombre                                                                    | 340   |
+| Índice analítico                                                                      | 342   |
+| Bibliografía                                                                          | 346   |
+| Modelo mecánico de la mano para recortar y montar                                     | 349   |
 
 <!-- PAGE_NUMBER: 12 -->
 
@@ -413,14 +412,14 @@ El hombro, articulación proximal del miembro superior, es la más móvil de tod
 
 Posee tres grados de libertad (Fig. 2), lo que le permite orientar el miembro superior en relación a los tres planos del espacio, merced a tres ejes principales:
 
-- 1) Eje transversal, incluido en el plano frontal: permite los movimientos de flexoextensión realizados en el plano sagital (véanse Figs. 3 y 4 pág. 7).
-- 2) Eje anteroposterior, incluido en el plano sagital: permite los movimientos de abducción (el miembro superior se aleja del plano de simetría del cuerpo) y aducción (el miembro superior se aproxima al plano de simetría) realizados en el plano frontal (véanse Figs. 7, 8, 9 y 10 pág. 9).
-- 3) Eje vertical, dirige los movimientos de flexión y de extensión realizados en el plano horizontal, el brazo en abducción de 90°. Estos movimientos también se denominan flexoextensión horizontal (véanse Figs. 17, 18 y 19 pág. 13).
+- 1. Eje transversal, incluido en el plano frontal: permite los movimientos de flexoextensión realizados en el plano sagital (véanse Figs. 3 y 4 pág. 7).
+- 2. Eje anteroposterior, incluido en el plano sagital: permite los movimientos de abducción (el miembro superior se aleja del plano de simetría del cuerpo) y aducción (el miembro superior se aproxima al plano de simetría) realizados en el plano frontal (véanse Figs. 7, 8, 9 y 10 pág. 9).
+- 3. Eje vertical, dirige los movimientos de flexión y de extensión realizados en el plano horizontal, el brazo en abducción de 90°. Estos movimientos también se denominan flexoextensión horizontal (véanse Figs. 17, 18 y 19 pág. 13).
 
 El eje longitudinal del húmero 4 permite la rotación externa/interna del brazo y del miembro superior de dos formas distintas:
 
-- 1) la rotación voluntaria (o también "rotación adjunta" de Mac Conaill) que utiliza el tercer grado de libertad (véanse Figs. 11, 12 y 13 pág. 11) y no es factible más que en articulaciones de tres ejes (las enartrosis). Se debe a la contracción de los músculos rotadores;
-- 2) la rotación automática (o también "rotación conjunta") que aparece sin ninguna acción voluntaria en las articulaciones de dos ejes, o también en las articulaciones de tres ejes cuando se emplean como articulaciones de dos ejes. Se tratará más adelante a propósito de la "paradoja" de CODMAN (véase pág. 19).
+- 1. la rotación voluntaria (o también "rotación adjunta" de Mac Conaill) que utiliza el tercer grado de libertad (véanse Figs. 11, 12 y 13 pág. 11) y no es factible más que en articulaciones de tres ejes (las enartrosis). Se debe a la contracción de los músculos rotadores;
+- 2. la rotación automática (o también "rotación conjunta") que aparece sin ninguna acción voluntaria en las articulaciones de dos ejes, o también en las articulaciones de tres ejes cuando se emplean como articulaciones de dos ejes. Se tratará más adelante a propósito de la "paradoja" de CODMAN (véase pág. 19).
 
 La posición anatómica se define como sigue:
 
@@ -475,9 +474,9 @@ La amplitud de la abducción alcanza los 180°: el brazo queda vertical por arri
 
 En cuanto a las acciones musculares y el juego articular, la abducción, desde la posición anatómica (Fig 7), pasa por tres estadios:
 
-- 1) Abducción de 0° a 60° (Fig. 8) que puede efectuarse únicamente en la articulación glenohumeral;
-- 2) Abducción de 60° a 120° (Fig 9) que necesita la participación de la articulación escapulotorácica;
-- 3) Abducción de 120° a 180° (Fig.10) que utiliza, además de la articulación glenohumeral y la articulación escapulotorácica, la inclinación del lado opuesto del tronco.
+- 1. Abducción de 0° a 60° (Fig. 8) que puede efectuarse únicamente en la articulación glenohumeral;
+- 2. Abducción de 60° a 120° (Fig 9) que necesita la participación de la articulación escapulotorácica;
+- 3. Abducción de 120° a 180° (Fig.10) que utiliza, además de la articulación glenohumeral y la articulación escapulotorácica, la inclinación del lado opuesto del tronco.
 
 Obsérvese que la abducción pura, descrita únicamente en el plano frontal, paralela al plano de apoyo dorsal, es un movimiento muy poco usual. Por el contrario, la abducción asociada a una determinada flexión, es decir la elevación del brazo en el plano del omóplato, formando un ángulo de 30° por delante del plano frontal, es el movimiento fisiológico más utilizado, especialmente para llevar la mano a la nuca o a la boca. Este plano se corresponde con la posición de equilibrio de los músculos rotadores de hombro (véase Fig. 22 pág. 15).
 
@@ -498,7 +497,9 @@ Fig. 10
 La rotación del brazo sobre su eje longitudinal (Eje 3, Fig. 2) puede realizarse en cualquier posición del hombro. Se trata de la rotación voluntaria o adjunta de las articulaciones con tres ejes y tres grados de libertad. Generalmente, esta rotación se mide en la posición anatómica del brazo que pende verticalmente a lo largo del cuerpo (Figs. 11, 12 y 13: visión superior).
 
 - a) Posición anatómica (Fig. 11), denominada de ro-
+
 2. tación interna/externa 0°: para medir la amplitud de estos movimientos de rotación, el codo debe estar necesariamente flexionado a 90° de forma que el antebrazo está entonces en el plano sagital. Sin esta precaución, a la amplitud de los movimientos de rotación interna/externa del brazo se añadiría la de los movimientos de pronosupinación del antebrazo. Ésta posición anatómica, con el antebrazo en el plano sagital, se adopta de manera totalmente arbitraria. En la práctica, la posición de partida más utilizada, debido a que corresponde al equilibrio de los rotadores, es la de rotación interna de 30° en relación a la posición anatómica, de modo que la mano se halla entonces delante del tronco. Podría denominarse posición anatómica fisiológica.
+
 - b) Rotación externa (Fig, 12): su amplitud es de 80°, jamás alcanza los 90°. Esta amplitud total de 80° no se utiliza habitualmente en esta posición, con el brazo vertical a lo largo del cuerpo. Por el contrario, la rotación externa más empleada y por lo tanto la más importante desde el punto de vista funcional, es el sector comprendido entre la posición anatómica fisiológica (rotación interna 30°) y la posición anatómica clásica (rotación 0°).
 - c) Rotación interna (Fig. 13): su amplitud es de 100 a 110°. Para alcanzarla, se requiere necesariamente que el antebrazo pase por detrás del tronco, lo que asocia cierto grado de extensión al hombro. La libertad de este movimiento es indispensable para que la mano pueda alcanzar la espalda. Es condición indispensable para poder realizar la higiene perineal posterior. En cuanto a los 90 primeros grados de rotación interna, se asocian ineludiblemente con una flexión de hombro mientras que la mano quede por delante del tronco. Los músculos motores de la rotación longitudinal se abordarán más adelante. Por lo que respecta a la rotación longitudinal del brazo en las demás posiciones distintas a la anatómica, no puede medirse de forma precisa más que mediante un sistema de coordenadas polares (véase Fig. 24 pág. 17) o con la prueba del meridiano (véase Fig. 25 pág. 17). Los músculos rotadores intervienen de manera distinta para cada posición, unos pierden su acción rotadora mientras que otros la adquieren. Esto no es más que un ejemplo de la ley de inversión de las acciones musculares según la posición.
 
@@ -676,7 +677,7 @@ El hombro no está constituido por una sola articulación sino por cinco articul
 
 Verdadera articulación desde el punto de vista anatómico (contacto de dos superficies cartilaginosas de deslizamiento).
 
-- 2) Articulación subdeltoidea o "segunda articulación del hombro"
+- 2. Articulación subdeltoidea o "segunda articulación del hombro"
 
 Esta articulación es la más importante del grupo.
 
@@ -870,9 +871,9 @@ En un corte frontal de la articulación glenohumeral (Fig. 51, según Rouvière)
 En un corte sagital del polo superior de la capsula puede apreciarse (Fig. 52):
 
 - En la cavidad articular, el tendón de la porción larga del músculo biceps braquial puede establecer nexos con la sinovial mediante tres disposiciones distintas:
-- 1) Adherido a la cara profunda de la cápsula e por la sinovial s;
-- 2) La sinovial forma dos pequeños fondos de saco entre la cápsula y el tendón que, de este modo, se une a la cápsula a través de un delgado tabique sinovial denominado mesotendón;
-- 3) Los dos fondos de saco se unen y desaparecen, el tendón queda libre, pero envuelto en una pequeña lámina sinovial.
+- 1. Adherido a la cara profunda de la cápsula e por la sinovial s;
+- 2. La sinovial forma dos pequeños fondos de saco entre la cápsula y el tendón que, de este modo, se une a la cápsula a través de un delgado tabique sinovial denominado mesotendón;
+- 3. Los dos fondos de saco se unen y desaparecen, el tendón queda libre, pero envuelto en una pequeña lámina sinovial.
 
 Normalmente, estas tres disposiciones pueden observarse de dentro afuera a medida que aumenta la distancia de la inserción tendinosa. Pero, en cualquier caso, el tendón, aunque intracapsular, permanece extrasinovial.
 
@@ -936,16 +937,16 @@ La rotación interna del húmero que aparece al final de la flexión distiende l
 
 Debido a su gran movilidad, la coaptación de la articulación del hombro no puede recaer únicamente en los ligamentos: la acción de los músculos coaptadores es indispensable. Se dividen en dos grupos:
 
-- 2) Los músculos coaptadores longitudinales (Figs. 67 y 68) que sujetan el miembro superior e impiden que la cabeza humeral se luxe por debajo de la glenoide bajo tracción de una carga sostenida con la mano: "sitúan" la cabeza humeral enfrente de la glenoide. Esta luxación interior se constata en el sindrome del "hombro subluxado", cuando, por cualquier motivo, los músculos del brazo y del hombro estan débiles o se paralizan. Por el contrario, cuando predominan, la luxación craneal de la cabeza humeral se contrarresta por la acción de "recentraje" de los músculos coaptadores transversales.
-- 1) Los músculos coaptadores transversales, cuya dirección introduce la cabeza humeral en la cavidad glenoidea (Figs. 64, 65 y 66);
+- 2. Los músculos coaptadores longitudinales (Figs. 67 y 68) que sujetan el miembro superior e impiden que la cabeza humeral se luxe por debajo de la glenoide bajo tracción de una carga sostenida con la mano: "sitúan" la cabeza humeral enfrente de la glenoide. Esta luxación interior se constata en el sindrome del "hombro subluxado", cuando, por cualquier motivo, los músculos del brazo y del hombro estan débiles o se paralizan. Por el contrario, cuando predominan, la luxación craneal de la cabeza humeral se contrarresta por la acción de "recentraje" de los músculos coaptadores transversales.
+- 1. Los músculos coaptadores transversales, cuya dirección introduce la cabeza humeral en la cavidad glenoidea (Figs. 64, 65 y 66);
 
 Existe por tanto, una relación de antagonismo-sinergia entre estos dos grupos musculares.
 
 En una visión posterior (Fig. 64) los músculos coaptadores transversales son tres:
 
-- 1) El músculo supraespinoso 1, encastrado en la fosa supraespinosa del omóplato y que se inserta en la carilla superior del troquíter.
-- 3) El músculo redondo menor 3, cuyo origen se localiza en la zona más baja de la fosa subespinosa y que se inserta en la carilla postero-inferior del troquiter.
-- 2) El músculo infraespinoso 2, cuyo origen se localiza en la zona más alta de la fosa subespinosa y que se inserta en la carilla postero-superior del troquiter.
+- 1. El músculo supraespinoso 1, encastrado en la fosa supraespinosa del omóplato y que se inserta en la carilla superior del troquíter.
+- 3. El músculo redondo menor 3, cuyo origen se localiza en la zona más baja de la fosa subespinosa y que se inserta en la carilla postero-inferior del troquiter.
+- 2. El músculo infraespinoso 2, cuyo origen se localiza en la zona más alta de la fosa subespinosa y que se inserta en la carilla postero-superior del troquiter.
 
 En una visión anterior (Fig. 65) puede distinguirse:
 
@@ -959,14 +960,14 @@ En una visión superior (Fig. 66) puede hallarse los músculos citados anteriorm
 
 En una visión posterior (Fig. 67) los músculos coaptadores longitudinales son tres:
 
-- 1) El músculo deltoides 8, con sus dos haces lateral 8 y posterior 8': asciende la cabeza humeral durante la abducción;
-- 2) La porción larga del músculo triceps braquial 7, que se inserta en el tubérculo subglenoideo del omóplato: lleva la cabeza humeral enfrente de la glenoide durante la extensión de la articulación del codo.
+- 1. El músculo deltoides 8, con sus dos haces lateral 8 y posterior 8': asciende la cabeza humeral durante la abducción;
+- 2. La porción larga del músculo triceps braquial 7, que se inserta en el tubérculo subglenoideo del omóplato: lleva la cabeza humeral enfrente de la glenoide durante la extensión de la articulación del codo.
 
 En una visión anterior (Fig. 68) los músculos coaptadores longitudinales son más numerosos, algunos ya se han citado con anterioridad:
 
-- 2) El músculo subescapular 2, muy potente, que se origina en toda la fosa anterior del omóplato y se inserta en el troquín; El tendón de la porción larga del músculo biceps braquial 5, y también la porción corta, que se inserta en la apófisis coracoides, al lado del músculo coracobraquial 6. Desplaza la cabeza humeral hacia arriba durante los movimientos de flexión de hombro y codo;
-- 1) El músculo deltoides 8, con sus dos haces lateral 8 y anterior, clavicular sin representar en la figura;
-- 3) El músculo pectoral mayor en cuanto a su porción clavicular 9, prolonga la acción del haz anterior del músculo deltoides; aunque es principalmente flexor y aductor de la articulación del hombro.
+- 2. El músculo subescapular 2, muy potente, que se origina en toda la fosa anterior del omóplato y se inserta en el troquín; El tendón de la porción larga del músculo biceps braquial 5, y también la porción corta, que se inserta en la apófisis coracoides, al lado del músculo coracobraquial 6. Desplaza la cabeza humeral hacia arriba durante los movimientos de flexión de hombro y codo;
+- 1. El músculo deltoides 8, con sus dos haces lateral 8 y anterior, clavicular sin representar en la figura;
+- 3. El músculo pectoral mayor en cuanto a su porción clavicular 9, prolonga la acción del haz anterior del músculo deltoides; aunque es principalmente flexor y aductor de la articulación del hombro.
 
 El predominio de los músculos coaptadores longitudinales puede, a largo plazo, "desgastar" los músculos del "manguito de los rotadores", verdaderos cojines entre la cabeza y el acromion, e incluso provocar la ruptura de alguno de ellos, especialmente del músculo supraespinoso: la cabeza humeral impacta entonces contra la carilla inferior del acromion y del ligamento acromiocoracoideo, originando dolor que antiguamente denominaban periartritis escapulohumeral, y que actualmente denominan "síndrome de ruptura del manguito de los rotadores".
 
@@ -1092,10 +1093,10 @@ La amplitud de la citada rotación es de 45 a 60°. El desplazamiento del ángul
 
 Anteriormente, se han descrito los movimientos elementales de la escapulotorácica, pero, actualmente, se sabe que durante los movimientos de abducción o de flexión del miembro superior estos distintos movimientos elementales se combinan en grados variables. Gracias a una serie de radiografias (Fig. 78) realizadas en el transcurso del movimiento de abducción, JY de la Caffinière pudo, comparándolas con fotografías del omoplato "seco" tomadas en diferentes actitudes, estudiar los componentes de su movimiento real; las visiones en perspectiva del acromion (arriba), de la coracoides y de la glenoide (arriba y a la derecha) permiten establecer que, durante la abducción activa, el omóplato realiza cuatro movimientos:
 
-- 1) Un ascenso de aproximadamente 8 a 10 cm sin que se asocie, como se afirma clásicamente, un desplazamiento hacia delante;
-- 2) Un movimiento de campanilla de progresión prácticamente lineal, de 38° cuando la abducción del miembro superior pasa de 0 a 145°. A partir de 120° de abducción, la rotación angular es igual en la articulación glenohumeral y en la escapulotorácica;
-- 3) Un movimiento basculante en torno a un eje transversal, oblicuo de dentro afuera y de atrás adelante, desplazando la punta del omóplato hacia delante y hacia arriba, mientras que la porción superior del hueso se desplaza hacia atrás y hacia abajo, movimiento que imita el de un hombre que se inclina hacia atrás para mirar la cima de un rascacielos. Su amplitud es de 23° durante la abducción de 0 a 45°.
-- 4) Un movimiento de "pivote" en torno a un eje vertical cuya característica es la de ser difásico:
+- 1. Un ascenso de aproximadamente 8 a 10 cm sin que se asocie, como se afirma clásicamente, un desplazamiento hacia delante;
+- 2. Un movimiento de campanilla de progresión prácticamente lineal, de 38° cuando la abducción del miembro superior pasa de 0 a 145°. A partir de 120° de abducción, la rotación angular es igual en la articulación glenohumeral y en la escapulotorácica;
+- 3. Un movimiento basculante en torno a un eje transversal, oblicuo de dentro afuera y de atrás adelante, desplazando la punta del omóplato hacia delante y hacia arriba, mientras que la porción superior del hueso se desplaza hacia atrás y hacia abajo, movimiento que imita el de un hombre que se inclina hacia atrás para mirar la cima de un rascacielos. Su amplitud es de 23° durante la abducción de 0 a 45°.
+- 4. Un movimiento de "pivote" en torno a un eje vertical cuya característica es la de ser difásico:
 - En un primer momento, durante la abducción de 0 a 90°, la glenoide tiende paradójicamente a orientarse hacia atrás siguiendo un ángulo de 10°;
 - A partir de los 90° de abducción, la glenoide tiende a retomar una orientación hacia arriba siguiendo un ángulo de 6°; por lo que no recupera su orientación inicial en el plano anteroposterior.
 
@@ -1268,13 +1269,17 @@ Fig. 92
 
 En este esquema del tórax (Fig. 93) la mitad derecha representa una visión posterior:
 
-- 1) Músculo Trapecio: dividido en tres porciones cuyas acciones difieren:
+- 1. Músculo Trapecio: dividido en tres porciones cuyas acciones difieren:
 - Porción superior 1; acromioclavicular. Acción:
 - eleva el muñón del hombro; evita su caída bajo el peso de una carga;
+
 4. hiperlordosis cervical + rotación de la cabeza hacia el lado opuesto, cuando este haz toma como punto fijo el hombro.
+
 - Porción media 1'; espinosa, dirección transversal. Su contracción:
+
 6. aproxima de 2 a 3 cm el borde interno del omóplato a la línea de las apófisis espinosas, encaja el omóplato en el tórax,
 7. desplaza el muñón del hombro hacia atrás.
+
 - Porción inferior 1". Dirección oblicua hacia bajo y hacia dentro. Acción:
 - desplaza el omóplato hacia bajo y hacia dentro.
 
@@ -1282,25 +1287,25 @@ En este esquema del tórax (Fig. 93) la mitad derecha representa una visión pos
 
 - lo gira hacia arriba 20°: desempeña un modesto papel en la abducción aunque importante a la hora de llevar cargas pesadas; impide la caída del brazo y la separación del omóplato con respecto al tórax.
 - desplaza el omóplato hacia dentro y hacia atrás;
-- 2) Músculo Romboides 2: dirección oblicua hacia arriba y hacia dentro. Acción:
+- 2. Músculo Romboides 2: dirección oblicua hacia arriba y hacia dentro. Acción:
 - desplaza el ángulo inferior hacia arriba y hacia dentro, de modo que:
 - eleva el omóplato, con;
 - rotación del omóplato hacia bajo: la glenoide se orienta hacia bajo;
 - fija el ángulo inferior del omóplato contra las costillas, su parálisis se manifiesta por una separación de los omóplatos con respecto al tórax.
-- 3) Músculo Elevador de la Escápula 3: dirección oblicua hacia arriba y hacia dentro y su acción es parecida a la del músculo romboides. De hecho:
+- 3. Músculo Elevador de la Escápula 3: dirección oblicua hacia arriba y hacia dentro y su acción es parecida a la del músculo romboides. De hecho:
 - Desplaza de 2 a 3 cm el ángulo superointerno hacia arriba y hacia dentro (acción de alzar los hombros).
 - Provoca una ligera rotación de la glenoide hacia bajo.
 - Se contrae durante el porte de carga. Su parálisis provoca una caída del muñón del hombro;
-- 4) Músculo Serrato anterior 4' (Fig. 94). En la figura, la mitad izquierda (Fig.
+- 4. Músculo Serrato anterior 4' (Fig. 94). En la figura, la mitad izquierda (Fig.
 - una visión anterior.
-- 5) Músculo Pectoral menor 5: su dirección es oblicua hacia bajo, hacia delante y hacia dentro. Acción:
+- 5. Músculo Pectoral menor 5: su dirección es oblicua hacia bajo, hacia delante y hacia dentro. Acción:
 - Desliza el omóplato hacia fuera y hacia delante, despegando su borde posterior.
 - Desciende el muñón del hombro, lo que desplaza la glenoide hacia bajo. Acción empleada, por ejemplo, en los movimientos en las barras paralelas;
-- 6) Músculo Subclavio 6: su dirección es oblicua hacia bajo y hacia dentro, casi paralela a la clavícula Cuando se contrae:
+- 6. Músculo Subclavio 6: su dirección es oblicua hacia bajo y hacia dentro, casi paralela a la clavícula Cuando se contrae:
 - Desciende la clavícula y por lo tanto el muñón del hombro;
 - Encaja la porción interna de la clavícula contra el manubrio esternal de modo que coapta la articulación esternocostoclavicular.
 
-93) representa
+93. representa
 
 <!-- PAGE_NUMBER: 67 -->
 
@@ -1333,7 +1338,7 @@ Fig. 95
 
 ## El músculo supraespinoso y la abducción
 
-Una visión externa del omóplato (Fig. 96) muestra perfectamente la corredera del músculo supraespinoso (*) limitada:
+Una visión externa del omóplato (Fig. 96) muestra perfectamente la corredera del músculo supraespinoso (\*) limitada:
 
 - Por detrás, por la espina del omóplato y el acromion
 - Por delante, por la apófisis coracoides c;
@@ -1394,19 +1399,19 @@ Los estudios electromiográficos han demostrado que las distintas porciones act�
 
 Durante la abducción pura, el orden de entrada en escena es el siguiente:
 
-- 1) Haz acromial III;
-- 2) Porciones IV y V casi inmediatamente después;
-- 3) Por último, la porción II a partir de los 20-30°.
+- 1. Haz acromial III;
+- 2. Porciones IV y V casi inmediatamente después;
+- 3. Por último, la porción II a partir de los 20-30°.
 
 ## Durante la abducción asociada a una flexión de 30°:
 
-- 1) Porciones III y Il actúan de inmediato;
-- 2) Las porciones IV y V cada vez más tarde, al igual que la porción 1;
+- 1. Porciones III y Il actúan de inmediato;
+- 2. Las porciones IV y V cada vez más tarde, al igual que la porción 1;
 
 ## Cuando la rotación externa del húmero se asocia a la abducción:
 
-- 1) La porción II se contrae desde el primer momento;
-- 2) Mientras que las porciones IV y V ni siquiera intervienen al final de la abducción.
+- 1. La porción II se contrae desde el primer momento;
+- 2. Mientras que las porciones IV y V ni siquiera intervienen al final de la abducción.
 
 Cuando la rotación interna del húmero se asocia a la abducción: se observa el mecanismo inverso.
 
@@ -1512,8 +1517,8 @@ Los músculos motores de esta primera fase son:
 
 Esta flexión está limitada en la articulación glenohumeral por dos factores:
 
-- 2) La resistencia de los músculos redondo menor, redondo mayor e infraespinoso.
-- 1) La tensión del ligamento coracohumeral;
+- 2. La resistencia de los músculos redondo menor, redondo mayor e infraespinoso.
+- 1. La tensión del ligamento coracohumeral;
 
 ## Segunda fase de la flexión (Fig. 109): de 60° a 120°:
 
@@ -1552,13 +1557,13 @@ Fig. 110
 Una visión superior esquemática (Fig. 111) de la articulación glenohumeral, muestra los músculos rotadores:
 
 - Rotadores internos (véase también la Fig. 112):
-- 1) Músculo dorsal ancho 1;
-- 2) Músculo redondo mayor 2;
-- 3) Músculo subescapular 3;
-- 4) Músculo pectoral mayor 4.
+- 1. Músculo dorsal ancho 1;
+- 2. Músculo redondo mayor 2;
+- 3. Músculo subescapular 3;
+- 4. Músculo pectoral mayor 4.
 - Rotadores externos (véase también la Fig. 113):
-- 5) Músculo infraespinoso 5;
-- 6) Músculo redondo menor 6.
+- 5. Músculo infraespinoso 5;
+- 6. Músculo redondo menor 6.
 
 Frente al número y a la potencia de los músculos rotadores internos, los músculos rotadores externos son débiles; no obstante, son indispensables para la correcta utilización del miembro superior, ya que sólo ellos pueden despegar la mano de la cara anterior del tronco desplazándola hacia delante y hacia fuera; este movimiento de la mano derecha de dentro afuera es imprescindible para la escritura.
 
@@ -1591,12 +1596,17 @@ Los músculos aductores están representados en una visión anterior (Fig. 114) 
 
 Los músculos extensores están representados en una visión posteroexterna (Fig. 116): la citada extensión se lleva a cabo en dos niveles:
 
-- 1) Extensión de la articulación glenohumeral:
+- 1. Extensión de la articulación glenohumeral:
+
 2. músculo redondo mayor 1;
+
 - músculo redondo menor 5;
+
 4. porción posterior, espinal, del músculo deltoides 6;
 5. músculo dorsal ancho 2.
-- 2) Extensión de la articulación escapulotorácica, por aducción del omóplato:
+
+- 2. Extensión de la articulación escapulotorácica, por aducción del omóplato:
+
 7. músculo romboides 4;
 8. porción media, transversal, del músculo trapecio 7;
 9. músculo dorsal ancho 2.
@@ -1724,8 +1734,8 @@ La visión posterior (Fig. 7: lado izquierdo), muestra la fosita olecraniana 21 
 
 En el corte verticofrontal de la articulación (Fig. 8, según Testut), puede observarse como la cápsula 17 constituye una sola cavidad articular para dos articulaciones funcionales: (Fig. 9: corte esquemático):
 
-- 1) La articulación de flexoextensión (en azul claro) con la interlinea trocleocubital 18 (Fig. 8) y la interlínea condiloradial 19;
-- 2) La articulación radiocubital proximal (en azul oscuro) en el caso de la pronosupinación, completada por el ligamento anular del radio.
+- 1. La articulación de flexoextensión (en azul claro) con la interlinea trocleocubital 18 (Fig. 8) y la interlínea condiloradial 19;
+- 2. La articulación radiocubital proximal (en azul oscuro) en el caso de la pronosupinación, completada por el ligamento anular del radio.
 
 También puede distinguirse el pico del olécranon 11 en la fosita olecraniana durante la extensión.
 
@@ -1743,7 +1753,7 @@ Se denomina paleta humeral a la porción inferior del húmero (Fig. 13: visión 
 
 Es importante conocer la estructura y la forma de esta paleta humeral para comprender la fisiología del codo.
 
-- 1) La paleta humeral posee la estructura de una horquilla que soporta entre sus dos ramas el eje de las superficies articulares (Fig. 15), como si se tratase de una horquilla de bicicleta.
+- 1. La paleta humeral posee la estructura de una horquilla que soporta entre sus dos ramas el eje de las superficies articulares (Fig. 15), como si se tratase de una horquilla de bicicleta.
 
 De hecho, en su parte central, la paleta humeral presenta dos cavidades:
 
@@ -1754,14 +1764,14 @@ En ocasiones, las citadas fositas son tan profundas que la delgada lámina ósea
 
 Sea como fuere, la sólida estructura de la paleta se localiza a cada lado de las fositas, conformando dos pilares divergentes (Figs. 13, 14 y 15) delimitados por dentro por la epitróclea, por fuera por el epicóndilo, y que, en su intervalo, contienen el conjunto articular condilotroclear. Es esta estructura en horquilla la que permite la reducción y, sobre todo, la correcta inmovilización de las fracturas de la porción inferior del húmero, siempre tan delicadas.
 
-- 2) La paleta humeral, en conjunto, está desplazada hacia delante (Fig. 16: visión de perfil de los dos huesos). El plano de la paleta forma un ángulo de aproximadamente 45° con el eje de la diáfisis. Esta configuración tiene una consecuencia mecánica: la totalidad de la tróclea se sitúa entonces por delante del eje diafisario. Es lo que debe visualizarse en la radiografía de perfil tras la reducción de las fracturas de la paleta humeral.
+- 2. La paleta humeral, en conjunto, está desplazada hacia delante (Fig. 16: visión de perfil de los dos huesos). El plano de la paleta forma un ángulo de aproximadamente 45° con el eje de la diáfisis. Esta configuración tiene una consecuencia mecánica: la totalidad de la tróclea se sitúa entonces por delante del eje diafisario. Es lo que debe visualizarse en la radiografía de perfil tras la reducción de las fracturas de la paleta humeral.
 
 Este desplazamiento de las superficies articulares hacia delante junto con su orientación de 45° favorece la flexión por dos motivos (Fig. 21):
 
 Al igual, la gran cavidad sigmoidea del cúbito, orientada hacia delante y hacia arriba siguiendo un eje inclinado de 45° sobre la horizontal, se sitúa en su totalidad por delante del eje diafisario del cúbito (Fig. 16).
 
-- 1) El impacto del pico coronoideo no ocurre hasta que los dos huesos están paralelos (flexión teórica: 80°);
-- 2) Incluso en flexión máxima, persiste una separación (doble flecha) entre los dos huesos, lo que permite alojar a las masas musculares.
+- 1. El impacto del pico coronoideo no ocurre hasta que los dos huesos están paralelos (flexión teórica: 80°);
+- 2. Incluso en flexión máxima, persiste una separación (doble flecha) entre los dos huesos, lo que permite alojar a las masas musculares.
 
 Si estas dos condiciones mecánicas no existiesen (Fig. 22), es fácil entender:
 
@@ -1796,16 +1806,16 @@ Basta (Fig. 30) la ruptura de uno de los tensores, como por ejemplo el interno (
 ## Particularidades:
 
 - El ligamento colateral cubital (LCC) lo constituyen tres haces (Fig. 25):
-- 1) Un haz anterior 1, cuyas fibras más anteriores refuerzan (Fig. 27) el ligamento anular del radio
-- 2) Un haz medio 3, el más potente;
+- 1. Un haz anterior 1, cuyas fibras más anteriores refuerzan (Fig. 27) el ligamento anular del radio
+- 2. Un haz medio 3, el más potente;
 
 Además, en este esquema puede distinguirse: la epitróclea 6, de donde parte el abanico del LCC, el olécranon 7, la cuerda oblicua de Weitbrecht 8, el tendón del músculo bíceps braquial 9 que se inserta en la tuberosidad bicipital del radio.
 
-- 3) Un haz posterior 4, o ligamento de Bardinet, reforzado por las fibras transversales del ligamento de Cooper 5.
+- 3. Un haz posterior 4, o ligamento de Bardinet, reforzado por las fibras transversales del ligamento de Cooper 5.
 - El ligamento colateral radial (LCR) (Fig. 26), constituido también por tres haces que parten del epicóndilo:
-- 2) Un haz medio 11, que refuerza el ligamento anular por detrás;
-- 1) Un haz anterior 10, que refuerza al ligamento anular por delante;
-- 3) Un haz posterior 12.
+- 2. Un haz medio 11, que refuerza el ligamento anular por detrás;
+- 1. Un haz anterior 10, que refuerza al ligamento anular por delante;
+- 3. Un haz posterior 12.
 - La cápsula está reforzada, por delante, por el ligamento anterior 14 y el ligamento oblicuo anterior 15. Por detrás, está reforzada por fibras transversales húmero-humerales y por fibras húmero-olecrananas.
 
 <!-- PAGE_NUMBER: 95 -->
@@ -1884,9 +1894,9 @@ La dirección del eje de flexoextensión varía continuamente entre dos posicion
 
 La limitación de la extensión (Fig. 44) se debe a tres factores:
 
-- 1) El impacto del pico olecraniano en el fondo de la fosita olecraniana;
-- 2) La puesta en tensión de la parte anterior de la cápsula articular;
-- 3) La resistencia que oponen los músculos flexores (músculo biceps braquial, músculo braquial y músculo braquiorradial).
+- 1. El impacto del pico olecraniano en el fondo de la fosita olecraniana;
+- 2. La puesta en tensión de la parte anterior de la cápsula articular;
+- 3. La resistencia que oponen los músculos flexores (músculo biceps braquial, músculo braquial y músculo braquiorradial).
 - Fractura del olécranon 1 (Fig. 45), seguida de desgarro capsular 2;
 
 Si la extensión prosigue, uno de los citados frenos se rompe:
@@ -1921,10 +1931,10 @@ Fig. 48
 
 Los músculos motores de la flexión del codo son esencialmente tres:
 
-- 1) El músculo braquial 1 que se extiende desde el tubérculo de la apófisis coronoides del cúbito hasta la cara anterior del húmero (Fig. 49): monoarticular, es exclusivamente flexor de codo y uno de los pocos músculos del cuerpo que realizan una única función;
-- 2) El músculo braquiorradial 2 que se extiende desde la apófisis estiloides del radio hasta el borde externo del húmero (Fig. 49): su función principal es la flexión de codo. Como músculo accesorio y tan sólo en la pronación máxima se convierte en supinador, incluso es pronador en supinación máxima;
+- 1. El músculo braquial 1 que se extiende desde el tubérculo de la apófisis coronoides del cúbito hasta la cara anterior del húmero (Fig. 49): monoarticular, es exclusivamente flexor de codo y uno de los pocos músculos del cuerpo que realizan una única función;
+- 2. El músculo braquiorradial 2 que se extiende desde la apófisis estiloides del radio hasta el borde externo del húmero (Fig. 49): su función principal es la flexión de codo. Como músculo accesorio y tan sólo en la pronación máxima se convierte en supinador, incluso es pronador en supinación máxima;
 - La porción larga 4 en el tubérculo supraglenoideo tras haber atravesado la articulación (véase capítulo l: el hombro);
-- 3) El músculo biceps braquial 3 es el flexor principal (Fig. 50). Su inserción inferior se localiza en la tuberosidad bicipital del radio. Sus inserciones superiores no se sitúan en el húmero (se trata entonces de un músculo biarticular), sino en el omóplato mediante dos porciones:
+- 3. El músculo biceps braquial 3 es el flexor principal (Fig. 50). Su inserción inferior se localiza en la tuberosidad bicipital del radio. Sus inserciones superiores no se sitúan en el húmero (se trata entonces de un músculo biarticular), sino en el omóplato mediante dos porciones:
 - La porción corta 5 en el pico de la apófisis coracoides.
 
 Mediante sus dos inserciones superiores, el músculo biceps braquial coapta el hombro y su porción larga lo abduce.
@@ -2065,9 +2075,9 @@ Fig. 70
 
 Los tres puntos de referencia, visibles y palpables, de la articulación del codo son:
 
-- 1) El olécranon 2, prominencia del codo, en la línea media;
-- 3) El epicóndilo 3, por fuera.
-- 2) La epitróclea 1, por dentro;
+- 1. El olécranon 2, prominencia del codo, en la línea media;
+- 3. El epicóndilo 3, por fuera.
+- 2. La epitróclea 1, por dentro;
 
 En posición de extensión (Figs. 72, 75), estos tres puntos de referencia están alineados en una horizontal. Entre el olécranon 2 y la epitróclea 1 se localiza la corredera epitrocleo-olecraniana, por donde pasa verticalmente (flecha blanca) el nervio cubital: un impacto violento en este punto determina un dolor de tipo eléctrico que se irradia por toda la zona cubital (borde interno de la mano). En el lado externo, por debajo del epicóndilo 3, puede palparse el giro de la cabeza radial durante los movimientos de pronosupinación.
 
@@ -2380,10 +2390,10 @@ Este movimiento está limitado (Fig. 68) por la tensión del ligamento cuadrado 
 
 ## Los movimientos secundarios son cuatro:
 
-- 1) La cúpula radial 1 gira al contacto del cóndilo humeral (Fig. 71).
-- 2) El bisel radial 4 (véase pág. 87) se desliza bajo la zona conoide de la tróclea humeral.
-- 3) El eje de la cabeza radial se desplaza hacia fuera durante la pronación (Fig. 70). Este hecho se debe a la forma "ovalada" de la cabeza radial: en la pronación P el eje mayor de la cúpula se hace transversal, desplazando el eje hacia fuera, una distancia e igual a la mitad de la diferencia entre los dos ejes
-- 4) Durante la pronación (Fig. 72) el radio se localiza por fuera del cúbito a, lo cruza por delante b, lo que tiene dos consecuencias:
+- 1. La cúpula radial 1 gira al contacto del cóndilo humeral (Fig. 71).
+- 2. El bisel radial 4 (véase pág. 87) se desliza bajo la zona conoide de la tróclea humeral.
+- 3. El eje de la cabeza radial se desplaza hacia fuera durante la pronación (Fig. 70). Este hecho se debe a la forma "ovalada" de la cabeza radial: en la pronación P el eje mayor de la cúpula se hace transversal, desplazando el eje hacia fuera, una distancia e igual a la mitad de la diferencia entre los dos ejes
+- 4. Durante la pronación (Fig. 72) el radio se localiza por fuera del cúbito a, lo cruza por delante b, lo que tiene dos consecuencias:
 
 de la cúpula y que equivale a 2 mm en posición X'. La importancia de este desplazamiento mecánico es primordial: le permite al radio alejarse del cúbito en el momento justo para que la tuberosidad bicipital pueda pasar por la fosita supinadora del cúbito (en ella se inserta el músculo supinador). La flecha blanca de la figura 67, indica esta "insinuación" de la tuberosidad bicipital "entre" el radio y el cúbito.
 
@@ -2525,40 +2535,40 @@ Para poder entender la forma de actuar de los músculos motores, debe analizarse
 
 Este hueso lo constituyen tres segmentos cuya unión representa, de forma tosca, una manivela m:
 
-- 1) El cuello, segmento superior, oblicuo hacia bajo y hacia dentro, forma con;
-- 2) El segmento medio, porción media de la diáfisis, oblicua hacia bajo y hacia fuera, un ángulo obtuso abierto hacia fuera, cuyo vértice (flecha 1) está ocupado por la tuberosidad bicipital, inserción del músculo bíceps braquial. Estos dos segmentos dibujan, en conjunto, la "curva supinadora" del radio;
+- 1. El cuello, segmento superior, oblicuo hacia bajo y hacia dentro, forma con;
+- 2. El segmento medio, porción media de la diáfisis, oblicua hacia bajo y hacia fuera, un ángulo obtuso abierto hacia fuera, cuyo vértice (flecha 1) está ocupado por la tuberosidad bicipital, inserción del músculo bíceps braquial. Estos dos segmentos dibujan, en conjunto, la "curva supinadora" del radio;
 
 Es preciso recalcar que la "manivela radial" es oblicua a su eje m. De hecho, este eje XX' (trazos discontinuos rojos), que es el eje de pronosupinación, pasa por los extremos de las ramas y no por las ramas mismas. De modo que los vértices de las dos curvas se localizan a un lado y otro de dicho eje.
 
-- 3) El segmento medio constituye con el segmento inferior, oblicuo hacia bajo y hacia dentro, un ángulo obtuso abierto hacia dentro cuyo vértice (flecha 2) es el punto de inserción del músculo pronador redondo 3. Ambos segmentos dibujan, en conjunto, la "curva pronadora" del radio.
+- 3. El segmento medio constituye con el segmento inferior, oblicuo hacia bajo y hacia dentro, un ángulo obtuso abierto hacia dentro cuyo vértice (flecha 2) es el punto de inserción del músculo pronador redondo 3. Ambos segmentos dibujan, en conjunto, la "curva pronadora" del radio.
 
 El eje XX' es común a las dos articulaciones radiocubitales; esta coincidencia de los dos ejes es indispensable para que se pueda llevar a cabo la pronosupinación. Esto requiere que los dos huesos estén íntegros, sin fracturas, ya sea en conjunto o por separado.
 
 - Existen dos formas de mover está manivela (Fig. 107): 1) Bien "desenrollar" un tractor enrollado en una de
 - las ramas (flecha 1);
-- 2) Bien tirar del vértice de una de las curvas (flecha 2).
+- 2. Bien tirar del vértice de una de las curvas (flecha 2).
 
 Tal es la forma de actuar de los músculos pronosupinadores.
 
 Los músculos pronosupinadores (Fig. 108) son cuatro, asociados de dos en dos. Para cada uno de los movimientos hay:
 
-- 1) Un músculo corto y plano, cuya acción es la de "desenrollar" (flecha 1);
-- 2) Un músculo largo que se inserta en el vértice de una curva (flecha 2).
+- 1. Un músculo corto y plano, cuya acción es la de "desenrollar" (flecha 1);
+- 2. Un músculo largo que se inserta en el vértice de una curva (flecha 2).
 
 ## Músculos motores de la supinación (Fig. 108: visión frontal y Figs. 111 y 112: cortes del lado derecho, visión del fragmento inferior por arriba).
 
 Son los siguientes:
 
-- 1) El músculo supinador 1, enrollado en torno al cuello del radio (Fig. 111) y que se inserta en la fosa supinadora del cúbito: actúa al "desenrollarse";
-- 2) El músculo bíceps braquial 2, que se inserta en el vértice de la curva supinadora a la altura de la tuberosidad bicipital (Fig. 112): actúa por tracción sobre el ángulo superior de la manivela y su máxima eficacia se da cuando el codo está en flexión de 90°. Es el músculo más potente de todos los que intervienen en la pronosupinación, lo que explica que se atornille "supinando", con el codo flexionado.
+- 1. El músculo supinador 1, enrollado en torno al cuello del radio (Fig. 111) y que se inserta en la fosa supinadora del cúbito: actúa al "desenrollarse";
+- 2. El músculo bíceps braquial 2, que se inserta en el vértice de la curva supinadora a la altura de la tuberosidad bicipital (Fig. 112): actúa por tracción sobre el ángulo superior de la manivela y su máxima eficacia se da cuando el codo está en flexión de 90°. Es el músculo más potente de todos los que intervienen en la pronosupinación, lo que explica que se atornille "supinando", con el codo flexionado.
 
 ## Músculos motores de la pronación (Figs. 109 y 110).
 
-- 1) El músculo pronador cuadrado 4, enrollado en torno al extremo inferior del cúbito: actúa "desenrollando" el cúbito en relación al radio (Fig. 109);
+- 1. El músculo pronador cuadrado 4, enrollado en torno al extremo inferior del cúbito: actúa "desenrollando" el cúbito en relación al radio (Fig. 109);
 
 Son los que siguen:
 
-- 2) El músculo pronador redondo 3, que se inserta en el vértice de la curva pronadora y actúa por tracción sobre el ángulo inferior de la manivela, pero su momento de acción es débil, sobre todo con el codo en extensión.
+- 2. El músculo pronador redondo 3, que se inserta en el vértice de la curva pronadora y actúa por tracción sobre el ángulo inferior de la manivela, pero su momento de acción es débil, sobre todo con el codo en extensión.
 
 Los músculos pronadores son menos potentes que los supinadores: cuando se intenta desatornillar un tornillo bloqueado, es necesaria la ayuda de la pronación conseguida mediante la abducción del hombro.
 
@@ -2835,7 +2845,7 @@ Fig. 11
 El complejo articular de la muñeca (Fig. 14) incluye dos articulaciones:
 
 - I) La articulación radiocarpiana 1 entre la porción inferior del radio y los huesos de la hilera superior del carpo;
-- 2) La articulación mediocarpiana 2 entre la hilera superior y la hilera inferior del carpo.
+- 2. La articulación mediocarpiana 2 entre la hilera superior y la hilera inferior del carpo.
 
 ## La articulación radiocarpiana
 
@@ -2843,21 +2853,21 @@ La articulación radiocarpiana es una articulación condilea (Fig. 15): la super
 
 Una curva anteroposterior (flecha 1), o sagital, cuyo eje AA' es transversal: esta curva corresponde a los movimientos de flexoextensión;
 
-- 1) El eje AA' de flexoextensión, pasa por la interlínea semilunar-hueso grande;
+- 1. El eje AA' de flexoextensión, pasa por la interlínea semilunar-hueso grande;
 
 Una curva transversal (flecha 2), de radio mayor y cuyo eje BB' es anteroposterior: esta curva corresponde a los movimientos de aducción-abducción; En el esqueleto:
 
-- 2) El eje BB' de aducción-abducción, pasa por la cabeza del hueso grande.
+- 2. El eje BB' de aducción-abducción, pasa por la cabeza del hueso grande.
 
 Los ligamentos de la articulación radiocarpiana se organizan según dos sistemas:
 
 - El ligamento colateral radial del carpo 1, que se extiende desde la apófisis estiloides radial hasta el escafoides;
-- 1) Los ligamentos laterales (Figs. 16, 17, 18):
+- 1. Los ligamentos laterales (Figs. 16, 17, 18):
 - El ligamento colateral cubital del carpo 2, que se extiende desde la apófisis estiloides cubital al hueso piramidal y al hueso pisiforme.
 
 La inserción distal de estos dos ligamentos se localiza, aproximadamente, en el punto de "partida" del eje AA' de flexoextensión.
 
-- 2) Los ligamentos anterior y posterior (Figs. 19, 20, 21: visión externa esquemática) que se analizarán con detalle más adelante:
+- 2. Los ligamentos anterior y posterior (Figs. 19, 20, 21: visión externa esquemática) que se analizarán con detalle más adelante:
 - Los ligamentos anteriores 3 (o más bien el sistema ligamentoso anterior) se insertan en el reborde anterior de la glenoide radial y del cuello del hueso grande;
 
 Los dos sistemas ligamentosos anterior y posterior se fijan en el carpo, en los puntos de "partida" del eje BB' de abducción-aducción.
@@ -2916,7 +2926,7 @@ Fig. 23
 
 La articulación mediocarpiana (Fig. 24, según Testut: representada abierta por su cara posterior) situada entre las dos hileras de los huesos del carpo, comprende:
 
-- 1) La superficie superior, en una visión posteroinferior. Está constituida de fuera adentro por:
+- 1. La superficie superior, en una visión posteroinferior. Está constituida de fuera adentro por:
 - Una carilla interna 3, de concavidad acentuada, para el hueso grande;
 - El escafoides, con: dos carillas inferiores, ligeramente convexas, una para el trapecio 1, por dentro, para el trapezoide 2;
 - La carilla inferior del semilunar 4, cóncava hacia bajo, que se articula con la cabeza del hueso grande;
@@ -2924,7 +2934,7 @@ La articulación mediocarpiana (Fig. 24, según Testut: representada abierta por
 
 El pisiforme, articulado sobre la cara anterior del piramidal, no participa en la constitución de la interlínea mediocarpiana. No es visible en la citada visión.
 
-- 2) La superficie inferior, en una visión posterosuperior. Está constituida de fuera adentro por:
+- 2. La superficie inferior, en una visión posterosuperior. Está constituida de fuera adentro por:
 - La cabeza del hueso grande 8, que se articula con el escafoides y el semilunar;
 - La carilla superior del trapecio 6 y del trapezoide 7;
 - La cara superior del hueso ganchoso 9, cuya mayor parte se articula con el piramidal, y una pequeña carilla 10 que contacta con el semilunar.
@@ -3110,7 +3120,7 @@ En flexión (Fig. 59), la distancia radio-trapecio también disminuye, pero más
 
 Esto implica tres observaciones (los puntos de contacto se sitúan en e, e' y f, g):
 
-- 1) Los puntos de contacto se desplazan sobre la glenoide radial y el escafoides (Fig. 60):
+- 1. Los puntos de contacto se desplazan sobre la glenoide radial y el escafoides (Fig. 60):
 
 En la glenoide radial, el contacto en extensión e' se localiza por delante del punto de contacto en posición de alineación a', y estos dos últimos por delante del punto de contacto en flexión e';
 
@@ -3118,13 +3128,13 @@ En el escafoides, en la superficie superior, el contacto en flexión e es anteri
 
 Lo importante en cuanto a patología se refiere es que cuando el escafoides se "acuesta" ejerce una presión máxima sobre la parte posterior de la glenoide radial (puntos a y e). Es donde se localiza la artrosis inicial, en las disyunciones escafolunares (véase más adelante).
 
-- 2) Los diámetros útiles en el escafoides ab, ed y ef, que corresponden respectivamente a la posición de alineación, a la extensión y a la flexión, son casi paralelos y prácticamente iguales:
+- 2. Los diámetros útiles en el escafoides ab, ed y ef, que corresponden respectivamente a la posición de alineación, a la extensión y a la flexión, son casi paralelos y prácticamente iguales:
 - cd y ef son paralelos;
 
 En la práctica, la báscula en flexión del escafoides reduce "la distancia útil" entre el radio y el trapecio.
 
 - ab y ef son iguales, ed es ligeramente más corto
-- 3) Desplazamiento del trapecio en relación al radio (Fig. 61).
+- 3. Desplazamiento del trapecio en relación al radio (Fig. 61).
 
 En las posiciones de alineación A, de flexión F y de extensión E, se desplaza prácticamente sobre un circulo concéntrico con curva anteroposterior de la glenoide radial, mientras que el trapecio realiza una rotación sobre sí mismo aproximadamente igual al ángulo del arco que describe: dicho de otra forma, su carilla superior se dirige hacia el centro del círculo C
 
@@ -3160,10 +3170,10 @@ Cuando el escafoides "se acuesta" en flexión (Fig. 67) por el empuje de los dos
 
 En los movimientos de flexoextensión de la muñeca, N. Kuhlmann distingue cuatro sectores (Fig. 69):
 
-- 1) El sector de adaptación permanente I hasta 20°: las amplitudes de los desplazamientos elementales son escasas y difíciles de apreciar; los ligamentos están distendidos y la presión sobre las superficies articulares es mínima. Los movimientos más habituales y que precisan restaurarse necesariamente tras una intervención quirúrgica o traumatismo se llevan a cabo en este sector;
-- 2) El sector de movilidad usual II hasta 40°: el juego ligamentoso empieza a manifestarse y las presiones articulares a hacerse notar. Hasta este punto, las amplitudes en las articulaciones radiocarpiana y mediocarpiana son casi iguales;
-- 4) El sector de alteración patológica IV superior a los 80°: a partir de este punto la continuación del movimiento conlleva obligatoriamente bien una ruptura bien una distensión ligamentosa que, desgraciadamente, pasa inadvertida frecuentemente, provocando una inestabilidad del carpo, o una fractura o luxación como se expondrá más adelante.
-- 3) El sector de alteración fisiológica momentánea IlI hasta 80°: las tensiones ligamentosas y las presiones articulares alcanzan su máximo para realizar al final del recorrido la posición de bloqueo o close-packed position (Mac Conaill);
+- 1. El sector de adaptación permanente I hasta 20°: las amplitudes de los desplazamientos elementales son escasas y difíciles de apreciar; los ligamentos están distendidos y la presión sobre las superficies articulares es mínima. Los movimientos más habituales y que precisan restaurarse necesariamente tras una intervención quirúrgica o traumatismo se llevan a cabo en este sector;
+- 2. El sector de movilidad usual II hasta 40°: el juego ligamentoso empieza a manifestarse y las presiones articulares a hacerse notar. Hasta este punto, las amplitudes en las articulaciones radiocarpiana y mediocarpiana son casi iguales;
+- 4. El sector de alteración patológica IV superior a los 80°: a partir de este punto la continuación del movimiento conlleva obligatoriamente bien una ruptura bien una distensión ligamentosa que, desgraciadamente, pasa inadvertida frecuentemente, provocando una inestabilidad del carpo, o una fractura o luxación como se expondrá más adelante.
+- 3. El sector de alteración fisiológica momentánea IlI hasta 80°: las tensiones ligamentosas y las presiones articulares alcanzan su máximo para realizar al final del recorrido la posición de bloqueo o close-packed position (Mac Conaill);
 
 Si se ha considerado necesario retomar la noción de bloqueo articular, ha sido para aclarar el asincronismo del bloqueo en extensión de las columnas del semilunar y del escafoides.
 
@@ -3464,7 +3474,7 @@ Según lo expuesto, ninguno de los músculos de la muñeca tiene una acción pur
 
 - Flexión (Flex): 1eт (FCC) y 3e grupos (FRC + PL);
 - Extensión (Ext): 2° (ECC) y 4° grupos (ERLC + ERCC);
-- Aducción (Adu): 1* (FCC) y 2° grupos (ECC);
+- Aducción (Adu): 1\* (FCC) y 2° grupos (ECC);
 
 Así se definen los movimientos en los cuatro planos de referencia, pero los movimientos naturales de la muñeca se efectúan en un plano oblicuo:
 
@@ -3593,19 +3603,19 @@ Para coger objetos la mano puede adaptar su forma. En una superficie plana, un c
 
 Cuando se quiere coger un objeto voluminoso, la mano se ahueca y se forman unos arcos orientados en tres direcciones:
 
-- 1) En sentido transversal (Fig. 7): el arco carpiano XOY que corresponde a la concavidad del macizo carpiano. Se prolonga distalmente mediante el arco metacarpiano, en el cual se alinean las cabezas metacarpianas. El eje longitudinal del conducto carpiano pasa por el semilunar, el hueso grande y el tercer metacarpiano;
+- 1. En sentido transversal (Fig. 7): el arco carpiano XOY que corresponde a la concavidad del macizo carpiano. Se prolonga distalmente mediante el arco metacarpiano, en el cual se alinean las cabezas metacarpianas. El eje longitudinal del conducto carpiano pasa por el semilunar, el hueso grande y el tercer metacarpiano;
 - El arco del dedo corazón OD, (Fig. 7), arco axial, ya que prolonga el eje del conducto carpiano, y sobre todo
-- 2) En sentido longitudinal, los arcos carpometacarpofalángicos que adoptan una posición radiada desde el macizo carpiano y están constituidos, en cada dedo, por el metacarpiano y las falanges correspondientes. La concavidad de estos arcos se orienta hacia delante de la palma y la clave de bôveda se localiza en la articulación metacarpofalángica: un desequilibrio muscular en este punto conlleva una ruptura de la curva. Los dos arcos longitudinales más importantes son:
+- 2. En sentido longitudinal, los arcos carpometacarpofalángicos que adoptan una posición radiada desde el macizo carpiano y están constituidos, en cada dedo, por el metacarpiano y las falanges correspondientes. La concavidad de estos arcos se orienta hacia delante de la palma y la clave de bôveda se localiza en la articulación metacarpofalángica: un desequilibrio muscular en este punto conlleva una ruptura de la curva. Los dos arcos longitudinales más importantes son:
 - El arco del índice OD2 (Fig. 8), que es el que se opone con mayor frecuencia al del pulgar;
-- 3) En sentido oblicuo (Figs. 7, 8 y 9), los arcos de oposición del pulgar con los otros cuatro dedos:
+- 3. En sentido oblicuo (Figs. 7, 8 y 9), los arcos de oposición del pulgar con los otros cuatro dedos:
 - El más extremo de los arcos de oposición pasa por el pulgar y el meñique: D,-D, (Figs. 7, 8 y 9).
 - El más importante de estos arcos oblicuos reúne y opone al pulgar y al índice: D,-D2 (Fig. 8);
 
 En conjunto, cuando la mano se ahueca, forma un conducto de concavidad anterior, cuyos bordes están limitados por tres puntos:
 
-- 1) El pulgar D,, que constituye por sí sólo el borde externo;
-- 2) El índice De y el meñique Ds, que limitan el borde interno;
-- 3) Entre estos dos bordes se despliegan los cuatro arcos oblicuos de oposición.
+- 1. El pulgar D,, que constituye por sí sólo el borde externo;
+- 2. El índice De y el meñique Ds, que limitan el borde interno;
+- 3. Entre estos dos bordes se despliegan los cuatro arcos oblicuos de oposición.
 
 Por el contrario, cuando se separan los dedos al máximo (Fig. 10), la mano se aplana y la distancia máxima entre el pulpejo del pulgar y el del meñique se denomina palmo o cuarta, que para un pianista debe alcanzar al menos una octava.
 
@@ -3686,7 +3696,7 @@ Se trata de una artrodia (Fig. 24) cuyas superficies son ligeramente cilíndrica
 - Cuando se observa la cara inferior del macizo carpiano (Fig. 23), el eje XX' de la carilla interna del hueso ganchoso es claramente oblicuo en relación al plano frontal (línea a trazos rojos): es oblicuo de fuera adentro y de atrás adelante.
 - Cualquier movimiento de flexión en torno a este eje desplaza, lógicamente, la cabeza del quinto metacarpiano hacia delante y hacia fuera;
 - El eje XX' de esta articulación no es estrictamente perpendicular al eje diafisario OA del quinto metacarpiano, sino que forma un ángulo XOA algo menor que el ángulo recto (Fig. 24). Esta disposición también contribuye a desplazar la cabeza del quinto metacarpiano hacia fuera, por el mecanismo geométrico expuesto a continuación;
-- Esta figura (Fig. 25) explica el fenómeno de la rotación cónica: cuando un segmento OA en la recta OZ gira en torno a un eje perpendicular YY', el punto A describe un círculo de centro, incluido en el plano P para situarse en OA*;
+- Esta figura (Fig. 25) explica el fenómeno de la rotación cónica: cuando un segmento OA en la recta OZ gira en torno a un eje perpendicular YY', el punto A describe un círculo de centro, incluido en el plano P para situarse en OA\*;
 - Si este mismo segmento OA gira en torno a un eje XX' oblicuo, ya no va a desplazarse sobre un plano sino sobre un segmento de cono de vértice O, tangencial al plano P. Tras el mismo grado de rotación, el punto A se localiza en un punto A' de la base del cono, y este punto A' ya no se sitúa en el plano P, sino por delante de este (en la figura). Si se traslada esta demostración geométrica al esquema de la articulación (Fig. 24), se entiende que la cabeza del metacarpiano salga del plano sagital para situarse ligeramente hacia fuera.
 
 <!-- PAGE_NUMBER: 221 -->
@@ -3709,11 +3719,11 @@ Poseen dos superficies articulares:
 
 De hecho, en un corte sagital en la extensión (Fig 25), la cara profunda, cartilaginosa, del fibrocartilago glenoideo 2 se halla en contacto con la cabeza del metacarpiano. Mientras que en la flexión (Fig. 28), el fibrocartilago sobrepasa la cabeza y, pivotando en torno a su charnela 3, se desliza sobre la cara anterior del metacarpiano. Es evidente que si el fibrocartilago fuese sustituido por una lengüeta ósea soldada a la base de la falange, la flexión se limitaría mucho antes debido a este tope. El fibrocartilago permite conciliar dos imperativos aparentemente contradictorios: una superficie de máximo contacto entre los dos extremos óseos y la ausencia de tope limitando el movimiento. Sin embargo, otra condición es necesaria para la libertad de movimientos: una laxitud suficiente de la capsula y de la sinovia. La libertad de movimiento de la flexoextensión es posible gracias a los fondos de saco posterior 4 y anterior 5 de la cápsula. La profundidad del fondo de saco anterior es indispensable para el deslizamiento del fibrocartilago glenoideo. En la parte posterior de la base falángica, se inserta la lengüeta profunda 6 del tendón extensor.
 
-- 1) Un ligamento metacarpoglenoideo (p. 216) que controla los movimientos del fibrocartílago glenoideo;
+- 1. Un ligamento metacarpoglenoideo (p. 216) que controla los movimientos del fibrocartílago glenoideo;
 
 A cada lado de la articulación se extienden dos tipos de ligamentos colaterales:
 
-- 2) Un ligamento lateral, mostrado en un corte 1 en la figura 26. Los dos ligamentos laterales mantienen las superficies articulares en contacto y limitan los movimientos.
+- 2. Un ligamento lateral, mostrado en un corte 1 en la figura 26. Los dos ligamentos laterales mantienen las superficies articulares en contacto y limitan los movimientos.
 
 Como su inserción metacarpiana A, no se sitúa en el centro de la curva de la cabeza (Fig. 29), sino que está claramente por detrás; están distendidos durante la extensión y tensos en la flexión; la longitud (flecha roja doble) mide el citado grado de tensión.
 
@@ -3725,7 +3735,7 @@ La amplitud de la flexión (Fig. 29) es próxima a los 90°; pero es necesario r
 
 Esto significa sencillamente que las correlaciones de longitud de cuatro segmentos óseos están en esta proporción... ¡En la práctica, es una condición para el buen enrrollamiento de las falanges!
 
-Considerando la flexión de los cuatro segmentos de una cadena digital -conformada por un metacarpiano y tres falanges- puede constatarse que ésta se lleva a cabo por enrollamiento (Fig. 30) a modo de espiral logarítmica, como bien lo ha demostrado Littler, cirujano americano. Esta espiral, también denominada equi-angular, está construida en base a la encajadura sucesiva de "Rectángulos de Oro", denominados así porque la proporción entre su longitud y su anchura es de 1,618, nombrado el "Número de Oro". Este número Ф (pronunciado Phi) y conocido desde Platón, posee virtudes casi esotéricas -se le llama la "Divina Proporción" - y desciende de "la serie de Fibbonacci" (matemático italiano 1180-1250), en la que cada cifra es la suma de las dos precedentes: 1-2-3-5-8-13, etc. A partir de la 25* cifra, la relación entre dos cifras sucesivas es fija y constante: 1,618 (Inténtese en el ordenador!).
+Considerando la flexión de los cuatro segmentos de una cadena digital -conformada por un metacarpiano y tres falanges- puede constatarse que ésta se lleva a cabo por enrollamiento (Fig. 30) a modo de espiral logarítmica, como bien lo ha demostrado Littler, cirujano americano. Esta espiral, también denominada equi-angular, está construida en base a la encajadura sucesiva de "Rectángulos de Oro", denominados así porque la proporción entre su longitud y su anchura es de 1,618, nombrado el "Número de Oro". Este número Ф (pronunciado Phi) y conocido desde Platón, posee virtudes casi esotéricas -se le llama la "Divina Proporción" - y desciende de "la serie de Fibbonacci" (matemático italiano 1180-1250), en la que cada cifra es la suma de las dos precedentes: 1-2-3-5-8-13, etc. A partir de la 25\* cifra, la relación entre dos cifras sucesivas es fija y constante: 1,618 (Inténtese en el ordenador!).
 
 <!-- PAGE_NUMBER: 223 -->
 
@@ -3770,10 +3780,13 @@ En una visión perspectiva posterosuperior y lateral de la articulación (Fig. 3
 
 También puede observarse el aparato capsuloligamentoso: la cápsula articular 7 reforzada por: el ligamento lateral que se inserta en el tubérculo lateral 8 de la cabeza metacarpiana, descentrada por detrás de la línea de los centros de curva (véase más arriba) y se divide en tres partes:
 
-- 2) El haz metacarpoglenoideo 10, que se dirige hacia delante para insertarse en los bordes del fibro-
-- 1) Un haz metacarpofalángico 9 oblicuo hacia bajo y hacia delante hacia la base de la primera falange;
+- 2. El haz metacarpoglenoideo 10, que se dirige hacia delante para insertarse en los bordes del fibro-
+- 1. Un haz metacarpofalángico 9 oblicuo hacia bajo y hacia delante hacia la base de la primera falange;
+
 3. cartílago glenoideo 6 que lo adhiere a la cabeza metacarpiana garantizando así la estabilidad del mismo;
-- 3) El haz falangoglenoideo 11 más delgado, que realiza la "llamada" del fibrocartilago glenoideo durante la extensión;
+
+- 3. El haz falangoglenoideo 11 más delgado, que realiza la "llamada" del fibrocartilago glenoideo durante la extensión;
+
 5. El ligamento transverso intermetacarpiano 4 se inserta en los bordes adyacentes de los fibrocartílagos glenoideos vecinos, de tal forma que sus fibras se extienden de un borde a otro de la mano, a la altura de las articulaciones metacarpofalángicas con las que delimita conductos osteofibrosos por cuyo interior pasan los tendones de los músculos interóseos (sin representar en las figuras); por delante del ligamento transverso se desliza el tendón del músculo lumbrical (sin representar en las figuras).
 
 Este dispositivo desempeña un papel muy importante durante la flexión de la articulación metacarpofalángica:
@@ -3977,13 +3990,13 @@ En la visión aplanada (Fig. 70), pueden observarse los mesotendones, laminas si
 
 Se denominan vincula tendinorum, y están conformados por dos sistemas:
 
-- 1) El sistema del músculo flexor superficial de los dedos, por dos aportes:
+- 1. El sistema del músculo flexor superficial de los dedos, por dos aportes:
 - Uno proximal, para la zona A, por los microvasos longitudinales intrínsecos 1 y los vasos del fondo de saco proximal de la vaina sinovial 2;
 
 Entre las dos zonas existe un segmento avascular 4 que corresponde a la división de las cintillas.
 
 - Otro distal, para la zona B, por los vasos del vinculum brevis 3 en las inserciones de las cintillas laterales de la segunda falange;
-- 2) El sistema del músculo flexor profundo de los dedos, por tres aportes:
+- 2. El sistema del músculo flexor profundo de los dedos, por tres aportes:
 - Uno proximal, para la zona A, con los dos tipos de vasos 5 y 6 comparables a los del músculo flexor superficial de los dedos;
 - Uno intermedio, para la zona B, por los vasos del vinculum longus 7 dependiente a su vez del vinculum brevis del músculo flexor superficial de los dedos;
 - Y uno distal, para la zona C, por los vasos del vinculum brevis que se insertan en la tercera falange
@@ -4038,12 +4051,12 @@ Tomando la cuerda del arco esquelético d, el tendón pierde toda su eficacia de
 
 Los músculos extensores de los dedos también son músculos extrínsecos. Recorren las correderas, pero como su trayecto es, en conjunto, convexo, estas son menos numerosas. No existen más que en la muñeca, único punto donde el trayecto de los tendones se convierte en cóncavo durante la extensión. En este caso, la corredera osteofibrosa está constituida por la porción inferior de los dos huesos del antebrazo y por el retináculo extensor (ligamento dorsal del carpo) (Fig. 77). Esta corredera está a su vez subdividida en seis conductos por tabiques fibrosos que se extienden desde la cara profunda del ligamento dorsal del carpo al esqueleto. Pueden observarse, de dentro afuera, (de izquierda a derecha en la figura), los conductos para los siguientes músculos:
 
-- 1) Músculo extensor cubital del carpo 1;
-- 2) Músculo extensor del dedo meñique 2 cuyo tendón se une más abajo al del músculo extensor de los dedos destinado, este también, al quinto dedo;
-- 3) Músculo extensor de los dedos 3, cuatro tendones acompañados en profundidad por el tendón del músculo extensor del índice 3', que se une un poco más abajo al tendón del músculo extensor de los dedos destinado al índice;
-- 5) Músculo extensor radial largo del carpo 5 y músculo extensor radial corto del carpo 5';
-- 4) Músculo extensor largo del pulgar 4;
-- 6) Músculo extensor corto del pulgar 6 y del músculo abductor largo del pulgar 6'.
+- 1. Músculo extensor cubital del carpo 1;
+- 2. Músculo extensor del dedo meñique 2 cuyo tendón se une más abajo al del músculo extensor de los dedos destinado, este también, al quinto dedo;
+- 3. Músculo extensor de los dedos 3, cuatro tendones acompañados en profundidad por el tendón del músculo extensor del índice 3', que se une un poco más abajo al tendón del músculo extensor de los dedos destinado al índice;
+- 5. Músculo extensor radial largo del carpo 5 y músculo extensor radial corto del carpo 5';
+- 4. Músculo extensor largo del pulgar 4;
+- 6. Músculo extensor corto del pulgar 6 y del músculo abductor largo del pulgar 6'.
 
 En estas correderas osteofibrosas, los tendones expuestos están envueltos en vainas serosas (Fig. 78) que sobrepasan por arriba al ligamento dorsal del carpo y se extienden bastante abajo sobre el dorso de la mano.
 
@@ -4216,28 +4229,36 @@ Resumiendo, es posible conocer el resultado de las acciones musculares sobre la 
 
 - Conlleva la hiperextensión de la articulación interfalángica distal en la enfermedad de Dupuytren en su tercer grado.
 - Extensión simultánea de F, + F, + F, (Fig. 101 A):
-+ sinergia ED + Is + Ls;
-+ acción pasiva y automática del LR.
-+ Flexión Fz: FSD (coadyuvante del ED) relajación de los Is.
+
+* sinergia ED + Is + Ls;
+* acción pasiva y automática del LR.
+* Flexión Fz: FSD (coadyuvante del ED) relajación de los Is.
+
 - Extensión aislada de F,: ED
-+ Flexión F,: FCP relajación de los Is.
-+ Extensión F,: Ls + Is (esta última acción es muy difícil).
-+ Flexión Fz: FSD (Is).
+
+* Flexión F,: FCP relajación de los Is.
+* Extensión F,: Ls + Is (esta última acción es muy difícil).
+* Flexión Fz: FSD (Is).
+
 - Flexión aislada de F,: Ls (starters) + Is (antagonismo ED/Is: relajación ED).
-+ Extensión Ez y F, (Fig. 101 C): Ls (extensores en cualquier posición de la articulación metacarpofalángica).
-+ Balanceo sinérgico ED + Is (Fig. 101 B).
-+ Extensión F3: Ls (acción difícil puesto que la flexión de las articulaciones interfalángicas proximales distiende las cintillas laterales).
-+ Flexión F2: FSD
-+ Flexión F2: FSD.
+
+* Extensión Ez y F, (Fig. 101 C): Ls (extensores en cualquier posición de la articulación metacarpofalángica).
+* Balanceo sinérgico ED + Is (Fig. 101 B).
+* Extensión F3: Ls (acción difícil puesto que la flexión de las articulaciones interfalángicas proximales distiende las cintillas laterales).
+* Flexión F2: FSD
+* Flexión F2: FSD.
 
 Los movimientos habituales de los dedos ilustran las distintas situaciones:
 
-+ Flexión Fg: FPD (su acción se ve facilitada por el "derrapaje de las cintillas laterales debido a la flexión de la articulación interfalángica proximal").
-- En los movimientos que se realizan durante la escritura (Duchenne de Boulogne):
-+ cuando se conduce nuevamente el lápiz hacia atrás (Fig 103), el ED extiende F, y el FSD flexiona Fz;
-+ cuando se impulsa el lápiz hacia delante (Fig 102), el músculo interóseo flexiona F, y extiende F2 y F3;
-- En los movimientos de los dedos en gancho (Fig 104) se contraen los músculos FSD y FPD y los músculos interóseos se relajan. Este movimiento es indispensable para el alpinista que se agarra a una pared rocosa vertical;
-- En los movimientos de los dedos en martillo (Fig. 105), el ED interviene para extender Fi mientras que el músculo FSD y el músculo FPD flexionan Ez y F3. Es la posición inicial de los dedos del pianista. El dedo percute la tecla por contracción de los músculos interóseos y de los músculos lumbricales que flexionan la articulación metacarpofalángica cuando el ED se relaja.
+- Flexión Fg: FPD (su acción se ve facilitada por el "derrapaje de las cintillas laterales debido a la flexión de la articulación interfalángica proximal").
+
+* En los movimientos que se realizan durante la escritura (Duchenne de Boulogne):
+
+- cuando se conduce nuevamente el lápiz hacia atrás (Fig 103), el ED extiende F, y el FSD flexiona Fz;
+- cuando se impulsa el lápiz hacia delante (Fig 102), el músculo interóseo flexiona F, y extiende F2 y F3;
+
+* En los movimientos de los dedos en gancho (Fig 104) se contraen los músculos FSD y FPD y los músculos interóseos se relajan. Este movimiento es indispensable para el alpinista que se agarra a una pared rocosa vertical;
+* En los movimientos de los dedos en martillo (Fig. 105), el ED interviene para extender Fi mientras que el músculo FSD y el músculo FPD flexionan Ez y F3. Es la posición inicial de los dedos del pianista. El dedo percute la tecla por contracción de los músculos interóseos y de los músculos lumbricales que flexionan la articulación metacarpofalángica cuando el ED se relaja.
 
 <!-- PAGE_NUMBER: 255 -->
 
@@ -4272,9 +4293,9 @@ La insuficiencia o la acentuación de la acción de cualquiera de los músculos 
 
 La eminencia hipotenar está compuesta por tres músculos (Fig. 113):
 
-- 1) El músculo flexor corto del dedo meñique 1; se inserta por abajo, en el tubérculo interno de la base de Fi, su dirección es oblicua hacia arriba y hacia afuera hacia su inserción carnosa en la cara anterior del ligamento anular y la apófisis unciforme;
-- 2) El músculo aductor del dedo meñique 2; aductor en relación al plano de simetría del cuerpo, termina por abajo como un músculo interóseo en el tubérculo lateral de F, (con el músculo flexor corto del dedo meñique), por un correón común con el cuarto músculo interóseo palmar y por una expansión hacia la cintilla lateral del músculo ED. Por arriba, se inserta en la cara anterior del ligamento anular y en el pisiforme;
-- 3) El músculo oponente del dedo meñique 3; se inserta por abajo en la cara interna del quinto metacarpiano, rodea su borde (Fig. 113) para dirigirse (flecha blanca y rosa) hacia arriba y hacia afuera hacia el borde inferior del ligamento anular y la apófisis unciforme, donde se inserta.
+- 1. El músculo flexor corto del dedo meñique 1; se inserta por abajo, en el tubérculo interno de la base de Fi, su dirección es oblicua hacia arriba y hacia afuera hacia su inserción carnosa en la cara anterior del ligamento anular y la apófisis unciforme;
+- 2. El músculo aductor del dedo meñique 2; aductor en relación al plano de simetría del cuerpo, termina por abajo como un músculo interóseo en el tubérculo lateral de F, (con el músculo flexor corto del dedo meñique), por un correón común con el cuarto músculo interóseo palmar y por una expansión hacia la cintilla lateral del músculo ED. Por arriba, se inserta en la cara anterior del ligamento anular y en el pisiforme;
+- 3. El músculo oponente del dedo meñique 3; se inserta por abajo en la cara interna del quinto metacarpiano, rodea su borde (Fig. 113) para dirigirse (flecha blanca y rosa) hacia arriba y hacia afuera hacia el borde inferior del ligamento anular y la apófisis unciforme, donde se inserta.
 
 ## En el plano fisiológico
 
@@ -4301,11 +4322,11 @@ El pulgar debe esta función eminente, por una parte, a su localización por del
 
 La columna osteoarticular del pulgar (Fig. 117) contiene cinco piezas óseas que constituyen el radio externo de la mano:
 
-- 1) El escafoides E;
-- 2) El trapecio T que los embriólogos consideran el equivalente de un metacarpiano;
-- 4) La primera falange F;
-- 3) El primer metacarpiano Mi;
-- 5) La segunda falange F2.
+- 1. El escafoides E;
+- 2. El trapecio T que los embriólogos consideran el equivalente de un metacarpiano;
+- 4. La primera falange F;
+- 3. El primer metacarpiano Mi;
+- 5. La segunda falange F2.
 
 El pulgar sólo incluye anatómicamente dos falanges pero, hecho importante, su columna se articula con la mano en un punto mucho más proximal que en el caso de los otros dedos. Su columna es, pues, claramente más corta y su extremo sólo alcanza la parte media de la primera falange del dedo índice. Esta es su longitud óptima ya que:
 
@@ -4316,10 +4337,10 @@ Esto es, pues, un ejemplo del principio de economía universal (principio de Okh
 
 Las articulaciones de la columna del pulgar son cuatro:
 
-- 1) La articulación trapezoescafoidea TE artrodia que, como se vio con anterioridad, permite que el trapecio efectúe un corto desplazamiento hacia delante sobre la carilla inferior, que se apoya sobre el tubérculo del escafoides: en este caso se esboza un movimiento de flexión de escasa amplitud;
-- 2) La articulación trapezometacarpiana TM dotada de dos grados de libertad;
-- 3) La articulación metacarpofalángica MF que posee dos grados de libertad;
-- 4) La articulación interfalángica IF con un único grado de libertad.
+- 1. La articulación trapezoescafoidea TE artrodia que, como se vio con anterioridad, permite que el trapecio efectúe un corto desplazamiento hacia delante sobre la carilla inferior, que se apoya sobre el tubérculo del escafoides: en este caso se esboza un movimiento de flexión de escasa amplitud;
+- 2. La articulación trapezometacarpiana TM dotada de dos grados de libertad;
+- 3. La articulación metacarpofalángica MF que posee dos grados de libertad;
+- 4. La articulación interfalángica IF con un único grado de libertad.
 
 En total cinco grados de libertad necesarios y suficientes para realizar la oposición del pulgar.
 
@@ -4335,9 +4356,9 @@ La oposición del pulgar es la facultad para desplazar la yema del pulgar para c
 
 En el movimiento de oposición, el pulgar acude al encuentro de otro dedo (véase más adelante, en la pág. 289), el dedo índice con mayor frecuencia. Esta acción es la suma de tres componentes elementales:
 
-- 1) La antepulsión del primer metacarpiano y, de forma accesoria, de la primera falange;
-- 3) La rotación longitudinal del metacarpiano y de la primera falange en sentido de la pronación.
-- 2) La aducción del primer metacarpiano y la inclinación lateral de la primera falange sobre el metacarpiano hacia su borde radial; estas acciones son más acusadas cuanto la oposición se efectúa con un dedo más interno. Por lo tanto, son máximas en la oposición pulgar-dedo meñique;
+- 1. La antepulsión del primer metacarpiano y, de forma accesoria, de la primera falange;
+- 3. La rotación longitudinal del metacarpiano y de la primera falange en sentido de la pronación.
+- 2. La aducción del primer metacarpiano y la inclinación lateral de la primera falange sobre el metacarpiano hacia su borde radial; estas acciones son más acusadas cuanto la oposición se efectúa con un dedo más interno. Por lo tanto, son máximas en la oposición pulgar-dedo meñique;
 
 Los dos primeros componentes están bajo dependencia de la acción combinada del músculo abductor largo del pulgar y de los músculos del grupo tenar externo.
 
@@ -4361,8 +4382,8 @@ Fig. 120
 
 De hecho, considérese (Fig. 121) un modelo de pulgar (experimento personal con maqueta en papel para plegar y construir): la tira de cartón que representa el pulgar se articula con la palma de la mano mediante un eje O (abducción-aducción) y se pliega sobre tres líneas perpendiculares al eje longitudinal de la tira que representa las tres articulaciones distales del pulgar. Haciendo que este modelo de pulgar efectúe sucesivamente dos movimientos:
 
-- 1) Abducción de 120° en torno a O;
-- 2) Flexión de 180° alrededor de los tres pliegues;
+- 1. Abducción de 120° en torno a O;
+- 2. Flexión de 180° alrededor de los tres pliegues;
 
 Para realizar la oposición a pesar de esta abducción limitada (Fig. 123), es imprescindible efectuar una torsión de la tira, es decir cierta rotación axial asociada a la flexión de distintos segmentos.
 
@@ -4456,13 +4477,13 @@ La cápsula de la articulación trapezometacarpiana TM es conocida por su laxitu
 
 De hecho, la laxitud capsular no tiene más efecto en la práctica que permitir el desplazamiento de la superficie metacarpiana sobre la del trapecio, pero esta articulación trabaja en compresión, semejante a un pivote (Fig. 136) permitiendo así orientar el primer metacarpiano en todas las direcciones del espacio, como si se tratase de una portada cuya orientación puede variarse modificando la tensión de las maromas representadas en este caso por los músculos tenares. Éstos garantizan así la coaptación articular en cualquier posición.
 
-- 1) El ligamento intermetacarpiano 4 LIM: manojo fibroso, grueso y corto, se extiende desde la base del primer y del segundo metacarpianos, hasta la parte superior de la primera comisura;
+- 1. El ligamento intermetacarpiano 4 LIM: manojo fibroso, grueso y corto, se extiende desde la base del primer y del segundo metacarpianos, hasta la parte superior de la primera comisura;
 
 En cuanto a los ligamentos de la articulación trapezometacarpiana, dirigen el movimiento y garantizan, según su grado de tensión, la coaptación en cada posición. Su descripción y su función fueron puntualizados en 1970 por JY de la Caffinière. A pesar de haberse realizado múltiples descripciones, esta es la que se considera válida, al menos en cuanto a su coherencia y sencillez. Diferencia cuatro (Fig. 137: visión anterior, y 138: visión posterior):
 
-- 2) El ligamento oblicuo posterointerno 3 LOPI: descrito por los clásicos, se trata de una cintilla ancha pero delgada que envuelve a modo de corbata la articulación por detrás, para enrollarse por dentro de la base del primer metacarpiano dirigiéndose hacia delante;
-- 4) El ligamento recto anteroexterno 1 LRAE: se extiende directamente entre el trapecio y la base del primer metacarpiano hasta la cara anteroexterna de la articulación, su claro y agudo limite interno delimita un hiato capsular por donde pasa una bolsa serosa hacia el tendón del músculo abductor largo del pulgar AbdL.
-- 3) El ligamento oblicuo anterointerno 2 LOAI: se extiende desde la parte distal de la cresta del trapecio hasta la zona yuxtacomisural de la base del primer metacarpiano, cruza la cara anterior de la articulación enrollándose en sentido inverso al precedente;
+- 2. El ligamento oblicuo posterointerno 3 LOPI: descrito por los clásicos, se trata de una cintilla ancha pero delgada que envuelve a modo de corbata la articulación por detrás, para enrollarse por dentro de la base del primer metacarpiano dirigiéndose hacia delante;
+- 4. El ligamento recto anteroexterno 1 LRAE: se extiende directamente entre el trapecio y la base del primer metacarpiano hasta la cara anteroexterna de la articulación, su claro y agudo limite interno delimita un hiato capsular por donde pasa una bolsa serosa hacia el tendón del músculo abductor largo del pulgar AbdL.
+- 3. El ligamento oblicuo anterointerno 2 LOAI: se extiende desde la parte distal de la cresta del trapecio hasta la zona yuxtacomisural de la base del primer metacarpiano, cruza la cara anterior de la articulación enrollándose en sentido inverso al precedente;
 
 Para JY. de la Caffinière, estos ligamentos pueden asociarse de dos en dos:
 
@@ -4524,7 +4545,7 @@ Se ha querido comparar estas superficies sillares a:
 
 Si se tiene en cuenta la descripción de K. Kuczynski, con la curva lateral de la cresta de la silla - el "caballo escoliótico" (véase Fig. 134 pág. 259) - este segmento axial de superficie tórica (Fig. 151) debe delimitarse asimétricamente sobre el toro, como si la silla se hubiese deformado deslizándose lateralmente sobre el dorso de un caballo normal. El eje mayor longitudinal (la cresta) de la silla nm está curvo lateralmente de tal modo que los radios u, v, w, que pasan por cada punto de la cresta, convergen en un punto O' situado en el eje XX' del toro por fuera de su plano de simetría y, por lo tanto, diferente del centro O del toro. Esta superficie sellada siempre es una superficie toroide negativa con dos ejes principales ortogonales y dos grados de libertad, pero es asimétrica.
 
-El modelo mecánico de una articulación de dos ejes es el cardán* (Fig. 152): dos ejes XX' y YY' perpendiculares y concurrentes que permiten movimientos en dos planos perpendiculares AB y CD.
+El modelo mecánico de una articulación de dos ejes es el cardán\* (Fig. 152): dos ejes XX' y YY' perpendiculares y concurrentes que permiten movimientos en dos planos perpendiculares AB y CD.
 
 En estas condiciones, es totalmente lógico y lícito modelar la articulación trapezometacarpiana del mismo modo que los biomecánicos modelan la cadera, como si se tratase de una articulación "de rótula", aunque se sepa sobradamente que la cabeza femoral no es una esfera perfecta.
 
@@ -4851,18 +4872,18 @@ El pulgar posee nueve músculos motores: esta riqueza muscular, que sobrepasa co
 Estos músculos se clasifican en dos grupos:
 
 - I) Los músculos extrínsecos, o músculos largos, son cuatro y se localizan en el antebrazo. Tres son extensores y abductores y se utilizan para relajar la presa, el último es flexor y su potencia se utiliza para el bloqueo de las presas de fuerza.
-- 2) Los músculos intrínsecos, incluidos en la eminencia tenar y el primer espacio interóseo, son cinco. Participan en la realización de distintas presas y en particular en la oposición. Su potencia es limitada ya que se trata más bien de motores de precisión y coordinación.
+- 2. Los músculos intrínsecos, incluidos en la eminencia tenar y el primer espacio interóseo, son cinco. Participan en la realización de distintas presas y en particular en la oposición. Su potencia es limitada ya que se trata más bien de motores de precisión y coordinación.
 
 Para entender la acción de los motores sobre el conjunto de la columna del pulgar, es necesario situar su recorrido en relación a los dos ejes teóricos de la articulación trapezometacarpiana (Fig. 212): el eje YY' de flexoextensión, paralelo a los ejes f, y f, de flexión de la articulación metacarpofalángica y de la articulación interfalángica, y el eje XX' de ante y retroposición delimitan entre ellos cuatro cuadrantes:
 
-- 1) Un cuadrante X'Y localizado por detrás del eje YY' de flexoextensión de la articulación trapezometacarpiana y por fuera del eje XX' de antepulsión retropulsión, ocupado por el tendón de un sólo músculo, el músculo abductor largo del pulgar 1, que se localiza en la proximidad inmediata de este último eje XX?. Esto explica la poca importancia de su componente de anteposición y su fuerte acción de extensión sobre el primer metacarpiano (Fig. 211: visión externa y proximal de la muñeca en posición de huida);
-- 2) Un cuadrante X'Y situado por dentro del eje XX' y por detrás del eje YY', que incluye los dos tendones extensores:
+- 1. Un cuadrante X'Y localizado por detrás del eje YY' de flexoextensión de la articulación trapezometacarpiana y por fuera del eje XX' de antepulsión retropulsión, ocupado por el tendón de un sólo músculo, el músculo abductor largo del pulgar 1, que se localiza en la proximidad inmediata de este último eje XX?. Esto explica la poca importancia de su componente de anteposición y su fuerte acción de extensión sobre el primer metacarpiano (Fig. 211: visión externa y proximal de la muñeca en posición de huida);
+- 2. Un cuadrante X'Y situado por dentro del eje XX' y por detrás del eje YY', que incluye los dos tendones extensores:
 - El músculo extensor corto del pulgar 2
 - El músculo extensor largo del pulgar 3;
-- 3) Un cuadrante X Y (Fig. 213) localizado por delante del eje YY' y por delante del eje XX', ocupado por dos músculos situados en el primer espacio y que producen una retroposición asociada a una ligera flexión en la articulación trapezometacarpiana:
+- 3. Un cuadrante X Y (Fig. 213) localizado por delante del eje YY' y por delante del eje XX', ocupado por dos músculos situados en el primer espacio y que producen una retroposición asociada a una ligera flexión en la articulación trapezometacarpiana:
 - El músculo aductor del pulgar con sus dos haces 8,
 - El primer músculo interóseo palmar 9 cuando existe.
-- 4) Un cuadrante XY' (Fig. 213) situado por delante del eje YY' y por fuera del eje XX' y que incluye los principales músculos de la oposición, ya que realizan a la vez una flexión y una anteposición del primer metacarpiano:
+- 4. Un cuadrante XY' (Fig. 213) situado por delante del eje YY' y por fuera del eje XX' y que incluye los principales músculos de la oposición, ya que realizan a la vez una flexión y una anteposición del primer metacarpiano:
 
 Estos dos músculos son aductores del primer metacarpiano: cierran la primera comisura, aproximando el primer metacarpiano al segundo (Fig. 211);
 
@@ -4885,7 +4906,7 @@ Fig. 213
 
 Un breve recuerdo de anatomía esclarece la fisiología de los músculos motores del pulgar.
 
-- 1) Los músculos extrínsecos:
+- 1. Los músculos extrínsecos:
 - El músculo abductor largo del pulgar 1 (Fig. 214: visión anterior) se inserta en la parte anteroexterna de la base del primer metacarpiano;
 - El músculo extensor corto del pulgar 2 (Fig. 215: visión externa) paralelo al anterior, se inserta en la parte dorsal de la base de la primera falange;
 - El músculo extensor largo del pulgar 3 se inserta en la parte dorsal de la base de la segunda falange;
@@ -4895,7 +4916,7 @@ A propósito de estos tres músculos se pueden constatar dos observaciones:
 - En el plano anatómico: estos tres tendones, visibles en la cara dorsal y externa del pulgar, delimitan entre sí un espacio triangular de vértice inferior, la tabaquera anatómica, en cuyo fondo se deslizan los tendones paralelos del músculo extensor radial largo del carpo 10 y del músculo extensor radial corto del carpo 11;
 - Sin embargo, el músculo flexor largo del pulgar 4 es palmar: transcurre por el conducto carpiano, pasa entre los dos haces musculares del músculo flexor corto del pulgar, se desliza entre los dos huesos sesamoideos (Fig. 214) para insertarse en la cara palmar de la base de la segunda falange.
 - En el plano funcional: cada uno de ellos es motor de un segmento del esqueleto del pulgar y los tres en conjunto en el sentido de la extensión;
-- 2) Los músculos intrínsecos (Figs. 214 y 215). Se clasifican en dos grupos:
+- 2. Los músculos intrínsecos (Figs. 214 y 215). Se clasifican en dos grupos:
 - el músculo flexor corto del pulgar 5 constituido por dos haces, uno se fija en el fondo de la corredera carpiana y el otro en el borde inferior del ligamento anular y del tubérculo del trapecio; terminan mediante un tendón común en el hueso se-
 - El grupo externo contiene tres músculos, inervados por el nervio mediano, que son, de la profundidad a la superficie:
 - samoideo externo y en el tubérculo externo de la base de la primera falange; dirección oblicua hacia arriba y hacia dentro;
@@ -4932,15 +4953,15 @@ Para hacer más cómoda la descripción se han expuesto las dos fases de manera 
 
 El músculo extensor corto del pulgar (Fig. 219) posee dos acciones:
 
-- 2) Desplaza el primer metacarpiano, y por consiguiente el pulgar, directamente hacia fuera: se trata pues del verdadero abductor del pulgar, lo que corresponde a una extensión/retroposición de la ar-
-- 1) Extiende la primera falange sobre el metacarpiano;
+- 2. Desplaza el primer metacarpiano, y por consiguiente el pulgar, directamente hacia fuera: se trata pues del verdadero abductor del pulgar, lo que corresponde a una extensión/retroposición de la ar-
+- 1. Extiende la primera falange sobre el metacarpiano;
 
 ticulación trapezometacarpiana. Para que esta abducción se lleve a cabo de manera aislada, es necesario estabilizar la muñeca mediante la contracción sinérgica del músculo flexor cubital del carpo y sobre todo del músculo extensor cubital del carpo, de lo contrario, el músculo extensor corto del pulgar también realiza la abducción de la muñeca.
 
 - El músculo extensor largo del pulgar (Fig. 220) tiene tres acciones:
-- 1) Extiende la segunda falange sobre la primera;
-- 2) Extiende la primera falange sobre el metacarpiano;
-- 3) Desplaza el metacarpiano hacia dentro y hacia atrás:
+- 1. Extiende la segunda falange sobre la primera;
+- 2. Extiende la primera falange sobre el metacarpiano;
+- 3. Desplaza el metacarpiano hacia dentro y hacia atrás:
 - Por detrás del plano de la mano: es retropulsor del primer metacarpiano gracias a su reflexión sobre el tubérculo de Lister (véase Fig. 211).
 - Hacia dentro: "cierra" el primer espacio interóseo. de modo que es aductor del primer metacarpiano;
 
@@ -4966,7 +4987,7 @@ Fig. 221
 
 El músculo aductor del pulgar (Fig. 222), con sus dos haces, haz oblicuo (flecha blanca superior) y haz transverso (flecha blanca inferior), extiende su acción sobre las tres piezas óseas del pulgar:
 
-- 1) Sobre el primer metacarpiano (Fig. 223: diagrama en corte), la contracción del músculo aductor del pulgar desplaza el primer metacarpiano hacia una posición de equilibrio A ligeramente por fuera y por delante del segundo metacarpiano, aunque, según Duchenne de Boulogne, el sentido del movimiento depende de la posición de partida del metacarpiano:
+- 1. Sobre el primer metacarpiano (Fig. 223: diagrama en corte), la contracción del músculo aductor del pulgar desplaza el primer metacarpiano hacia una posición de equilibrio A ligeramente por fuera y por delante del segundo metacarpiano, aunque, según Duchenne de Boulogne, el sentido del movimiento depende de la posición de partida del metacarpiano:
 - El músculo aductor del pulgar es efectivamente aductor si el metacarpiano parte de una posición de máxima abducción 1;
 - Pero se convierte en abductor si el metacarpiano está, en el punto de partida, en máxima aducción 2;
 - Por el contrario, si el metacarpiano está colocado previamente en anteposición por el músculo abductor corto del pulgar 4, se convierte en retropulsor;
@@ -4979,8 +5000,8 @@ El músculo aductor del pulgar no interviene en la abducción, la antepulsión, 
 
 Posteriores trabajos electromiográficos (Hamonet, de la Caffinière y Opsomer) han confirmado que su actividad se manifiesta principalmente en el movimiento que aproxima el pulgar al segundo metacarpiano, y esto en todos los sectores de la oposición. Su actividad es menor en el trayecto mayor que en uno más pequeño (Fig. 224: diagrama de acción del músculo aductor del pulgar según Hamonet, de la Caffinière y Opsomer).
 
-- 2) Sobre la primera falange (Fig. 222) la acción es triple: ligera flexión, inclinación sobre el borde interno (borde cubital), rotación longitudinal en rotación externa o supinación (flecha blanca incurvada);
-- 3) Sobre la segunda falange: extensión, en la medida en que las inserciones terminales del músculo aductor del pulgar son comunes con las del primer músculo interóseo palmar.
+- 2. Sobre la primera falange (Fig. 222) la acción es triple: ligera flexión, inclinación sobre el borde interno (borde cubital), rotación longitudinal en rotación externa o supinación (flecha blanca incurvada);
+- 3. Sobre la segunda falange: extensión, en la medida en que las inserciones terminales del músculo aductor del pulgar son comunes con las del primer músculo interóseo palmar.
 
 El primer músculo interóseo palmar posee una acción muy parecida:
 
@@ -5035,9 +5056,9 @@ La contracción global de los músculos del grupo tenar externo, reforzada por l
 
 La extensión de la segunda falange se puede llevar a cabo, como demostró Duchenne de Boulogne, por tres músculos o grupos musculares que intervienen bajo distintas circunstancias:
 
-- 1) Por el músculo extensor largo del pulgar: se asocia entonces con una extensión de la primera falange y un aplanamiento de la eminencia tenar. Estas acciones se desarrollan cuando se abre y aplana la mano;
-- 2) Por los músculos del grupo tenar interno (primer músculo interóseo palmar): se asocia entonces con una aducción del pulgar. Estas acciones se desarrollan cuando se opone el pulpejo del pulgar a la cara externa de la primera falange del dedo indice (véase Fig. 249);
-- 3) Por los músculos del grupo tenar externo, sobre todo el músculo abductor corto del pulgar en la acción de oposición del pulpejo.
+- 1. Por el músculo extensor largo del pulgar: se asocia entonces con una extensión de la primera falange y un aplanamiento de la eminencia tenar. Estas acciones se desarrollan cuando se abre y aplana la mano;
+- 2. Por los músculos del grupo tenar interno (primer músculo interóseo palmar): se asocia entonces con una aducción del pulgar. Estas acciones se desarrollan cuando se opone el pulpejo del pulgar a la cara externa de la primera falange del dedo indice (véase Fig. 249);
+- 3. Por los músculos del grupo tenar externo, sobre todo el músculo abductor corto del pulgar en la acción de oposición del pulpejo.
 
 <!-- PAGE_NUMBER: 307 -->
 
@@ -5094,10 +5115,10 @@ De la posición de partida (Fig. 235: visión anterosuperior del modelo) a la po
 
 Concretando (Fig. 237), basta con efectuar sucesivamente (o simultáneamente) las cuatro operaciones siguientes:
 
-- 1) Rotación en la articulación trapezometacarpiana en torno al eje XX' de la pieza intermedia del cardán en el sentido de la anteposición (flecha 1) desplazando el primer metacarpiano de la posición 1 a la posición 2 y el eje Y, Y, a Y, Y,;
-- 3) Flexión de la articulación metacarpofalángica de la primera falange en torno al eje f;
-- 2) Rotación de la articulación trapezometacarpiana del primer metacarpiano (flecha 2) de la posición 2 a la posición 3 por flexión en torno al eje Y,Y?;
-- 4) Flexión de la articulación interfalángica de la segunda falange en torno al eje f,.
+- 1. Rotación en la articulación trapezometacarpiana en torno al eje XX' de la pieza intermedia del cardán en el sentido de la anteposición (flecha 1) desplazando el primer metacarpiano de la posición 1 a la posición 2 y el eje Y, Y, a Y, Y,;
+- 3. Flexión de la articulación metacarpofalángica de la primera falange en torno al eje f;
+- 2. Rotación de la articulación trapezometacarpiana del primer metacarpiano (flecha 2) de la posición 2 a la posición 3 por flexión en torno al eje Y,Y?;
+- 4. Flexión de la articulación interfalángica de la segunda falange en torno al eje f,.
 
 De este modo se demuestra, no mediante argumentos teóricos sino merced a trabajos prácticos, la importante función del cardán de la articulación trapezometacarpiana en la rotación longitudinal del pulgar.
 
@@ -5223,16 +5244,16 @@ Las presas digitales se dividen a su vez en dos subgrupos: las pinzas bidigitale
 
 A. Las presas bidigitales constituyen la clásica pinza pulgodigital, generalmente pulgar-índice. Asimismo, son de tres tipos, dependiendo de que la oposición sea terminal, subterminal o subterminolateral.
 
-- 1) La presa por oposición terminal o terminopulpejo (Figs. 246 y 247) es la más fina y precisa. Permite sujetar un objeto de pequeño calibre (Fig. 246) o coger un objeto muy fino: una cerilla o una aguja (Fig. 247). El pulgar y el dedo índice (o el dedo corazón) se oponen por el extremo del pulpejo e incluso en el caso de algunos objetos extremadamente finos (coger un pelo) por el borde de la uña. Por lo tanto, se necesita un pulpejo elástico y correctamente apuntalado por la uña, cuya función es primordial en este tipo de prensión. Por este motivo, también se puede denominar prensión pulpejo-ungueal. Es la prensión más fácil de comprometer ante la menor alteración de la mano; de hecho, precisa de un máximo juego articular (la flelos grupos musculares y tendones, y en particular:
+- 1. La presa por oposición terminal o terminopulpejo (Figs. 246 y 247) es la más fina y precisa. Permite sujetar un objeto de pequeño calibre (Fig. 246) o coger un objeto muy fino: una cerilla o una aguja (Fig. 247). El pulgar y el dedo índice (o el dedo corazón) se oponen por el extremo del pulpejo e incluso en el caso de algunos objetos extremadamente finos (coger un pelo) por el borde de la uña. Por lo tanto, se necesita un pulpejo elástico y correctamente apuntalado por la uña, cuya función es primordial en este tipo de prensión. Por este motivo, también se puede denominar prensión pulpejo-ungueal. Es la prensión más fácil de comprometer ante la menor alteración de la mano; de hecho, precisa de un máximo juego articular (la flelos grupos musculares y tendones, y en particular:
 - Del músculo flexor profundo de los dedos del dedo índice, que estabiliza la pequeña falange en flexión, de ahí la importancia de una reparación prioritaria del músculo flexor profundo de los dedos cuando están seccionados ambos flexores;
 - Del músculo flexor largo del pulgar, por la misma razón, del lado del pulgar;
-- 2) La prensión por oposición subterminal o del pulpejo (Fig. 248) es el tipo más común. Permite sujetar objetos relativamente más gruesos: un lápiz o una hoja de papel: la prueba de eficacia de la prensión del pulpejo subterminal consiste en intentar arrancar una hoja de papel sujeto con firmeza por el pulgar y el dedo índice. Si la oposición es buena, la hoja no se puede arrancar. También se denomina signo de Froment, que valora la potencia del músculo aductor corto del pulgar así como la integridad del nervio cubital que lo inerva.
+- 2. La prensión por oposición subterminal o del pulpejo (Fig. 248) es el tipo más común. Permite sujetar objetos relativamente más gruesos: un lápiz o una hoja de papel: la prueba de eficacia de la prensión del pulpejo subterminal consiste en intentar arrancar una hoja de papel sujeto con firmeza por el pulgar y el dedo índice. Si la oposición es buena, la hoja no se puede arrancar. También se denomina signo de Froment, que valora la potencia del músculo aductor corto del pulgar así como la integridad del nervio cubital que lo inerva.
 
 En este tipo de prensión, pulgar y dedo índice (o cualquier otro dedo) se oponen por la cara palmar del pulpejo. Naturalmente, el estado del pulpejo es importante, pero la articulación interfalángica distal puede estar en extensión o incluso bloqueada en semiflexión mediante una artrodesis. Los principales músculos de este tipo de prensión son:
 
 - Los músculos tenares flexores de la primera falange del pulgar: músculo flexor corto del pulgar, primer músculo interóseo palmar, músculo abductor corto del pulgar y sobre todo el músculo aductor del pulgar:
 - El músculo flexor superficial de los dedos del dedo indice para la estabilización en flexión de la segunda falange;
-- 3) La presa por oposición subterminolateral o pulpolateral (Fig 249), como cuando se sujeta una moneda. Este tipo de prensión puede suplir la oposición terminal o la subterminal cuando se han amputado las dos últimas falanges del dedo índice: la presa es menos fina aunque sigue siendo sólida. La cara palmar del pulpejo del pulgar contacta con la cara externa de la primera falange del dedo indice. Los músculos más importantes de este tipo de prensión son:
+- 3. La presa por oposición subterminolateral o pulpolateral (Fig 249), como cuando se sujeta una moneda. Este tipo de prensión puede suplir la oposición terminal o la subterminal cuando se han amputado las dos últimas falanges del dedo índice: la presa es menos fina aunque sigue siendo sólida. La cara palmar del pulpejo del pulgar contacta con la cara externa de la primera falange del dedo indice. Los músculos más importantes de este tipo de prensión son:
 - El primer músculo interóseo dorsal del dedo índice para estabilizar el dedo indice lateralmente, apuntalado además por los otros dedos;
 - xión es máxima) y sobre todo de la integridad de · El músculo flexor corto del pulgar, el primer músculo interóseo palmar y sobre todo el músculo aductor del pulgar; cuya actividad ha sido confirmada mediante electromiografia.
 
@@ -5244,9 +5265,9 @@ Fig. 248
 
 <!-- PAGE_NUMBER: 320 -->
 
-- 4) Entre las presas digitales, existe una que no constituye una pinza pulgodigital, se trata de la prensión interdigital laterolateral (Fig. 250): es un tipo de prensión accesoria: por ejemplo sujetar un cigarro o cualquier otro objeto pequeño. Generalmente, se efectúa entre el dedo índice y el dedo corazón, el pulgar no interviene. El diámetro del objeto que se ha de coger debe ser pequeño. Los músculos que participan son los músculos interóseos (segundos músculos interóseos palmar y dorsal). Es una presa débil y sin precisión, aunque los individuos que sufren amputación del pulgar la desarrollan de manera sorprendente;
+- 4. Entre las presas digitales, existe una que no constituye una pinza pulgodigital, se trata de la prensión interdigital laterolateral (Fig. 250): es un tipo de prensión accesoria: por ejemplo sujetar un cigarro o cualquier otro objeto pequeño. Generalmente, se efectúa entre el dedo índice y el dedo corazón, el pulgar no interviene. El diámetro del objeto que se ha de coger debe ser pequeño. Los músculos que participan son los músculos interóseos (segundos músculos interóseos palmar y dorsal). Es una presa débil y sin precisión, aunque los individuos que sufren amputación del pulgar la desarrollan de manera sorprendente;
 - B. Las presas pluridigitales hacen intervenir, además del pulgar, los otros dos, tres o cuatro dedos. Permiten una prensión mucho más firme que la bidigital que persiste como presa de precisión.
-- 1) Las presas tridigitales comprometen al pulgar, dedo índice y dedo corazón y son las que se utilizan con mayor frecuencia. Una parte importante, por no decir preponderante, de la humanidad que no usa el tenedor, utiliza esta presa para llevarse los alimentos a la boca. Se asemeja entonces a la presa tridigital del pulpejo (Fig. 251), tal cual se emplea para sujetar una pelota pequeña donde el pulgar opone su pulpejo al del dedo índice y al del dedo corazón en relación al objeto. Por ejemplo, escribir con un lápiz (Fig. 252), necesita una presa tridigital, del pulpejo en el caso del dedo indice y del pulgar, y lateral para la tercera falange del dedo corazón que sirve de soporte al igual que el fondo de la primera comisura.
+- 1. Las presas tridigitales comprometen al pulgar, dedo índice y dedo corazón y son las que se utilizan con mayor frecuencia. Una parte importante, por no decir preponderante, de la humanidad que no usa el tenedor, utiliza esta presa para llevarse los alimentos a la boca. Se asemeja entonces a la presa tridigital del pulpejo (Fig. 251), tal cual se emplea para sujetar una pelota pequeña donde el pulgar opone su pulpejo al del dedo índice y al del dedo corazón en relación al objeto. Por ejemplo, escribir con un lápiz (Fig. 252), necesita una presa tridigital, del pulpejo en el caso del dedo indice y del pulgar, y lateral para la tercera falange del dedo corazón que sirve de soporte al igual que el fondo de la primera comisura.
 
 En este sentido, esta presa es muy direccional y se parece tanto a las presas centradas como a las presas activas, que se podrán analizar más adelante, ya que la escritura no sólo es el resultado de los movimientos del hombro y de la mano que se desliza por la mesa sobre su borde cubital y el dedo meñique, sino también de los movimientos de los tres primeros dedos que provocan la intervención del músculo flexor largo del pulgar y del músculo flexor superficial del dedo indice para el vaivén del lápiz y de los músculos sesamoideos externos y del segundo músculo interóseo dorsal para sujetarlo.
 
@@ -5260,10 +5281,12 @@ Si al inicio, el tapón no está demasiado apretado, puede emplearse la presa tr
 
 <!-- PAGE_NUMBER: 322 -->
 
-- 2) Las presas tetradigitales se utilizan cuando se trata de un objeto muy grueso que debe cogerse con mayor firmeza. La presa puede ser entonces:
+- 2. Las presas tetradigitales se utilizan cuando se trata de un objeto muy grueso que debe cogerse con mayor firmeza. La presa puede ser entonces:
 - Tetradigital del pulpejo (Fig. 254) cuando coge un objeto esférico como una pelota de ping-pong. En este caso se puede observar que el contacto se lleva a cabo por el pulpejo en el caso del pulgar, dedo índice y dedo corazón, mientras que es lateral en el caso de la tercera falange del dedo anular, cuya función es evitar que el objeto se escape hacia dentro;
 - Tetradigital pulpejo-lateral (Fig. 255) cuando se desenrosca una tapa. En este caso, el contacto del pulgar es amplio, abarcando el pulpejo y la cara palmar de la primera falange, así como sobre el dedo indice y el dedo corazón; es lateral y del pulpejo en
+
 4. la segunda falange del dedo anular que bloquea el objeto por dentro. "El rodeo" de la tapa por los cuatro dedos produce un movimiento de espiral sobre el segundo, tercero y cuarto dedos y se puede demostrar que la resultante de las fuerzas que ejercen se anula en el centro de la tapa que se proyecta hacia la articulación metacarpofalángica del dedo indice;
+
 - Tetradigital del pulpejo pulgotridigital (Fig. 256), como cuando se sostiene un carboncillo, un pincel o un lápiz: el pulpejo del pulgar dirige y mantiene el objeto con fuerza contra el pulpejo del dedo índice, del dedo corazón y del dedo anular casi en máxima extensión. También es la forma en la que el violinista y el violonchelista sujetan su arco.
 
 <!-- PAGE_NUMBER: 323 -->
@@ -5274,7 +5297,7 @@ Fig. 256
 
 <!-- PAGE_NUMBER: 324 -->
 
-- 3) Las presas pentadigitales emplean todos los dedos, el pulgar se opone de forma variada a los otros dedos. Se utilizan generalmente para coger grandes objetos. Sin embargo, cuando se trata de un objeto pequeño, se puede coger con un presa pentadigital del pulpejo (Fig. 257), de modo que sólo el quinto dedo efectúa un contacto lateral. Si el objeto es un poco más voluminoso, como una pelota de tenis, la presa se convierte en pentadigital pulpejo-lateral (Fig. 258): los cuatro primeros dedos contactan con toda su cara palmar y envuelven el objeto casi totalmente, el pulgar se opone a los tres otros dedos y el dedo menique evita mediante su cara externa cualquier posible desplazamiento del objeto hacia dentro y en sentido proximal. Aunque no se trata de una presa palmar, la pelota se localiza más en los dedos que en la palma de la mano, también es una presa firme.
+- 3. Las presas pentadigitales emplean todos los dedos, el pulgar se opone de forma variada a los otros dedos. Se utilizan generalmente para coger grandes objetos. Sin embargo, cuando se trata de un objeto pequeño, se puede coger con un presa pentadigital del pulpejo (Fig. 257), de modo que sólo el quinto dedo efectúa un contacto lateral. Si el objeto es un poco más voluminoso, como una pelota de tenis, la presa se convierte en pentadigital pulpejo-lateral (Fig. 258): los cuatro primeros dedos contactan con toda su cara palmar y envuelven el objeto casi totalmente, el pulgar se opone a los tres otros dedos y el dedo menique evita mediante su cara externa cualquier posible desplazamiento del objeto hacia dentro y en sentido proximal. Aunque no se trata de una presa palmar, la pelota se localiza más en los dedos que en la palma de la mano, también es una presa firme.
 
 Otra presa pentadigital que podría denominarse presa pentadigital comisural (Fig. 259), coge objetos gruesos hemisféricos, como por ejemplo un cuenco, envolviéndolo con la primera comisura: pulgar y dedo indice ampliamente extendidos y separados contactan con toda su cara palmar, lo que precisa una gran flexibilidad y posibilidades normales de separación de la primera comisura. Este no es el caso tras las fracturas del primer metacarpiano o las heridas del primer espacio que acarrean una retracción de la primera comisura. Además, el cuenco lo sujetan (Fig. 260) el dedo corazón, el dedo anular y el dedo meñique, que no contactan más que a través de sus dos últimas falanges. Por lo tanto, se trata más bien de una presa digital y no palmar:
 
@@ -5325,8 +5348,8 @@ Fig. 265
 
 <!-- PAGE_NUMBER: 328 -->
 
-- 1) Cuando se utiliza la presa palmar cilíndrica para objetos de diámetro importante (Figs. 266 y 267), la presa es tanto menos firme cuanto mayor es el diámetro. De modo, que el bloqueo depende, como ya se vio con anterioridad, de la acción de la articulación metacarpofalángica que permite que el pulgar recorra una directriz del cilindro, es decir un círculo, o el camino más corto para dar la vuelta. Por otra parte, el volumen del objeto exige la máxima libertad de separación de la primera comisura;
-- 2) Las presas palmares esféricas pueden implicar a tres, cuatro o cinco dedos. Cuando intervienen tres (Fig. 268) o cuatro dedos (Fig. 269) el último dedo implicado por dentro, bien sea el dedo corazón en la presa esférica tridigital, o el dedo anular en la presa esférica tetradigital, contactan por la cara lateral externa con el objeto, constituyendo así un tope interno, reforzado por los dedos restantes, a saber el dedo meñique en solitario o asociado con el dedo anular. Este tope se opone a la presión del pulgar de modo que el objeto queda bloqueado distalmente por el o los "ganchos" de los dedos que establecen un contacto palmar con el objeto.
+- 1. Cuando se utiliza la presa palmar cilíndrica para objetos de diámetro importante (Figs. 266 y 267), la presa es tanto menos firme cuanto mayor es el diámetro. De modo, que el bloqueo depende, como ya se vio con anterioridad, de la acción de la articulación metacarpofalángica que permite que el pulgar recorra una directriz del cilindro, es decir un círculo, o el camino más corto para dar la vuelta. Por otra parte, el volumen del objeto exige la máxima libertad de separación de la primera comisura;
+- 2. Las presas palmares esféricas pueden implicar a tres, cuatro o cinco dedos. Cuando intervienen tres (Fig. 268) o cuatro dedos (Fig. 269) el último dedo implicado por dentro, bien sea el dedo corazón en la presa esférica tridigital, o el dedo anular en la presa esférica tetradigital, contactan por la cara lateral externa con el objeto, constituyendo así un tope interno, reforzado por los dedos restantes, a saber el dedo meñique en solitario o asociado con el dedo anular. Este tope se opone a la presión del pulgar de modo que el objeto queda bloqueado distalmente por el o los "ganchos" de los dedos que establecen un contacto palmar con el objeto.
 
 <!-- PAGE_NUMBER: 329 -->
 
@@ -5463,7 +5486,7 @@ Dependen de cada caso particular:
 - cuando los dedos han perdido su función de prensión, el bloqueo de la muñeca es más ventajoso en flexión;
 - si las dos muñecas están definitivamente inmovilizadas, impera el bloqueo de una de ellas para la higiene perineal; la utilización de una muleta o de un bastón induce al bloqueo de la muñeca en posición de alineación. La utilización de dos muletas conlleva una artrodesis en extensión de 10° de la mano dominante y una artrodesis en flexión de 10° de la otra;
 - 295), que · En lo que concierne a las articulaciones metacarpofalángicas, la posición de flexión varía de 35° en el caso del dedo indice a 50° en el caso del dedo meñique;
-- 1) La posición de inmovilización temporal, denominada de "protección" (véase Fig. intenta preservar la movilidad ulterior de la mano:
+- 1. La posición de inmovilización temporal, denominada de "protección" (véase Fig. intenta preservar la movilidad ulterior de la mano:
 - Antebrazo en semiflexión, pronación, codo flexionado 100°;
 - Dedos tanto más flexionados cuanto más internos:
 - Muñeca en extensión a 20° y ligera aducción;
@@ -5483,7 +5506,7 @@ Fig. 293
 
 <!-- PAGE_NUMBER: 340 -->
 
-- 3) Las posiciones no funcionales denominadas "de inmovilización temporal"-posiciones de relajación parcial.
+- 3. Las posiciones no funcionales denominadas "de inmovilización temporal"-posiciones de relajación parcial.
 
 Sólo se justifican en el periodo de tiempo más corto posible para obtener una mayor estabilidad en un foco de fractura o una relajación en una sutura tendinosa o nerviosa.
 
@@ -5514,9 +5537,9 @@ Las manos ficción no son un simple ejercicio de imaginación, sino que permiten
 
 Las manos asimétricas derivan de la mano normal por reducción o incremento del número de dedos, o por inversión de la simetría.
 
-- 2) La reducción del número de dedos a cuatro o tres hace que la mano pierda sus posibilidades. Algunos monos de América Central poseen en el miembro superior una mano con cuatro dedos sin pulgar, que lo único que pueden hacer es agarrarse a las ramas, mientras que en el miembro inferior poseen una mano de cinco dedos con pulgar oponible. La mano con tres dedos (Fig. 296), tal como puede observarse después de determinadas amputaciones, conserva presas tridigitales y bidigitales, las más frecuentes y las más precisas, pero pierde la presa con la totalidad de la palma de la mano, indispensable para coger los mangos de las herramientas y los cayados. La mano con dos dedos (Fig. 297) pulgar y dedo índice, aún puede realizar un gancho, con el índice y una pinza bidigital para las presas finas, pero no puede efectuar de ninguna manera las presas tridigitales y las presas con la totalidad de la palma de la mano, y sin embargo, ¡que resultado puede dar la conservación o restitución de una mano con dos dedos en algunos mutilados!
-- 1) El incremento del número de dedos, seis o siete dedos añadidos tras el dedo meñique en el borde cubital de la mano aumentaría con certeza la presa con la totalidad de la palma de la mano, pero al precio de una complicación funcional prohibitiva sin ganancia real de funcionalidad. Estas manos con exceso de dedos suelen ser malformaciones congénitas que necesitan la amputación de los mismos.
-- 3) Tras lesiones del dedo meñique -amputación final por enfermedad de Dupuytren- o del dedo anular desenguantage por alianza también denominado "dedo de anillo"- los cirujanos de la mano pueden verse abocados a reconstruir una mano con cuatro dedos. Sea por resección del quinto dedo (Fig. 298) o por resección de la articulación interfalángica del cuarto radio (Fig. 299), el resultado estético y funcional es generalmente muy satisfactorio, y esta enfermedad pasa, por lo general, inadvertida
+- 2. La reducción del número de dedos a cuatro o tres hace que la mano pierda sus posibilidades. Algunos monos de América Central poseen en el miembro superior una mano con cuatro dedos sin pulgar, que lo único que pueden hacer es agarrarse a las ramas, mientras que en el miembro inferior poseen una mano de cinco dedos con pulgar oponible. La mano con tres dedos (Fig. 296), tal como puede observarse después de determinadas amputaciones, conserva presas tridigitales y bidigitales, las más frecuentes y las más precisas, pero pierde la presa con la totalidad de la palma de la mano, indispensable para coger los mangos de las herramientas y los cayados. La mano con dos dedos (Fig. 297) pulgar y dedo índice, aún puede realizar un gancho, con el índice y una pinza bidigital para las presas finas, pero no puede efectuar de ninguna manera las presas tridigitales y las presas con la totalidad de la palma de la mano, y sin embargo, ¡que resultado puede dar la conservación o restitución de una mano con dos dedos en algunos mutilados!
+- 1. El incremento del número de dedos, seis o siete dedos añadidos tras el dedo meñique en el borde cubital de la mano aumentaría con certeza la presa con la totalidad de la palma de la mano, pero al precio de una complicación funcional prohibitiva sin ganancia real de funcionalidad. Estas manos con exceso de dedos suelen ser malformaciones congénitas que necesitan la amputación de los mismos.
+- 3. Tras lesiones del dedo meñique -amputación final por enfermedad de Dupuytren- o del dedo anular desenguantage por alianza también denominado "dedo de anillo"- los cirujanos de la mano pueden verse abocados a reconstruir una mano con cuatro dedos. Sea por resección del quinto dedo (Fig. 298) o por resección de la articulación interfalángica del cuarto radio (Fig. 299), el resultado estético y funcional es generalmente muy satisfactorio, y esta enfermedad pasa, por lo general, inadvertida
 
 para gente poco observadora. ¡Quién ha caído en la cuenta que la mano de Mickey (Fig. 300) no tiene más que cuatro dedos!
 
@@ -5629,9 +5652,9 @@ Fig. 311
 
 nas anteriores, tres pruebas para el nervio cubital merecen ser señaladas. Dos son clásicas y la tercera nueva.
 
-- 1) El signo de Wartenberg (Fig. 314) se advierte en las parálisis cubitales globales, pero, sobre todo, es interesante para reconocer las parálisis dístales del nervio, por ejemplo en el conducto de Guyon. Puede llamar la atención la separación permanente del dedo meñique en relación al dedo anular (flecha negra). La aproximación activa, voluntaria, del dedo meñique hacia el dedo vecino (en segundo plano) es imposible.
-- 2) El signo de Froment (Fig. 315) se observa cuando se le pide al sujeto que sujete una hoja de papel entre el pulgar y el dedo índice: el dedo índice y el pulgar adoptan normalmente la forma de anillo (en segundo plano). En caso de alteración del nervio cubital, la pinza pierde firmeza por parálisis del músculo aductor corto del pulgar, inervado por la rama palmar profunda del nervio cubital; la primera falange se extiende y si se tira del papel, la presa no es capaz de sujetarlo, lo que no es posible si el nervio está normal.
-- 3) El signo del gancho cubital fallido (descrito recientemente por el autor). Normalmente, cuando se flexionan con fuerza los dos últimos dedos en la palma, el evaluador no puede "desenganchar" el dedo meñique, es decir conseguir la extensión pasiva de la última falange del dedo meñique del sujeto. He aquí como se busca la prueba descrita, pro ejemplo en la mano derecha de un paciente (Fig. 316):
+- 1. El signo de Wartenberg (Fig. 314) se advierte en las parálisis cubitales globales, pero, sobre todo, es interesante para reconocer las parálisis dístales del nervio, por ejemplo en el conducto de Guyon. Puede llamar la atención la separación permanente del dedo meñique en relación al dedo anular (flecha negra). La aproximación activa, voluntaria, del dedo meñique hacia el dedo vecino (en segundo plano) es imposible.
+- 2. El signo de Froment (Fig. 315) se observa cuando se le pide al sujeto que sujete una hoja de papel entre el pulgar y el dedo índice: el dedo índice y el pulgar adoptan normalmente la forma de anillo (en segundo plano). En caso de alteración del nervio cubital, la pinza pierde firmeza por parálisis del músculo aductor corto del pulgar, inervado por la rama palmar profunda del nervio cubital; la primera falange se extiende y si se tira del papel, la presa no es capaz de sujetarlo, lo que no es posible si el nervio está normal.
+- 3. El signo del gancho cubital fallido (descrito recientemente por el autor). Normalmente, cuando se flexionan con fuerza los dos últimos dedos en la palma, el evaluador no puede "desenganchar" el dedo meñique, es decir conseguir la extensión pasiva de la última falange del dedo meñique del sujeto. He aquí como se busca la prueba descrita, pro ejemplo en la mano derecha de un paciente (Fig. 316):
 - El evaluador (dos manos) presenta su dedo índice derecho al paciente y le pide que lo agarre con fuerza entre sus dos últimos dedos flexionados.
 - En caso de parálisis del nervio cubital, el gancho del dedo meñique del paciente cede y su tercera falange se extiende (flecha negra).
 - Normalmente, este intento fracasa: los dos últimos dedos del paciente en forma de gancho resisten.
@@ -5661,13 +5684,13 @@ Desde la Prehistoria (Fig. 318), la Mano del Hombre no ha cambiado, como atestig
 
 Esta pareja mano/cerebro funciona en los dos sentidos: existe una relación de "reciprocidad". Es gracias a las capacidades de la mano que el cerebro humano ha podido progresar.
 
-* Del nombre Gerlamo Cardano (1501-1576), su inventor.
+- Del nombre Gerlamo Cardano (1501-1576), su inventor.
 
 · Guillermo de Okham (1285-1349), Franciscano en Oxford y en París, celebre por su aforismo, conocido bajo el nombre de
 
 "Navaja de Okham" que dice: "la belleza de una teoría radica en su simplicidad".
 
-En su estructura compleja, se descubre perfectamente lógica y adaptada a sus distintas funciones. Su arquitectura refleja el principio de Economía Universal, de Guillermo de Okham*. Es uno de los más bellos logros de la Evolución Creadora.
+En su estructura compleja, se descubre perfectamente lógica y adaptada a sus distintas funciones. Su arquitectura refleja el principio de Economía Universal, de Guillermo de Okham\*. Es uno de los más bellos logros de la Evolución Creadora.
 
 El Hombre, empujado por sus ambiciones prometeas, ya fabrica órganos robóticos de prensión y de manipulación, pero todavía está muy lejos de conseguir el grado de perfección de su modelo.
 
@@ -6796,9 +6819,9 @@ El esquema b muestra como se fija la mano sobre su pedestal introduciendo su bas
 
 Tal como está ahora, este modelo permite entender por movilización pasiva tres características funcionales fundamentales de la mano:
 
-- 1) El ahuecamiento de la palma de la mano, por flexión de los dos pliegues longitudinales que simula los movimientos de oposición del 4° y sobre todo del 5° metacarpiano;
-- 2) La flexión oblicua de los dedos, que los hace converger hacia la base de la eminencia tenar gracias a la oblicuidad cada vez más acentuada de los ejes de las articulaciones interfalángicas y de las articulaciones metacarpofalángicas, cuando se dirige el índice hacia el meñique (ejemplo de rotación cónica). Este fenómeno está reforzado por la oposición de los radios metacarpianos internos (4° y sobre todo 5° metacarpiano);
-- 3) La oposición del pulgar: los tres casos de rotación plana, rotación cónica y rotación cilíndrica expuestos en el texto pueden verificarse aquí, cogiendo el eje 1 como eje principal y el eje 2 como eje secundario; de este modo, se puede comprobar que la flexión sucesiva en el eje 2 y las dos otras articulaciones del pulgar (articulaciones metacarpofalangica e interfalángica) permiten efectuar una rotación cilíndrica de la última falange del pulgar que cambia así de orientación sin que se haya marcado la flexión en la articulación trapezometacarpiana y sin que la rotación del primer metacarpiano sobre su eje longitudinal haya sido relevante. Se puede constatar que sin que haya intervenido ningún juego mecánico en las articulaciones del pulgar, es posible llevar a cabo la oposición en "pequeño y gran recorrido" del índice hasta el meñique con un cambio de orientación del pulpejo del pulgar que corresponde exactamente a la realidad.
+- 1. El ahuecamiento de la palma de la mano, por flexión de los dos pliegues longitudinales que simula los movimientos de oposición del 4° y sobre todo del 5° metacarpiano;
+- 2. La flexión oblicua de los dedos, que los hace converger hacia la base de la eminencia tenar gracias a la oblicuidad cada vez más acentuada de los ejes de las articulaciones interfalángicas y de las articulaciones metacarpofalángicas, cuando se dirige el índice hacia el meñique (ejemplo de rotación cónica). Este fenómeno está reforzado por la oposición de los radios metacarpianos internos (4° y sobre todo 5° metacarpiano);
+- 3. La oposición del pulgar: los tres casos de rotación plana, rotación cónica y rotación cilíndrica expuestos en el texto pueden verificarse aquí, cogiendo el eje 1 como eje principal y el eje 2 como eje secundario; de este modo, se puede comprobar que la flexión sucesiva en el eje 2 y las dos otras articulaciones del pulgar (articulaciones metacarpofalangica e interfalángica) permiten efectuar una rotación cilíndrica de la última falange del pulgar que cambia así de orientación sin que se haya marcado la flexión en la articulación trapezometacarpiana y sin que la rotación del primer metacarpiano sobre su eje longitudinal haya sido relevante. Se puede constatar que sin que haya intervenido ningún juego mecánico en las articulaciones del pulgar, es posible llevar a cabo la oposición en "pequeño y gran recorrido" del índice hasta el meñique con un cambio de orientación del pulpejo del pulgar que corresponde exactamente a la realidad.
 
 La flexión-pronación de la articulación interfalángica así como la de la articulación metacarpofalángica aparecen gracias a la oblicuidad de los pliegues.
 
@@ -6818,16 +6841,16 @@ La única excepción es la doble polea 2-7 de la pieza C: es ventral para 2 y do
 
 Cada tendón está referenciado con un número en todo su trayecto:
 
-- 1) Músculo abductor largo del pulgar: fijo en la pieza B, moviliza la articulación trapezometacarpiana en torno a su eje principal (eje l);
-- 2) Músculo flexor del pulgar: fijo sobre la 2ª falange, pasa por la corredera (2) de la primera falange en la pieza B. Flexiona las dos falanges del pulgar;
-- 4) Músculo flexor profundo del dedo índice fijo sobre la tercera falange del indice (4) y que pasa a través de tres poleas: flexiona totalmente el índice;
-- 3) Este "tendón" de dirección transversal, fijo sobre el primer metacarpiano (3), y que se refleja en una polea de la palma de la mano (3), es a la vez equivalente del aductor y del flexor corto;
-- 5) Este "tendón" de dirección transversal, simétrico al 3, se fija sobre una cuña de 6 a 7 mm de grosor (trapecio rayado 5); se refleja en la palma de la mano sobre la polea 5, equivale al oponente del meñique;
+- 1. Músculo abductor largo del pulgar: fijo en la pieza B, moviliza la articulación trapezometacarpiana en torno a su eje principal (eje l);
+- 2. Músculo flexor del pulgar: fijo sobre la 2ª falange, pasa por la corredera (2) de la primera falange en la pieza B. Flexiona las dos falanges del pulgar;
+- 4. Músculo flexor profundo del dedo índice fijo sobre la tercera falange del indice (4) y que pasa a través de tres poleas: flexiona totalmente el índice;
+- 3. Este "tendón" de dirección transversal, fijo sobre el primer metacarpiano (3), y que se refleja en una polea de la palma de la mano (3), es a la vez equivalente del aductor y del flexor corto;
+- 5. Este "tendón" de dirección transversal, simétrico al 3, se fija sobre una cuña de 6 a 7 mm de grosor (trapecio rayado 5); se refleja en la palma de la mano sobre la polea 5, equivale al oponente del meñique;
 
 Nota: los flexores del 3er y 4° dedos no se han colocado en aras de la simplificación, pero se podría hacer sin dificultad;
 
-- 6) Músculo flexor profundo del dedo meñique (mismo trayecto, misma función que el 4).
-- 7) Este tendón no es visible en el esquema. Se trata del extensor largo propio del pulgar: se fija en la cara dorsal de su segunda falange en el mismo agujero que el flexor propio (los dos nudos están opuestos), pasa por la polea 7 de la cara dorsal de su primera falange y después por un agujero en la pieza B.
+- 6. Músculo flexor profundo del dedo meñique (mismo trayecto, misma función que el 4).
+- 7. Este tendón no es visible en el esquema. Se trata del extensor largo propio del pulgar: se fija en la cara dorsal de su segunda falange en el mismo agujero que el flexor propio (los dos nudos están opuestos), pasa por la polea 7 de la cara dorsal de su primera falange y después por un agujero en la pieza B.
 
 En el extremo de cada tendón se pueden hacer bucles para pasar los dedos, o bien fijar anillas que permitan movilizar los tendones con más facilidad.
 
@@ -6841,9 +6864,9 @@ En el caso del eje 1, la tira elástica se origina en uno de los agujeros e, de 
 
 Gracias a los tendones se pueden realizar prácticamente todos los modelos de la mano:
 
-- 1) Ahuecamiento de la palma de la mano: traccionando del tendón 5 (la eficacia de esta maniobra depende de la altura de la cuña 5);
-- 3) Animación del pulgar
-- 2) Flexión del dedo índice y del dedo meñique mediante tracción de los tendones 4 y 6;
+- 1. Ahuecamiento de la palma de la mano: traccionando del tendón 5 (la eficacia de esta maniobra depende de la altura de la cuña 5);
+- 3. Animación del pulgar
+- 2. Flexión del dedo índice y del dedo meñique mediante tracción de los tendones 4 y 6;
 - a) Colocación del pulgar en el plano de la palma de la mano (mano plana: posición inicial del experimento de Sterling-Bunnell): traccionando de forma equilibrada de los tendones 7 y 3;
 - c) Oposición pulgar-meñique: mientras que se flexiona el dedo meñique hay que traccionar simultáneamente de los tendones 1, 3 y 4;
 - b) Oposición pulgar-índice: mientras que se flexiona el índice hay que traccionar simultáneamente de los tendones 1, 3 y 7;
@@ -6852,23 +6875,17 @@ Gracias a los tendones se pueden realizar prácticamente todos los modelos de la
 
 <!-- PAGE_NUMBER: 362 -->
 
-
-
 <!-- PAGE_NUMBER: 363 -->
 
 <!-- image -->
 
 <!-- PAGE_NUMBER: 364 -->
 
-
-
 <!-- PAGE_NUMBER: 365 -->
 
 <!-- image -->
 
 <!-- PAGE_NUMBER: 366 -->
-
-
 
 <!-- PAGE_NUMBER: 367 -->
 

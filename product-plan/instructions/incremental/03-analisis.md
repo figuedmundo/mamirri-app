@@ -14,6 +14,7 @@ Implement the Análisis feature — Análisis visual de huellas plantares y vide
 Analysis section provides objective biomechanical evaluation tools: podoscopy (footprints), posturogram (static posture), video analysis (dynamic gait), and dashboard comparing initial vs. final state to track objective progress.
 
 **Key Functionality:**
+
 - Upload and analyze footprints with pressure heatmaps and arch classification (plano/cavo/normal)
 - Capture posturogram with 4 views (anterior, posterior, lateral) and mark anatomical deviations
 - Analyze gait/posture videos with slow-motion playback and angle detection
@@ -25,11 +26,13 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 Before implementing this section, **write tests first** based on the test specifications provided.
 
 See `product-plan/sections/analisis/tests.md` for detailed test-writing instructions including:
+
 - Key user flows to test (success and failure paths)
 - Specific UI elements, button labels, and interactions to verify
 - Expected behaviors and assertions
 
 **TDD Workflow:**
+
 1. Read `tests.md` and write failing tests for the key user flows
 2. Implement the feature to make tests pass
 3. Refactor while keeping tests green
@@ -56,50 +59,51 @@ The components expect these data shapes:
 ```typescript
 // Footprint analysis
 interface Huella {
-  id: string
-  evaluacionId: string
-  tipo: 'inicial' | 'final' | 'seguimiento'
-  fecha: string
-  url: string
+  id: string;
+  evaluacionId: string;
+  tipo: 'inicial' | 'final' | 'seguimiento';
+  fecha: string;
+  url: string;
   analisis?: {
-    arco: 'plano' | 'cavo' | 'normal'
-    presionTalon: string
-    desviacion: string
-  }
+    arco: 'plano' | 'cavo' | 'normal';
+    presionTalon: string;
+    desviacion: string;
+  };
 }
 
 // Posturogram structure
 interface Posturograma {
-  vistaAnterior?: VistaPostural
-  vistaPosterior?: VistaPostural
-  vistaSagitalLateral?: VistaPostural
-  marcha?: string
-  cabeza?: string
-  hombros?: string
-  columna?: string
-  pelvis?: string
-  rodillas?: string
-  pies?: string
+  vistaAnterior?: VistaPostural;
+  vistaPosterior?: VistaPostural;
+  vistaSagitalLateral?: VistaPostural;
+  marcha?: string;
+  cabeza?: string;
+  hombros?: string;
+  columna?: string;
+  pelvis?: string;
+  rodillas?: string;
+  pies?: string;
 }
 
 // Video analysis
 interface VideoDePostura {
-  id: string
-  evaluacionId: string
-  tipo: 'caminata' | 'postura-estatica'
-  fecha: string
-  url: string
-  duracion: number
-  observaciones: string
+  id: string;
+  evaluacionId: string;
+  tipo: 'caminata' | 'postura-estatica';
+  fecha: string;
+  url: string;
+  duracion: number;
+  observaciones: string;
   angulosDetectados?: {
-    genuFlexo: number
-    inclinacionTronco: number
+    genuFlexo: number;
+    inclinacionTronco: number;
     // ... other angle measurements
-  }
+  };
 }
 ```
 
 You'll need to:
+
 - Create API endpoints or data fetching logic for footprint, posturogram, and video data
 - Implement image/video upload with file validation
 - Connect real data to the components

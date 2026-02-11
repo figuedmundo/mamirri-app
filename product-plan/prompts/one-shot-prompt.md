@@ -10,6 +10,7 @@ Please carefully read and analyze the following files:
 2. **@product-plan/instructions/one-shot-instructions.md** — Complete implementation instructions for all milestones
 
 After reading these, also review:
+
 - **@product-plan/design-system/** — Color and typography tokens
 - **@product-plan/data-model/** — Entity types and relationships
 - **@product-plan/shell/** — Application shell components

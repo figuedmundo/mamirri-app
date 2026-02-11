@@ -12,7 +12,7 @@ El conocimiento clínico valioso existe, pero no está estructurado, ni accesibl
 
 Crear un **Asistente Clínico Digital** robusto que actúe como una extensión cognitiva del profesional.
 
-- **Filosofía:** El sistema piensa *con* el fisioterapeuta, no *por* él.
+- **Filosofía:** El sistema piensa _con_ el fisioterapeuta, no _por_ él.
 - **Objetivo MVP:** Digitalizar la práctica clínica con **cero fricción**, eliminando el teclado mediante voz y visión, y asegurando que los datos sean fiables y seguros.
 
 ### 1.3 Principios de Diseño

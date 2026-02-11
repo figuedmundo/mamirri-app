@@ -74,7 +74,10 @@ export interface PlantillasEditorProps {
   materiales: Material[];
 
   /** Called when structural parameters change (slider interactions) */
-  onUpdateParameter: (param: keyof Plantilla['parametros'], value: number | boolean) => void;
+  onUpdateParameter: (
+    param: keyof Plantilla['parametros'],
+    value: number | boolean,
+  ) => void;
 
   /** Called when a relief zone is added or modified (brush interaction) */
   onUpdateReliefZone: (zona: ZonaAlivio) => void;

@@ -45,21 +45,21 @@ See `screenshot.png` for the target UI design.
 
 ## Callback Props
 
-| Callback | Description |
-|----------|-------------|
-| `onView` | Called when user clicks to view patient details |
-| `onCreate` | Called when user clicks "Nuevo Paciente" button |
-| `onEdit` | Called when user wants to edit patient information |
-| `onDelete` | Called when user wants to delete a patient |
-| `onSchedule` | Called when user wants to schedule appointment in Google Calendar |
-| `onVoiceDictation` | Called when user wants to start voice dictation for clinical notes |
-| `onCaptureHuella` | Called when user wants to capture footprint image |
-| `onCaptureVideo` | Called when user wants to capture posture video |
-| `onSave` | Called when user saves evaluation form data |
-| `onPosturogramaChange` | Called when user marks deviations on posturograma |
-| `onPainScaleChange` | Called when user updates pain scale values |
-| `onExport` | Called when user wants to export comparison report |
-| `onShare` | Called when user wants to share comparison with patient |
-| `onViewSession` | Called when user clicks to view session details |
-| `onAddSession` | Called when user wants to add new treatment session |
-| `onEditSession` | Called when user wants to edit a treatment session |
+| Callback               | Description                                                        |
+| ---------------------- | ------------------------------------------------------------------ |
+| `onView`               | Called when user clicks to view patient details                    |
+| `onCreate`             | Called when user clicks "Nuevo Paciente" button                    |
+| `onEdit`               | Called when user wants to edit patient information                 |
+| `onDelete`             | Called when user wants to delete a patient                         |
+| `onSchedule`           | Called when user wants to schedule appointment in Google Calendar  |
+| `onVoiceDictation`     | Called when user wants to start voice dictation for clinical notes |
+| `onCaptureHuella`      | Called when user wants to capture footprint image                  |
+| `onCaptureVideo`       | Called when user wants to capture posture video                    |
+| `onSave`               | Called when user saves evaluation form data                        |
+| `onPosturogramaChange` | Called when user marks deviations on posturograma                  |
+| `onPainScaleChange`    | Called when user updates pain scale values                         |
+| `onExport`             | Called when user wants to export comparison report                 |
+| `onShare`              | Called when user wants to share comparison with patient            |
+| `onViewSession`        | Called when user clicks to view session details                    |
+| `onAddSession`         | Called when user wants to add new treatment session                |
+| `onEditSession`        | Called when user wants to edit a treatment session                 |

@@ -1,7 +1,7 @@
-import { Search } from 'lucide-react'
+import { Search } from 'lucide-react';
 
 interface SearchBarProps {
-  onSearch: (query: string) => void
+  onSearch: (query: string) => void;
 }
 
 export function SearchBar({ onSearch }: SearchBarProps) {
@@ -24,5 +24,5 @@ export function SearchBar({ onSearch }: SearchBarProps) {
         </kbd>
       </div>
     </div>
-  )
+  );
 }

@@ -12,7 +12,6 @@ original_file: Manual Mobilization of the Joints _ the Kaltenborn Method - 4th e
 extraction_date: '2026-02-09T23:38:41.007Z'
 ---
 
-
 <!-- PAGE_NUMBER: 1 -->
 
 ## Manual Mobilization of the Joints
@@ -28,8 +27,6 @@ Dennis Morgan and Eileen Vollowitz
 4th Edition 2003 ~ Reprint 2005 Norli Oslo, Norway
 
 <!-- PAGE_NUMBER: 2 -->
-
-
 
 <!-- PAGE_NUMBER: 3 -->
 
@@ -121,16 +118,16 @@ Manual Mobilization of the Joints, Volume I, The Extremities, 2002 (ISBN 82-7054
 
 ## Also published in the following languages:
 
-| Volume I: The Extremities   | Volume I: The Extremities   | Volume II: The Spine   | Volume II: The Spine   |
-|-----------------------------|-----------------------------|------------------------|------------------------|
-| Chinese                     | 2002                        | Chinese                | 2000                   |
-| Finnish                     | 1986                        | German                 | 1972 - 2004            |
-| German                      | 1972 - 2005                 | Japanese               | 1988                   |
-| Japanese                    | 1988                        | Korean                 | 2001                   |
-| Korean                      | 2001                        | Norwegian              | 1964 - 1989            |
-| Norwegian                   | 1960 - 1993 (out of print)  | Polish                 | 1998                   |
-| Polish                      | 1996                        | Spanish                | 2000                   |
-| Spanish                     | 1986 - 2001                 |                        |                        |
+| Volume I: The Extremities | Volume I: The Extremities  | Volume II: The Spine | Volume II: The Spine |
+| ------------------------- | -------------------------- | -------------------- | -------------------- |
+| Chinese                   | 2002                       | Chinese              | 2000                 |
+| Finnish                   | 1986                       | German               | 1972 - 2004          |
+| German                    | 1972 - 2005                | Japanese             | 1988                 |
+| Japanese                  | 1988                       | Korean               | 2001                 |
+| Korean                    | 2001                       | Norwegian            | 1964 - 1989          |
+| Norwegian                 | 1960 - 1993 (out of print) | Polish               | 1998                 |
+| Polish                    | 1996                       | Spanish              | 2000                 |
+| Spanish                   | 1986 - 2001                |                      |                      |
 
 Volume II: The Spine ~ ISBN 82-7054-069-2
 
@@ -201,7 +198,7 @@ Over time, the term "Mobilization" encompassed active procedures as well. This p
 ## Table of contents
 
 | • OMT Kaltenborn-Evjenth Concept.                 |        |
-|---------------------------------------------------|--------|
+| ------------------------------------------------- | ------ |
 | History                                           |        |
 | Special features                                  | ...9   |
 | Overview ....                                     | ... 12 |
@@ -243,45 +240,45 @@ Over time, the term "Mobilization" encompassed active procedures as well. This p
 
 <!-- PAGE_NUMBER: 12 -->
 
-| Grades of translatoric movement                                   | 39   |
-|-------------------------------------------------------------------|------|
-| Normal grades of translatoric movement (Grades I - III)           | 39   |
-| Palpating resistance to normal movement                           | 40   |
-| Pathological grades of translatoric movement ...                  | 41   |
-| Using translatoric grades of movement ......                      | 42   |
-| 3 Tests of function ....                                          | 43   |
-| Principles of function testing ....                               | 44   |
-| Assessing quantity of movement                                    | 44   |
-| Measuring rotatoric movement with a device .......                | 44   |
-| Manual grading of rotatoric movement (0 - 6 scale)                | 45   |
-| Assessing quality of movement ..                                  | 45   |
-| Quality of movement to the first stop .........                   | 46   |
-| End-feel: Quality of movement after the first stop ..             | 46   |
-| Elements of function testing                                      | 48   |
-| Active and passive rotatoric movements                            | 48   |
-| Testing rotatoric movement                                        | 50   |
-| Localization tests                                                | 51   |
-| Differentiating articular from extra-articular dysfunction ... 53 |      |
-| Differentiating muscle shortening from muscle spasm .........     |      |
-| Translatoric joint play tests ..                                  | 54   |
-| Resisted movements ...                                            | 56   |
-| Passive soft tissue movements                                     | 57   |
-| Additional tests .....................                            | 58   |
-| 4 OMT evaluation                                                  | 59   |
-| Goals of the OMT evaluation                                       | 59   |
-| Physical diagnosis ........                                       | 60   |
-| Indications and contraindications                                 | 61   |
-| Measuring progress ....                                           | 64   |
-| Elements of the OMT evaluation                                    | 65   |
-| Screening exam ...                                                | 66   |
-| Detailed exam ..                                                  | 69   |
-| History ....                                                      | 69   |
-| Inspection                                                        | 72   |
-| Tests of function (see Chapter 3)                                 |      |
-| Palpation.                                                        | 73   |
-| Neurologic and vascular tests...                                  | 74   |
-| Medical diagnostic studies ........                               | 76   |
-| Diagnosis and trial treatment                                     | 77   |
+| Grades of translatoric movement                                   | 39  |
+| ----------------------------------------------------------------- | --- |
+| Normal grades of translatoric movement (Grades I - III)           | 39  |
+| Palpating resistance to normal movement                           | 40  |
+| Pathological grades of translatoric movement ...                  | 41  |
+| Using translatoric grades of movement ......                      | 42  |
+| 3 Tests of function ....                                          | 43  |
+| Principles of function testing ....                               | 44  |
+| Assessing quantity of movement                                    | 44  |
+| Measuring rotatoric movement with a device .......                | 44  |
+| Manual grading of rotatoric movement (0 - 6 scale)                | 45  |
+| Assessing quality of movement ..                                  | 45  |
+| Quality of movement to the first stop .........                   | 46  |
+| End-feel: Quality of movement after the first stop ..             | 46  |
+| Elements of function testing                                      | 48  |
+| Active and passive rotatoric movements                            | 48  |
+| Testing rotatoric movement                                        | 50  |
+| Localization tests                                                | 51  |
+| Differentiating articular from extra-articular dysfunction ... 53 |     |
+| Differentiating muscle shortening from muscle spasm .........     |     |
+| Translatoric joint play tests ..                                  | 54  |
+| Resisted movements ...                                            | 56  |
+| Passive soft tissue movements                                     | 57  |
+| Additional tests .....................                            | 58  |
+| 4 OMT evaluation                                                  | 59  |
+| Goals of the OMT evaluation                                       | 59  |
+| Physical diagnosis ........                                       | 60  |
+| Indications and contraindications                                 | 61  |
+| Measuring progress ....                                           | 64  |
+| Elements of the OMT evaluation                                    | 65  |
+| Screening exam ...                                                | 66  |
+| Detailed exam ..                                                  | 69  |
+| History ....                                                      | 69  |
+| Inspection                                                        | 72  |
+| Tests of function (see Chapter 3)                                 |     |
+| Palpation.                                                        | 73  |
+| Neurologic and vascular tests...                                  | 74  |
+| Medical diagnostic studies ........                               | 76  |
+| Diagnosis and trial treatment                                     | 77  |
 
 <!-- PAGE_NUMBER: 13 -->
 
@@ -290,7 +287,7 @@ Over time, the term "Mobilization" encompassed active procedures as well. This p
 110
 
 | 5 Spinal joint mobilization                                                                   | 79      |
-|-----------------------------------------------------------------------------------------------|---------|
+| --------------------------------------------------------------------------------------------- | ------- |
 | Goals of joint mobilization..                                                                 | ... 79  |
 | Mobilization techniques ...                                                                   | ... 80  |
 | Pain relief mobilization                                                                      | ...81   |
@@ -330,48 +327,48 @@ Over time, the term "Mobilization" encompassed active procedures as well. This p
 
 <!-- PAGE_NUMBER: 14 -->
 
-| Neurologic evaluation of nerve root syndromes   | 111   |
-|-------------------------------------------------|-------|
-| Sensory innervation of the skin...              | 111   |
-| Sensory innervation of deep structures          | 114   |
-| Motor innervation ........                      | 115   |
-| Common nerve root syndromes                     | 116   |
-| TECHNIQUES                                      |       |
-| 8 Technique principles                          | 119   |
-| Learning manual techniques...                   | 119   |
-| Applying manual techniques                      | 120   |
-| Objective ...                                   | 121   |
-| Starting position ..                            | 122   |
-| Patient's position ..                           | 122   |
-| Therapist's position ...                        | 123   |
-| Hand placement and fixation/stabilization ....  | 123   |
-| Grip ...                                        | 124   |
-| Therapist's stable hand                         | 124   |
-| Therapist's moving hand                         | 126   |
-| Procedure ....                                  | 126   |
-| Joint pre-positioning .....                     | 126   |
-| Mobilization technique                          | 127   |
-| Symbols .                                       | 128   |
-| Recording .....                                 | 129   |
-| Identifying an intervertebral segment           | 129   |
-| The Star Diagram ..                             | 129   |
-| 9 Pelvis                                        | 131   |
-| Functional anatomy and movement                 | 131   |
-| Notes on evaluation and treatment ...           | 134   |
-| Pelvis tests and mobilizations ...              | 136   |
-| 10 Lumbar spine ...                             | 153   |
-| Functional anatomy and movement                 | 153   |
-| Notes on evaluation and treatment..             | 154   |
-| Lumbar tests and mobilizations..                | 156   |
-| 11 Thoracic spine and ribs                      | 205   |
-| Functional anatomy and movement                 | 205   |
-| Notes on evaluation and treatment               | 207   |
-| Thoracic tests and mobilizations .              | 209   |
+| Neurologic evaluation of nerve root syndromes  | 111 |
+| ---------------------------------------------- | --- |
+| Sensory innervation of the skin...             | 111 |
+| Sensory innervation of deep structures         | 114 |
+| Motor innervation ........                     | 115 |
+| Common nerve root syndromes                    | 116 |
+| TECHNIQUES                                     |     |
+| 8 Technique principles                         | 119 |
+| Learning manual techniques...                  | 119 |
+| Applying manual techniques                     | 120 |
+| Objective ...                                  | 121 |
+| Starting position ..                           | 122 |
+| Patient's position ..                          | 122 |
+| Therapist's position ...                       | 123 |
+| Hand placement and fixation/stabilization .... | 123 |
+| Grip ...                                       | 124 |
+| Therapist's stable hand                        | 124 |
+| Therapist's moving hand                        | 126 |
+| Procedure ....                                 | 126 |
+| Joint pre-positioning .....                    | 126 |
+| Mobilization technique                         | 127 |
+| Symbols .                                      | 128 |
+| Recording .....                                | 129 |
+| Identifying an intervertebral segment          | 129 |
+| The Star Diagram ..                            | 129 |
+| 9 Pelvis                                       | 131 |
+| Functional anatomy and movement                | 131 |
+| Notes on evaluation and treatment ...          | 134 |
+| Pelvis tests and mobilizations ...             | 136 |
+| 10 Lumbar spine ...                            | 153 |
+| Functional anatomy and movement                | 153 |
+| Notes on evaluation and treatment..            | 154 |
+| Lumbar tests and mobilizations..               | 156 |
+| 11 Thoracic spine and ribs                     | 205 |
+| Functional anatomy and movement                | 205 |
+| Notes on evaluation and treatment              | 207 |
+| Thoracic tests and mobilizations .             | 209 |
 
 <!-- PAGE_NUMBER: 15 -->
 
 | 12 Cervical spine ...                     | 253    |
-|-------------------------------------------|--------|
+| ----------------------------------------- | ------ |
 | Functional anatomy and movement           | 253    |
 | Notes on evaluation and treatment ..      | 254    |
 | Cervical tests and mobilizations ...      | 255    |
@@ -578,46 +575,61 @@ The Kaltenborn Method for joint testing and mobilization presented in this book 
 
 - A. Screening exam: An abbreviated exam to quickly identify the region where a problem is located and focus the detailed examination
 - B. Detailed exam:
+
 1. History: Narrow diagnostic possibilities; develop early hypotheses to be confirmed by further exam; determine whether or not symptoms are musculoskeletal and treatable with OMT. (Includes present episode, past medical history, related personal history, family history, review of systems)
 2. Inspection: Further focus the exam. (Includes posture, shape, skin, assistive devices)
 3. Tests of function
+
 - a. Active and passive movements: Identify location, type, and severity of dysfunction. (Includes standard-anatomical-uniaxial movements and combined-functional-multiaxial movements)
 - b. Translatoric joint play movements: Further differentiate articular from nonarticular lesions; identify directions of joint restrictions. (Includes traction, compression, gliding)
 - c. Resisted movements: Test neuromuscular integrity and status of associated joints, nerves and vascular supply.
 - d. Passive soft tissue movements: Differentiate joint from soft tissue dysfunction and the type of soft tissue involvement. (Includes physiological movements, accessory movements)
 - e. Additional tests (Includes coordination, speed, endurance, functional capacity assessment ...)
+
 4. Palpation (Includes tissue characteristics, structures)
 5. Neurologic and vascular examination
+
 - C. Medical diagnostic studies (Includes diagnostic imaging, lab tests, electro-diagnostic tests, punctures)
 - D. Diagnosis and trial treatment
 
 <!-- PAGE_NUMBER: 29 -->
 
 - A. To relieve symptoms (most often pain)
+
 1. Immobilization
+
 - General: bed rest
 - Specific: corsets, splinting, casting, taping
+
 2. Thermo-Hydro-Electro (T-H-E) therapy
 3. Pain relief joint mobilization (Grade I-ll Slack Zone in the actual resting position)
+
 - Intermittent manual traction
 - Vibrations, oscillations
+
 4. Special procedures (Includes acupuncture, acupressure, soft tissue mobilization ...)
 
 ## B. To increase mobility
 
 1. Soft tissue mobilization
+
 - a. Passive soft tissue mobilization
 - Classical, functional, and friction massage
 - b. Active-facilitated soft tissue mobilization
 - Contract-relax, reciprocal inhibition, muscle stretching
+
 2. Joint mobilization
+
 - a. Relaxation joint mobilization (Grade I - II)
+
 8. Three-dimensional, pre-positioned mobilizations
+
 - b. Stretch joint mobilization (Grade III)
 - Manual mobilization in the joint (actual) resting position
 - Manual mobilization at the point of restriction
 - c. Manipulation
 - High velocity, short amplitude, linear thrust movement
+
 3. Neural tissue mobilization
 
 To increase mobility of dura mater, nerve roots, and peripheral nerves
@@ -627,9 +639,11 @@ To increase mobility of dura mater, nerve roots, and peripheral nerves
 To increase or maintain soft tissue length and mobility and joint mobility
 
 - C. To limit movement
+
 1. Supportive devices
 2. Specialized exercise
 3. Treatments to increase movement in adjacent joints
+
 - D. To inform, instruct, and train
 
 Exercises and education to improve function, compensate for injuries, and prevent reinjury. Instruction in relevant ergonomics and self-care techniques, e.g., medical training therapy, automobilization, autostabilization, autostretching, back school, activities of daily living, etc.
@@ -647,8 +661,6 @@ Clinical trials to determine the efficacy of both single and combined treatment 
 ## PRINCIPLES
 
 <!-- PAGE_NUMBER: 32 -->
-
-
 
 <!-- PAGE_NUMBER: 33 -->
 
@@ -748,11 +760,11 @@ The resting position is useful for:
 
 <!-- PAGE_NUMBER: 38 -->
 
-- 1) Position the joint in the approximate resting position according to established norms. For example, resting position for the neck is usually a slight lordosis.
-- 2) In this approximate resting position, apply several gentle Grade Il traction joint play tests to the first stop, feeling for the ease and degree of movement.
-- 3) Re-position into slightly more or less flexion or extension and apply the traction tests again until you locate the position with the greatest ease and degree of movement. Maintain this position as you proceed to the next step.
-- 4) Repeat the traction tests with subtle re-positionings into more or less sidebending and apply the traction tests again until you locate the position with greatest ease and degree of movement. Maintain this flexion/extension and sidebending position as you proceed to the next step.
-- 5) Repeat the traction tests with subtle re-positionings into more or less rotation until you find the position with the greatest ease and range of movement in all three dimensions. This is the resting position.
+- 1. Position the joint in the approximate resting position according to established norms. For example, resting position for the neck is usually a slight lordosis.
+- 2. In this approximate resting position, apply several gentle Grade Il traction joint play tests to the first stop, feeling for the ease and degree of movement.
+- 3. Re-position into slightly more or less flexion or extension and apply the traction tests again until you locate the position with the greatest ease and degree of movement. Maintain this position as you proceed to the next step.
+- 4. Repeat the traction tests with subtle re-positionings into more or less sidebending and apply the traction tests again until you locate the position with greatest ease and degree of movement. Maintain this flexion/extension and sidebending position as you proceed to the next step.
+- 5. Repeat the traction tests with subtle re-positionings into more or less rotation until you find the position with the greatest ease and range of movement in all three dimensions. This is the resting position.
 
 Experienced practitioners may speed their exploration and identification of the resting position with simultaneous joint re-positioning in multiple planes.
 
@@ -795,7 +807,7 @@ Translations: linear (straight-lined) movement parallel to an axis in one plane"
 Rotations of bone produce the joint movement of roll-gliding. Translations of bone result in the linear joint play movements of traction, compression, and gliding.
 
 | Bone movements                                                                                                                        | Corresponding joint movements                              |
-|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | Rotatoric (curved) movement - Standard (anatomical, uniaxial) - Combined (functional, multiaxial)                                     | Roll-gliding                                               |
 | Translatoric (linear) movement - Longitudinal bone separation - Longitudinal bone approximation - Transverse (parallel) bone movement | Translatoric joint play - Traction - Compression - Gliding |
 
@@ -803,8 +815,8 @@ Rotations of bone produce the joint movement of roll-gliding. Translations of bo
 
 All active movements occur around an axis and therefore, from a mechanical viewpoint, are considered rotations. All bone rotations can be produced passively as well. There are two types of bone rotations:
 
-- 1) Standard, uniaxial bone movements (MacConaill's "pure, cardinal swing")
-- 2) Combined, multiaxial bone movements (MacConaill's "impure arcuate swing")
+- 1. Standard, uniaxial bone movements (MacConaill's "pure, cardinal swing")
+- 2. Combined, multiaxial bone movements (MacConaill's "impure arcuate swing")
 
 4 From a mechanical perspective, translations can be curved or linear. Only linear translations are relevant to OMT practice. In this text, the term "translation" refers to linear translations in relation to The Kaltenborn Treatment Plane.
 
@@ -1381,8 +1393,8 @@ Joint play range of movement is greatest in the resting position of the joint an
 
 There are two ways to test joint play:
 
-- 1) Without fixation: Apply vibrations, oscillations, or small amplitude joint play movements while you palpate the joint space. Apply no fixation or stabilization. This method of joint play testing is especially useful for spinal joint testing and is usually used for screening prior to attempting a fixation technique.
-- 2) With fixation: Fixate one joint partner and move the other through the fullest possible range of joint play movement. Feel for changes in the resistance to the movement through Grade Il, past the first stop, and into Grade III for end-feel. Determine whether there is normal movement quality through the range and if there is hypo- or hypermobility.
+- 1. Without fixation: Apply vibrations, oscillations, or small amplitude joint play movements while you palpate the joint space. Apply no fixation or stabilization. This method of joint play testing is especially useful for spinal joint testing and is usually used for screening prior to attempting a fixation technique.
+- 2. With fixation: Fixate one joint partner and move the other through the fullest possible range of joint play movement. Feel for changes in the resistance to the movement through Grade Il, past the first stop, and into Grade III for end-feel. Determine whether there is normal movement quality through the range and if there is hypo- or hypermobility.
 
 ## Traction and compression tests
 
@@ -1458,10 +1470,12 @@ The course of the OMT evaluation is influenced by a mixture of factors, includin
 
 The OMT evaluation is directed toward three goals:
 
-- 1) Physical diagnosis To establish a physical, or biomechanical, diagnosis.
-- 2) Indications and contraindications
+- 1. Physical diagnosis To establish a physical, or biomechanical, diagnosis.
+- 2. Indications and contraindications
+
 3. To identify indications and contraindications to treatment.
-- 3) Measuring progress
+
+- 3. Measuring progress
 
 To establish a baseline for measuring progress.
 
@@ -1574,23 +1588,31 @@ Periodic reassessment of the patient's chief complaints and dominant physical si
 
 - A. Screening exam: An abbreviated exam to quickly identify the region where a problem is located and focus the detailed examination.
 - B. Detailed exam:
+
 1. History: Narrow diagnostic possibilities; develop early hypotheses to be confirmed by further exam; determine whether or not symptoms are musculoskeletal and treatable with OMT.
+
 - Present episode
 - Past medical history
 - Related personal history
 - Family history
 - Review of systems
+
 2. Inspection: Further focus the exam.
+
 - Posture
 - Shape
 - Skin
 - Assistive devices
 - ADL
+
 3. Tests of function: Differentiate articular from extraarticular problems; identify structures involved (see Chapter 3).
 4. Palpation
+
 - Tissue characteristics
 - Structures
+
 5. Neurologic and vascular examination
+
 - C. Medical diagnostic studies: Diagnostic imaging, lab tests, electro-diagnostic tests, punctures
 - D. Diagnosis and trial treatment
 
@@ -1665,8 +1687,10 @@ A good patient history will often narrow diagnostic possibilities, however, an a
 During the history, you begin forming early hypotheses which subsequently must be confirmed or eliminated by further examination. In this way the history guides you in planning an appropriate physical examination.
 
 - a. Present episode
+
 2. Past medical history
 3. Related personal history
+
 - d. Family history
 - e. Review of systems
 
@@ -1687,7 +1711,7 @@ If the patient reports symptoms only during certain times, for example, in the e
 ## Symptoms (chief complaint):
 
 | » Location:     | anatomical site or area of symptoms                       |
-|-----------------|-----------------------------------------------------------|
+| --------------- | --------------------------------------------------------- |
 | » Time:         | behavior of symptoms over a twenty-four- hour period      |
 | » Character:    | quality and nature of symptoms                            |
 |                 | » Influences: aggravating and alleviating factors         |
@@ -1746,17 +1770,17 @@ Identify any patterns of recurring health problems in the patient's family or an
 
 Answers to questions about each organ system and anatomical region can uncover symptoms not previously identified. A complete review of organ systems is especially important to rule out pathologies that might mimic musculoskeletal disorders in patients who come to the physical therapist without a medical referral. It can be difficult to determine whether symptoms are of visceral or musculoskeletal origin. For example, nerve root irritation in the thoracic spine can mimic symptoms of angina pectoris and make diagnosis difficult. The following systems should be reviewed:
 
-| » Integument (skin)       | » Lymph nodes   |
-|---------------------------|-----------------|
-| » Bones, joints, muscles  | » Head          |
-| » Hematopoietic system    | » Eyes          |
-| » Immune system           | » Ears          |
-| » Endocrine system        | » Nose          |
-| » Cardiovascular system   | » Throat        |
-| » Respiratory system      | » Mouth         |
-| » Gastrointestinal system | » Neck          |
-| » Genitourinary system    | » Breasts       |
-| » Nervous system          |                 |
+| » Integument (skin)       | » Lymph nodes |
+| ------------------------- | ------------- |
+| » Bones, joints, muscles  | » Head        |
+| » Hematopoietic system    | » Eyes        |
+| » Immune system           | » Ears        |
+| » Endocrine system        | » Nose        |
+| » Cardiovascular system   | » Throat      |
+| » Respiratory system      | » Mouth       |
+| » Gastrointestinal system | » Neck        |
+| » Genitourinary system    | » Breasts     |
+| » Nervous system          |               |
 
 ## Inspection
 
@@ -1941,13 +1965,20 @@ If the biomechanical status of the joint cannot be determined due to severe pain
 ## Spinal joint mobilization
 
 1. Pain-relief mobilization
+
 - Grade I - IISZ in the (actual) joint resting position.
+
 2. Relaxation mobilization
+
 - Grade I - Il in the joint (actual) resting position.
+
 3. Stretch mobilization
+
 - Grade Ill in the joint (actual) resting position
 - Grade Ill at the point of restriction.
+
 4. Manipulation (quick mobilization)
+
 - Grade III, high velocity, short amplitude, low force tractionmanipulation in the (actual) resting position.
 
 <!-- PAGE_NUMBER: 97 -->
@@ -2068,7 +2099,7 @@ If the traction force is applied to the caudal vertebra in a segment, the spacia
 
 <!-- PAGE_NUMBER: 103 -->
 
-* Note in Figure 5. 1a, you can alternatively fixate the concave joint partner and mobilize the convex joint partner.
+- Note in Figure 5. 1a, you can alternatively fixate the concave joint partner and mobilize the convex joint partner.
 
 <!-- image -->
 
@@ -2187,24 +2218,34 @@ Mobilization is one part of the greater scope of OMT practice, and is generally 
 ## OMT Treatment
 
 - A. To relieve symptoms
+
 1. Immobilization
 2. Thermo-Hydro-Electro (T-H-E) therapy
 3. Pain relief mobilization (Grade I - IISZ) (see Chapter 5)
 4. Special procedures
+
 - B. To increase mobility
+
 1. Soft tissue mobilization
+
 - a. Passive soft tissue mobilization
 - b. Active-facilitated soft tissue mobilization
+
 2. Joint mobilization (see Chapter 5)
+
 - a. Relaxation mobilization (Grade I - Il)
 - b. Stretch mobilization (Grade III)
 - c. Translatoric manipulation
+
 3. Neural tissue mobilization
 4. Specialized exercise
+
 - C. To limit movement
+
 1. Supportive devices
 2. Specialized exercises
 3. Increasing movement in adjacent joints
+
 - D. To Inform, instruct, and train
 
 <!-- PAGE_NUMBER: 112 -->
@@ -2441,19 +2482,19 @@ In a 1963 study, Bechgaard compared hospital admission diagnoses with discharge 
 
 Table 1 Hospital admission diagnoses with cases of thoracic segmental pain syndrome
 
-| Diagnosis                  | Number of cases   | Effective Treatment   | Effective Treatment   | Positive thoracic x-ray   |
-|----------------------------|-------------------|-----------------------|-----------------------|---------------------------|
-| Diagnosis                  | Number of cases   | Anesthesia            | Mobilization          | Positive thoracic x-ray   |
-| Angina Pectoris            |                   |                       |                       |                           |
-| Coronary Artery Thrombosis | 5                 | 1                     | 3                     |                           |
-| Heart Disease              | 10                | 2                     | 4                     | 4                         |
-| Hyperventilation           | 5                 |                       |                       |                           |
-| Pneumothorax               | 1                 |                       |                       |                           |
-| Dyspnea                    | 9                 | 2                     |                       | 2                         |
-| Gall Bladder               |                   | 3                     | 4                     | 3                         |
-| Kidney Disease             | 1                 | 1                     |                       | 1                         |
-| Chest Pain                 | 28                | 1                     | 24                    | 5                         |
-| TOTALS                     | 75                | 12                    | 52                    | 16                        |
+| Diagnosis                  | Number of cases | Effective Treatment | Effective Treatment | Positive thoracic x-ray |
+| -------------------------- | --------------- | ------------------- | ------------------- | ----------------------- |
+| Diagnosis                  | Number of cases | Anesthesia          | Mobilization        | Positive thoracic x-ray |
+| Angina Pectoris            |                 |                     |                     |                         |
+| Coronary Artery Thrombosis | 5               | 1                   | 3                   |                         |
+| Heart Disease              | 10              | 2                   | 4                   | 4                       |
+| Hyperventilation           | 5               |                     |                     |                         |
+| Pneumothorax               | 1               |                     |                     |                         |
+| Dyspnea                    | 9               | 2                   |                     | 2                       |
+| Gall Bladder               |                 | 3                   | 4                   | 3                       |
+| Kidney Disease             | 1               | 1                   |                     | 1                       |
+| Chest Pain                 | 28              | 1                   | 24                  | 5                       |
+| TOTALS                     | 75              | 12                  | 52                  | 16                      |
 
 The "facilitated segment" phenomenon further confuses attempts to distinguish between visceral and somatic problems, especially in the thoracic spine. Any irritation within structures that share nervous innervation may decrease the pain threshold in the related vertebral segment. For example, not only can irritation of a thoracic nerve root mimic symptoms of angina pectoris, but
 
@@ -2523,35 +2564,33 @@ Monoradicular loss can also present with atrophy of certain small distal muscles
 
 Table 2: Cervicothoracic nerve root syndromes
 
-| Root   | Key Muscle(s)                                                                             | Reflex                                         | Dermatome                                     |
-|--------|-------------------------------------------------------------------------------------------|------------------------------------------------|-----------------------------------------------|
-| C1     | Intrinsic upper cervical flexors and extensors between O-C1                               |                                                |                                               |
-| C2     | Intrinsic upper cervical rotators between C1-C2                                           |                                                | Posterior head                                |
-| C3     | Scaleni                                                                                   |                                                | "Shawl"                                       |
-| C4     | Diaphragm                                                                                 |                                                | 'Epaulets'                                    |
-| C5     | Biceps brachii Infraspinatus and supraspinatus                                            | Biceps tendon reflex                           | Shoulder and lateral side of upper arm        |
-| C6     | Brachioradialis Wrist extensors                                                           | Brachioradialis reflex Radialperiosteal reflex | Forearm (radial side) Thumb and index finger  |
-| C7     | Triceps brachii Wrist flexors Finger extensors Abductor pollicis brevis Opponens pollicis | Triceps tendon reflex                          | Forearm (dorsal side) Middle and index finger |
-| C8     | Flexor digitorum Adductor pollicis Abductor digiti minimi                                 | Thumb reflex                                   | Forearm (ulnar side) Small and ring fingers   |
-| T1     | Interossei                                                                                |                                                | Arm (medial side)                             |
+| Root | Key Muscle(s)                                                                             | Reflex                                         | Dermatome                                     |
+| ---- | ----------------------------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------- |
+| C1   | Intrinsic upper cervical flexors and extensors between O-C1                               |                                                |                                               |
+| C2   | Intrinsic upper cervical rotators between C1-C2                                           |                                                | Posterior head                                |
+| C3   | Scaleni                                                                                   |                                                | "Shawl"                                       |
+| C4   | Diaphragm                                                                                 |                                                | 'Epaulets'                                    |
+| C5   | Biceps brachii Infraspinatus and supraspinatus                                            | Biceps tendon reflex                           | Shoulder and lateral side of upper arm        |
+| C6   | Brachioradialis Wrist extensors                                                           | Brachioradialis reflex Radialperiosteal reflex | Forearm (radial side) Thumb and index finger  |
+| C7   | Triceps brachii Wrist flexors Finger extensors Abductor pollicis brevis Opponens pollicis | Triceps tendon reflex                          | Forearm (dorsal side) Middle and index finger |
+| C8   | Flexor digitorum Adductor pollicis Abductor digiti minimi                                 | Thumb reflex                                   | Forearm (ulnar side) Small and ring fingers   |
+| T1   | Interossei                                                                                |                                                | Arm (medial side)                             |
 
 Table 3: Lumbosacral nerve root syndromes
 
-| Root   | Key Muscle(s)                                                                    | Reflex                                         | Dermatome                                      |
-|--------|----------------------------------------------------------------------------------|------------------------------------------------|------------------------------------------------|
-| L1-2   | Cremaster                                                                        | Cremasteric reflex                             | Waist "backbelt"                               |
-| L2-3   | Hip adductors                                                                    | Adductor reflex                                | Ventral thigh down to the knee                 |
-| L4     | Tibialis anterior Quadriceps (vastus medialis)                                   | Patellar tendon reflex                         | Medial side of lower leg down to the malleolus |
-| L5     | Extensor hallucis longus Extensor digitorum longus and brevis Tibialis posterior | Tibialis posterior reflex Semitendinous reflex | Dorsal foot Big toe                            |
-| S1     | Peroneals Triceps surae (primarily gastrocnemius, medial)                        | Achilles tendon reflex                         | Lateral foot and sole Small toe                |
+| Root | Key Muscle(s)                                                                    | Reflex                                         | Dermatome                                      |
+| ---- | -------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
+| L1-2 | Cremaster                                                                        | Cremasteric reflex                             | Waist "backbelt"                               |
+| L2-3 | Hip adductors                                                                    | Adductor reflex                                | Ventral thigh down to the knee                 |
+| L4   | Tibialis anterior Quadriceps (vastus medialis)                                   | Patellar tendon reflex                         | Medial side of lower leg down to the malleolus |
+| L5   | Extensor hallucis longus Extensor digitorum longus and brevis Tibialis posterior | Tibialis posterior reflex Semitendinous reflex | Dorsal foot Big toe                            |
+| S1   | Peroneals Triceps surae (primarily gastrocnemius, medial)                        | Achilles tendon reflex                         | Lateral foot and sole Small toe                |
 
 <!-- PAGE_NUMBER: 133 -->
 
 ## TECHNIQUES
 
 <!-- PAGE_NUMBER: 134 -->
-
-
 
 <!-- PAGE_NUMBER: 135 -->
 
@@ -2667,7 +2706,7 @@ spinal segments. Many therapists use the index finger as the palpating finger (a
 The palpating finger is positioned at the targeted joint space with contact to both joint partners. The most commonly used contacts for movement palpation in the spine are:
 
 | Occiput                  | → mastoid process                               |
-|--------------------------|-------------------------------------------------|
+| ------------------------ | ----------------------------------------------- |
 | Atlas                    | → posterior vertebral arch & transverse process |
 | Cervical Spine (C2 - C7) | → facet joints and spinous processes            |
 | Thoracic Spine           | -> spinous processes                            |
@@ -2863,7 +2902,7 @@ It is important to realize that palpation over bony prominences on the pelvis ca
 ## Pelvis tests and mobilizations
 
 | • Screening techniques                                                                                                                                                                                                      | • Screening techniques                                                                                                                                                                                                      |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Figure 1                                                                                                                                                                                                                    | Sacroiliac joint: knee flexion . ... (test) .. . 137                                                                                                                                                                        |
 | Figure 2                                                                                                                                                                                                                    | Sacroiliac joint: hip flexion... .. (test) .. 137                                                                                                                                                                           |
 | Figure 3                                                                                                                                                                                                                    | Sacroiliac joint: trunk flexion ... (test) ... . 138                                                                                                                                                                        |
@@ -3460,8 +3499,6 @@ Figure 17b - coccyx dorsal
 
 <!-- PAGE_NUMBER: 168 -->
 
-
-
 <!-- PAGE_NUMBER: 169 -->
 
 ## • Functional anatomy and movement
@@ -3517,7 +3554,7 @@ Lumber
 ## Lumbar tests and mobilizations
 
 | Screening techniques    | Screening techniques                                                      | Screening techniques                    | Screening techniques                    |
-|-------------------------|---------------------------------------------------------------------------|-----------------------------------------|-----------------------------------------|
+| ----------------------- | ------------------------------------------------------------------------- | --------------------------------------- | --------------------------------------- |
 | Figure 1                | Active lumbar flexion                                                     | .. (test)                               | 159                                     |
 | Figure 2                | Active lumbar extension ..                                                | ... (test)                              | .159                                    |
 | Figure 3                | Active lumbar sidebending                                                 | ... (test)                              | 160                                     |
@@ -3551,7 +3588,7 @@ Lumber
 <!-- PAGE_NUMBER: 173 -->
 
 | Traction techniques                                                                       | Traction techniques                                                                                  |
-|-------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
+| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | Figure 18a,b Lumbar traction...                                                           | (test, mobilization) ......... 181                                                                   |
 | Figure 19a,b Lumbar traction (belt and harness)                                           | (stretch mobilization) ..... 182                                                                     |
 | Figure 20 Lumbar segment L1 to L4: traction                                               | (test, mobilization) ........ 183                                                                    |
@@ -3583,15 +3620,15 @@ Lumber
 
 <!-- PAGE_NUMBER: 174 -->
 
-| Before practicing any lumbar mobilization technique students should screen their partners using the following evaluation procedures:   | Before practicing any lumbar mobilization technique students should screen their partners using the following evaluation procedures:   |
-|----------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| Lumbar segment: cranial vertebra ventral .... (Figure 14a) ...... 176                                                                  | Lumbar segment: cranial vertebra ventral .... (Figure 14a) ...... 176                                                                  |
-| Lumbar "springing" ..... (Figure 15) ... 178                                                                                           | Lumbar "springing" ..... (Figure 15) ... 178                                                                                           |
-| Lumbar segment: translatoric joint play . ... (Figure 17) 180                                                                          | Lumbar segment: translatoric joint play . ... (Figure 17) 180                                                                          |
-| When symptoms are present in the lower extremities, students should screen their partners using these additional procedures:           | When symptoms are present in the lower extremities, students should screen their partners using these additional procedures:           |
-| Differentiating lumbar spine, sacroiliac joint, muscle and nerve .... (Figure 13) .. 174                                               | Differentiating lumbar spine, sacroiliac joint, muscle and nerve .... (Figure 13) .. 174                                               |
-| Sciatic nerve                                                                                                                          | .. (Figure 11) 166                                                                                                                     |
-| Femoral nerve                                                                                                                          | (Figure 12) .. 170                                                                                                                     |
+| Before practicing any lumbar mobilization technique students should screen their partners using the following evaluation procedures: | Before practicing any lumbar mobilization technique students should screen their partners using the following evaluation procedures: |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Lumbar segment: cranial vertebra ventral .... (Figure 14a) ...... 176                                                                | Lumbar segment: cranial vertebra ventral .... (Figure 14a) ...... 176                                                                |
+| Lumbar "springing" ..... (Figure 15) ... 178                                                                                         | Lumbar "springing" ..... (Figure 15) ... 178                                                                                         |
+| Lumbar segment: translatoric joint play . ... (Figure 17) 180                                                                        | Lumbar segment: translatoric joint play . ... (Figure 17) 180                                                                        |
+| When symptoms are present in the lower extremities, students should screen their partners using these additional procedures:         | When symptoms are present in the lower extremities, students should screen their partners using these additional procedures:         |
+| Differentiating lumbar spine, sacroiliac joint, muscle and nerve .... (Figure 13) .. 174                                             | Differentiating lumbar spine, sacroiliac joint, muscle and nerve .... (Figure 13) .. 174                                             |
+| Sciatic nerve                                                                                                                        | .. (Figure 11) 166                                                                                                                   |
+| Femoral nerve                                                                                                                        | (Figure 12) .. 170                                                                                                                   |
 
 <!-- PAGE_NUMBER: 175 -->
 
@@ -5081,7 +5118,7 @@ Rib mobilization is usually initiated with traction at the costotransverse joint
 ## Thoracic spine
 
 | • Screening techniques              | • Screening techniques                                                                         | • Screening techniques          |
-|-------------------------------------|------------------------------------------------------------------------------------------------|---------------------------------|
+| ----------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------- |
 | Figure 1                            | Active thoracic flexion..                                                                      | .. (test) . .. 211              |
 | Figure 2                            | Active thoracic extension...                                                                   | . (test) ...211                 |
 | Figure 3                            | Active thoracic flexion with coupled sidebending and rotation                                  | (test) . .212                   |
@@ -5110,7 +5147,7 @@ Rib mobilization is usually initiated with traction at the costotransverse joint
 <!-- PAGE_NUMBER: 226 -->
 
 |      | Techniques with an extension component                                                                                                 | Techniques with an extension component                                                                                                 | Techniques with an extension component                                                                                                 |
-|------|----------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 |      | Figure 17a                                                                                                                             | Thoracic segment: extension (sitting) .. .... (test) .........                                                                         | .229                                                                                                                                   |
 |      |                                                                                                                                        | Figure 17b,c Thoracic segment: extension (sitting) ..... ..... (stretch mobilization)                                                  | 230                                                                                                                                    |
 |      | Figure 18a                                                                                                                             | Thoracic segment: extension (sidelying) ...... (test) ...                                                                              | 231                                                                                                                                    |
@@ -6590,7 +6627,7 @@ When treating in the supine position, a small pillow placed under the occiput wi
 ## Cervical spine
 
 | • Screening techniques              | • Screening techniques                                                | • Screening techniques              | • Screening techniques              |
-|-------------------------------------|-----------------------------------------------------------------------|-------------------------------------|-------------------------------------|
+| ----------------------------------- | --------------------------------------------------------------------- | ----------------------------------- | ----------------------------------- |
 | Figure 1                            | Active cervical flexion.                                              | ... (test)                          | ..257                               |
 | Figure 2                            | Active cervical extension...                                          | .. (test)                           | 257                                 |
 | Figure 3                            | Active cervical flexion with coupled sidebending and rotation...      | .. (test)                           | ..258                               |
@@ -6624,33 +6661,33 @@ When treating in the supine position, a small pillow placed under the occiput wi
 
 <!-- PAGE_NUMBER: 272 -->
 
-| Techniques with an extension component   | Techniques with an extension component                                                                                                  | Techniques with an extension component                                                                                                  | Techniques with an extension component                                                                                                  | Techniques with an extension component                                                                                                  |
-|------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-|                                          | Figure 21                                                                                                                               | Cervical segment: extension (supine) ..                                                                                                 | .... (test) ....                                                                                                                        | ..281                                                                                                                                   |
-|                                          | Figure 22a                                                                                                                              | Cervical segment: extension (sitting)                                                                                                   | • (test) ....                                                                                                                           | . 282                                                                                                                                   |
-|                                          | Figure 22b                                                                                                                              | Cervical segment: extension ........                                                                                                    | ... (stretch mobilization) .........283                                                                                                 |                                                                                                                                         |
-|                                          | Figure 23a                                                                                                                              | Cervical segment: extension with coupled sidebending and rotation                                                                       | ... (test) ....                                                                                                                         | ..284                                                                                                                                   |
-|                                          | Figure 23b                                                                                                                              | Cervical segment: extension with coupled sidebending and rotation.                                                                      | .. (stretch mobilization) ..                                                                                                            | 285                                                                                                                                     |
-| Cervicothoracic junction                 | Cervicothoracic junction                                                                                                                | Cervicothoracic junction                                                                                                                | Cervicothoracic junction                                                                                                                | Cervicothoracic junction                                                                                                                |
-|                                          | Figure 24                                                                                                                               | Active cervicothoracic rotation..                                                                                                       | .. (test) ....                                                                                                                          | 286                                                                                                                                     |
-|                                          | Figure 25                                                                                                                               | Cervicothoracic segment: flexion with coupled sidebending and rotation ...                                                              | ... (test) ....                                                                                                                         | 287                                                                                                                                     |
-|                                          | Figure 26                                                                                                                               | Cervicothoracic segment C5-T3: translatoric joint play .............                                                                    | ... (test) ....                                                                                                                         | .....288                                                                                                                                |
-|                                          | Figure 27                                                                                                                               | Cervicothoracic segment: flexion and extension ...                                                                                      | . (test, stretch mobilization) .. 289                                                                                                   |                                                                                                                                         |
-|                                          | Figure 28a                                                                                                                              | Cervicothoracic segment: flexion with combined sidebending and rotation                                                                 | . (test) ....                                                                                                                           | 290                                                                                                                                     |
-|                                          | Figure 28b                                                                                                                              | Cervicothoracic segment: flexion with combined sidebending and rotation ....                                                            | ... (stretch mobilization) .                                                                                                            | 291                                                                                                                                     |
-|                                          | Figure 29a,b                                                                                                                            | Cervicothoracic segment: traction in the lower cervical and upper thoracic facet joints...                                              | .. (mobilization)                                                                                                                       | ..292                                                                                                                                   |
-| Soft tissue techniques                   | Soft tissue techniques                                                                                                                  | Soft tissue techniques                                                                                                                  | Soft tissue techniques                                                                                                                  | Soft tissue techniques                                                                                                                  |
-|                                          |                                                                                                                                         | Figure 30a,b Cervical soft tissue and joint: dorsal ............ (mobilization) ...                                                     |                                                                                                                                         | .....294                                                                                                                                |
-|                                          | Figure 30c                                                                                                                              | Cervical soft tissue and joint: ventral (cranial stabilization) …                                                                       | (mobilization)                                                                                                                          | ...295                                                                                                                                  |
-|                                          | Figure 30d                                                                                                                              | Cervical soft tissue and joint: ventral (caudal stabilization) ...                                                                      | (mobilization)                                                                                                                          | ..296                                                                                                                                   |
-| Note                                     | Note                                                                                                                                    | Note                                                                                                                                    | Note                                                                                                                                    | Note                                                                                                                                    |
-|                                          | Before practicing any cervical mobilization technique, students should screen their partners using the following evaluation procedures: | Before practicing any cervical mobilization technique, students should screen their partners using the following evaluation procedures: | Before practicing any cervical mobilization technique, students should screen their partners using the following evaluation procedures: | Before practicing any cervical mobilization technique, students should screen their partners using the following evaluation procedures: |
-|                                          | Cervical segment: translatoric joint play ..                                                                                            | Cervical segment: translatoric joint play ..                                                                                            | ... (Figure 15)                                                                                                                         | ...272                                                                                                                                  |
-|                                          | Cervical segment: lateral glide .                                                                                                       | Cervical segment: lateral glide .                                                                                                       | .. (Figure 13)                                                                                                                          | ..270                                                                                                                                   |
-|                                          | Vertebral artery                                                                                                                        | Vertebral artery                                                                                                                        | ... (Figure 12)                                                                                                                         | ....269                                                                                                                                 |
-|                                          | When symptoms are present in the upper extremities, students should screen their partners using these additional procedures:            | When symptoms are present in the upper extremities, students should screen their partners using these additional procedures:            | When symptoms are present in the upper extremities, students should screen their partners using these additional procedures:            | When symptoms are present in the upper extremities, students should screen their partners using these additional procedures:            |
-|                                          | Intervertebral foramen .... ... (Figure 11) .                                                                                           | Intervertebral foramen .... ... (Figure 11) .                                                                                           | Intervertebral foramen .... ... (Figure 11) .                                                                                           | ....268                                                                                                                                 |
-|                                          | Nerve mobility: medial, radial, and ulnar nerve..                                                                                       | Nerve mobility: medial, radial, and ulnar nerve..                                                                                       | .. (Figure 9a-c)                                                                                                                        | 262-264                                                                                                                                 |
+| Techniques with an extension component | Techniques with an extension component                                                                                                  | Techniques with an extension component                                                                                                  | Techniques with an extension component                                                                                                  | Techniques with an extension component                                                                                                  |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+|                                        | Figure 21                                                                                                                               | Cervical segment: extension (supine) ..                                                                                                 | .... (test) ....                                                                                                                        | ..281                                                                                                                                   |
+|                                        | Figure 22a                                                                                                                              | Cervical segment: extension (sitting)                                                                                                   | • (test) ....                                                                                                                           | . 282                                                                                                                                   |
+|                                        | Figure 22b                                                                                                                              | Cervical segment: extension ........                                                                                                    | ... (stretch mobilization) .........283                                                                                                 |                                                                                                                                         |
+|                                        | Figure 23a                                                                                                                              | Cervical segment: extension with coupled sidebending and rotation                                                                       | ... (test) ....                                                                                                                         | ..284                                                                                                                                   |
+|                                        | Figure 23b                                                                                                                              | Cervical segment: extension with coupled sidebending and rotation.                                                                      | .. (stretch mobilization) ..                                                                                                            | 285                                                                                                                                     |
+| Cervicothoracic junction               | Cervicothoracic junction                                                                                                                | Cervicothoracic junction                                                                                                                | Cervicothoracic junction                                                                                                                | Cervicothoracic junction                                                                                                                |
+|                                        | Figure 24                                                                                                                               | Active cervicothoracic rotation..                                                                                                       | .. (test) ....                                                                                                                          | 286                                                                                                                                     |
+|                                        | Figure 25                                                                                                                               | Cervicothoracic segment: flexion with coupled sidebending and rotation ...                                                              | ... (test) ....                                                                                                                         | 287                                                                                                                                     |
+|                                        | Figure 26                                                                                                                               | Cervicothoracic segment C5-T3: translatoric joint play .............                                                                    | ... (test) ....                                                                                                                         | .....288                                                                                                                                |
+|                                        | Figure 27                                                                                                                               | Cervicothoracic segment: flexion and extension ...                                                                                      | . (test, stretch mobilization) .. 289                                                                                                   |                                                                                                                                         |
+|                                        | Figure 28a                                                                                                                              | Cervicothoracic segment: flexion with combined sidebending and rotation                                                                 | . (test) ....                                                                                                                           | 290                                                                                                                                     |
+|                                        | Figure 28b                                                                                                                              | Cervicothoracic segment: flexion with combined sidebending and rotation ....                                                            | ... (stretch mobilization) .                                                                                                            | 291                                                                                                                                     |
+|                                        | Figure 29a,b                                                                                                                            | Cervicothoracic segment: traction in the lower cervical and upper thoracic facet joints...                                              | .. (mobilization)                                                                                                                       | ..292                                                                                                                                   |
+| Soft tissue techniques                 | Soft tissue techniques                                                                                                                  | Soft tissue techniques                                                                                                                  | Soft tissue techniques                                                                                                                  | Soft tissue techniques                                                                                                                  |
+|                                        |                                                                                                                                         | Figure 30a,b Cervical soft tissue and joint: dorsal ............ (mobilization) ...                                                     |                                                                                                                                         | .....294                                                                                                                                |
+|                                        | Figure 30c                                                                                                                              | Cervical soft tissue and joint: ventral (cranial stabilization) …                                                                       | (mobilization)                                                                                                                          | ...295                                                                                                                                  |
+|                                        | Figure 30d                                                                                                                              | Cervical soft tissue and joint: ventral (caudal stabilization) ...                                                                      | (mobilization)                                                                                                                          | ..296                                                                                                                                   |
+| Note                                   | Note                                                                                                                                    | Note                                                                                                                                    | Note                                                                                                                                    | Note                                                                                                                                    |
+|                                        | Before practicing any cervical mobilization technique, students should screen their partners using the following evaluation procedures: | Before practicing any cervical mobilization technique, students should screen their partners using the following evaluation procedures: | Before practicing any cervical mobilization technique, students should screen their partners using the following evaluation procedures: | Before practicing any cervical mobilization technique, students should screen their partners using the following evaluation procedures: |
+|                                        | Cervical segment: translatoric joint play ..                                                                                            | Cervical segment: translatoric joint play ..                                                                                            | ... (Figure 15)                                                                                                                         | ...272                                                                                                                                  |
+|                                        | Cervical segment: lateral glide .                                                                                                       | Cervical segment: lateral glide .                                                                                                       | .. (Figure 13)                                                                                                                          | ..270                                                                                                                                   |
+|                                        | Vertebral artery                                                                                                                        | Vertebral artery                                                                                                                        | ... (Figure 12)                                                                                                                         | ....269                                                                                                                                 |
+|                                        | When symptoms are present in the upper extremities, students should screen their partners using these additional procedures:            | When symptoms are present in the upper extremities, students should screen their partners using these additional procedures:            | When symptoms are present in the upper extremities, students should screen their partners using these additional procedures:            | When symptoms are present in the upper extremities, students should screen their partners using these additional procedures:            |
+|                                        | Intervertebral foramen .... ... (Figure 11) .                                                                                           | Intervertebral foramen .... ... (Figure 11) .                                                                                           | Intervertebral foramen .... ... (Figure 11) .                                                                                           | ....268                                                                                                                                 |
+|                                        | Nerve mobility: medial, radial, and ulnar nerve..                                                                                       | Nerve mobility: medial, radial, and ulnar nerve..                                                                                       | .. (Figure 9a-c)                                                                                                                        | 262-264                                                                                                                                 |
 
 <!-- PAGE_NUMBER: 273 -->
 
@@ -8043,7 +8080,7 @@ If testing reveals ligamentous laxity, then manipulation and joint mobilization 
 Note
 
 | • Screening techniques   | • Screening techniques                                                                                                                     | • Screening techniques                                                                                                                     |
-|--------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
 |                          | Figure 1                                                                                                                                   | Active upper cervical flexion .. (test) .... ...301                                                                                        |
 |                          | Figure 2                                                                                                                                   | Active upper cervical extension (test) .... 301                                                                                            |
 |                          | Figure 3                                                                                                                                   | Active upper cervical flexion with coupled sidebending and rotation .. (test) .... 302                                                     |
@@ -8664,8 +8701,6 @@ Figure 15d - relative right rotation
 
 <!-- PAGE_NUMBER: 334 -->
 
-
-
 <!-- PAGE_NUMBER: 335 -->
 
 ## • Functional anatomy and movement
@@ -8852,10 +8887,10 @@ ME
 
 ## • Jaw tests and mobilizations
 
-| Figure 77     | Mandibular head ventral glide ..... ...... (test, stretch mobilization) .... 320   |
-|---------------|------------------------------------------------------------------------------------|
-| Figure 78a, b | TMJ traction.................. ... (test, stretch mobilization) .... 321           |
-| Figure 79a, b | TMJ medial and lateral glide ............. (test, stretch mobilization) .... 322   |
+| Figure 77     | Mandibular head ventral glide ..... ...... (test, stretch mobilization) .... 320 |
+| ------------- | -------------------------------------------------------------------------------- |
+| Figure 78a, b | TMJ traction.................. ... (test, stretch mobilization) .... 321         |
+| Figure 79a, b | TMJ medial and lateral glide ............. (test, stretch mobilization) .... 322 |
 
 <!-- PAGE_NUMBER: 339 -->
 
@@ -8981,8 +9016,6 @@ Figure 79b - lateral
 
 <!-- PAGE_NUMBER: 344 -->
 
-
-
 <!-- PAGE_NUMBER: 345 -->
 
 ## • Notes for entry-level MT instruction
@@ -8995,14 +9028,14 @@ Those familiar with earlier editions of these books will notice inclusion of man
 
 ## Basic extremity joint manipulations
 
-| Low-force thrusts of all resting position "trial treatments".   | fig. 1b     | Toe          | fig. 43b                         |
-|-----------------------------------------------------------------|-------------|--------------|----------------------------------|
-| Metacarpals                                                     | fig. 6b, 7b | Foot         | fig. 50a(notes), 51a(notes), 54b |
-| Wrist                                                           | fig. 8b     | Ankle        | fig. 56b                         |
-| Forearm                                                         | fig. 22     | Knee         | fig. 64b                         |
-| Elbow                                                           | fig. 24b    | Hip          | fig. 72a, 72b, 74a               |
-| Shoulder                                                        | fig. 28b    |              |                                  |
-| Shoulder girdle                                                 |             | fig. 39a,b,c |                                  |
+| Low-force thrusts of all resting position "trial treatments". | fig. 1b     | Toe          | fig. 43b                         |
+| ------------------------------------------------------------- | ----------- | ------------ | -------------------------------- |
+| Metacarpals                                                   | fig. 6b, 7b | Foot         | fig. 50a(notes), 51a(notes), 54b |
+| Wrist                                                         | fig. 8b     | Ankle        | fig. 56b                         |
+| Forearm                                                       | fig. 22     | Knee         | fig. 64b                         |
+| Elbow                                                         | fig. 24b    | Hip          | fig. 72a, 72b, 74a               |
+| Shoulder                                                      | fig. 28b    |              |                                  |
+| Shoulder girdle                                               |             | fig. 39a,b,c |                                  |
 
 ## Basic spinal joint manipulations
 
@@ -9042,23 +9075,23 @@ Freddy Kaltenborn and Olov Lindahl, "Reproducibility of the Results of Manual Mo
 
 Professors Lindahl and Kaltenborn conducted a pilot study on the intertester reliability of specific manual mobility testing in the spine. Ten manual therapy instructors used specific spinal mobility testing techniques to examine 13 intervertebral segments in four patients. Of their findings, 93% were in agreement. Seven testers had 97.8% agreement. All ten testers found 6 lumbar vertebrae in the patient who had a hypermobile segment. The results of the study are summarized in following table.
 
-| Instructor   | Patient 1                 | Patient 1                 | Patient 1                  | Patient 1                  | Patient 2                      | Patient 3                  | Patient 3                  | Patient 3                  | Patient 4                | Patient 4                | Patient 4   | Patient 4   | Patient 4   |
-|--------------|---------------------------|---------------------------|----------------------------|----------------------------|--------------------------------|----------------------------|----------------------------|----------------------------|--------------------------|--------------------------|-------------|-------------|-------------|
-| Instructor   | Occiput-Atlas Sidebending | Occiput-Atlas Sidebending | Thoracic Sagittal Movement | Thoracic Sagittal Movement | Occiput-Atlas Sidebending Left | Thoracic Sagittal Movement | Thoracic Sagittal Movement | Thoracic Sagittal Movement | Lumbar Sagittal Movement | Lumbar Sagittal Movement | Correct     | Incorrect   |             |
-| Instructor   | Right                     | Left                      | 6-7                        | 7-8 8-9                    | Right                          | 6-7 7-8                    |                            | 8-9                        | 3-4                      | 5-6                      | Correct     | Incorrect   |             |
-|              |                           |                           |                            | N                          |                                |                            |                            |                            |                          |                          | 13          |             |             |
-|              |                           | N                         | N                          | N                          | N                              | N                          |                            |                            |                          |                          | 13          |             |             |
-|              |                           |                           |                            |                            |                                |                            |                            |                            | N                        |                          | 13          |             |             |
-|              |                           |                           |                            |                            |                                |                            | R                          | N                          | N                        |                          | 13          |             |             |
-|              |                           |                           |                            |                            |                                |                            | R                          |                            | N                        |                          | 12          |             |             |
-|              |                           | N                         | N                          | N                          | N                              |                            |                            |                            |                          |                          | 12          |             |             |
-|              |                           |                           |                            | N                          |                                |                            |                            | N                          | N                        | N                        | 11          |             |             |
-|              |                           |                           |                            |                            |                                |                            |                            |                            | N                        |                          |             |             |             |
-|              |                           |                           |                            |                            |                                |                            | R                          |                            | N                        |                          |             | 5           |             |
-| 10           |                           | R                         | N                          |                            |                                | N                          |                            |                            | N                        |                          |             |             |             |
-| Correct      | 10                        |                           |                            | 9                          |                                |                            |                            | 9                          | 10                       |                          |             |             |             |
-| Incorrect    |                           |                           |                            |                            |                                |                            |                            |                            |                          |                          |             |             |             |
-| TOTAL        |                           |                           |                            |                            |                                |                            |                            |                            |                          |                          | 111         | 18          |             |
+| Instructor | Patient 1                 | Patient 1                 | Patient 1                  | Patient 1                  | Patient 2                      | Patient 3                  | Patient 3                  | Patient 3                  | Patient 4                | Patient 4                | Patient 4 | Patient 4 | Patient 4 |
+| ---------- | ------------------------- | ------------------------- | -------------------------- | -------------------------- | ------------------------------ | -------------------------- | -------------------------- | -------------------------- | ------------------------ | ------------------------ | --------- | --------- | --------- |
+| Instructor | Occiput-Atlas Sidebending | Occiput-Atlas Sidebending | Thoracic Sagittal Movement | Thoracic Sagittal Movement | Occiput-Atlas Sidebending Left | Thoracic Sagittal Movement | Thoracic Sagittal Movement | Thoracic Sagittal Movement | Lumbar Sagittal Movement | Lumbar Sagittal Movement | Correct   | Incorrect |           |
+| Instructor | Right                     | Left                      | 6-7                        | 7-8 8-9                    | Right                          | 6-7 7-8                    |                            | 8-9                        | 3-4                      | 5-6                      | Correct   | Incorrect |           |
+|            |                           |                           |                            | N                          |                                |                            |                            |                            |                          |                          | 13        |           |           |
+|            |                           | N                         | N                          | N                          | N                              | N                          |                            |                            |                          |                          | 13        |           |           |
+|            |                           |                           |                            |                            |                                |                            |                            |                            | N                        |                          | 13        |           |           |
+|            |                           |                           |                            |                            |                                |                            | R                          | N                          | N                        |                          | 13        |           |           |
+|            |                           |                           |                            |                            |                                |                            | R                          |                            | N                        |                          | 12        |           |           |
+|            |                           | N                         | N                          | N                          | N                              |                            |                            |                            |                          |                          | 12        |           |           |
+|            |                           |                           |                            | N                          |                                |                            |                            | N                          | N                        | N                        | 11        |           |           |
+|            |                           |                           |                            |                            |                                |                            |                            |                            | N                        |                          |           |           |           |
+|            |                           |                           |                            |                            |                                |                            | R                          |                            | N                        |                          |           | 5         |           |
+| 10         |                           | R                         | N                          |                            |                                | N                          |                            |                            | N                        |                          |           |           |           |
+| Correct    | 10                        |                           |                            | 9                          |                                |                            |                            | 9                          | 10                       |                          |           |           |           |
+| Incorrect  |                           |                           |                            |                            |                                |                            |                            |                            |                          |                          |           |           |           |
+| TOTAL      |                           |                           |                            |                            |                                |                            |                            |                            |                          |                          | 111       | 18        |           |
 
 N = normal
 
@@ -9072,7 +9105,7 @@ R = hypomobile (restricted) X = unable to test
 
 ## Selected bibliography
 
-- Brodin, H., J. Bang, P. Bechgaard, F. Kaltenborn, E. Schiotz. Manipulasjon av Ryggraden. Oslo: Universitetsforlaget, 1966*
+- Brodin, H., J. Bang, P. Bechgaard, F. Kaltenborn, E. Schiotz. Manipulasjon av Ryggraden. Oslo: Universitetsforlaget, 1966\*
 - Cyriax, J. Textbook of Orthopedic Medicine, Vol. 1. London: Bailliere Tindall, 1982
 - Evjenth, O. and J. Hamberg. Muscle Stretching in Manual Therapy, Vols. I and II. Alfta, Sweden: Alfta Rehab, 1984
 - —. Autostretching. Alfta, Sweden: Alfta Rehab, 1989
@@ -9081,7 +9114,7 @@ R = hypomobile (restricted) X = unable to test
 - Kaltenborn, F. The Spine: Basic Evaluation and Mobilization Techniques. Oslo: Norlis Bokhandel, 1996
 - Kaltenborn, F. Manual Mobilization of the Joints, Volume 1: The Extremities. Oslo: Norlis Bokhandel, 2002
 - MacConaill, M.A. and Basmajian, J.F. Muscles and Movements, Krieger, Huntington, New York, 1977.
-- Mennell, J. Science and Art of Joint Manipulation, Vol. II. London: Churchill, 1952*
+- Mennell, J. Science and Art of Joint Manipulation, Vol. II. London: Churchill, 1952\*
 - Schiotz. E. and J. Cyriax. Manipulation Past and Present. London: W. Heinemann Medical Books Ltd, 1975 (This book has an exhaustive bibliography).
 - Schiotz. E. Manipulasionsbehandling av columna under medisinsk-historisk synsvinkel (History of manipulations), excerpt from Tidsskrift for Den norske laegeforening, 1958.
 - Spalteholz, W., and R. Spanner. Atlas of Human Anatomy. Amsterdam: Scheltema &amp; Holkema NV, 1961
@@ -9089,15 +9122,11 @@ R = hypomobile (restricted) X = unable to test
 - Stoddard, A. Manual of Osteopathic Practice. London: Hutchinson, 1983 Distributed by: Osteopathic Supplies, Ltd. 70 Belmont Road Hereford HR2 7JW England.
 - White, A., and M. Panjabi. Clinical Biomechanics of the Spine. Philadelphia: Lippincott, 1978
 
-*Out of print
+\*Out of print
 
 <!-- PAGE_NUMBER: 348 -->
 
-
-
 <!-- PAGE_NUMBER: 349 -->
-
-
 
 <!-- PAGE_NUMBER: 350 -->
 
@@ -9108,8 +9137,6 @@ R = hypomobile (restricted) X = unable to test
 <!-- image -->
 
 <!-- PAGE_NUMBER: 352 -->
-
-
 
 <!-- PAGE_NUMBER: 353 -->
 

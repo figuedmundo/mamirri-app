@@ -8,7 +8,6 @@ original_file: SINELNIKOV_ATLAS_OF_HUMAN_ANATOMY_Volume_I.pdf
 extraction_date: '2026-02-10T00:36:29.192Z'
 ---
 
-
 <!-- PAGE_NUMBER: 1 -->
 
 ## R.D. SINELNIKOV
@@ -18,8 +17,6 @@ extraction_date: '2026-02-10T00:36:29.192Z'
 <!-- image -->
 
 <!-- PAGE_NUMBER: 2 -->
-
-
 
 <!-- PAGE_NUMBER: 3 -->
 
@@ -117,46 +114,46 @@ Inconstantly present nerve segments are put in round brackets which are enclosed
 
 ## CONTENTS
 
-| Preface                                                                         | 5       |                                                                              | Articulations of the Trunk Bones 183   |
-|---------------------------------------------------------------------------------|---------|------------------------------------------------------------------------------|----------------------------------------|
-| THE SCIENCE OF THE BONES                                                        | 9       | Articulations of the Ribs                                                    | 195                                    |
-| The Bones of the Trunk .                                                        | 21      | Articulations of the Bones of the Skull                                      | 199                                    |
-| The Vertebrae                                                                   | 21      | Articulations of the Shoulder Girdle and Free Upper Limb (Ya.R. Sinelnikov). | 203                                    |
-| The Ribs . The Sternum                                                          | 37 39   | Articulations of the Upper Limb                                              | 203                                    |
-| The Thoracic Cage                                                               | 41      | Articulations of the Shoulder Girdle                                         | 203                                    |
-| Development of Bones and Age Features of the Trunk Ske-                         |         | Joints of the Free Upper Limb •                                              | 205                                    |
-| leton (Ya.R. Sinelnikov)                                                        | 46      | Articulations of the Pelvic Girdle and Free Lower Limb                       | 223                                    |
-| The Bones of the Head The Bones of the Cranium                                  | 50      | Joints of the Free Lower Limb                                                | 227                                    |
-| The Bones of the Face                                                           | 56 80   | Development and Age Features of Bone Articulations (Ya.R. Sinelnikov)        | 251                                    |
-| The Skull as a Whole The Skull Cap                                              | 92 96   | THE SCIENCE OF THE MUSCLES                                                   | 255                                    |
-| The Base of the Skull                                                           | 98      | Muscles of the Trunk and Head                                                | 265                                    |
-| Development and Age Features of the Bones of the Head                           |         | 110                                                                          | Muscles and Fasciae of the Trunk 265   |
-| (Ya.R. Sinelnikov)                                                              | 113     | Muscles and Fasciae of the Back                                              | 265                                    |
-| The Bones of the Upper Limb (Ya.R. Sinelnikov) The Bones of the Shoulder Girdle | 113     | Superficial Muscles of the Back                                              | 268                                    |
-| The Skeleton of the Free Upper Limb                                             |         | Deep Muscles of the Back                                                     | 272                                    |
-| The Humerus                                                                     | 119 119 | Fasciae of the Back                                                          | 279                                    |
-| The Bones of the Forearm                                                        | 123     | Muscles and Fasciae of the Head (Ya.R. Sinelnikov)                           | 282                                    |
-| The Bones of the Hand                                                           | 129     | Muscles of Facial Expression                                                 | 286                                    |
-| Development and Age Features of the Bones of the Upper                          |         | Muscles of Mastication                                                       | 290 295                                |
-| Limb (Ya.R. Sinelnikov)                                                         | 137 139 | Fasciae of the Head Muscles and Fasciae of the Neck (Ya.R. Sinelnikov)       | 296                                    |
-| The Bones of the Lower Limb (Ya.R. Sinelnikov) The Bones of the Pelvic Girdle   | 139     | Superficial Muscles of the Neck                                              | 296                                    |
-|                                                                                 |         | Deep Muscles of the Neck                                                     | 301                                    |
-| The Skeleton of the Free Lower Limb The Femur                                   | 153     | Triangles of the Neck                                                        | 305                                    |
-| The Patella                                                                     | 153     | Fasciae of the Neck                                                          | 307                                    |
-|                                                                                 | 153     | Muscles and Fasciae of the Chest                                             | 308                                    |
-| The Bones of the Leg                                                            | 157     | Superficial Muscles of the Chest                                             | 308                                    |
-| The Bones of the Foot                                                           | 161     | Deep (Proper) Muscles of the Chest                                           | 316                                    |
-|                                                                                 |         |                                                                              | 317 317                                |
-| Development and Age Features of the Bones of the Lower Limb (Ya.R. Sinelnikov)  | 172     | Fasciae of the Chest                                                         |                                        |
-|                                                                                 |         | The Diaphragm                                                                | 319                                    |
-| THE SCIENCE OF THE ARTICULATION OF BONES                                        | 175     | Muscles and Fasciae of the Abdomen Muscles of the Lateral Abdominal Wall     | 319 320                                |
-|                                                                                 |         | Muscles of the Anterior Abdominal Wall                                       | 323                                    |
-| Articulations of the Bones of the Trunk and the Head.                           | 183     | Muscles of the Posterior Abdominal Wall                                      |                                        |
+| Preface                                                                         | 5       |                                                                              | Articulations of the Trunk Bones 183 |
+| ------------------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------- | ------------------------------------ |
+| THE SCIENCE OF THE BONES                                                        | 9       | Articulations of the Ribs                                                    | 195                                  |
+| The Bones of the Trunk .                                                        | 21      | Articulations of the Bones of the Skull                                      | 199                                  |
+| The Vertebrae                                                                   | 21      | Articulations of the Shoulder Girdle and Free Upper Limb (Ya.R. Sinelnikov). | 203                                  |
+| The Ribs . The Sternum                                                          | 37 39   | Articulations of the Upper Limb                                              | 203                                  |
+| The Thoracic Cage                                                               | 41      | Articulations of the Shoulder Girdle                                         | 203                                  |
+| Development of Bones and Age Features of the Trunk Ske-                         |         | Joints of the Free Upper Limb •                                              | 205                                  |
+| leton (Ya.R. Sinelnikov)                                                        | 46      | Articulations of the Pelvic Girdle and Free Lower Limb                       | 223                                  |
+| The Bones of the Head The Bones of the Cranium                                  | 50      | Joints of the Free Lower Limb                                                | 227                                  |
+| The Bones of the Face                                                           | 56 80   | Development and Age Features of Bone Articulations (Ya.R. Sinelnikov)        | 251                                  |
+| The Skull as a Whole The Skull Cap                                              | 92 96   | THE SCIENCE OF THE MUSCLES                                                   | 255                                  |
+| The Base of the Skull                                                           | 98      | Muscles of the Trunk and Head                                                | 265                                  |
+| Development and Age Features of the Bones of the Head                           |         | 110                                                                          | Muscles and Fasciae of the Trunk 265 |
+| (Ya.R. Sinelnikov)                                                              | 113     | Muscles and Fasciae of the Back                                              | 265                                  |
+| The Bones of the Upper Limb (Ya.R. Sinelnikov) The Bones of the Shoulder Girdle | 113     | Superficial Muscles of the Back                                              | 268                                  |
+| The Skeleton of the Free Upper Limb                                             |         | Deep Muscles of the Back                                                     | 272                                  |
+| The Humerus                                                                     | 119 119 | Fasciae of the Back                                                          | 279                                  |
+| The Bones of the Forearm                                                        | 123     | Muscles and Fasciae of the Head (Ya.R. Sinelnikov)                           | 282                                  |
+| The Bones of the Hand                                                           | 129     | Muscles of Facial Expression                                                 | 286                                  |
+| Development and Age Features of the Bones of the Upper                          |         | Muscles of Mastication                                                       | 290 295                              |
+| Limb (Ya.R. Sinelnikov)                                                         | 137 139 | Fasciae of the Head Muscles and Fasciae of the Neck (Ya.R. Sinelnikov)       | 296                                  |
+| The Bones of the Lower Limb (Ya.R. Sinelnikov) The Bones of the Pelvic Girdle   | 139     | Superficial Muscles of the Neck                                              | 296                                  |
+|                                                                                 |         | Deep Muscles of the Neck                                                     | 301                                  |
+| The Skeleton of the Free Lower Limb The Femur                                   | 153     | Triangles of the Neck                                                        | 305                                  |
+| The Patella                                                                     | 153     | Fasciae of the Neck                                                          | 307                                  |
+|                                                                                 | 153     | Muscles and Fasciae of the Chest                                             | 308                                  |
+| The Bones of the Leg                                                            | 157     | Superficial Muscles of the Chest                                             | 308                                  |
+| The Bones of the Foot                                                           | 161     | Deep (Proper) Muscles of the Chest                                           | 316                                  |
+|                                                                                 |         |                                                                              | 317 317                              |
+| Development and Age Features of the Bones of the Lower Limb (Ya.R. Sinelnikov)  | 172     | Fasciae of the Chest                                                         |                                      |
+|                                                                                 |         | The Diaphragm                                                                | 319                                  |
+| THE SCIENCE OF THE ARTICULATION OF BONES                                        | 175     | Muscles and Fasciae of the Abdomen Muscles of the Lateral Abdominal Wall     | 319 320                              |
+|                                                                                 |         | Muscles of the Anterior Abdominal Wall                                       | 323                                  |
+| Articulations of the Bones of the Trunk and the Head.                           | 183     | Muscles of the Posterior Abdominal Wall                                      |                                      |
 
 <!-- PAGE_NUMBER: 9 -->
 
 | Aponeuroses and Fasciae of the Abdomen         |     | 323 Muscles of the Hip Joint                   |
-|------------------------------------------------|-----|------------------------------------------------|
+| ---------------------------------------------- | --- | ---------------------------------------------- |
 | The Inguinal Canal                             | 329 | Muscles of the Free Lower Limb                 |
 | Muscles of the Upper Limb (Ya.R. Sinelnikov)   | 341 | Muscles of the Thigh                           |
 | Muscles of the Shoulder Girdle                 | 341 | Muscles of the Leg                             |
@@ -320,8 +317,8 @@ The vertebral arch (arcus vertebrae) forms the posterior and lateral boundaries 
 <!-- image -->
 
 9. Vertebral column (columna vertebralis) (/4).
-2. C-posterior aspect.
-3. A - from the right side; B-anterior aspect;
+10. C-posterior aspect.
+11. A - from the right side; B-anterior aspect;
 
 <!-- PAGE_NUMBER: 22 -->
 
@@ -1786,7 +1783,7 @@ diamond-shaped and located at the junction of the sagittal, coronal, and frontal
 
 It is general knowledge that the calvaria undergoes structural changes during intrauterine life, i.e. it is a membranous structure covering the top of the brain at first but is gradually replaced by bony tissue later without going through the stage of cartilage. This period is characterized by the appearance of bone nuclei (in the second or the beginning of the third intrauterine month) as islets in this or that bone. These islets merge later to form large bony plates which are the bony framework of the various bones of the calvaria.
 
-By the time of birth, however, areas of the membranous skull remain between the bones as narrow bands and wider spaces called fontanelles. Due to their elasticity they may retract or protrude depending on the intracranial pressure; hence their name (dim. of Fr. fontaine fountain). Six fontanelles are distinguished on the skull of a newborn; among them two are paired and two unpaired. The unpaired are the anterior and posterior fontanelles, the paired -the * sphenoidal and mastoid fontanelles.
+By the time of birth, however, areas of the membranous skull remain between the bones as narrow bands and wider spaces called fontanelles. Due to their elasticity they may retract or protrude depending on the intracranial pressure; hence their name (dim. of Fr. fontaine fountain). Six fontanelles are distinguished on the skull of a newborn; among them two are paired and two unpaired. The unpaired are the anterior and posterior fontanelles, the paired -the \* sphenoidal and mastoid fontanelles.
 
 The anterior fontanelle (fonticulus anterior) (Fig. 100) is usually
 
@@ -2718,36 +2715,36 @@ The line connecting the middle points of the straight diameters of the pelvic in
 
 <!-- PAGE_NUMBER: 146 -->
 
-|                                                                                                                                                           | MEASUREMENTS OF THE PELVIS   | MEASUREMENTS OF THE PELVIS   |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------|------------------------------|
-|                                                                                                                                                           | FEMALE                       | MALE                         |
-| GREATER (FALSE) PELVIS                                                                                                                                    |                              |                              |
-| Interspinous diameter (distance between both anterior superior iliac spines)                                                                              | 23-25 cm                     | less by 2-3 cm               |
-| Intercristal diameter (greatest distance between both iliac crests)                                                                                       | 25-27 cm                     |                              |
-| LESSER (TRUE) PELVIS                                                                                                                                      |                              |                              |
-| Inlet (apertura pelvis superior)                                                                                                                          |                              |                              |
-| Anteroposterior diameter, or anatomic conjugate (diameter recta seu conjugata anatom- ica) (distance between promontorium and superior edge of symphysis) | 11.5 cm                      | 10.8 cm                      |
-| Conjugate obstetric diameter (conjugata vera s. gynecologica) (distance between pro- montorium and most posteriorly prominent point of symphysis)         | 10.5-11 cm                   |                              |
-| Conjugate diagonal diameter (conjugata diagonalis) (distance between promontorium and inferior edge of symphysis)                                         | 12.5-13 cm                   |                              |
-| Transverse diameter (diameter transversa) (greatest distance between both terminal lines)                                                                 | 13.5 cm                      | 12.8 cm                      |
-| Oblique diameter (diameter obliqua) (distance between sacroiliac joint on one side and iliopubic eminence on the other)                                   | 12-12.6 cm                   | 12-12.2 cm                   |
-| Pelvic cavity (cavum pelois)                                                                                                                              |                              |                              |
-| Anteroposterior diameter (diameter recta) (distance between articulation of second and third sacral vertebrae and middle of symphysis)                    | 12.2 cm                      | 10.8 cm                      |
-| Transverse diameter (diameter transversa) (distance between centres of acetabula)                                                                         | 11.5 cm                      | 10.8 cm                      |
-| Outlet (apertura pelvis inferior)                                                                                                                         |                              |                              |
-| Diameter recta (distance between apex of coccyx and inferior edge of symphysis)                                                                           | 9.5 cm                       | 7.5 cm                       |
-| Diameter recta (distance between ischial tuberosities)                                                                                                    | 10.8 cm                      | 8.1 cm                       |
-| INCLINATION OF PELVIS (INCLINATIO PELVIS) IS MEASURED BY THE ANGLE FORMED BY HORIZONTAL PLANE AND PLANE OF PELVIC INLET                                   | 55-60°                       | 50-55°                       |
+|                                                                                                                                                           | MEASUREMENTS OF THE PELVIS | MEASUREMENTS OF THE PELVIS |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | -------------------------- |
+|                                                                                                                                                           | FEMALE                     | MALE                       |
+| GREATER (FALSE) PELVIS                                                                                                                                    |                            |                            |
+| Interspinous diameter (distance between both anterior superior iliac spines)                                                                              | 23-25 cm                   | less by 2-3 cm             |
+| Intercristal diameter (greatest distance between both iliac crests)                                                                                       | 25-27 cm                   |                            |
+| LESSER (TRUE) PELVIS                                                                                                                                      |                            |                            |
+| Inlet (apertura pelvis superior)                                                                                                                          |                            |                            |
+| Anteroposterior diameter, or anatomic conjugate (diameter recta seu conjugata anatom- ica) (distance between promontorium and superior edge of symphysis) | 11.5 cm                    | 10.8 cm                    |
+| Conjugate obstetric diameter (conjugata vera s. gynecologica) (distance between pro- montorium and most posteriorly prominent point of symphysis)         | 10.5-11 cm                 |                            |
+| Conjugate diagonal diameter (conjugata diagonalis) (distance between promontorium and inferior edge of symphysis)                                         | 12.5-13 cm                 |                            |
+| Transverse diameter (diameter transversa) (greatest distance between both terminal lines)                                                                 | 13.5 cm                    | 12.8 cm                    |
+| Oblique diameter (diameter obliqua) (distance between sacroiliac joint on one side and iliopubic eminence on the other)                                   | 12-12.6 cm                 | 12-12.2 cm                 |
+| Pelvic cavity (cavum pelois)                                                                                                                              |                            |                            |
+| Anteroposterior diameter (diameter recta) (distance between articulation of second and third sacral vertebrae and middle of symphysis)                    | 12.2 cm                    | 10.8 cm                    |
+| Transverse diameter (diameter transversa) (distance between centres of acetabula)                                                                         | 11.5 cm                    | 10.8 cm                    |
+| Outlet (apertura pelvis inferior)                                                                                                                         |                            |                            |
+| Diameter recta (distance between apex of coccyx and inferior edge of symphysis)                                                                           | 9.5 cm                     | 7.5 cm                     |
+| Diameter recta (distance between ischial tuberosities)                                                                                                    | 10.8 cm                    | 8.1 cm                     |
+| INCLINATION OF PELVIS (INCLINATIO PELVIS) IS MEASURED BY THE ANGLE FORMED BY HORIZONTAL PLANE AND PLANE OF PELVIC INLET                                   | 55-60°                     | 50-55°                     |
 
-|                                                                                | COMPARATIVE SEX FEATURES OF PELVIS   | COMPARATIVE SEX FEATURES OF PELVIS                        |
-|--------------------------------------------------------------------------------|--------------------------------------|-----------------------------------------------------------|
-|                                                                                | FEMALE                               | MALE                                                      |
-| General appearance of pelvis                                                   | Wider and shorter                    | Narrower and higher                                       |
-| Position of alae of ili                                                        | More horizontal                      | More vertical                                             |
-| Sacrum                                                                         | Shorter and wider                    | Narrower and longer                                       |
-| Angle at junction of inferior pubic rami                                       | 90-100° (pubic arch)                 | 70-75° (subpubic angle)                                   |
-| Shape of cavity of true pelvis                                                 | Cylindrical                          | Conical                                                   |
-| Shape of superior aperture, or inlet of true pelvis (apertura pelvis superior) | More rounded                         | Jard heart' due to marked projection le promontory forwar |
+|                                                                                | COMPARATIVE SEX FEATURES OF PELVIS | COMPARATIVE SEX FEATURES OF PELVIS                        |
+| ------------------------------------------------------------------------------ | ---------------------------------- | --------------------------------------------------------- |
+|                                                                                | FEMALE                             | MALE                                                      |
+| General appearance of pelvis                                                   | Wider and shorter                  | Narrower and higher                                       |
+| Position of alae of ili                                                        | More horizontal                    | More vertical                                             |
+| Sacrum                                                                         | Shorter and wider                  | Narrower and longer                                       |
+| Angle at junction of inferior pubic rami                                       | 90-100° (pubic arch)               | 70-75° (subpubic angle)                                   |
+| Shape of cavity of true pelvis                                                 | Cylindrical                        | Conical                                                   |
+| Shape of superior aperture, or inlet of true pelvis (apertura pelvis superior) | More rounded                       | Jard heart' due to marked projection le promontory forwar |
 
 <!-- PAGE_NUMBER: 147 -->
 
@@ -3401,7 +3398,7 @@ In the lower parts of the vertebral column the anterior longitudinal ligament is
 
 2. The posterior longitudinal ligament (ligamentum longitudinale posterius) (see Figs 182-184, 187, 188) runs on the posterior surface of the vertebral bodies in the vertebral canal (canalis vertebralis). It arises on the posterior surface of the axis and is continuous with the membrana tectoria at the level of the upper two cervical vertebrae. Inferiorly this ligament stretches to the proximal part of
 
-182. Zygapophyseal joint (junctura zygapophysealis); superior aspect (⅓).
+3. Zygapophyseal joint (junctura zygapophysealis); superior aspect (⅓).
 
 <!-- image -->
 
@@ -3558,6 +3555,7 @@ of the atlas to the anterior surface of the foramen magnum. The lower band, whic
 3. The apical ligament of the odontoid process (ligamentum apias dentis) (Figs 187, 191) stretches between the apex of the dens
 
 - and the middle of the anterior border of the foramen magnum. It is considered a rudiment of the chorda dorsalis.
+
 4. The alar ligaments of the odontoid process (ligamenta alaria) (see Figs 190, 191) are formed of bands of connective-tissue fibres stretched between the lateral surfaces of the dens and medial surfaces of the occipital condyles.
 
 ## ARTICULATIONS OF THE RIBS
@@ -3850,10 +3848,11 @@ The articular capsule (capsula articularis) is fastened on the humerus above the
 Three joints are distinguished in the cavity of the elbow joint: the humeroulnar, the humeroradial, and the proximal (superior) radioulnar joints.
 
 - humeroulnar (articulatio humeroulnaris) (Figs 209-212) is formed between the trochlea of the humerus and the trochlear notch of the ulna; it is a variant of the hinge joint and is related to the cochlear joints.
+
 2. The humeroradial joint (articulatio humeroradialis) (Fig. 209) is formed by the head of the humerus and the facet on the head of the radius. It is related to the ball-and-socket or spheroid joints (articulatio spheroidea) (actually movements occur about not three but only two axes, frontal and vertical)
 3. The superior, or proximal radioulnar joint (articulatio radi-
 
-207. Right elbow joint (articulatio cubiti); anterior aspect (⅘).
+4. Right elbow joint (articulatio cubiti); anterior aspect (⅘).
 
 <!-- image -->
 
@@ -3978,7 +3977,7 @@ The joint is strengthened by the following ligaments.
 
 1. The lateral ligament of the wrist (ligamentum collaterale carpi radiale) which is stretched between the lateral styloid process and the scaphoid bone. Some of its bands reach the trapezium bone. The ligament checks adduction of the hand.
 2. The medial ligament of the wrist (ligamentum collaterale carpi ulnare), arises from the medial styloid process and is attached to the triquetrum and partly to the pisiform bone. It checks abduction of the hand.
-4. The anterior radiocarpal ligament (ligamentum radiocarpeum palmare). It arises from the base of the lateral styloid process of the radius and the margin of the carpal articular surface of this bone and runs downwards and medially to be attached to the proximal and distal rows of carpal bones (the scaphoid, lunate, triquetrum, and capitate). The ligament checks extension of the hand.
+3. The anterior radiocarpal ligament (ligamentum radiocarpeum palmare). It arises from the base of the lateral styloid process of the radius and the margin of the carpal articular surface of this bone and runs downwards and medially to be attached to the proximal and distal rows of carpal bones (the scaphoid, lunate, triquetrum, and capitate). The ligament checks extension of the hand.
 
 In addition to these ligaments, there are the interosseous intercarpal ligaments (ligamenta intercarpea interossea) which connect the proximal carpal bones to one another; some of the carpal bones articulate to form intercarpal joints (articulationes intercarpeae).
 
@@ -4263,7 +4262,7 @@ The hip joint has the following ligaments.
 
 1. The iliofemoral ligament (ligamentum iliofemorale) (Fig. 221) lies on the anterior surface of the hip joint. It stretches from the anterior inferior iliac spine and is attached to the trochanteric line. It checks extension at the hip joint and contributes to holding the trunk erect.
 
-221. Right hip joint (articulatio coxae); anterior aspect (⅖).
+2. Right hip joint (articulatio coxae); anterior aspect (⅖).
 
 <!-- image -->
 
@@ -4276,8 +4275,8 @@ The hip joint has the following ligaments.
 2. The pubofemoral ligament (ligamentum pubofemorale) (Fig. 221) runs downwards from the superior pubie ramus and intertwines with the capsule of the hip joint; some of its bands reach the medial part of the trochanteric line.
 3. The ischiofemoral ligament (ligamentum ischiofemorale) (Fig. 219) arises on the anterior surface of the body of the ischium, runs forewards and blends with the capsule of the hip joint; some of its bundles reach the trochanteric fossa.
 4. The zona orbicularis (Figs 219 and 222) runs in the articu-
-4. lar capsule, loops the femoral neck, and is attached to the anterior inferior iliac spine.
-5. The ligament of the head of the femur (ligamentum capitis femoris) (Figs 222, 223) is in the joint cavity. It arises from the transverse ligament of the acetabulum and is covered by a synovial membrane; it is attached to the pit in the femoral head. Vessels pass to the head of the femur in the ligament.
+5. lar capsule, loops the femoral neck, and is attached to the anterior inferior iliac spine.
+6. The ligament of the head of the femur (ligamentum capitis femoris) (Figs 222, 223) is in the joint cavity. It arises from the transverse ligament of the acetabulum and is covered by a synovial membrane; it is attached to the pit in the femoral head. Vessels pass to the head of the femur in the ligament.
 
 The hip joint is a variety of a ball-and-socket joint (articulatio cotylica).
 
@@ -4947,20 +4946,27 @@ Superficial and deep muscles of the back (musculi dorsi) are distinguished.
 
 - I. Superficial muscles of the back.
 - A. Muscles of the back related to the upper limb:
+
 1. The trapezius muscle (musculus trapezius).
 2. The latissimus dorsi muscle (musculus latissimus dorsi).
 3. The rhomboid major and minor muscles (musculi rhomboidei major et minor).
 4. The levator scapula muscle (musculus levator scapulae).
+
 - B. Muscles of the ribs:
+
 5. The serratus posterior superior muscle (musculus serratus posterior superior).
-9. posterior superior). 6. The serratus posterior inferior muscle (musculus serratus
+6. posterior superior). 6. The serratus posterior inferior muscle (musculus serratus
+
 - II. Deep (proper) muscles of the back.
 - A. Long muscles:
+
 1. The splenius capitis muscle (musculus splenius capitis).
 2. The splenius cervicis muscle (musculus splenius cervicis).
 3. The sacrospinalis muscle (musculus erector trunci spinae).
 4. The transversospinalis muscle (musculus transversospinalis).
+
 - B. Short muscles:
+
 1. The interspinales muscles (musculi interspinales)
 2. The intertransverse muscles (musculi intertransversarii)
 3. The levatores costarum muscles (musculi levatores costarum).
@@ -5057,6 +5063,7 @@ The deep (proper) muscles of the back are classified as long and short muscles.
 ## LONG MUSCLES OF THE BACK
 
 - I. The splenius capitis muscle (musculus splenus capitis) (see Figs 254, 255, 257) arises from the ligamentum nuchae and the spinous processes of the lower five cervical and upper three thoracic vertebrae and is inserted into the lateral parts of the superior nuchal line and the posterior border of the mastoid process.
+
 1. The iliocostocervicalis muscle (musculus iliocostalis) (see Figs 255-257) is inserted by numerous muscular and tendinous slips into the angles of all the ribs and the transverse processes of the lower cervical vertebrae; it is divided topographically into the musculi iliocostalis lumborum, thoracis, and cervicis:
 
 II. The splenius cervicis muscle (musculus splenius cervicis) arises from the spinous processes of the lower five cervical and upper five thoracic vertebrae and is inserted into the posterior tubercles of the transverse processes of the upper two or three cervical vertebrae.
@@ -5069,7 +5076,9 @@ Innervation: the greater occipital nerve and third and fourth cervical nerves (C
 - (a) the iliocostalis muscle (musculus iliocostalis lumborum) takes origin from the posterior part of the transverse tubercles of the sacrum and lumbar fascia, passes laterally and upwards, giving off eight or nine slips which are inserted into the angles of the lower eight or nine ribs by thin and narrow tendons;
 - (b) the costalis muscle (musculus iliocostalis thoracis) arises near the angles of the lower five or six ribs, ascends slightly obliquely and laterally and is inserted by thin, narrow tendons into the angles of the upper five or seven ribs;
 - (c) the costocervicalis muscle (musculus iliocostalis cervicis) takes origin from the angles of the upper five or seven ribs, also ascends obliquely and laterally, and is inserted by three slips into the posterior tubercles of the transverse processes of the fourth, fifth, and sixth cervical vertebrae.
+
 2. The longissimus muscle (musculus longissimus) (see Figs 255-257) is medial of the costocervicalis muscle and stretches from the sacrum to the base of the skull. The following three parts are distinguished in it topographically:
+
 - (a) the longissimus thoracis muscle (musculus longissimus thora-
 
 Innervation: the spinal nerves (Cg-Cg; Th, -Th,2; L,).
@@ -5084,9 +5093,9 @@ cis) arises from the transverse processes of the lumbar and lower six or seven t
 Innervation: the spinal nerves (C,-Cg; Th,-Thiz; LI-Ls; S, - S2).
 
 3. The spinalis muscle (musculus spinalis) (see Figs 255-257) runs along the spinous processes and is divided topographically into the following three parts:
-2. (a) the spinalis thoracis muscle (musculus spinalis thoracis) takes origin from the spinous processes of the upper two or three lumbar and lower two or three thoracic vertebrae and extending upwards is inserted into the spinous processes of the eighth to second thoracic vertebrae;
-3. (b) the spinalis cervicis muscle (musculus spinalis cervicis) arises from the spinous processes of the upper two thoracie and lower two cervical vertebrae, runs upwards, and is inserted into the spinous processes of the fourth, third, and second cervical vertebrae;
-4. (c) the spinalis capitis muscle (musculus spinalis capitis) is a poorly developed part of the spinalis muscle and is often absent. It takes origin from the spinous processes of the upper thoracie and lower lumbar vertebrae and extends upwards to be inserted near to the external occipital protuberance.
+4. (a) the spinalis thoracis muscle (musculus spinalis thoracis) takes origin from the spinous processes of the upper two or three lumbar and lower two or three thoracic vertebrae and extending upwards is inserted into the spinous processes of the eighth to second thoracic vertebrae;
+5. (b) the spinalis cervicis muscle (musculus spinalis cervicis) arises from the spinous processes of the upper two thoracie and lower two cervical vertebrae, runs upwards, and is inserted into the spinous processes of the fourth, third, and second cervical vertebrae;
+6. (c) the spinalis capitis muscle (musculus spinalis capitis) is a poorly developed part of the spinalis muscle and is often absent. It takes origin from the spinous processes of the upper thoracie and lower lumbar vertebrae and extends upwards to be inserted near to the external occipital protuberance.
 
 Action: the whole erector spinae muscle acts as a strong extensor of the vertebral column on bilateral contraction. It holds the trunk erect. In contraction on one side the vertebral column bends to the same side. The upper fibres pull the head to the side of the contracting muscle. Some of the fibres (the costalis muscle) pull the ribs downwards.
 
@@ -5108,9 +5117,9 @@ Innervation: the spinal nerves (Cz-Cg; Th, -Th,2).
 2. The multifidus muscle (musculus multifidus) (Figs 258-260) is covered by the semispinalis muscle and in the lumbar region by the longissimus muscle. Its fibres run for the whole distance of the vertebral column between the transverse and spinous processes of the vertebrae (up to the second cervical) and bridges two, three or four vertebrae. It arises from the posterior surface of the sacrum, the posterior part of the iliac crest, the mamillary processes of the lumbar vertebrae, the transverse processes of the thoracie vertebrae, and the articular processes of the lower four cervical vertebrae and is inserted into the spinous processes of all vertebrae with the exception of the atlas.
 
 3. The rotatores muscles (musculi rotatores) (Figs 259, 260) are the deepest part of the transversospinalis muscle and are separated into the following parts topographically:
-2. (a) the cervical rotatores muscles (musculi rotatores cervicis);
-3. (b) the thoracie rotatores muscles (musculi rotatores thoracis);
-4. (c) the lumbar rotatores muscles (musculi rotatores lumborum).
+4. (a) the cervical rotatores muscles (musculi rotatores cervicis);
+5. (b) the thoracie rotatores muscles (musculi rotatores thoracis);
+6. (c) the lumbar rotatores muscles (musculi rotatores lumborum).
 
 They take origin from the transverse processes of all vertebrae (except the atlas) and the mamillary process of the lumbar vertebrae; overlapping one vertebra, they are inserted into the spinous processes of the next vertebrae above, the adjacent parts of their arches, and the base of the arches of two contiguous vertebrae
 
@@ -5237,10 +5246,11 @@ The following regions of the head and face are distinguished (Fig. 264).
 1. The frontal region (regio frontalis) is unpaired and reaches ated on the sides of the head below the parietal region. It corresponds to the contours of the squamous part of the temporal bone.
 
 - the nasofrontal suture (the root of the nose) and the supraorbital margins anteriorly, the parietal region posteriorly, and the temporal regions laterally.
+
 2. The parietal region (regio parietalis) is unpaired and corresponds to the contours of the parietal bones.
-4. The occipital region (regio occipitalis) is unpaired and is situated to the back of the parietal region. It stretches to the posterior region of the neck.
-5. The infratemporal region (regio infratemporalis).
-3. The temporal region (regio temporalis) is paired and is situ-
+3. The occipital region (regio occipitalis) is unpaired and is situated to the back of the parietal region. It stretches to the posterior region of the neck.
+4. The infratemporal region (regio infratemporalis).
+5. The temporal region (regio temporalis) is paired and is situ-
 
 ## REGIONS OF THE FACE
 
@@ -5251,9 +5261,9 @@ from the nasal and oral region by the nasolabial groove (sulcus nasolabialis).
 2. The nasal region (regio nasalis) is unpaired and corresponds to the contours of the nose.
 3. The infraorbital region (regio infraorbitalis) is paired and is located lateral to the nasal region and below the orbital region.
 4. The zygomatic region (regio cygomatica) corresponds to the contours of the body of the zygomatic bone.
-6. The parotideomasseteric region (regio parotideomasseterica) is paired and corresponds to the contours of the parotid gland and the masseter muscle. The posterior parts of this region are called the retromandibular fossa.
-7. The oral region (regio oralis) is an unpaired region.
-5. The buccal region (regio buccalis) is paired and is separated
+5. The parotideomasseteric region (regio parotideomasseterica) is paired and corresponds to the contours of the parotid gland and the masseter muscle. The posterior parts of this region are called the retromandibular fossa.
+6. The oral region (regio oralis) is an unpaired region.
+7. The buccal region (regio buccalis) is paired and is separated
 8. The mental region (regio mentalis) is unpaired and is separated from the oral region by the mentolabial groove (sulcus mentolabialis).
 
 ## MUSCLES OF THE HEAD
@@ -5267,6 +5277,7 @@ On contraction, the muscles of facial expression displace certain areas of the s
 They are predominantly grouped around the natural orifices of the face (the palpebral fissure, oral fissure, orifices of the nose and ear) which either become smaller and even closed completely by the action of the muscles or become larger, i.e. dilate. In accordance with this, all muscles of facial expression are divided into the following four groups.
 
 - 1, Muscles of the scalp.
+
 2. Muscles surrounding the eyes.
 3. Muscles surrounding the mouth.
 4. Muscles surrounding the nose.
@@ -5277,8 +5288,8 @@ The following four pairs of muscles of mastication are distinguished.
 
 1. The masseter muscle (musculus masseter).
 2. The temporal muscle (musculus temporalis).
-4. The lateral pterygoid muscle (musculus pterygoideus lateralis).
-3. The medial pterygoid muscle (musculus pterygoideus medialis).
+3. The lateral pterygoid muscle (musculus pterygoideus lateralis).
+4. The medial pterygoid muscle (musculus pterygoideus medialis).
 
 <!-- PAGE_NUMBER: 278 -->
 
@@ -5360,7 +5371,7 @@ Action: contraction of the muscle on both sides produces transverse folds at the
 Blood supply: the angular and ethmoidal arteries.
 
 3. The orbicularis oculi muscle (musculus orbicularis oculi) (Figs 263, 266) lies under the skin overlying the anterior parts of the orbit. Three parts are distinguished in the muscle: orbicular, palpebral, and lacrimal which arise in the region of the medial angle of the eye:
-2. (a) the orbital part (pars orbitalis) takes origin from the medial palpebral ligament, the frontal process of the maxilla, and the nasal part of the frontal bone and stretches along the superior and inferior margins of the orbit to form a muscular ring.
+4. (a) the orbital part (pars orbitalis) takes origin from the medial palpebral ligament, the frontal process of the maxilla, and the nasal part of the frontal bone and stretches along the superior and inferior margins of the orbit to form a muscular ring.
 
 In the region of the lateral palpebral ligament, the inner fibres of the muscle form the lateral palpebral raphe (raphe palpebralis lateralis);
 
@@ -5460,7 +5471,7 @@ Blood supply: the inferior labial and mental arteries.
 1. The nasal muscle (musculus nasalis) (Figs 263, 266) takes origin from the maxilla above the alveoli of the canine and lateral incisor teeth, stretches upwards, and separates into two parts, medial and lateral:
 2. (a) the lateral, or transverse part (pars transversus) curves around the ala nasi, becomes slightly wider, and is continuous with a tendon in the midline. The tendon joins that of the contralateral muscle;
 3. (b) the medial, or alar part (pars alaris) is inserted into the posterior end of the cartilage of the ala nasi.
-2. The depressor septi nasi muscle (musculus depressor septi nas, (Fig. 266) arises from the alveolar juga of the maxillary medial incisor and partly includes fibres of the orbicularis oris. It is inserted into the inferior surface of the cartilage of the nasal septum.
+4. The depressor septi nasi muscle (musculus depressor septi nas, (Fig. 266) arises from the alveolar juga of the maxillary medial incisor and partly includes fibres of the orbicularis oris. It is inserted into the inferior surface of the cartilage of the nasal septum.
 
 Action: narrows the nostrils.
 
@@ -5581,8 +5592,8 @@ The following regions of the neck (regiones colli) (Fig. 264) are distinguished.
 1. The anterior cervical region (regio colli anterior) includes:
 2. (a) the submaxillary triangle (trigonum submandibulare);
 3. (b) the carotid triangle (trigonum caroticum).
-2. The paired sternocleidomastoid region (regio sternodeidomastoideae) corresponds to the contours of the sternocleidomastoid muscle.
-3. The paired lateral cervical region (regio colli lateralis) is bounded by the posterior border of the sternocleidomastoid muscle anteriorly, by the border of the trapezius muscle posteriorly, and by the border of the clavicle inferiorly. This region includes the omoclavicular triangle (trigonum omoclaviculare) in which the greater supraclavicular fossa (fossa supradavicularis major) is situated.
+4. The paired sternocleidomastoid region (regio sternodeidomastoideae) corresponds to the contours of the sternocleidomastoid muscle.
+5. The paired lateral cervical region (regio colli lateralis) is bounded by the posterior border of the sternocleidomastoid muscle anteriorly, by the border of the trapezius muscle posteriorly, and by the border of the clavicle inferiorly. This region includes the omoclavicular triangle (trigonum omoclaviculare) in which the greater supraclavicular fossa (fossa supradavicularis major) is situated.
 
 The paired lesser supraclavicular fossa (fossa supraclavicularis minor) is bounded by the heads (slips) of the sternocleidomastoid muscle and the corresponding border of the clavicle.
 
@@ -5595,9 +5606,10 @@ The cervical muscles (musculus colli) cover one another to form three groups - s
 The deep muscles may be divided into a lateral and prevertebral groups.
 
 - I. The superficial muscles of the neck: the platysma and the sternocleidomastoid muscles (musculus sternocleidomastoideus).
+
 2. Il. The middle group:
 1. The suprahyoid muscles (musculi suprahyoidei): the digastric muscle (musculus digastricus), the stylohyoid muscle (musculus stylohyoideus), the mylohyoid muscle (musculus mylohyoideus), and the geniohyoid muscle (musculus geniohyoideus).
-2. The infrahyoid muscles (musculi infrahyoidei): the sternohy-
+1. The infrahyoid muscles (musculi infrahyoidei): the sternohy-
 
 ## SUPERFICIAL MUSCLES OF THE NECK
 
@@ -5752,7 +5764,7 @@ Blood supply: the vertebral and deep cervical arteries. Innervation: the cervica
 
 3. The scalenus posterior muscle (musculus scalenus posterior)
 
-278. Sites of origin and insertion of muscles on the hyoid bone (schematical representation).
+4. Sites of origin and insertion of muscles on the hyoid bone (schematical representation).
 
 <!-- image -->
 
@@ -5875,7 +5887,7 @@ This space is continuous with the right and left lateral recesses
 
 2. The previsceral space (spatium previscerale) is between the
 3. The retrovisceral space (spatium retroviscerale) forms between
-2. The pretracheal fascia (lamina pretrachealis) arises from the behind the sternocleidomastoid muscle. posterior surface of the clavicles and the manubrium sterni and ascends to form a sheath for the thyroid gland and the group of in- pretracheal fascia and the viscera of the neck. frahyoid muscles. The upper parts of this fascia blend with the superficial layer at the level of the hyoid bone, the lateral parts give the prevertebral fascia and the viscera of the neck. off processes to the organs of the neck (the larynx, trachea, pha-
+4. The pretracheal fascia (lamina pretrachealis) arises from the behind the sternocleidomastoid muscle. posterior surface of the clavicles and the manubrium sterni and ascends to form a sheath for the thyroid gland and the group of in- pretracheal fascia and the viscera of the neck. frahyoid muscles. The upper parts of this fascia blend with the superficial layer at the level of the hyoid bone, the lateral parts give the prevertebral fascia and the viscera of the neck. off processes to the organs of the neck (the larynx, trachea, pha-
 
 <!-- PAGE_NUMBER: 303 -->
 
@@ -5888,22 +5900,22 @@ The superficial muscles are as follows.
 The anterolateral thoracic wall is composed of the following regions (regiones pectorales) (Fig. 285).
 
 1. The pectoral region (regio pectoralis) (the region of the mammary gland, or regio mammaria) is limited by the inferior border of the pectoralis major muscle, superiorly it borders on the infraclavicular fossa. This region is also called the anterosuperior region of the chest.
-4. The medioclavicular line (linea mamillaris s. medioclavicularis) runs through the middle of the clavicle. It is also called the mamillary line (linea mamillaris) but the variable position of the mammary gland makes the name inaccurate.
-2. The presternal region (regio presternalis) occupies an extreme medial position stretching from the anterior median line to the parasternal line. It is also called the anterior median region of the chest.
-3. The axillary region (regio axillaris) includes the axillary fossa (fossa axillaris) (see Muscles of the Upper Limb. The Axillary fossa).
-4. The inframammary region (regio inframammaria) occupies the lower part of the pectoral region and borders upon hypochondriac region (regio hypochondriaca). It is also the inferior part of the pectoral region.
+2. The medioclavicular line (linea mamillaris s. medioclavicularis) runs through the middle of the clavicle. It is also called the mamillary line (linea mamillaris) but the variable position of the mammary gland makes the name inaccurate.
+3. The presternal region (regio presternalis) occupies an extreme medial position stretching from the anterior median line to the parasternal line. It is also called the anterior median region of the chest.
+4. The axillary region (regio axillaris) includes the axillary fossa (fossa axillaris) (see Muscles of the Upper Limb. The Axillary fossa).
+5. The inframammary region (regio inframammaria) occupies the lower part of the pectoral region and borders upon hypochondriac region (regio hypochondriaca). It is also the inferior part of the pectoral region.
 
 The following vertical lines are marked on the thoracic wall (see Vol. II. Respiratory Apparatus).
 
 1. The anterior median line (linea mediana anterior) runs on the middle of the sternum.
 2. The sternal line (linea sternalis) corresponds to the lateral border of the sternum.
 3. The parasternal line (linea parasternalis) runs midway between the sternum and the medioclavicular line.
-5. The anterior axillary line (linea axillaris anterior) corresponds to the anterior axillary fold (plica axillaris anterior) which is projected along the superolateral border of the pectoralis major and pectoralis minor muscles.
-6. The posterior axillary line (linea axillaris posterior) corresponds to the posterior axillary fold (plica axillaris posterior) formed by the anterior borders of the teres major and latissimus dorsi muscles.
-7. The middle axillary line (linea axillaris media) passes between the anterior and posterior axillary lines.
-8. The scapular line (linea scapularis) passes vertically through the inferior angle of the scapula
-9. The paravertebral line (linea paravertebralis) is projected along the transverse vertebral processes.
-10. The posterior median line (linea mediana posterior) runs on the midline of the back along the vertebral spinous processes.
+4. The anterior axillary line (linea axillaris anterior) corresponds to the anterior axillary fold (plica axillaris anterior) which is projected along the superolateral border of the pectoralis major and pectoralis minor muscles.
+5. The posterior axillary line (linea axillaris posterior) corresponds to the posterior axillary fold (plica axillaris posterior) formed by the anterior borders of the teres major and latissimus dorsi muscles.
+6. The middle axillary line (linea axillaris media) passes between the anterior and posterior axillary lines.
+7. The scapular line (linea scapularis) passes vertically through the inferior angle of the scapula
+8. The paravertebral line (linea paravertebralis) is projected along the transverse vertebral processes.
+9. The posterior median line (linea mediana posterior) runs on the midline of the back along the vertebral spinous processes.
 
 Inspection and palpation of the chest determine the regions of the clavicles on the superior border and the right and left costal arches and the infrasternal angle on the inferior border. The angle of the scapula is also well palpated, it corresponds to the articulation of the second costal cartilage with the sternum. The nipple in males is usually in line with the fourth rib.
 
@@ -5915,11 +5927,11 @@ The muscles of the chest (musculi thoracis) are separated into two groups, one i
 2. The pectoralis minor muscle (musculus pectoralis minor).
 3. The subclavius muscle (musculus subclavius).
 4. The serratus anterior muscle (musculus serratus anterior). The following are the deep muscles.
-1. The external intercostal muscles (musculi intercostales externi),
-2. The internal intercostal muscles (musculi intercostalis interni).
-3. The intercostales intimi muscles (musculi intercostales intimi).
-4. The subcostal muscles (musculi subcostales).
-5. The transversus thoracis muscle (musculus transversus thoracis).
+5. The external intercostal muscles (musculi intercostales externi),
+6. The internal intercostal muscles (musculi intercostalis interni).
+7. The intercostales intimi muscles (musculi intercostales intimi).
+8. The subcostal muscles (musculi subcostales).
+9. The transversus thoracis muscle (musculus transversus thoracis).
 
 The musculotendinous sheet separating the thoracic and abdominal cavities and which is called the diaphragm (diaphragma) is also related to the chest muscles.
 
@@ -6368,9 +6380,9 @@ The following regions of the upper limb (regiones membri superioris) (Figs 309, 
 3. The elbow (cubitus) in which are distinguished an anterior cubital region (regio cubiti anterior) with the cubital fossa (fossa cubitalis) and a posterior cubital region (regio cubiti posterior).
 4. The forearm (antebrachium) with an anterior (regio antebrachii
 5. anterior) and a posterior antebrachial region (regio antebrachii posterior).
-5. The wrist (carpus) in which an anterior carpal region (regio carpalis anterior) and a posterior carpal region (regio carpalis posterior) are distinguished.
-6. The hand (manus) which has a palm (palma manus), on whose medial side is the thenar eminence (thenar) and on the lateral side the hypothenar eminence (hypothenar), and a back (dorsum manus s. regio dorsi manus) which corresponds to the dorsal surface of the carpus and metacarpus.
-7. The fingers (digiti manus) in which are distinguished palmar surfaces (facies digitales ventrales palmares) and dorsal surfaces (facies digitales dorsales).
+6. The wrist (carpus) in which an anterior carpal region (regio carpalis anterior) and a posterior carpal region (regio carpalis posterior) are distinguished.
+7. The hand (manus) which has a palm (palma manus), on whose medial side is the thenar eminence (thenar) and on the lateral side the hypothenar eminence (hypothenar), and a back (dorsum manus s. regio dorsi manus) which corresponds to the dorsal surface of the carpus and metacarpus.
+8. The fingers (digiti manus) in which are distinguished palmar surfaces (facies digitales ventrales palmares) and dorsal surfaces (facies digitales dorsales).
 
 ## MUSCLES OF THE UPPER LIMB
 
@@ -6386,6 +6398,7 @@ The following are the muscles of the shoulder girdle (see also Muscles of the Ba
 - (4) the teres minor muscle (musculus teres minor);
 - (5) the teres major muscle (musculus teres major);
 - (6) the subscapularis muscle (musculus subscapularis).
+
 1. The deltoid muscle (musculus deltoideus) (Fig. 313) covers the shoulder joint. It is thick and triangular with the base facing upwards and the apex downwards. The muscle is made up of large muscle fibres converging fan-wise at the apex. It arises from the
 
 <!-- PAGE_NUMBER: 336 -->
@@ -6611,10 +6624,10 @@ The pronator quadratus muscle (musculus pronator quadratus).
 The lateral (radial) group includes the following muscles.
 
 1. The brachioradialis muscle (musculus brachioradialis).
-3. The extensor carpi radialis brevis muscle (musculus extensor carpi radialis brevis). The muscles of the posterior group lie in two layers.
-2. The extensor carpi radialis longus muscle (musculus extensor carpi radialis longus).
+2. The extensor carpi radialis brevis muscle (musculus extensor carpi radialis brevis). The muscles of the posterior group lie in two layers.
+3. The extensor carpi radialis longus muscle (musculus extensor carpi radialis longus).
 
-319. Regions of upper limb; posterior aspect.
+4. Regions of upper limb; posterior aspect.
 
 <!-- image -->
 
@@ -6656,7 +6669,7 @@ Innervation: the median nerve [C,-C, (C,)].
 
 3. The palmar longus muscle (musculus palmaris longus) (Fig. 330) has a short spindle-shaped belly and a very long tendon. It lies directly under the skin medial to the flexor carpi radialis muscle. It takes origin from the medial humeral epicondyle, the in-
 
-320. Lines of skin incisions on upber limb (most suitable for exposure of muscles in dissection).
+4. Lines of skin incisions on upber limb (most suitable for exposure of muscles in dissection).
 
 <!-- image -->
 
@@ -6828,7 +6841,7 @@ Innervation: the radial nerve (Cg-Cg).
 
 1. The supinator muscle (musculus supinator) (Fig. 338) is a thin rhomboid sheet lying on the lateroposterior surface of the proximal end of the forearm. It arises from the lateral epicondyle of the humerus, the supinator crest of the ulna, and the capsule of the elbow joint, extends obliquely downwards and laterally embracing the upper end of the radius, and is inserted into it for a distance from the tuberosity of the radius to the insertion of the pronator teres muscle.
 
-327. Muscles and fasciae of right upper arm (½10). (Transverse section through middle of upper arm.)
+2. Muscles and fasciae of right upper arm (½10). (Transverse section through middle of upper arm.)
 
 <!-- image -->
 
@@ -6930,7 +6943,7 @@ Blood supply: the posterior and anterior interosseous arteries. Innervation: the
 
 4. The extensor pollicis longus muscle (musculus extensor pollicis longus) (Fig. 338) has a spindle-shaped belly and a long tendon. It lies next to the extensor pollicis brevis muscle and arises from the interosseous membrane and the interosseous border and posterior surface of the ulna, runs downwards, and gives place to a tendon which is invested in the synovial sheath of the extensor pollicis longus tendon (vagina tendinis musculi extensoris pollicis longi). The
 
-339. Sites of origin and attachment of muscles and joint capsules on bones of right forearm; posterior aspect (schematical representation).
+5. Sites of origin and attachment of muscles and joint capsules on bones of right forearm; posterior aspect (schematical representation).
 
 <!-- image -->
 
@@ -6974,7 +6987,7 @@ The muscles of the thenar eminence, muscles of the hypothenar eminence, and musc
 
 1. The palmaris brevis muscle (musculus palmaris brevis).
 2. The abductor digiti minimi muscle (musculus abductor digiti minini).
-4. The adductor pollicis muscle (musculus adductor pollicis.
+3. The adductor pollicis muscle (musculus adductor pollicis.
 4. minimi breois). 3. The flexor digiti minimi brevis muscle (musculus flexor digiti
 5. minimi). 4. The opponens digiti minimi muscle (musculus opponens digiti
 
@@ -6992,6 +7005,7 @@ The muscles of the thenar eminence, muscles of the hypothenar eminence, and musc
 Action: abducts the thumb and sets it in mild opposition, helps in flexion of the proximal phalanx.
 
 - Blood supply: superficial palmar branch of radial artery. Innervation: the median nerve (C,-C,).
+
 2. The flexor pollicis brevis muscle (musculus flexor pollicis brevis) (Fig. 341) lies medially of the abductor pollicis brevis muscle and also directly under the skin. It arises from the flexor retinaculum, the trapezium, trapezoid, and capitate bones, and the base of the first metacarpal bone. The muscle fibres run distally and are inserted radially: the superficial fibres (caput superficiale) are inserted into the radial sesamoid bone, the deep fibres (caput profundum) are inserted into both sesamoid bones of the metacarpophalangeal joint of the thumb.
 
 Blood supply: superficial palmar branch of radial artery, deep palmar arch.
@@ -7525,6 +7539,7 @@ muscles.)
 <!-- PAGE_NUMBER: 398 -->
 
 2. The quadriceps femoris muscle (musculus quadriceps femoris) (Figs 355-359) occupies the anterolateral surface of the thigh and its lower parts extend to the lateral surface. Each of its four heads arises independently, but on reaching the knee they form a common tendon which passes on the anterior surface of the patella and is inserted into the tubercle of the tibia.
+
 - A. The rectus femoris muscle (musculus rectus femoris) is the longest head and occupies the anterior surface of the thigh. It takes origin by a fine tendon from the anterior inferior iliac spine and superior border of the acetabulum and then passes downwards to be continuous with a narrow tendon which fuses with the base and anterior surface of the patella. On reaching the tibia the ten-
 
 362. Sites of origin and attachment of muscles and articular capsule on right hip bone; inner aspect (schematical representation).
@@ -7565,7 +7580,7 @@ C. The vastus lateralis muscle (musculus vastus lateralis) occu-
 
 <!-- PAGE_NUMBER: 403 -->
 
-07. Muscles and fasciae of right hip mount and thigh. posterior aspect (¼)
+7.  Muscles and fasciae of right hip mount and thigh. posterior aspect (¼)
 
 <!-- image -->
 
@@ -8357,14 +8372,14 @@ angles, 59
 
 primary, 46
 
-|   bone(s) |
-|-----------|
-|       400 |
+| bone(s) |
+| ------- |
+| 400     |
 
 <!-- PAGE_NUMBER: 449 -->
 
 | Calcaneum, 162, 172                              |
-|--------------------------------------------------|
+| ------------------------------------------------ |
 | calvaria, 92, 96 canal, carotid, 72, 75, 98, 100 |
 | condylar, anterior, 101                          |
 | posterior, 101                                   |
@@ -8425,7 +8440,7 @@ lata, 435
 <!-- PAGE_NUMBER: 450 -->
 
 |                | foramen        | fascia (e)                                                                                     | fascia (e)                                                                                     | fascia (e)                                                                                     | fascia (e)                                                                                     |
-|----------------|----------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| -------------- | -------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 |                |                | medial, 349                                                                                    | medial, 349                                                                                    | medial, 349                                                                                    | medial, 349                                                                                    |
 | fasciculi, 257 |                | carotid, 65, 100                                                                               | carotid, 65, 100                                                                               | carotid, 65, 100                                                                               | carotid, 65, 100                                                                               |
 | femur, 11, 153 |                | costal, 39                                                                                     | costal, 39                                                                                     | costal, 39                                                                                     | costal, 39                                                                                     |
@@ -8471,8 +8486,8 @@ lata, 435
 <!-- PAGE_NUMBER: 451 -->
 
 | J                                             | joint(s)                            |                                               |
-|-----------------------------------------------|-------------------------------------|-----------------------------------------------|
-|                                               |                                     | *!!!                                          |
+| --------------------------------------------- | ----------------------------------- | --------------------------------------------- |
+|                                               |                                     | \*!!!                                         |
 |                                               | K                                   |                                               |
 |                                               |                                     | i do. 1, 216                                  |
 |                                               | knee cap, 153                       | torsal, 2                                     |
@@ -8522,7 +8537,7 @@ lata, 435
 <!-- PAGE_NUMBER: 452 -->
 
 | ligament(s)                      | linea                                            |                             |
-|----------------------------------|--------------------------------------------------|-----------------------------|
+| -------------------------------- | ------------------------------------------------ | --------------------------- |
 | posterior, 239                   |                                                  | deep, 268                   |
 | suprascapular, 113, 204          |                                                  |                             |
 | supraspinous, 188                |                                                  | elly, 25                    |
@@ -8579,39 +8594,39 @@ lata, 435
 
 <!-- PAGE_NUMBER: 453 -->
 
-|              |                              | skeletal, 257   |
-|--------------|------------------------------|-----------------|
-|              |                              | soleus, 419     |
-|              |                              | spinalis, 273   |
-|              |                              | capitis, 273    |
-|              |                              | striated, 257   |
-| head, 257    |                              |                 |
-| iliacus, 394 |                              |                 |
-|              | oris, 288                    |                 |
-|              | minor, 308                   |                 |
-|              |                              | tendon,         |
-|              | minor, 394                   | posterior,      |
-| lateral, 279 |                              |                 |
-| scapul       |                              |                 |
-|              | minor, 27                    |                 |
-| breves, 279  | emoris, 40                   |                 |
-| longi, 279   |                              |                 |
-|              | minor, 268                   |                 |
-|              | risorius, 289                |                 |
-|              | rotatores, 273 cervical, 273 |                 |
-|              | lumbar, 273                  |                 |
-|              | thoracic, 273                |                 |
-|              | sartorius, 401               | N               |
-|              |                              | Navel, 32:      |
-|              | of scalp, 283                | costal, 41      |
-| nasal, 289   |                              |                 |
-|              | capitis, 273                 |                 |
-|              | cervicis, 273                |                 |
+|              |                              | skeletal, 257 |
+| ------------ | ---------------------------- | ------------- |
+|              |                              | soleus, 419   |
+|              |                              | spinalis, 273 |
+|              |                              | capitis, 273  |
+|              |                              | striated, 257 |
+| head, 257    |                              |               |
+| iliacus, 394 |                              |               |
+|              | oris, 288                    |               |
+|              | minor, 308                   |               |
+|              |                              | tendon,       |
+|              | minor, 394                   | posterior,    |
+| lateral, 279 |                              |               |
+| scapul       |                              |               |
+|              | minor, 27                    |               |
+| breves, 279  | emoris, 40                   |               |
+| longi, 279   |                              |               |
+|              | minor, 268                   |               |
+|              | risorius, 289                |               |
+|              | rotatores, 273 cervical, 273 |               |
+|              | lumbar, 273                  |               |
+|              | thoracic, 273                |               |
+|              | sartorius, 401               | N             |
+|              |                              | Navel, 32:    |
+|              | of scalp, 283                | costal, 41    |
+| nasal, 289   |                              |               |
+|              | capitis, 273                 |               |
+|              | cervicis, 273                |               |
 
 <!-- PAGE_NUMBER: 454 -->
 
 | notch                     | periosteum, 11                                         | region(s)           |
-|---------------------------|--------------------------------------------------------|---------------------|
+| ------------------------- | ------------------------------------------------------ | ------------------- |
 | frontal, 62               |                                                        |                     |
 | intercondylar, 153        | peritendineum, 262 phalanges, of foot, 171, 172        |                     |
 | jugular                   | of hand, 136, 137                                      |                     |
@@ -8664,7 +8679,7 @@ lata, 435
 <!-- PAGE_NUMBER: 455 -->
 
 |                                  | space(s)           | suture(s)   |
-|----------------------------------|--------------------|-------------|
+| -------------------------------- | ------------------ | ----------- |
 | S                                |                    |             |
 | Sacrum, 21, 32, 33               |                    |             |
 | apex, 33                         |                    |             |

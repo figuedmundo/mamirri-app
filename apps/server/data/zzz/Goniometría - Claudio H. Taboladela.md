@@ -8,7 +8,6 @@ original_file: Goniometría - Claudio H. Taboladela.pdf
 extraction_date: '2026-02-09T23:15:20.639Z'
 ---
 
-
 <!-- PAGE_NUMBER: 1 -->
 
 CO
@@ -175,47 +174,47 @@ Claudio H. Taboadela
 
 ## ÍNDICE
 
-| Prologo por el Di OSANO FARENO WERNER.   | Prologo por el Di OSANO FARENO WERNER.                    |       |
-|------------------------------------------|-----------------------------------------------------------|-------|
-| Prefacio......                           | Prefacio......                                            | XIIII |
-| Agradecimientos                          | Agradecimientos                                           | XV    |
-|                                          | Parte I: Introducción a la Goniometría                    |       |
-| 1.2.                                     | Fig. 1......                                              |       |
-| 1.3.                                     | bjetivos de la goniometría en Medicina. Figs. 2-3 ....... |       |
-| 1.4.                                     | plicaciones de la goniometría en Medicina. Figs. 4-5      | 3     |
-| 2.                                       | Posición neutra. Figs. 6-8.                               |       |
-| 3.                                       | Planimetría. Fig. 9...                                    |       |
-| 3.1.                                     | Plano sagital. Fig. 10.                                   | 0 00. |
-| 3.1.1.                                   | Flexión. Fig. 11....                                      |       |
-| 3.1.2.                                   | Extensión. Fig. 11 ......                                 |       |
-| 3.1.3.                                   | Excepciones. Figs. 12-13...                               |       |
-|                                          | Plano frontal o coronal. Fig. 14                          |       |
-| 3.2.1.                                   | Abducción. Fig. 15.                                       |       |
-| 3.2.2.                                   | Aducción. Fig. 15.                                        |       |
-| 3.2.3.                                   | Abducción y aducción de los dedos de la mano. Fig. 16.    |       |
-| 3.2.4.                                   | Abducción y aducción de los dedos del pie. Fig. 17..      |       |
-| 3.2.5.                                   | Inclinación lateral del raquis. Fig. 18........           | 14    |
-| 3.2.6.                                   | Desviación radial y cubital de la muñeca. Fig. 19...      | 14    |
-| 3.3                                      | Plano transversal u horizontal. Fig. 20...                |       |
-| 3.3.1.                                   | Rotación interna y externa. Fig. 21.                      |       |
-| 3.3.2.                                   | Rotación derecha e izquierda. Fig. 22                     |       |
-| 3.3.3.                                   | Pronación-supinación. Figs. 23-24.                        | 17    |
-|                                          | Arco de movimiento.                                       | 18    |
-| 4.1.                                     | Factores que influyen sobre el arco de movimiento .       | 18    |
-| 4.1.1.                                   | Tipo de articulación ...                                  |       |
-| 4.1.2.                                   | Integridad de los elementos anatómicos                    |       |
-| 4.1.3.                                   | Estado de conciencia .......................              |       |
-| 4.1.4.                                   | Características individuales                              |       |
-| 4.1.5.                                   | Presencia de patología ..                                 |       |
-| 5.1.                                     | Clasificación del arco de movimiento                      |       |
-|                                          | Arco de movimiento activo. Fig. 25 ...                    |       |
+| Prologo por el Di OSANO FARENO WERNER. | Prologo por el Di OSANO FARENO WERNER.                    |       |
+| -------------------------------------- | --------------------------------------------------------- | ----- |
+| Prefacio......                         | Prefacio......                                            | XIIII |
+| Agradecimientos                        | Agradecimientos                                           | XV    |
+|                                        | Parte I: Introducción a la Goniometría                    |       |
+| 1.2.                                   | Fig. 1......                                              |       |
+| 1.3.                                   | bjetivos de la goniometría en Medicina. Figs. 2-3 ....... |       |
+| 1.4.                                   | plicaciones de la goniometría en Medicina. Figs. 4-5      | 3     |
+| 2.                                     | Posición neutra. Figs. 6-8.                               |       |
+| 3.                                     | Planimetría. Fig. 9...                                    |       |
+| 3.1.                                   | Plano sagital. Fig. 10.                                   | 0 00. |
+| 3.1.1.                                 | Flexión. Fig. 11....                                      |       |
+| 3.1.2.                                 | Extensión. Fig. 11 ......                                 |       |
+| 3.1.3.                                 | Excepciones. Figs. 12-13...                               |       |
+|                                        | Plano frontal o coronal. Fig. 14                          |       |
+| 3.2.1.                                 | Abducción. Fig. 15.                                       |       |
+| 3.2.2.                                 | Aducción. Fig. 15.                                        |       |
+| 3.2.3.                                 | Abducción y aducción de los dedos de la mano. Fig. 16.    |       |
+| 3.2.4.                                 | Abducción y aducción de los dedos del pie. Fig. 17..      |       |
+| 3.2.5.                                 | Inclinación lateral del raquis. Fig. 18........           | 14    |
+| 3.2.6.                                 | Desviación radial y cubital de la muñeca. Fig. 19...      | 14    |
+| 3.3                                    | Plano transversal u horizontal. Fig. 20...                |       |
+| 3.3.1.                                 | Rotación interna y externa. Fig. 21.                      |       |
+| 3.3.2.                                 | Rotación derecha e izquierda. Fig. 22                     |       |
+| 3.3.3.                                 | Pronación-supinación. Figs. 23-24.                        | 17    |
+|                                        | Arco de movimiento.                                       | 18    |
+| 4.1.                                   | Factores que influyen sobre el arco de movimiento .       | 18    |
+| 4.1.1.                                 | Tipo de articulación ...                                  |       |
+| 4.1.2.                                 | Integridad de los elementos anatómicos                    |       |
+| 4.1.3.                                 | Estado de conciencia .......................              |       |
+| 4.1.4.                                 | Características individuales                              |       |
+| 4.1.5.                                 | Presencia de patología ..                                 |       |
+| 5.1.                                   | Clasificación del arco de movimiento                      |       |
+|                                        | Arco de movimiento activo. Fig. 25 ...                    |       |
 
 <!-- PAGE_NUMBER: 13 -->
 
 ## XVIIII ÍNDICE
 
 | 5.2.                             | Arco de movimiento pasivo. Figs. 26-27 ...                                                                                      | 23                               |
-|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------|----------------------------------|
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
 | 5.3.                             | Arco de movimiento activo asistido. Fig. 28                                                                                     | 23                               |
 |                                  | Arco de movimiento patológico ..                                                                                                | 25                               |
 | 6.1.                             | Fractura..........                                                                                                              |                                  |
@@ -262,61 +261,61 @@ Claudio H. Taboadela
 
 <!-- PAGE_NUMBER: 14 -->
 
-| 12.3.   | Rotación derecha e izquierda. Fig. 74....                                                            | 63   |
-|---------|------------------------------------------------------------------------------------------------------|------|
-|         | Parte III: Goniometría de los miembros superiores                                                    |      |
-| 13.     | Goniometría de los miembros superiores..................                                             | 65   |
-| 13.1.   | Articulación glenohumeral (enartrosis). Fig. 75......                                                | 65   |
-| 13.2.   | Articulación del codo (trocleartrosis humerocubital y condilo- artrosis humerorradial). Fig. 76 .... | 65   |
-| 13.3.   | Articulación de la muñeca (condiloartrosis radiocarpiana). Fig. 77...                                | 66   |
-| 13.4.   | Articulaciones del pulgar. Fig. 78.....                                                              | 66   |
-| 13.5.   | Articulaciones de los dedos de la mano. Fig. 79 ......                                               | 67   |
-| 14.     | Goniometría de la articulación escapulohumeral                                                       | 68   |
-| 14.1.   | Abducción-aducción. Fig. 80......                                                                    | 68   |
-| 14.2.   | Flexión. Fig. 81                                                                                     | 69   |
-| 14.3.   | Extensión. Fig. 82...........                                                                        | 70   |
-| 14.4.   | Rotación externa-interna. Fig. 83..                                                                  | 70   |
-| 15.     | Goniometría del codo .........                                                                       | 72   |
-| 15.1.   | Flexión-extensión. Fig. 84                                                                           | 72   |
-| 15.2.   | Pronación-supinación. Fig. 85 ..                                                                     | 73   |
-| 16.     | Goniometría de la muñeca....                                                                         | 74   |
-| 16.1.   | Flexión-extensión. Fig. 86 ......                                                                    | 74   |
-| 16.2.   | Desviación radial-cubital. Fig. 87 .                                                                 | 75   |
-|         | Goniometría del pulgar...............                                                                | 76   |
-| 17.1.   | Articulación carpometacarpiana .                                                                     | 76   |
-| 17.1.1. | Abducción-aducción. Fig. 88 ....                                                                     | 76   |
-| 17.1.2. | Flexión-extensión .......                                                                            | 77   |
-| 17.1.3. | Oposición. Fig. 89 ...........                                                                       | 77   |
-| 17.2.   | Articulación metacarpofalángica ..                                                                   | 78   |
-|         | 17.2.1. Flexión-extensión ......                                                                     | 78   |
-|         | 17.2.1.1. Flexión. Fig. 90 ....                                                                      | 78   |
-|         | 17.2.1.2. Extensión. Fig. 91....                                                                     |      |
-| 17.3.   | Articulación interfalángica.                                                                         |      |
-|         | 17.3.1. Flexión-extensión ....                                                                       |      |
-|         | 17.3.1.1. Flexión. Fig. 92 17.3.1.2. Extensión. Fig. 93..                                            | 81   |
-| 18.     | Goniometría de los dedos de la mano ..                                                               | 82   |
-| 18.1.   | Articulación metacarpofalángica ...                                                                  | 82   |
-|         | 18.1.1. Flexión-extensión .....                                                                      | 82   |
-|         | 18.1.1.1. Flexión. Fig. 94.                                                                          | 82   |
-|         | 18.1.1.2. Extensión. Fig. 95...                                                                      | 84   |
-|         | 18.1.2. Abducción-aducción....                                                                       | 85   |
-| 18.2.   | Articulación interfalángica proximal                                                                 | 85   |
-|         | 18.2.1. Flexión-extensión ..                                                                         | 85   |
-|         | 18.2.1.1. Flexión. Fig. 96                                                                           | 85   |
-|         | 18.2.1.2. Extensión. Fig. 97...........                                                              | 86   |
-| 18.3.   | Articulación interfalángica distal                                                                   | 87   |
-|         | 18.3.1. Flexión-extensión ........                                                                   | 87   |
-|         | 18.3.1.1. Flexión. Fig. 98                                                                           | 87   |
-|         | 18.3.1.2. Extensión. Fig. 99....                                                                     | 88   |
-|         | Parte IV: Goniometría de los miembros inferiores                                                     |      |
-| 19.     | Miembro inferior...                                                                                  | 91   |
+| 12.3.   | Rotación derecha e izquierda. Fig. 74....                                                            | 63  |
+| ------- | ---------------------------------------------------------------------------------------------------- | --- |
+|         | Parte III: Goniometría de los miembros superiores                                                    |     |
+| 13.     | Goniometría de los miembros superiores..................                                             | 65  |
+| 13.1.   | Articulación glenohumeral (enartrosis). Fig. 75......                                                | 65  |
+| 13.2.   | Articulación del codo (trocleartrosis humerocubital y condilo- artrosis humerorradial). Fig. 76 .... | 65  |
+| 13.3.   | Articulación de la muñeca (condiloartrosis radiocarpiana). Fig. 77...                                | 66  |
+| 13.4.   | Articulaciones del pulgar. Fig. 78.....                                                              | 66  |
+| 13.5.   | Articulaciones de los dedos de la mano. Fig. 79 ......                                               | 67  |
+| 14.     | Goniometría de la articulación escapulohumeral                                                       | 68  |
+| 14.1.   | Abducción-aducción. Fig. 80......                                                                    | 68  |
+| 14.2.   | Flexión. Fig. 81                                                                                     | 69  |
+| 14.3.   | Extensión. Fig. 82...........                                                                        | 70  |
+| 14.4.   | Rotación externa-interna. Fig. 83..                                                                  | 70  |
+| 15.     | Goniometría del codo .........                                                                       | 72  |
+| 15.1.   | Flexión-extensión. Fig. 84                                                                           | 72  |
+| 15.2.   | Pronación-supinación. Fig. 85 ..                                                                     | 73  |
+| 16.     | Goniometría de la muñeca....                                                                         | 74  |
+| 16.1.   | Flexión-extensión. Fig. 86 ......                                                                    | 74  |
+| 16.2.   | Desviación radial-cubital. Fig. 87 .                                                                 | 75  |
+|         | Goniometría del pulgar...............                                                                | 76  |
+| 17.1.   | Articulación carpometacarpiana .                                                                     | 76  |
+| 17.1.1. | Abducción-aducción. Fig. 88 ....                                                                     | 76  |
+| 17.1.2. | Flexión-extensión .......                                                                            | 77  |
+| 17.1.3. | Oposición. Fig. 89 ...........                                                                       | 77  |
+| 17.2.   | Articulación metacarpofalángica ..                                                                   | 78  |
+|         | 17.2.1. Flexión-extensión ......                                                                     | 78  |
+|         | 17.2.1.1. Flexión. Fig. 90 ....                                                                      | 78  |
+|         | 17.2.1.2. Extensión. Fig. 91....                                                                     |     |
+| 17.3.   | Articulación interfalángica.                                                                         |     |
+|         | 17.3.1. Flexión-extensión ....                                                                       |     |
+|         | 17.3.1.1. Flexión. Fig. 92 17.3.1.2. Extensión. Fig. 93..                                            | 81  |
+| 18.     | Goniometría de los dedos de la mano ..                                                               | 82  |
+| 18.1.   | Articulación metacarpofalángica ...                                                                  | 82  |
+|         | 18.1.1. Flexión-extensión .....                                                                      | 82  |
+|         | 18.1.1.1. Flexión. Fig. 94.                                                                          | 82  |
+|         | 18.1.1.2. Extensión. Fig. 95...                                                                      | 84  |
+|         | 18.1.2. Abducción-aducción....                                                                       | 85  |
+| 18.2.   | Articulación interfalángica proximal                                                                 | 85  |
+|         | 18.2.1. Flexión-extensión ..                                                                         | 85  |
+|         | 18.2.1.1. Flexión. Fig. 96                                                                           | 85  |
+|         | 18.2.1.2. Extensión. Fig. 97...........                                                              | 86  |
+| 18.3.   | Articulación interfalángica distal                                                                   | 87  |
+|         | 18.3.1. Flexión-extensión ........                                                                   | 87  |
+|         | 18.3.1.1. Flexión. Fig. 98                                                                           | 87  |
+|         | 18.3.1.2. Extensión. Fig. 99....                                                                     | 88  |
+|         | Parte IV: Goniometría de los miembros inferiores                                                     |     |
+| 19.     | Miembro inferior...                                                                                  | 91  |
 
 <!-- PAGE_NUMBER: 15 -->
 
 ## XX |&gt; ÍNDICE
 
 | 19.1.                                  | Articulación coxofemoral (enartrosis). Fig. 100 ...                    | 91      |
-|----------------------------------------|------------------------------------------------------------------------|---------|
+| -------------------------------------- | ---------------------------------------------------------------------- | ------- |
 | 19.2.                                  | Articulación femorotibial (trocleartrosis). Fig. 101 ...               |         |
 | 19.3.                                  | Articulación tibioperoneoastragalina (trocleartrosis). Fig. 102..      |         |
 | 19.4.                                  | Articulación subastragalina (doble artrodia). Fig. 103.                |         |
@@ -634,6 +633,7 @@ Cada articulación posee un arco de movimiento característico que la distingue 
 <!-- PAGE_NUMBER: 34 -->
 
 - a) Diartrosis o articulaciones sinoviales: son verdaderas articulaciones que poseen cavidad articular, membrana y líquido sinovial, cáppula lin mayores vine cases denieros son las articulaciones que
+
 2. Condiloartrosis: los cóndilos presentan superficies convexas que se articulan con superficies cóncavas. Ejemplo: articulación temporomaxilar.
 3. icaje recíproco o en silla de montar: la superficie articular ! erda una silla de montar inglesa. Permite todos los movimie tos, excepto la rotación. Ejemplo: articulación carpometacarpiana del pulgar.
 4. Trocleartrosis o ginglimoides: permiten solo movimientos de flexión y extensión. Ejemplo: articulación femorotibial.
@@ -1163,25 +1163,25 @@ Existen tres formas de registrar por escrito las mediciones: tablas numéricas, 
 
 48
 
-| CADERA DERECHA   | CADERA DERECHA   | CADERA DERECHA   |
-|------------------|------------------|------------------|
-| Movimiento       | de movimiento    | Rango Util       |
-| Flexión          | 0/120°           | 120°             |
-| Extensión        | 0/200            | 200              |
-| Abducción        | 01400            | 400              |
-| Aducción         | 0/200            | 200              |
-| Rotación externa | 0/30°            | 300              |
-| Rotación interna | 0/300            | 300              |
+| CADERA DERECHA   | CADERA DERECHA | CADERA DERECHA |
+| ---------------- | -------------- | -------------- |
+| Movimiento       | de movimiento  | Rango Util     |
+| Flexión          | 0/120°         | 120°           |
+| Extensión        | 0/200          | 200            |
+| Abducción        | 01400          | 400            |
+| Aducción         | 0/200          | 200            |
+| Rotación externa | 0/30°          | 300            |
+| Rotación interna | 0/300          | 300            |
 
-| CADERA DERECHA   | CADERA DERECHA   | CADERA DERECHA   | CADERA DERECHA   |
-|------------------|------------------|------------------|------------------|
-| Movimiento       | de movimiento    | Rango Útil       |                  |
-| Flexión          | 10/100°          | 900 (1000-100)   |                  |
-| Extensión        | -100             | 0°               |                  |
-| Abducción        | 10/30°           | 20° (300-100)    |                  |
-| Aducción         | - 100            | 0°               |                  |
-| Rotación externa | 10/30°           | 200 (300-100)    |                  |
-| Rotación interna | -100             | 00               |                  |
+| CADERA DERECHA   | CADERA DERECHA | CADERA DERECHA | CADERA DERECHA |
+| ---------------- | -------------- | -------------- | -------------- |
+| Movimiento       | de movimiento  | Rango Útil     |                |
+| Flexión          | 10/100°        | 900 (1000-100) |                |
+| Extensión        | -100           | 0°             |                |
+| Abducción        | 10/30°         | 20° (300-100)  |                |
+| Aducción         | - 100          | 0°             |                |
+| Rotación externa | 10/30°         | 200 (300-100)  |                |
+| Rotación interna | -100           | 00             |                |
 
 g. 57: Evaluación goniométrica de la cadera derecha: a) a partir posición 0° (nótese que cuando la medición comienza en 0 el ran útil es igual al arco de movimiento), y b) a partir de 10° de flexión, 10 de abducción y 10° de rotación externa (en este caso la extensión aducción y rotación interna están fijas en -10° y su rango útil es 0°).
 
@@ -1237,13 +1237,13 @@ ig. 62: Ejemplo de tabla de arco de movimiento del tobillo para con arar sujetos
 
 <!-- image -->
 
-| EVALUACIÓN: Arco de movimiento del tobillo   | EVALUACIÓN: Arco de movimiento del tobillo   | EVALUACIÓN: Arco de movimiento del tobillo   | EVALUACIÓN: Arco de movimiento del tobillo   | EVALUACIÓN: Arco de movimiento del tobillo   |
-|----------------------------------------------|----------------------------------------------|----------------------------------------------|----------------------------------------------|----------------------------------------------|
-| Sexo masculino                               | Sexo masculino                               | Sexo masculino                               | Sexo masculino                               | Sexo masculino                               |
-| EDAD                                         | EDAD                                         | EDAD                                         | EDAD                                         | EDAD                                         |
-|                                              | 20/29 años                                   | 30/39 años                                   | 40/54 años                                   | 61/69 años                                   |
-| Extensión                                    | 12 +/-4                                      | 12 +/-4                                      | 12+1-4                                       | 8+1-4                                        |
-| Flexión                                      | 55 +/-3                                      | 54 +/-6                                      | 52 +/-7                                      | 46 +1-7                                      |
+| EVALUACIÓN: Arco de movimiento del tobillo | EVALUACIÓN: Arco de movimiento del tobillo | EVALUACIÓN: Arco de movimiento del tobillo | EVALUACIÓN: Arco de movimiento del tobillo | EVALUACIÓN: Arco de movimiento del tobillo |
+| ------------------------------------------ | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
+| Sexo masculino                             | Sexo masculino                             | Sexo masculino                             | Sexo masculino                             | Sexo masculino                             |
+| EDAD                                       | EDAD                                       | EDAD                                       | EDAD                                       | EDAD                                       |
+|                                            | 20/29 años                                 | 30/39 años                                 | 40/54 años                                 | 61/69 años                                 |
+| Extensión                                  | 12 +/-4                                    | 12 +/-4                                    | 12+1-4                                     | 8+1-4                                      |
+| Flexión                                    | 55 +/-3                                    | 54 +/-6                                    | 52 +/-7                                    | 46 +1-7                                    |
 
 <!-- PAGE_NUMBER: 67 -->
 
@@ -1264,7 +1264,7 @@ Hacen referencia al arco de movimiento de cada una de las articulaciones (Fig. 6
 Fig. 63: Baremo de la Tabla de Evaluación de Incapacidades Laborales (Dec. N.° 659/96) para la limitación funcional de la columna cervial. El máximo porcentaje de incapacidad le corresponde a la movi ad de 0°. El 0% de incapacidad le corresponde a la máxima movi ad establecida como normal. Nótese sin embargo, un error en otación de columna donde no figura el 0% y se repite el 1% de inca pacidad. Nótese, además, la leyenda al pie de la tabla que establece que la incapacidad total por limitación funcional es igual a la suma aritmética de los porcentajes de cada movimiento.
 
 | LIMITACIÓN FUNCIONAL:                                                                               | LIMITACIÓN FUNCIONAL:                                                                               | LIMITACIÓN FUNCIONAL:                                                                               | LIMITACIÓN FUNCIONAL:                                                                               | LIMITACIÓN FUNCIONAL:                                                                               |
-|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | Desde 0° hasta:                                                                                     | Extensión                                                                                           | Columna Cervical Rotación                                                                           | Inclinación                                                                                         | Flexión                                                                                             |
 | O°                                                                                                  | 4°                                                                                                  |                                                                                                     | 4°                                                                                                  | 4°                                                                                                  |
 | 10P                                                                                                 |                                                                                                     | 2°                                                                                                  |                                                                                                     |                                                                                                     |
@@ -1289,13 +1289,13 @@ No presentan 0% de incapacidad, ya que todas las anquilosis son patológicas y p
 
 ## Anquilosis en Columna Cervical
 
-|     | Rotación   | Inclinación   | Flexión   | Extensión   |
-|-----|------------|---------------|-----------|-------------|
-|     | 209        | 20°           | 20°       | 20°         |
-| 10° | 27°        | 25°           | 27°       | 27°         |
-| 20° | 33°        | 30°           | 33°       | 33°         |
-| 30° | 40°        | 35°           | 40°       | 409         |
-| 40° |            | 40°           |           |             |
+|     | Rotación | Inclinación | Flexión | Extensión |
+| --- | -------- | ----------- | ------- | --------- |
+|     | 209      | 20°         | 20°     | 20°       |
+| 10° | 27°      | 25°         | 27°     | 27°       |
+| 20° | 33°      | 30°         | 33°     | 33°       |
+| 30° | 40°      | 35°         | 40°     | 409       |
+| 40° |          | 40°         |         |           |
 
 I porcentaje total por anquilosis es el que corresponde a yor cifra por tal afección los resultados parciales no se sum
 

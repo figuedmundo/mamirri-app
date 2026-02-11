@@ -11,7 +11,6 @@
 No buscamos el software perfecto todavía. Buscamos responder una sola pregunta:
 
 > "¿Puede este sistema ahorrarle tiempo a la fisioterapeuta y generarle confianza en sus diagnósticos sin complicarle la vida?"
-> 
 
 Si el MVP logra que tu madre diga: "¡Guau, esto pensó en algo que yo había olvidado!", entonces es un éxito.
 
@@ -34,7 +33,7 @@ No habrá menús, ni configuraciones, ni pestañas. Será una Web App (accesible
 
 1. **Audio:** Capacidad de grabar hasta 2 minutos de voz y transcribirlo a texto perfecto (usando Whisper).
 2. **Foto:** Capacidad de subir/tomar **una** foto de la huella plantar.
-    - *Limitación del MVP:* No medirá ángulos milimétricos exactos todavía. Hará un análisis cualitativo (forma, arco, zonas de presión visibles).
+   - _Limitación del MVP:_ No medirá ángulos milimétricos exactos todavía. Hará un análisis cualitativo (forma, arco, zonas de presión visibles).
 
 ### C. Cerebro Médico (RAG Limitado)
 
@@ -67,13 +66,13 @@ Para no retrasar el lanzamiento, **excluimos deliberadamente**:
 Para construir esto rápido y robusto:
 
 - **Frontend:** **Streamlit** (Python).
-    - *Por qué:* Permite crear la interfaz web en horas, funciona perfecto en navegador de iPad, y maneja la cámara y el audio nativamente. Cero complicaciones de CSS/HTML.
+  - _Por qué:_ Permite crear la interfaz web en horas, funciona perfecto en navegador de iPad, y maneja la cámara y el audio nativamente. Cero complicaciones de CSS/HTML.
 - **Backend/Lógica:** Python puro.
 - **Modelos AI:**
-    - Audio: OpenAI Whisper.
-    - Cerebro & Visión: GPT-4o (todo en uno).
+  - Audio: OpenAI Whisper.
+  - Cerebro & Visión: GPT-4o (todo en uno).
 - **Base de Datos Vectorial:** **ChromaDB** (Local/Simple) o Pinecone (Cloud tier gratuito).
-    - *Por qué:* No necesitamos infraestructura compleja para 5 libros.
+  - _Por qué:_ No necesitamos infraestructura compleja para 5 libros.
 - **Almacenamiento de Datos:** Una carpeta segura en la nube (S3 o simplemente local si corre en un servidor casero inicialmente) para guardar los logs de las sesiones.
 
 ---

@@ -1,7 +1,7 @@
 # Transcription Accuracy Verification Report
 
-**Date:** ************\_\_************
-**Tester:** ************\_\_************
+**Date:** ****\*\*\*\*****\_\_****\*\*\*\*****
+**Tester:** ****\*\*\*\*****\_\_****\*\*\*\*****
 **Status:** [ ] PASS [ ] FAIL
 
 ## 1. Executive Summary
@@ -12,8 +12,8 @@
 
 - **Groq Model:** whisper-large-v3
 - **Prompt Version:** v1 (Original)
-- **Test Device (Manual QA):** ************\_\_************
-- **Network:** ************\_\_************
+- **Test Device (Manual QA):** ****\*\*\*\*****\_\_****\*\*\*\*****
+- **Network:** ****\*\*\*\*****\_\_****\*\*\*\*****
 
 ## 3. Metrics
 
@@ -28,10 +28,10 @@
 
 ### Manual QA Results
 
-| Metric                     | Target         | Result       | Status |
-| -------------------------- | -------------- | ------------ | ------ |
-| **Vocabulary Recognition** | 25/25          | **\_**/25    | [ ]    |
-| **Subjective Quality**     | Good/Excellent | ****\_\_**** | [ ]    |
+| Metric                     | Target         | Result           | Status |
+| -------------------------- | -------------- | ---------------- | ------ |
+| **Vocabulary Recognition** | 25/25          | **\_**/25        | [ ]    |
+| **Subjective Quality**     | Good/Excellent | \***\*\_\_\*\*** | [ ]    |
 
 ## 4. Issues Log
 
@@ -45,7 +45,7 @@
 Did the prompt need updating?
 
 - [ ] No, original prompt worked perfectly.
-- [ ] Yes, added the following terms: ************\_\_************
+- [ ] Yes, added the following terms: ****\*\*\*\*****\_\_****\*\*\*\*****
 
 ## 6. Sign-off
 
@@ -53,4 +53,4 @@ Did the prompt need updating?
 [ ] Ready for Field Testing (Week 9)
 [ ] Needs Improvement
 
-**Signed:** ************\_\_************
+**Signed:** ****\*\*\*\*****\_\_****\*\*\*\*****

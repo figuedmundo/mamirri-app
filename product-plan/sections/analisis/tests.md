@@ -17,10 +17,12 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 #### Success Path
 
 **Setup:**
+
 - Clinical case exists and is selected
 - User has permission to upload images
 
 **Steps:**
+
 1. User navigates to `/analisis`
 2. User selects clinical case from dropdown
 3. User clicks "Subir Huella" button
@@ -29,6 +31,7 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 6. User views arch classification (plano/cavo/normal)
 
 **Expected Results:**
+
 - [ ] Footprint image displays with pressure heatmap overlay
 - [ ] Heatmap uses color gradient (red = high pressure, blue = low pressure)
 - [ ] Arch type is labeled: "Plano", "Cavo", or "Normal"
@@ -38,13 +41,16 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 #### Failure Path: Invalid Image Format
 
 **Setup:**
+
 - User uploads non-image file (PDF, DOCX)
 
 **Steps:**
+
 1. User selects PDF file
 2. System attempts to process
 
 **Expected Results:**
+
 - [ ] Error message: "Formato no válido. Solo se aceptan imágenes (JPG, PNG)."
 - [ ] Upload button remains enabled for retry
 - [ ] Invalid file is rejected before processing
@@ -58,9 +64,11 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 #### Success Path
 
 **Setup:**
+
 - 4 posture images are available (anterior, posterior, lateral izquierda, lateral derecha)
 
 **Steps:**
+
 1. User clicks "Capturar Posturograma" button
 2. User uploads 4 images to respective views
 3. System displays 4-view posturogram interface
@@ -70,6 +78,7 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 7. User clicks "Guardar Posturograma"
 
 **Expected Results:**
+
 - [ ] All 4 views display in grid layout
 - [ ] Anatomical points are clickable and draggable
 - [ ] Deviations list updates in real-time as points move
@@ -80,14 +89,17 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 #### Failure Path: Missing View
 
 **Setup:**
+
 - User only uploads 2 of 4 required views
 
 **Steps:**
+
 1. User uploads anterior and posterior views
 2. User leaves laterals empty
 3. User clicks "Guardar Posturograma"
 
 **Expected Results:**
+
 - [ ] Validation error: "Se requieren las 4 vistas del posturograma"
 - [ ] Missing views are highlighted in UI
 - [ ] Save is prevented until all views are provided
@@ -101,9 +113,11 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 #### Success Path
 
 **Setup:**
+
 - Video file is available (MP4 or similar format)
 
 **Steps:**
+
 1. User clicks "Subir Video de Postura" button
 2. User selects video file (marcha or postura estática)
 3. Video player loads with full controls
@@ -115,6 +129,7 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 9. User switches to "Comparación Inicial vs. Final" mode
 
 **Expected Results:**
+
 - [ ] Video player displays with play/pause controls
 - [ ] Speed indicator shows current playback rate (1x, 0.5x, 0.25x)
 - [ ] Timeline shows frame-by-frame navigation
@@ -126,13 +141,16 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 #### Failure Path: Corrupted Video
 
 **Setup:**
+
 - Uploaded video file is corrupted or unsupported codec
 
 **Steps:**
+
 1. User uploads file
 2. System attempts to load video
 
 **Expected Results:**
+
 - [ ] Error message: "Video no pudo cargarse. Verifica que el archivo no esté corrupto."
 - [ ] Placeholder shows or last valid video remains displayed
 - [ ] Upload button remains enabled for retry
@@ -146,10 +164,12 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 #### Success Path
 
 **Setup:**
+
 - Clinical case has initial and final evaluations
 - Both have functional test results and pain scales
 
 **Steps:**
+
 1. User opens "Evolución" dashboard
 2. User sees comparison cards for each metric
 3. User views pain reduction chart (9/10 → 4/10)
@@ -158,6 +178,7 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 6. System generates summary text
 
 **Expected Results:**
+
 - [ ] Pain chart shows line graph from session 1 to session 15
 - [ ] Initial value and final value are clearly marked
 - [ ] Functional test bar chart shows improvement trend
@@ -175,9 +196,11 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 **Scenario:** User navigates to analysis section without selecting a case
 
 **Setup:**
+
 - No clinical case is selected for analysis
 
 **Expected Results:**
+
 - [ ] Empty state message: "Selecciona un caso clínico para análisis"
 - [ ] Case selector dropdown is visible and enabled
 - [ ] Placeholder illustration shows analysis icon
@@ -189,9 +212,11 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 **Scenario:** Clinical case selected but has no initial evaluation data
 
 **Setup:**
+
 - CasoClinico exists but evaluacion is null or empty
 
 **Expected Results:**
+
 - [ ] Message: "Sin evaluación inicial disponible"
 - [ ] "Crear Evaluación" CTA button is visible
 - [ ] Case info displays (title, date) but analysis tools show empty state
@@ -202,9 +227,11 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 **Scenario:** Case has initial evaluation but no follow-up sessions for comparison
 
 **Setup:**
+
 - Only one evaluation exists (initial), no final/intermediate data
 
 **Expected Results:**
+
 - [ ] Single evaluation data displays correctly
 - [ ] Comparison mode shows "En progreso" instead of before/after
 - [ ] Charts display single data point
@@ -218,11 +245,13 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 ### AnalisisDashboard
 
 **Renders correctly:**
+
 - [ ] Displays case selector dropdown
 - [ ] Shows summary cards (sessions, current pain, last evaluation date)
 - [ ] Quick action buttons (Upload Video, Upload Huella, Create Evaluation)
 
 **User interactions:**
+
 - [ ] Changing case selector updates all dashboard metrics
 - [ ] Clicking quick actions opens corresponding modals or forms
 - [ ] Hover effects show on actionable cards
@@ -230,12 +259,14 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 ### VideoAnalysis
 
 **Renders correctly:**
+
 - [ ] Video player displays with full controls
 - [ ] Timeline shows duration and current position
 - [ ] Speed control buttons (0.25x, 0.5x, 1x, 2x) visible
 - [ ] Angle detection overlays appear when analysis is complete
 
 **User interactions:**
+
 - [ ] Clicking play/pause toggles video state
 - [ ] Dragging timeline seeks to specific timestamp
 - [ ] Clicking speed buttons changes playback rate smoothly
@@ -245,12 +276,14 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 ### PosturogramaView
 
 **Renders correctly:**
+
 - [ ] 4 views display in grid (anterior, posterior, lateral izq, lateral der)
 - [ ] Anatomical points overlay on each view
 - [ ] Deviations list updates as points are dragged
 - [ ] Auto-detection highlights when system identifies deviations
 
 **User interactions:**
+
 - [ ] Clicking on a point selects it for dragging
 - [ ] Dragging point updates its coordinates
 - [ ] Releasing point locks it in place
@@ -260,12 +293,14 @@ Analysis section provides objective biomechanical evaluation tools: podoscopy (f
 ### HuellaAnalysis
 
 **Renders correctly:**
+
 - [ ] Footprint image displays clearly
 - [ ] Heatmap overlay uses gradient colors
 - [ ] Arch classification label shows (Plano/Cavo/Normal)
 - [ ] Symmetry comparison panel shows left vs. right
 
 **User interactions:**
+
 - [ ] Hovering over footprint shows pressure values at cursor
 - [ ] Clicking "Comparar Lado Izquierdo/Derecho" toggles comparison view
 - [ ] Zoom controls allow magnifying specific areas
@@ -307,46 +342,55 @@ Use the data from `sample-data.json` or create variations:
 // Example test data - posturogram with deviations
 const mockPosturograma: Posturograma = {
   vistaAnterior: {
-    cabeza: "Lateralización derecha",
-    hombros: "Derecho ascendido",
-    trianguloDeTales: "Aumentado a la derecha",
-    espinaIliaca: "Anterosuperior izquierda ascendida"
+    cabeza: 'Lateralización derecha',
+    hombros: 'Derecho ascendido',
+    trianguloDeTales: 'Aumentado a la derecha',
+    espinaIliaca: 'Anterosuperior izquierda ascendida',
   },
   vistaSagitalLateral: {
-    cabeza: "Anteriorizada",
-    hombros: "Antepulsión (hacia adelante)",
-    columnaCervical: "Hiperlordosis",
-    columnaDorsal: "Hipercifosis",
-    columnaLumbar: "Rectificada",
-    rodillas: "Genuflexa (ligeramente flexionada)"
+    cabeza: 'Anteriorizada',
+    hombros: 'Antepulsión (hacia adelante)',
+    columnaCervical: 'Hiperlordosis',
+    columnaDorsal: 'Hipercifosis',
+    columnaLumbar: 'Rectificada',
+    rodillas: 'Genuflexa (ligeramente flexionada)',
   },
-  marcha: "Realizada con ayuda mecánica (bastón)"
-}
+  marcha: 'Realizada con ayuda mecánica (bastón)',
+};
 
 // Example test data - pain progression
 const mockPainLevels: PainLevel[] = [
-  { sesion: 1, nivel: 9, fecha: "2024-05-15" },
-  { sesion: 2, nivel: 8, fecha: "2024-05-20" },
-  { sesion: 3, nivel: 7, fecha: "2024-06-05" },
-  { sesion: 4, nivel: 6, fecha: "2024-06-20" },
-  { sesion: 5, nivel: 5, fecha: "2024-07-10" },
-  { sesion: 15, nivel: 4, fecha: "2024-10-15" }
-]
+  { sesion: 1, nivel: 9, fecha: '2024-05-15' },
+  { sesion: 2, nivel: 8, fecha: '2024-05-20' },
+  { sesion: 3, nivel: 7, fecha: '2024-06-05' },
+  { sesion: 4, nivel: 6, fecha: '2024-06-20' },
+  { sesion: 5, nivel: 5, fecha: '2024-07-10' },
+  { sesion: 15, nivel: 4, fecha: '2024-10-15' },
+];
 
 // Example test data - functional test comparison
 const mockFunctionalTests = {
   inicial: {
-    schober: { resultado: "Flexión +3 cm", interpretacion: "Lumbalgia mecánica severa" },
-    dedoSuelo: { resultado: "25 cm", interpretacion: "Limitación severa" }
+    schober: {
+      resultado: 'Flexión +3 cm',
+      interpretacion: 'Lumbalgia mecánica severa',
+    },
+    dedoSuelo: { resultado: '25 cm', interpretacion: 'Limitación severa' },
   },
   final: {
-    schober: { resultado: "Flexión +4 cm", interpretacion: "Mejora significativa" },
-    dedoSuelo: { resultado: "15 cm", interpretacion: "Funcionalidad recuperada" }
-  }
-}
+    schober: {
+      resultado: 'Flexión +4 cm',
+      interpretacion: 'Mejora significativa',
+    },
+    dedoSuelo: {
+      resultado: '15 cm',
+      interpretacion: 'Funcionalidad recuperada',
+    },
+  },
+};
 
 // Example test data - empty states
-const mockNoEvaluations: Evaluacion | null = null
+const mockNoEvaluations: Evaluacion | null = null;
 ```
 
 ---

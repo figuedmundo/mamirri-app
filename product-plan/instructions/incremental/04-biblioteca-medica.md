@@ -14,6 +14,7 @@ Implement the Biblioteca Médica feature — Búsqueda inteligente en libros, ar
 Biblioteca Médica is a smart clinical research assistant with natural language search, structured category navigation, and AI-powered translation between medical languages (EN/ES). It helps clinicians find protocols, anatomical references, and evidence during patient evaluation.
 
 **Key Functionality:**
+
 - Natural language search for protocols and medical literature
 - Structured category navigation (Osteology, Myology, Elasticity Tests, etc.)
 - View detailed protocol cards (Ficha Explicativa) with definition, justification, procedure steps
@@ -26,11 +27,13 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 Before implementing this section, **write tests first** based on the test specifications provided.
 
 See `product-plan/sections/biblioteca-medica/tests.md` for detailed test-writing instructions including:
+
 - Key user flows to test (success and failure paths)
 - Specific UI elements, button labels, and interactions to verify
 - Expected behaviors and assertions
 
 **TDD Workflow:**
+
 1. Read `tests.md` and write failing tests for the key user flows
 2. Implement the feature to make tests pass
 3. Refactor while keeping tests green
@@ -54,30 +57,31 @@ The components expect these data shapes:
 ```typescript
 // Protocol structure
 interface Protocol {
-  id: string
-  nombre: string
-  categoria: string
-  definicionES: string
-  definicionEN: string
-  justificacion: string
-  pasos: string[]
-  referencias: ReferenciaBibliografica[]
+  id: string;
+  nombre: string;
+  categoria: string;
+  definicionES: string;
+  definicionEN: string;
+  justificacion: string;
+  pasos: string[];
+  referencias: ReferenciaBibliografica[];
 }
 
 // Reference structure
 interface ReferenciaBibliografica {
-  id: string
-  protocoloId: string
-  autor: string
-  año: number
-  titulo: string
-  fuente: string
-  url?: string
-  idiomaOriginal?: string
+  id: string;
+  protocoloId: string;
+  autor: string;
+  año: number;
+  titulo: string;
+  fuente: string;
+  url?: string;
+  idiomaOriginal?: string;
 }
 ```
 
 You'll need to:
+
 - Create API endpoints or data fetching logic for protocol/library search
 - Implement natural language search with debouncing
 - Connect real data to the components

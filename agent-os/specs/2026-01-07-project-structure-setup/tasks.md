@@ -1,6 +1,7 @@
 # Task Breakdown: Project Structure Setup
 
 ## Overview
+
 Total Tasks: 20
 
 ## Task List
@@ -8,6 +9,7 @@ Total Tasks: 20
 ### Infrastructure & Monorepo
 
 #### Task Group 1: Monorepo Initialization
+
 **Dependencies:** None
 
 - [x] 1.0 Initialize Monorepo Structure
@@ -25,6 +27,7 @@ Total Tasks: 20
     - Run `pnpm install` to ensure workspace linking works.
 
 **Acceptance Criteria:**
+
 - Monorepo structure exists with `apps/client` and `apps/server`.
 - Root scripts (`dev`, `lint`) execute without errors.
 - ESLint and Prettier enforce styles across the workspace.
@@ -32,6 +35,7 @@ Total Tasks: 20
 ### Database Layer
 
 #### Task Group 2: Database & Docker Setup
+
 **Dependencies:** Task Group 1
 
 - [x] 2.0 Database Infrastructure
@@ -44,6 +48,7 @@ Total Tasks: 20
     - Verify connection using a DB client or command line.
 
 #### Task Group 3: ORM Setup (Prisma)
+
 **Dependencies:** Task Group 2
 
 - [x] 3.0 Prisma Setup
@@ -63,6 +68,7 @@ Total Tasks: 20
     - Verify tables exist in the database.
 
 **Acceptance Criteria:**
+
 - PostgreSQL container runs via Docker Compose.
 - Prisma schema is defined with User, Patient, and Session models.
 - Migration runs successfully and creates tables in the DB.
@@ -70,6 +76,7 @@ Total Tasks: 20
 ### Backend Layer
 
 #### Task Group 4: NestJS Backend Setup
+
 **Dependencies:** Task Group 1, Task Group 3
 
 - [x] 4.0 Backend Application
@@ -86,6 +93,7 @@ Total Tasks: 20
     - Access `http://localhost:3000/api/docs` (or configured port) to see Swagger UI.
 
 **Acceptance Criteria:**
+
 - NestJS app runs without errors.
 - API is accessible at `/api/v1`.
 - Swagger documentation is available at `/api/docs`.
@@ -93,6 +101,7 @@ Total Tasks: 20
 ### Frontend Layer
 
 #### Task Group 5: React Frontend Setup
+
 **Dependencies:** Task Group 1
 
 - [x] 5.0 Frontend Application
@@ -115,6 +124,7 @@ Total Tasks: 20
     - Verify UI renders correctly with Tailwind styles and Shadcn components.
 
 **Acceptance Criteria:**
+
 - React app runs via Vite.
 - TailwindCSS styles apply correctly.
 - Shadcn/UI components (Button, Input, Card) function.
@@ -123,6 +133,7 @@ Total Tasks: 20
 ## Execution Order
 
 Recommended implementation sequence:
+
 1. Monorepo Initialization (Task Group 1)
 2. Database & Docker Setup (Task Group 2)
 3. ORM Setup (Task Group 3)

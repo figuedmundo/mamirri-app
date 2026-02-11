@@ -8,7 +8,6 @@ original_file: Fisiología Articular Tomo 3 6ta Edicion - Kapandji.pdf
 extraction_date: '2026-02-09T22:35:00.916Z'
 ---
 
-
 <!-- PAGE_NUMBER: 1 -->
 
 TOMO 3
@@ -80,9 +79,9 @@ ISBN 978-84-9835-047-0
 
 1. Articulaciones-Movimiento. I. Título
 
-612.75
+   612.75
 
-612.76
+   612.76
 
 litulo del original en frances
 
@@ -200,54 +199,54 @@ A.I.KAPANDJI
 
 ## Índice
 
-| Capítulo 1: El raquis en conjunto                                                           |    |
-|---------------------------------------------------------------------------------------------|----|
-| El raquis, eje mantenido ..                                                                 |    |
-| El raquis, eje del cuerpo y protector del eje nervioso                                      |    |
-| Las curvas del raquis en conjunto                                                           |    |
-| La aparición de las curvas raquídeas                                                        | 10 |
-| Constitución de la vértebra tipo                                                            | 12 |
-| Las curvas raquídeas ...                                                                    | 14 |
-| Estructura del cuerpo vertebral .                                                           | 16 |
-| Las divisiones funcionales de una vértebra                                                  | 18 |
-| Los elementos de unión intervertebral ...                                                   | 20 |
-| Estructura del disco intervertebral                                                         | 22 |
-| El núcleo pulposo comparado a una rótula                                                    | 24 |
-| El estado de precompresión del disco y la autoestabilidad de la articulación discovertebral | 26 |
-| La migración de agua en el núcleo pulposo                                                   | 28 |
-| Las fuerzas de compresión sobre el disco                                                    | 30 |
-| Variaciones del disco según el nivel ..                                                     | 32 |
-| Comportamiento del disco intervertebral en los movimientos elementales                      | 34 |
-| Rotación automática del raquis durante la inflexión lateral ..                              | 36 |
-| Amplitudes globales de la flexoextensión del raquis .                                       | 38 |
-| Amplitudes totales de la inflexión lateral del raquis ...                                   | 40 |
-| Amplitudes globales de la rotación del raquis en conjunto                                   | 42 |
-| Apreciación clínica de las amplitudes globales del raquis                                   | 44 |
-| Capítulo 2: La cintura pélvica                                                              | 46 |
-| La cintura pélvica en el hombre y en la mujer                                               |    |
-| Modelo mecánico de la cintura pélvica                                                       | 50 |
-| Arquitectura de la cintura pélvica                                                          | 52 |
-| Las superficies articulares de la articulación sacroilíaca                                  | 54 |
-| La carilla auricular del sacro                                                              | 56 |
-| Los ligamentos de la articulación sacroilíaca                                               | 58 |
-| La nutación y la contranutación                                                             |    |
-| Las diferentes teorías de la nutación                                                       |    |
-| La sinfisis púbica y la articulación sacrococcigea                                          |    |
-| Influencia de la posición sobre las articulaciones de la cintura pélvica                    |    |
-| La pared pélvica                                                                            |    |
-| El diafragma inferior pelviano                                                              |    |
-| El periné femenino                                                                          | 72 |
-| Los volúmenes abdomino-pélvicos                                                             | 74 |
-| El parto                                                                                    | 76 |
-| Micción y defecación: ejemplo del periné femenino .                                         |    |
-| El control urinario                                                                         |    |
-| El control fecal .                                                                          | 78 |
-| Las referencias externas de la pelvis: el rombo de Michaelis y el plano de Lewinneck        | 82 |
+| Capítulo 1: El raquis en conjunto                                                           |     |
+| ------------------------------------------------------------------------------------------- | --- |
+| El raquis, eje mantenido ..                                                                 |     |
+| El raquis, eje del cuerpo y protector del eje nervioso                                      |     |
+| Las curvas del raquis en conjunto                                                           |     |
+| La aparición de las curvas raquídeas                                                        | 10  |
+| Constitución de la vértebra tipo                                                            | 12  |
+| Las curvas raquídeas ...                                                                    | 14  |
+| Estructura del cuerpo vertebral .                                                           | 16  |
+| Las divisiones funcionales de una vértebra                                                  | 18  |
+| Los elementos de unión intervertebral ...                                                   | 20  |
+| Estructura del disco intervertebral                                                         | 22  |
+| El núcleo pulposo comparado a una rótula                                                    | 24  |
+| El estado de precompresión del disco y la autoestabilidad de la articulación discovertebral | 26  |
+| La migración de agua en el núcleo pulposo                                                   | 28  |
+| Las fuerzas de compresión sobre el disco                                                    | 30  |
+| Variaciones del disco según el nivel ..                                                     | 32  |
+| Comportamiento del disco intervertebral en los movimientos elementales                      | 34  |
+| Rotación automática del raquis durante la inflexión lateral ..                              | 36  |
+| Amplitudes globales de la flexoextensión del raquis .                                       | 38  |
+| Amplitudes totales de la inflexión lateral del raquis ...                                   | 40  |
+| Amplitudes globales de la rotación del raquis en conjunto                                   | 42  |
+| Apreciación clínica de las amplitudes globales del raquis                                   | 44  |
+| Capítulo 2: La cintura pélvica                                                              | 46  |
+| La cintura pélvica en el hombre y en la mujer                                               |     |
+| Modelo mecánico de la cintura pélvica                                                       | 50  |
+| Arquitectura de la cintura pélvica                                                          | 52  |
+| Las superficies articulares de la articulación sacroilíaca                                  | 54  |
+| La carilla auricular del sacro                                                              | 56  |
+| Los ligamentos de la articulación sacroilíaca                                               | 58  |
+| La nutación y la contranutación                                                             |     |
+| Las diferentes teorías de la nutación                                                       |     |
+| La sinfisis púbica y la articulación sacrococcigea                                          |     |
+| Influencia de la posición sobre las articulaciones de la cintura pélvica                    |     |
+| La pared pélvica                                                                            |     |
+| El diafragma inferior pelviano                                                              |     |
+| El periné femenino                                                                          | 72  |
+| Los volúmenes abdomino-pélvicos                                                             | 74  |
+| El parto                                                                                    | 76  |
+| Micción y defecación: ejemplo del periné femenino .                                         |     |
+| El control urinario                                                                         |     |
+| El control fecal .                                                                          | 78  |
+| Las referencias externas de la pelvis: el rombo de Michaelis y el plano de Lewinneck        | 82  |
 
 <!-- PAGE_NUMBER: 8 -->
 
 | Capítulo 3: El raquis lumbar                                                                                   | 84    |
-|----------------------------------------------------------------------------------------------------------------|-------|
+| -------------------------------------------------------------------------------------------------------------- | ----- |
 | El raquis lumbar en conjunto .                                                                                 | 86    |
 | Constitución de las vértebras lumbares                                                                         | 88    |
 | El sistema ligamentoso en el raquis lumbar                                                                     | 90    |
@@ -298,7 +297,7 @@ A.I.KAPANDJI
 <!-- PAGE_NUMBER: 9 -->
 
 | Movimientos de las costillas en torno a las articulaciones costovertebrales        | 152   |
-|------------------------------------------------------------------------------------|-------|
+| ---------------------------------------------------------------------------------- | ----- |
 | Movimientos de los cartílagos costales y del esternón                              | 154   |
 | Las deformaciones del tórax en el plano sagital durante la inspiración             | 156   |
 | Mecanismo de los músculos intercostales y del músculo transverso del tórax         | 158   |
@@ -351,7 +350,7 @@ A.I.KAPANDJI
 <!-- PAGE_NUMBER: 10 -->
 
 | Los movimientos combinados de inclinación-rotación en el raquis cervical inferior                                      | 220    |
-|------------------------------------------------------------------------------------------------------------------------|--------|
+| ---------------------------------------------------------------------------------------------------------------------- | ------ |
 | Geometría del movimiento de inclinación y de rotación                                                                  | 222    |
 | Modelo mecánico del raquis cervical                                                                                    | 224    |
 | Los movimientos de inclinación-rotación en el modelo del raquis cervical                                               | 226    |
@@ -396,7 +395,7 @@ A.I.KAPANDJI
 <!-- PAGE_NUMBER: 11 -->
 
 | Capítulo 6: La cabeza                                                   | 276    |
-|-------------------------------------------------------------------------|--------|
+| ----------------------------------------------------------------------- | ------ |
 | El cráneo                                                               | . 278  |
 | Las suturas craneales                                                   | . 280  |
 | El cráneo y el macizo facial                                            | .282   |
@@ -2326,13 +2325,13 @@ Como cabía esperar, las amplitudes de la flexión son bien distintas según la 
 
 <!-- image -->
 
-| 2-13 años   | 35-49 años   | 50-64 años   | 65-77 años   |
-|-------------|--------------|--------------|--------------|
-|             | 8°           | 4°           | 2°           |
-| 10°         | 8°           | 5°           | 5°           |
-| 13°         | 9°           | 8°           | 3°           |
-| 17°         | 12°          | 8°           | 7°           |
-| 24°         | 8°           | 8°           | 7°           |
+| 2-13 años | 35-49 años | 50-64 años | 65-77 años |
+| --------- | ---------- | ---------- | ---------- |
+|           | 8°         | 4°         | 2°         |
+| 10°       | 8°         | 5°         | 5°         |
+| 13°       | 9°         | 8°         | 3°         |
+| 17°       | 12°        | 8°         | 7°         |
+| 24°       | 8°         | 8°         | 7°         |
 
 <!-- image -->
 
@@ -2353,13 +2352,13 @@ No deja de ser interesante recalcar que la amplitud segmentaria de la inclinaci�
 
 <!-- PAGE_NUMBER: 141 -->
 
-| 2-13 años   |    | 35-49 años 50-64 años   | 65-77 años   |
-|-------------|----|-------------------------|--------------|
-| 12°         | 5° | 6°                      | 4°           |
-| 12°         | 8° | 7°                      | 7°           |
-| 16°         | 8° | 8°                      | 6°           |
-| 15°         | 8° | 7°                      | 5°           |
-| 7°          | 2° | 1°                      | 0°           |
+| 2-13 años |     | 35-49 años 50-64 años | 65-77 años |
+| --------- | --- | --------------------- | ---------- |
+| 12°       | 5°  | 6°                    | 4°         |
+| 12°       | 8°  | 7°                    | 7°         |
+| 16°       | 8°  | 8°                    | 6°         |
+| 15°       | 8°  | 7°                    | 5°         |
+| 7°        | 2°  | 1°                    | 0°         |
 
 <!-- image -->
 

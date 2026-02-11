@@ -123,7 +123,7 @@ Saves the entire application state, including Patient records, Clinical Cases, U
 pnpm knowledge:backup
 ```
 
-_Creates: `backups/full_db_[TIMESTAMP].sql.gz`_
+_Creates: `backups/full_db_[TIMESTAMP].sql.gz`\_
 
 #### 2. Library-wide Export (Migration)
 
@@ -133,7 +133,7 @@ Saves **only** the vectorized books (documents and embeddings). This is ideal fo
 pnpm knowledge:export
 ```
 
-_Creates: `backups/library/library_all_[TIMESTAMP].sql.gz`_
+_Creates: `backups/library/library_all_[TIMESTAMP].sql.gz`\_
 
 #### 3. Atomic Book Backups (Standalone)
 

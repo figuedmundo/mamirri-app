@@ -8,6 +8,7 @@
 ## About These Instructions
 
 **What you're receiving:**
+
 - Finished UI designs (React components with full styling)
 - Data model definitions (TypeScript types and sample data)
 - UI/UX specifications (user flows, requirements, screenshots)
@@ -15,6 +16,7 @@
 - Test-writing instructions for each section (for TDD approach)
 
 **What you need to build:**
+
 - Backend API endpoints and database schema
 - Authentication and authorization
 - Data fetching and state management
@@ -22,6 +24,7 @@
 - Integration of the provided UI components with real data
 
 **Important guidelines:**
+
 - **DO NOT** redesign or restyle the provided components — use them as-is
 - **DO** wire up the callback props to your routing and API calls
 - **DO** replace sample data with real data from your backend
@@ -41,6 +44,7 @@ Implement the Pacientes feature — Gestión de expedientes médicos con captura
 The Pacientes section acts as a central clinical records system — a "Professional Athlete Logbook" for managing patient history, evaluations, and progress tracking. It uses voice AI for structured clinical admission and presents a visual timeline of the 15-session intervention model for longitudinal tracking.
 
 **Key Functionality:**
+
 - View and manage all patients in card-based grid layout
 - Create new patients with voice dictation for clinical history (anamnesis)
 - Record treatment sessions with pain scales (END 0-10) and functional independence indices (Barthel 0-100)
@@ -55,6 +59,7 @@ The Pacientes section acts as a central clinical records system — a "Professio
 Before implementing this section, **write tests first** based on the test specifications provided.
 
 See `product-plan/sections/pacientes/tests.md` for detailed test-writing instructions including:
+
 - Key user flows to test (success and failure paths)
 - Specific UI elements, button labels, and interactions to verify
 - Expected behaviors and assertions
@@ -62,6 +67,7 @@ See `product-plan/sections/pacientes/tests.md` for detailed test-writing instruc
 The test instructions are framework-agnostic — adapt them to your testing setup (Jest, Vitest, Playwright, Cypress, RSpec, Minitest, PHPUnit, etc.).
 
 **TDD Workflow:**
+
 1. Read `tests.md` and write failing tests for the key user flows
 2. Implement the feature to make tests pass
 3. Refactor while keeping tests green
@@ -88,46 +94,47 @@ The components expect these data shapes:
 ```typescript
 // Patient and clinical case structure
 interface Paciente {
-  id: string
-  nombre: string
-  edad: number
-  ocupacion: string
-  telefono: string
-  email?: string
-  fechaNacimiento: string
-  activo: boolean
-  casosClinicos: CasoClinico[]
+  id: string;
+  nombre: string;
+  edad: number;
+  ocupacion: string;
+  telefono: string;
+  email?: string;
+  fechaNacimiento: string;
+  activo: boolean;
+  casosClinicos: CasoClinico[];
 }
 
 interface CasoClinico {
-  id: string
-  pacienteId: string
-  titulo: string
-  estado: 'activo' | 'completado' | 'inactivo'
-  fechaInicio: string
-  motivoConsulta: string
-  evaluacion?: Evaluacion
-  sesionesTratamiento: SesionDeTratamiento[]
+  id: string;
+  pacienteId: string;
+  titulo: string;
+  estado: 'activo' | 'completado' | 'inactivo';
+  fechaInicio: string;
+  motivoConsulta: string;
+  evaluacion?: Evaluacion;
+  sesionesTratamiento: SesionDeTratamiento[];
 }
 
 interface Evaluacion {
-  posturograma: Posturograma
-  testOrtopedicos: TestOrtopedicos
-  escalaDolor: EscalaDolor
-  huellas: Huella[]
-  videosPostura: VideoDePostura[]
+  posturograma: Posturograma;
+  testOrtopedicos: TestOrtopedicos;
+  escalaDolor: EscalaDolor;
+  huellas: Huella[];
+  videosPostura: VideoDePostura[];
 }
 
 interface SesionDeTratamiento {
-  fecha: string
-  faseNumero: number
-  tecnicasAplicadas: string[]
-  respuestaPaciente: string
-  dolorFinal: number // 0-10 scale
+  fecha: string;
+  faseNumero: number;
+  tecnicasAplicadas: string[];
+  respuestaPaciente: string;
+  dolorFinal: number; // 0-10 scale
 }
 ```
 
 You'll need to:
+
 - Create API endpoints or data fetching logic for patients CRUD operations
 - Connect real data to the components
 - Implement voice transcription service for anamnesis and evolution notes

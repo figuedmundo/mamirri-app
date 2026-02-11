@@ -8,7 +8,6 @@ original_file: Fisiología Articular Tomo 2 6ta Edicion - Kapandji.pdf
 extraction_date: '2026-02-09T22:09:07.181Z'
 ---
 
-
 <!-- PAGE_NUMBER: 1 -->
 
 A. I. Kapandji
@@ -92,7 +91,7 @@ ISBN: 978-84-9835-459-1
 
 1. Articulaciones
 
-612.751.76
+   612.751.76
 
 ## Título del original en francés
 
@@ -203,7 +202,7 @@ Esta nueva edición no sólo se ha mejorado en relación a capítulos ya existen
 ## Índice
 
 | Capítulo 1 La cadera                                                  | 2   |
-|-----------------------------------------------------------------------|-----|
+| --------------------------------------------------------------------- | --- |
 | La articulación coxo-femoral                                          |     |
 | La cadera, articulación proximal del miembro inferior                 |     |
 | Movimientos de flexión de la cadera .                                 | 6   |
@@ -239,142 +238,142 @@ Esta nueva edición no sólo se ha mejorado en relación a capítulos ya existen
 
 <!-- PAGE_NUMBER: 9 -->
 
-| Capítulo 2 La rodilla                                                                                 | 66   |
-|-------------------------------------------------------------------------------------------------------|------|
-| Los ejes de la articulación de la rodilla                                                             | 68   |
-| Los desplazamientos laterales de la rodilla                                                           | 70   |
-| Los movimientos de flexoextensión …                                                                   | 72   |
-| La rotación axial de la rodilla                                                                       | 74   |
-| Arquitectura general del miembro inferior y orientación de las superficies articulares .              | 76   |
-| Arquitectura general del miembro inferior y orientación de las superficies articulares (continuación) | 78   |
-| Las superficies de la flexoextensión                                                                  | 80   |
-| Las superficies tibiales en función de la rotación axial                                              | 82   |
-| Perfil de los cóndilos y de las glenoides                                                             | 84   |
-| Determinismo del perfil cóndilo-troclear                                                              |      |
-| Los movimientos de los cóndilos sobre las glenoides en la flexoextensión                              | 88   |
-| Los movimientos de los cóndilos sobre las glenoides en los movimientos de rotación axial              | 90   |
-| La cápsula articular                                                                                  | 92   |
-| El pliegue sinovial infrarrotuliano, las plicas, la capacidad articular                               |      |
-| Los meniscos interarticulares                                                                         | 96   |
-| Los desplazamientos de los meniscos en la flexoextensión                                              | 98   |
-| Los desplazamientos de los meniscos en la rotación axial                                              | 100  |
-| Los desplazamientos de la rótula sobre el fémur                                                       | 102  |
-| Los nexos femororrotulianos ....                                                                      | 104  |
-| Los desplazamientos de la rótula sobre la tibia                                                       | 106  |
-| Los ligamentos colaterales de la rodilla ....                                                         | 108  |
-| La estabilidad transversal de la rodilla ...                                                          | 110  |
-| La estabilidad transversal de la rodilla (continuación)                                               | 112  |
-| La estabilidad anteroposterior de la rodilla                                                          | 114  |
-| Las defensas periféricas de la rodilla .                                                              | 116  |
-| Los ligamentos cruzados de la rodilla                                                                 | 118  |
-| Nexos de la cápsula y de los ligamentos cruzados                                                      | 120  |
-| Dirección de los ligamentos cruzados                                                                  | 122  |
-| Función mecánica de los ligamentos cruzados                                                           | 124  |
-| Función mecánica de los ligamentos cruzados (continuación)                                            | 126  |
-| Función mecánica de los ligamentos cruzados (continuación)                                            | 128  |
-| La estabilidad rotadora de la rodilla en extensión .                                                  | 130  |
-| La estabilidad rotadora de la rodilla en extensión (continuación)                                     | 132  |
-| Estabilidad rotatoria de la rodilla en extensión                                                      | 134  |
-| Las pruebas dinámicas en rotación interna                                                             | 136  |
-| Las pruebas dinámicas de ruptura del LCAE                                                             | 138  |
-| Las pruebas dinámicas en rotación externa .                                                           | 140  |
-| Los músculos extensores de la rodilla .                                                               | 142  |
-| Fisiología del músculo recto femoral                                                                  | 144  |
-| Los músculos flexores de la rodilla                                                                   | 146  |
-| Los músculos rotadores de la rodilla                                                                  | 148  |
-| La rotación automática de la rodilla                                                                  | 150  |
+| Capítulo 2 La rodilla                                                                                 | 66  |
+| ----------------------------------------------------------------------------------------------------- | --- |
+| Los ejes de la articulación de la rodilla                                                             | 68  |
+| Los desplazamientos laterales de la rodilla                                                           | 70  |
+| Los movimientos de flexoextensión …                                                                   | 72  |
+| La rotación axial de la rodilla                                                                       | 74  |
+| Arquitectura general del miembro inferior y orientación de las superficies articulares .              | 76  |
+| Arquitectura general del miembro inferior y orientación de las superficies articulares (continuación) | 78  |
+| Las superficies de la flexoextensión                                                                  | 80  |
+| Las superficies tibiales en función de la rotación axial                                              | 82  |
+| Perfil de los cóndilos y de las glenoides                                                             | 84  |
+| Determinismo del perfil cóndilo-troclear                                                              |     |
+| Los movimientos de los cóndilos sobre las glenoides en la flexoextensión                              | 88  |
+| Los movimientos de los cóndilos sobre las glenoides en los movimientos de rotación axial              | 90  |
+| La cápsula articular                                                                                  | 92  |
+| El pliegue sinovial infrarrotuliano, las plicas, la capacidad articular                               |     |
+| Los meniscos interarticulares                                                                         | 96  |
+| Los desplazamientos de los meniscos en la flexoextensión                                              | 98  |
+| Los desplazamientos de los meniscos en la rotación axial                                              | 100 |
+| Los desplazamientos de la rótula sobre el fémur                                                       | 102 |
+| Los nexos femororrotulianos ....                                                                      | 104 |
+| Los desplazamientos de la rótula sobre la tibia                                                       | 106 |
+| Los ligamentos colaterales de la rodilla ....                                                         | 108 |
+| La estabilidad transversal de la rodilla ...                                                          | 110 |
+| La estabilidad transversal de la rodilla (continuación)                                               | 112 |
+| La estabilidad anteroposterior de la rodilla                                                          | 114 |
+| Las defensas periféricas de la rodilla .                                                              | 116 |
+| Los ligamentos cruzados de la rodilla                                                                 | 118 |
+| Nexos de la cápsula y de los ligamentos cruzados                                                      | 120 |
+| Dirección de los ligamentos cruzados                                                                  | 122 |
+| Función mecánica de los ligamentos cruzados                                                           | 124 |
+| Función mecánica de los ligamentos cruzados (continuación)                                            | 126 |
+| Función mecánica de los ligamentos cruzados (continuación)                                            | 128 |
+| La estabilidad rotadora de la rodilla en extensión .                                                  | 130 |
+| La estabilidad rotadora de la rodilla en extensión (continuación)                                     | 132 |
+| Estabilidad rotatoria de la rodilla en extensión                                                      | 134 |
+| Las pruebas dinámicas en rotación interna                                                             | 136 |
+| Las pruebas dinámicas de ruptura del LCAE                                                             | 138 |
+| Las pruebas dinámicas en rotación externa .                                                           | 140 |
+| Los músculos extensores de la rodilla .                                                               | 142 |
+| Fisiología del músculo recto femoral                                                                  | 144 |
+| Los músculos flexores de la rodilla                                                                   | 146 |
+| Los músculos rotadores de la rodilla                                                                  | 148 |
+| La rotación automática de la rodilla                                                                  | 150 |
 
 <!-- PAGE_NUMBER: 10 -->
 
-| La rotación automática de la rodilla (continuación)                                                                                      | 152   |
-|------------------------------------------------------------------------------------------------------------------------------------------|-------|
-| El equilibrio dinámico de la rodilla                                                                                                     | 154   |
-| Capítulo 3 El tobillo                                                                                                                    | 156   |
-| El complejo articular del pie                                                                                                            | 158   |
-| La flexoextensión                                                                                                                        |       |
-| Las superficies de la articulación talocrural                                                                                            | 160   |
-| Las superficies de la articulación talocrural (continuación)                                                                             | 162   |
-| Los ligamentos de la articulación talocrural                                                                                             | 164   |
-|                                                                                                                                          | 166   |
-| Estabilidad anteroposterior del tobillo y factores limitantes de la flexoextensión Estabilidad transversal de la articulación talocrural | 168   |
-|                                                                                                                                          | 170   |
-| Las articulaciones peroneotibiales                                                                                                       | 172   |
-| Fisiología de las articulaciones peroneotibiales                                                                                         | 174   |
-| ¿Por qué la pierna está compuesta por dos huesos?                                                                                        | 176   |
-| Capítulo 4 El pie                                                                                                                        |       |
-| Los movimientos de rotación longitudinal y de lateralidad del pie                                                                        | 178   |
-|                                                                                                                                          | 180   |
-| Las superficies articulares de la articulación subastragalina ....                                                                       | 182   |
-| Congruencia e incongruencia de la articulación subastragalina                                                                            | 184   |
-| El astrágalo, un hueso singular                                                                                                          | 186   |
-| Los ligamentos de la articulación subastragalina .                                                                                       | 188   |
-| La articulación transversa del tarso y sus ligamentos                                                                                    | 190   |
-| Los movimientos en la articulación subastragalina                                                                                        | 192   |
-| Los movimientos en la articulación subastragalina y en la articulación transversa del tarso                                              | 194   |
-| Los movimientos en la articulación transversa del tarso                                                                                  | 196   |
-| Funcionamiento global de las articulaciones del tarso posterior El cardán heterocinético del retropié …                                  | 198   |
-|                                                                                                                                          | 200   |
-| Las cadenas ligamentosas de inversión y eversión                                                                                         | 202   |
-| Las articulaciones escafocuneales, intercuneales y tarsometatarsianas                                                                    | 204   |
-| Movimientos en las articulaciones del tarso anterior y en la articulación tarsometatarsiana La extensión de los dedos                    | 206   |
-| Los compartimentos de la pierna                                                                                                          | 208   |
-| Los compartimentos de la pierna (continuación)                                                                                           | 210   |
-| Músculos interóseos y lumbricales                                                                                                        | 212   |
-| Músculos de la planta del pie                                                                                                            | 214   |
-|                                                                                                                                          | 216   |
-| Correderas tendinosas de la garganta y de la planta del pie                                                                              | 218   |
-| Los músculos flexores de tobillo                                                                                                         | 220   |
-| El músculo tríceps sural                                                                                                                 | 222   |
-| El músculo tríceps sural (continuación)                                                                                                  | 224   |
-| Los otros extensores del tobillo ........                                                                                                | 226   |
-| Los músculos abductores-pronadores: los músculos peroneos                                                                                | 228   |
-| Los músculos aductores-supinadores: los músculos tibiales .                                                                              | 230   |
+| La rotación automática de la rodilla (continuación)                                                                                      | 152 |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| El equilibrio dinámico de la rodilla                                                                                                     | 154 |
+| Capítulo 3 El tobillo                                                                                                                    | 156 |
+| El complejo articular del pie                                                                                                            | 158 |
+| La flexoextensión                                                                                                                        |     |
+| Las superficies de la articulación talocrural                                                                                            | 160 |
+| Las superficies de la articulación talocrural (continuación)                                                                             | 162 |
+| Los ligamentos de la articulación talocrural                                                                                             | 164 |
+|                                                                                                                                          | 166 |
+| Estabilidad anteroposterior del tobillo y factores limitantes de la flexoextensión Estabilidad transversal de la articulación talocrural | 168 |
+|                                                                                                                                          | 170 |
+| Las articulaciones peroneotibiales                                                                                                       | 172 |
+| Fisiología de las articulaciones peroneotibiales                                                                                         | 174 |
+| ¿Por qué la pierna está compuesta por dos huesos?                                                                                        | 176 |
+| Capítulo 4 El pie                                                                                                                        |     |
+| Los movimientos de rotación longitudinal y de lateralidad del pie                                                                        | 178 |
+|                                                                                                                                          | 180 |
+| Las superficies articulares de la articulación subastragalina ....                                                                       | 182 |
+| Congruencia e incongruencia de la articulación subastragalina                                                                            | 184 |
+| El astrágalo, un hueso singular                                                                                                          | 186 |
+| Los ligamentos de la articulación subastragalina .                                                                                       | 188 |
+| La articulación transversa del tarso y sus ligamentos                                                                                    | 190 |
+| Los movimientos en la articulación subastragalina                                                                                        | 192 |
+| Los movimientos en la articulación subastragalina y en la articulación transversa del tarso                                              | 194 |
+| Los movimientos en la articulación transversa del tarso                                                                                  | 196 |
+| Funcionamiento global de las articulaciones del tarso posterior El cardán heterocinético del retropié …                                  | 198 |
+|                                                                                                                                          | 200 |
+| Las cadenas ligamentosas de inversión y eversión                                                                                         | 202 |
+| Las articulaciones escafocuneales, intercuneales y tarsometatarsianas                                                                    | 204 |
+| Movimientos en las articulaciones del tarso anterior y en la articulación tarsometatarsiana La extensión de los dedos                    | 206 |
+| Los compartimentos de la pierna                                                                                                          | 208 |
+| Los compartimentos de la pierna (continuación)                                                                                           | 210 |
+| Músculos interóseos y lumbricales                                                                                                        | 212 |
+| Músculos de la planta del pie                                                                                                            | 214 |
+|                                                                                                                                          | 216 |
+| Correderas tendinosas de la garganta y de la planta del pie                                                                              | 218 |
+| Los músculos flexores de tobillo                                                                                                         | 220 |
+| El músculo tríceps sural                                                                                                                 | 222 |
+| El músculo tríceps sural (continuación)                                                                                                  | 224 |
+| Los otros extensores del tobillo ........                                                                                                | 226 |
+| Los músculos abductores-pronadores: los músculos peroneos                                                                                | 228 |
+| Los músculos aductores-supinadores: los músculos tibiales .                                                                              | 230 |
 
 <!-- PAGE_NUMBER: 11 -->
 
-| Capítulo 5 La bóveda plantar                                                        | . 232   |
-|-------------------------------------------------------------------------------------|---------|
-| La bóveda plantar en conjunto ..                                                    | 234     |
-| El arco interno                                                                     | 236     |
-| El arco externo                                                                     | 238     |
-| El arco anterior y la curva transversal                                             | 240     |
-| Distribución de las cargas y deformaciones estáticas de la bóveda plantar           | 242     |
-| El equilibrio arquitectural del pie                                                 | 244     |
-| Deformaciones dinámicas de la bóveda plantar durante la marcha                      | 246     |
-| Deformaciones dinámicas según la inclinación de la pierna sobre el pie en inversión | 248     |
-| Deformaciones dinámicas según la inclinación de la pierna sobre el pie en eversión  | 250     |
-| Adaptación de la bóveda plantar al terreno                                          | 252     |
-| Los pies cavos                                                                      | 254     |
-| Los pies planos                                                                     | 256     |
-| Los desequilibrios del arco anterior                                                | 258     |
-| Tipos de pies ...                                                                   | 260     |
-| Capítulo 6 La marcha                                                                | 262     |
-| El paso bipedestación ...                                                           | 264     |
-| El milagro de la bipedestación                                                      | 266     |
-| El paso inicial                                                                     | 268     |
-| El paso oscilante .                                                                 | 270     |
-| El desarrollo del paso .                                                            | 272     |
-| Los pasos                                                                           |         |
-| Las oscilaciones de la pelvis                                                       |         |
-| Las básculas de la pelvis                                                           |         |
-| La torsión del tronco                                                               |         |
-| El balanceo de los miembros superiores                                              |         |
-| Los músculos de la marcha ..                                                        |         |
-| Cadenas musculares y carrera                                                        |         |
-| ¡La marcha... es libertad!                                                          |         |
-| Anexos                                                                              | 291     |
-| Los nervios del miembro inferior                                                    | 292     |
-| Territorios sensitivos del miembro inferior                                         |         |
-| Bibliografĩa ..                                                                     | 297     |
-| Índice analítico                                                                    | 299     |
-| Modelos recortables de mecánica articular                                           | 301     |
+| Capítulo 5 La bóveda plantar                                                        | . 232 |
+| ----------------------------------------------------------------------------------- | ----- |
+| La bóveda plantar en conjunto ..                                                    | 234   |
+| El arco interno                                                                     | 236   |
+| El arco externo                                                                     | 238   |
+| El arco anterior y la curva transversal                                             | 240   |
+| Distribución de las cargas y deformaciones estáticas de la bóveda plantar           | 242   |
+| El equilibrio arquitectural del pie                                                 | 244   |
+| Deformaciones dinámicas de la bóveda plantar durante la marcha                      | 246   |
+| Deformaciones dinámicas según la inclinación de la pierna sobre el pie en inversión | 248   |
+| Deformaciones dinámicas según la inclinación de la pierna sobre el pie en eversión  | 250   |
+| Adaptación de la bóveda plantar al terreno                                          | 252   |
+| Los pies cavos                                                                      | 254   |
+| Los pies planos                                                                     | 256   |
+| Los desequilibrios del arco anterior                                                | 258   |
+| Tipos de pies ...                                                                   | 260   |
+| Capítulo 6 La marcha                                                                | 262   |
+| El paso bipedestación ...                                                           | 264   |
+| El milagro de la bipedestación                                                      | 266   |
+| El paso inicial                                                                     | 268   |
+| El paso oscilante .                                                                 | 270   |
+| El desarrollo del paso .                                                            | 272   |
+| Los pasos                                                                           |       |
+| Las oscilaciones de la pelvis                                                       |       |
+| Las básculas de la pelvis                                                           |       |
+| La torsión del tronco                                                               |       |
+| El balanceo de los miembros superiores                                              |       |
+| Los músculos de la marcha ..                                                        |       |
+| Cadenas musculares y carrera                                                        |       |
+| ¡La marcha... es libertad!                                                          |       |
+| Anexos                                                                              | 291   |
+| Los nervios del miembro inferior                                                    | 292   |
+| Territorios sensitivos del miembro inferior                                         |       |
+| Bibliografĩa ..                                                                     | 297   |
+| Índice analítico                                                                    | 299   |
+| Modelos recortables de mecánica articular                                           | 301   |
 
 <!-- PAGE_NUMBER: 12 -->
 
 ## Índice de Abreviaturas
 
 | Abducción                                                              | Fd       | Fosa digital                                           |                             | PAAE Capa tendinosa anteroexterna                    |
-|------------------------------------------------------------------------|----------|--------------------------------------------------------|-----------------------------|------------------------------------------------------|
+| ---------------------------------------------------------------------- | -------- | ------------------------------------------------------ | --------------------------- | ---------------------------------------------------- |
 | Aducción                                                               |          | FLDG Músculo flexor largo del                          |                             | PAAI Capa tendinosa anterointerna                    |
 | Músculo aductor largo                                                  |          | dedo gordo                                             |                             | PAPE Punto del ángulo posteroex-                     |
 | Músculo aductor mayor                                                  |          | FLD Músculo flexor largo de los                        |                             |                                                      |
@@ -549,7 +548,7 @@ rga.
 
 s en del
 
-26)
+26.
 
 nús- ales
 
@@ -1617,8 +1616,6 @@ En flexión, posición de inestabilidad, la rodilla está expuesta al máximo a 
 En extensión es más vulnerable a las fracturas articulares y a las rupturas ligamentosas.
 
 <!-- PAGE_NUMBER: 78 -->
-
-
 
 <!-- PAGE_NUMBER: 79 -->
 
@@ -3748,7 +3745,7 @@ La carilla interna 7 de la tróclea astragalina, visible en una visión interna 
 
 De este modo, las dos caras laterales de la tróclea astragalina están sujetas por los maléolos (flechas rojas). El conjunto de la cara articular inferior y de los dos maléolos también se denomina mortaja tibioperonea. Las características de los maléolos se oponen punto por punto:
 
-La carilla externa 12 se desvía considerablemente hacia fuera (Fig. 8), cóncava tanto de arriba abajo (Fig. 11) como de delante atrás (Fig. 9); su "plano" es ligeramente oblicuo hacia adelante y hacia fuera (línea a trazos). Contacta con la carilla articular 13 de la cara interna (Fig. 7) del maléolo lateral 14. Esta carilla está separada de la superficie tibial por la interlínea peroneotibial inferior 15. Esta sindesmosis la mantienen los ligamentos tibioperoneos inferiores 40. Está ocupada por una franja sinovial 14 (véase pág. 174), en contacto con la arista 17 que separa la vertiente y carilla externas de la tróclea. Esta arista está biselada* (Fig. 12) por delante 18 y por detrás 19 (véase pág. 172).
+La carilla externa 12 se desvía considerablemente hacia fuera (Fig. 8), cóncava tanto de arriba abajo (Fig. 11) como de delante atrás (Fig. 9); su "plano" es ligeramente oblicuo hacia adelante y hacia fuera (línea a trazos). Contacta con la carilla articular 13 de la cara interna (Fig. 7) del maléolo lateral 14. Esta carilla está separada de la superficie tibial por la interlínea peroneotibial inferior 15. Esta sindesmosis la mantienen los ligamentos tibioperoneos inferiores 40. Está ocupada por una franja sinovial 14 (véase pág. 174), en contacto con la arista 17 que separa la vertiente y carilla externas de la tróclea. Esta arista está biselada\* (Fig. 12) por delante 18 y por detrás 19 (véase pág. 172).
 
 - el maléolo lateral es más voluminoso que el maléolo medial;
 - desciende más abajo m (Fig. 11);
@@ -3785,11 +3782,11 @@ El ligamento lateral interno (Fig. 16: visión inter- na) se divide en dos plano
 
 Los ligamentos anterior (Fig. 15: visión anterior) y posterior (Fig. 14: visión posterior) de la articulación talocrural son simples engrosarnientos capsulares.
 
-El ligamento anterior 29 une oblicuamente el margen anterior de la superficie tibial y la rama de la bifurcación posterior del yugo astragalino* (Fig. 13).
+El ligamento anterior 29 une oblicuamente el margen anterior de la superficie tibial y la rama de la bifurcación posterior del yugo astragalino\* (Fig. 13).
 
 El ligamento posterior 30 está formado por fibras de origen tibial y peroneo que convergen hacia el tubérculo posterointerno del astrágalo 39, que con el tubérculo posteroexterno 37, constituye los límites de la corredera profunda del músculo flexor corto del dedo gordo 38. Esta corredera del tendón del músculo flexor corto del dedo gordo se prolonga por la cara interna del sustentáculo del astrágalo 41.
 
-* El yugo astragalito es una cresta en forma de Y, expandida transversalmente en la cara superior del cuello del astrágalo, cuya rama única es interna. Puede observarse en la Fig. 19, pág. 189.
+- El yugo astragalito es una cresta en forma de Y, expandida transversalmente en la cara superior del cuello del astrágalo, cuya rama única es interna. Puede observarse en la Fig. 19, pág. 189.
 
 <!-- PAGE_NUMBER: 178 -->
 
@@ -3830,7 +3827,7 @@ Cuando los movimientos de flexoextensión sobrepasan la amplitud permitida, uno 
 
 En el esguince del ligamento lateral externo, el haz anterior (Fig. 25) es el primero que se solicita: en primer lugar, en caso de esguince benigno estará simplemente "estirado", se rompe en los esguinces graves. Entonces es posible poner de manifiesto un cajón anterior, clinicamente 0 sobre todo, radiológicamente: el astrágalo se desplaza hacia delante y los dos arcos de círculo de la tróclea astragalina y del techo de la mortaja tibial han dejado de ser concéntricos; cuando los centros de la curva están desplazados más de 4-5 mm, existe una ruptura del haz anterior del ligamento lateral externo.
 
-* El término "equino" proviene de equus que, en latin, significa "caballo": el pie equino anda con los dedos, como el caballo.
+- El término "equino" proviene de equus que, en latin, significa "caballo": el pie equino anda con los dedos, como el caballo.
 
 <!-- PAGE_NUMBER: 180 -->
 
@@ -5087,7 +5084,7 @@ El resto de los tendones pasan por las correderas retromaleolares.
 
 Por detrás del maléolo lateral se localiza la corredera retromaleolar externa (Fig. 99: visión externa): en una corredera osteofibrosa 5 que emana del ligamento anular externo, dos tendones se deslizan paralelos, el del músculo peroneo corto 6 por arriba y por delante, y del musculo peroneo largo 7 por detrás y por abajo. Tras reflejarse en el vértice del maléolo quedan sujetos a la cara externa del calcáneo en dos correderas osteofibrosas 8 y 9, apoyadas en el tubérculo de los peroneos 10. Su vaina serosa común se desdobla desde este punto. Entonces, el músculo peroneo corto se fija en la apófisis estiloides del 5° metatarsiano 11 y la base del 4°. Se ha resecado un pequeño fragmento 12 para comprobar cuándo el tendón del músculo peroneo largo cambia de dirección para introducirse en la corredera del cuboides 13. A continuación, vuelve a aparecer 14 en la planta del pie (Fig. 100: visión inferior del esqueleto del pie), envuelto en una nueva vaina serosa, dirigiéndose oblicuamente hacia delante y adentro en una corredera osteofibrosa formada, por arriba, por el esqueleto y, por abajo, por las fibras del haz superficial del ligamento calcaneocuboideo plantar (haz profundo
 
-- 15) extendidas desde el calcáneo 16 hasta el cuboides y la base de todos los metatarsianos + y por las expansiones terminales del tendón del músculo tibial posterior 17. El tendón del músculo peroneo largo se fija en la base del 1* metatarsiano 18 y envía expansiones al 2° metatarsiano y la 1ª cuña. De manera casi constante, en su entrada en la corredera, se localiza un hueso sesamoideo 32 que facilita su reflexión.
+- 15. extendidas desde el calcáneo 16 hasta el cuboides y la base de todos los metatarsianos + y por las expansiones terminales del tendón del músculo tibial posterior 17. El tendón del músculo peroneo largo se fija en la base del 1\* metatarsiano 18 y envía expansiones al 2° metatarsiano y la 1ª cuña. De manera casi constante, en su entrada en la corredera, se localiza un hueso sesamoideo 32 que facilita su reflexión.
 - las fibras longitudinales del gran ligamento calcaneocuboideo plantar dispuestas en dos capas; en la figura sólo puede observarse la capa profunda 15;
 
 Por lo tanto, la cara plantar del tarso está cubierta por tres sistemas fibrosos (Fig. 100):
@@ -6972,17 +6969,17 @@ Este modelo (Fig. 3) permite comprender cómo, gracias a los ligamentos cruzados
 
 2. En un cartón más resistente, recortar otras dos plaquitas de las mismas dimensiones.
 1. Recortar las dos plaquitas A y B (Lámina I).
-3. En una hoja de papel corriente, recortar tres tiras de 1 cm de ancho por todo el largo de la hoja.
-4. En la plaquita A, pegar el extremo de cada una de las tiras (a) en las zonas grisáceas a, b y c, con la precaución de que queden paralelas con el lado mayor de la plaquita;
+1. En una hoja de papel corriente, recortar tres tiras de 1 cm de ancho por todo el largo de la hoja.
+1. En la plaquita A, pegar el extremo de cada una de las tiras (a) en las zonas grisáceas a, b y c, con la precaución de que queden paralelas con el lado mayor de la plaquita;
 
 ## Para el montaje, véase la Fig. 4.
 
 5. Pegar encima de la plaquita A y de los extremos de las tres tiras ya pegadas, una de las plaquitas de cartón grueso; debe recubrir con exactitud la plaquita A.
 6. Poner el conjunto sobre la mesa (b), el cartón grueso debajo, y doblar por encima de la plaquita A las
-3. tres tiras de papel, que deben quedar paralelas entre sí y con el lado mayor de la plaquita.
+7. tres tiras de papel, que deben quedar paralelas entre sí y con el lado mayor de la plaquita.
 8. Doblar sobre la plaquita el extremo libre de las tres tiras que se pegarán en a , b y c.
-7. Colocar encima la plaquita B, con el anverso hacia arriba, orientando la zona grisácea a hacia el lado del extremo libre de la tira media.
-9. Pegar por encima B la segunda plaquita de cartón grueso (c), tensar bien las tres tiras, poner un peso sobre el conjunto del montaje y esperar a que quede bien seco.
+9. Colocar encima la plaquita B, con el anverso hacia arriba, orientando la zona grisácea a hacia el lado del extremo libre de la tira media.
+10. Pegar por encima B la segunda plaquita de cartón grueso (c), tensar bien las tres tiras, poner un peso sobre el conjunto del montaje y esperar a que quede bien seco.
 
 En el montaje, las tiras, que representan los ligamentos cruzados, se cruzan ellas mismas, de modo que su tensión impide cualquier separación vertical de las plaquitas.
 
@@ -7003,7 +7000,9 @@ Este modelo traza por sí mismo el contorno de la tróclea y de los cóndilos, l
 ## Realización (Lámina II):
 
 - la meseta tibial A;
+
 1. Recortar las distintas piezas de este modelo:
+
 - una pieza denominada base femoral B que se fija en C;
 - la rótula, prolongada por abajo por el ligamento rotuliano;
 - la platina rectangular en la que se va a realizar el trazado; en trazos gruesos la referencia del contorno articular con la diáfisis femoral que se trazará posteriormente;
@@ -7022,6 +7021,7 @@ res
 SO
 
 - y las tres tiras para confeccionar las "arandelas" gruesas necesarias para el montaje.
+
 2. Efectuar el plegado en acordeón de las tiras que constituirán las "arandelas", luego realizar un agujero a la vez (no es nada fácil...) en los seis engrosamicniosi
 3. Realizar a cada extremo del LCPI un doble pliegue antes de perforar los agujeros 3 y 4.
 4. Perforar los agujeros en las otras piezas, exactamente en los sitios indicados.
@@ -7049,11 +7049,13 @@ Este modelo mecánico es una versión simplificada del modelo propuesto en las p
 ## Realización (Lámina IV):
 
 1. En primer lugar recortar las distintas partes del modelo:
+
 - la pierna A, los segmentos articulados subyacentes representan el cardan del tobillo. Las dos hendiduras deben recortarse de forma exquisita, con bisturi o cutter;
 - el calcáneo C;
 - la pieza intermedia del tarso anterior B;
 - el estabilizador calcáneo D;
 - los cinco radios del pie; primer radio I, segundo radio II, etc.
+
 2. Para aumentar la rigidez de la parte de la pierna de la pieza A, dos tiras del mismo cartón pueden reforzarla si se pegan en paralelo a sus dos bordes.
 
 ## Montaje (Lámina V):
@@ -7156,8 +7158,6 @@ Fig. 6
 Fig. 8
 
 <!-- PAGE_NUMBER: 316 -->
-
-
 
 <!-- PAGE_NUMBER: 317 -->
 
