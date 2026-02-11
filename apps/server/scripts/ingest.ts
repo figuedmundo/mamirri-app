@@ -126,15 +126,16 @@ async function bootstrap() {
 
       if (useBatchApi) {
         console.log(
-          `   ⏳ Batch job submitted. Skipping atomic backup until completion.`,
+          `   ⏳ Batch job submitted. File stays in data/markdowns/ until batch completes.`,
+        );
+        console.log(
+          `   Run 'pnpm knowledge:batch-status' to check progress and commit when ready.`,
         );
       } else if (dryRun) {
         console.log(`   [DRY RUN] Skipping atomic backup creation`);
-      }
-
-      // Archive the markdown file
-      const newAbsPath = path.join(booksDir, file);
-      if (!dryRun) {
+      } else {
+        // Archive the markdown file (only for real-time ingestion)
+        const newAbsPath = path.join(booksDir, file);
         fs.renameSync(filePath, newAbsPath);
         console.log(`   📦 Archived MD to: data/books/${file}`);
 
@@ -143,9 +144,6 @@ async function bootstrap() {
           data: { filePath: `data/books/${file}` },
         });
         console.log(`   🗂️ Updated Document path in database`);
-      } else {
-        console.log(`   [DRY RUN] Would archive MD to: data/books/${file}`);
-        console.log(`   [DRY RUN] Would update Document path in database`);
       }
 
       successCount++;

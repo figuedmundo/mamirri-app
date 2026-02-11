@@ -75,7 +75,7 @@ export interface VoyageBatchCreateRequest {
     model: string;
     input_type?: 'document' | 'query';
     output_dimension?: number;
-    output_dtype?: 'float32' | 'uint8';
+    output_dtype?: 'float' | 'int8' | 'uint8' | 'binary' | 'ubinary';
   };
   completion_window?: string; // e.g., "12h"
   metadata?: Record<string, any>;
@@ -188,7 +188,7 @@ export class VoyageEmbeddingService {
       this.configService.get<number>('voyage.rateLimitTpm') || 1000000;
 
     this.logger.log(
-      `VoyageEmbeddingService configured with rate limits: ${this.rateLimitRpm} RPM, ${this.rateLimitTpm} TPM`,
+      `VoyageEmbeddingService initialized (real-time: ${this.rateLimitRpm} RPM/${this.rateLimitTpm} TPM | batch: ${this.jobFileLimit.toLocaleString()} inputs max)`,
     );
   }
 
@@ -624,7 +624,7 @@ export class VoyageEmbeddingService {
       inputType?: 'document' | 'query';
       completionWindow?: string;
       outputDimension?: number;
-      outputDtype?: 'float32' | 'uint8';
+      outputDtype?: 'float' | 'int8' | 'uint8' | 'binary' | 'ubinary';
       dryRun?: boolean;
     } = {},
   ): Promise<string> {
@@ -648,12 +648,8 @@ export class VoyageEmbeddingService {
         .map((item) =>
           JSON.stringify({
             custom_id: item.id,
-            method: 'POST',
-            url: '/v1/embeddings',
             body: {
               input: [item.text],
-              model: options.model || this.documentModel,
-              input_type: options.inputType || 'document',
             },
           }),
         )
@@ -705,7 +701,7 @@ export class VoyageEmbeddingService {
           model: options.model || this.documentModel,
           input_type: options.inputType || 'document',
           output_dimension: options.outputDimension || this.outputDimension,
-          output_dtype: options.outputDtype || 'float32',
+          output_dtype: options.outputDtype || 'float',
         },
         completion_window: options.completionWindow || '12h',
       };

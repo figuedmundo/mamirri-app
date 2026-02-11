@@ -407,7 +407,7 @@ export class KnowledgeBaseService {
     useSemanticChunking: boolean = false,
     useBatchApi: boolean = false,
     dryRun: boolean = false,
-  ): Promise<{ id: string }> {
+  ): Promise<{ id: string; staged?: boolean; stagingFilePath?: string }> {
     const existingDoc = await (this.prisma as any).document.findFirst({
       where: { title: metadata.title },
     });
@@ -427,7 +427,7 @@ export class KnowledgeBaseService {
 
     let documentId = existingDoc?.id || randomUUID();
 
-    if (!dryRun) {
+    if (!dryRun && !useBatchApi) {
       if (!existingDoc) {
         const document = await (this.prisma as any).document.create({
           data: {
@@ -439,9 +439,13 @@ export class KnowledgeBaseService {
         });
         documentId = document.id;
       }
-    } else {
+    } else if (dryRun) {
       this.logger.log(
         `[DRY RUN] Simulating document creation (ID: ${documentId})`,
+      );
+    } else if (useBatchApi) {
+      this.logger.log(
+        `[BATCH MODE] Document will be created after batch succeeds (ID: ${documentId})`,
       );
     }
 
@@ -509,52 +513,51 @@ export class KnowledgeBaseService {
 
       if (useBatchApi) {
         this.logger.log(
-          `Submitting ${chunks.length + parentChunks.length} total chunks to Voyage Batch API...`,
+          `Preparing ${chunks.length + parentChunks.length} total chunks for Voyage Batch API...`,
         );
 
         const batchInputs: { id: string; text: string }[] = [];
-        const parentIds: string[] = [];
+        const parentChunkData: {
+          id: string;
+          content: string;
+          pageNumber: number;
+        }[] = [];
+        const childChunkData: {
+          content: string;
+          pageNumber: number;
+          parentIndex: number;
+        }[] = [];
 
-        // Placeholder zero-vector (1024 dimensions) to satisfy NOT NULL constraint
-        // This will be overwritten by the batch status job later
-        const placeholderVector = `[${new Array(1024).fill(0).join(',')}]`;
-
+        // Prepare parent chunks with IDs
         for (const chunk of parentChunks) {
           const id = randomUUID();
-          parentIds.push(id);
+          parentChunkData.push({
+            id,
+            content: chunk.content,
+            pageNumber: chunk.pageNumber,
+          });
           batchInputs.push({ id, text: chunk.content });
-
-          if (!dryRun) {
-            await (this.prisma as any).$executeRaw`
-            INSERT INTO embeddings (id, content, "pageNumber", "documentId", "parentContent", vector)
-            VALUES (${id}::uuid, ${chunk.content}, ${chunk.pageNumber}, ${documentId}, ${chunk.content}, ${placeholderVector}::vector)
-          `;
-          }
         }
 
+        // Prepare child chunks with parent references
         for (let i = 0; i < chunks.length; i++) {
           const chunk = chunks[i];
           const id = randomUUID();
 
-          let parentId: string | null = null;
-          let parentContent: string | null = null;
-
+          let parentIndex: number | null = null;
           if (parentChunks.length > 0) {
-            const parentIndex = Math.floor(i / this.chunksPerParent);
-            if (parentIndex < parentIds.length) {
-              parentId = parentIds[parentIndex];
-              parentContent = parentChunks[parentIndex].content;
+            parentIndex = Math.floor(i / this.chunksPerParent);
+            if (parentIndex >= parentChunkData.length) {
+              parentIndex = null;
             }
           }
 
+          childChunkData.push({
+            content: chunk.content,
+            pageNumber: chunk.pageNumber,
+            parentIndex: parentIndex !== null ? parentIndex : -1,
+          });
           batchInputs.push({ id, text: chunk.content });
-
-          if (!dryRun) {
-            await (this.prisma as any).$executeRaw`
-            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-            VALUES (gen_random_uuid(), ${chunk.content}, ${chunk.pageNumber}, ${documentId}, ${placeholderVector}::vector, ${parentId}::uuid, ${parentContent})
-          `;
-          }
         }
 
         if (dryRun) {
@@ -624,8 +627,33 @@ export class KnowledgeBaseService {
 
           this.logger.log(`[DRY RUN] Would submit batch job to Voyage API`);
           this.logger.log(`[DRY RUN] Would track job in batch-jobs.json`);
-          return { id: documentId };
+          return { id: documentId, staged: true };
         }
+
+        // Create staging file with all data needed for later commit
+        const stagingDir = path.resolve(process.cwd(), 'data/batch-staging');
+        if (!fs.existsSync(stagingDir)) {
+          fs.mkdirSync(stagingDir, { recursive: true });
+        }
+
+        const sanitizedTitle = metadata.title
+          .replace(/[^a-z0-9]/gi, '_')
+          .toLowerCase();
+        const stagingFileName = `${sanitizedTitle}_${Date.now()}.json`;
+        const stagingFilePath = path.join(stagingDir, stagingFileName);
+
+        const stagingData = {
+          metadata,
+          sourceFilePath: filePath,
+          parentChunks: parentChunkData,
+          childChunks: childChunkData,
+          batchInputs,
+          chunksPerParent: this.chunksPerParent,
+          timestamp: new Date().toISOString(),
+        };
+
+        fs.writeFileSync(stagingFilePath, JSON.stringify(stagingData, null, 2));
+        this.logger.log(`Staging data written to: ${stagingFilePath}`);
 
         const batchId = await this.voyageEmbeddingService.createBatchJob(
           batchInputs,
@@ -644,6 +672,7 @@ export class KnowledgeBaseService {
           status: 'pending',
           chunkCount: batchInputs.length,
           timestamp: new Date().toISOString(),
+          stagingFilePath,
         };
 
         const batchJobsFile = path.resolve(
@@ -671,7 +700,10 @@ export class KnowledgeBaseService {
         fs.writeFileSync(batchJobsFile, JSON.stringify(batchJobs, null, 2));
 
         this.logger.log(`Batch job tracked in ${batchJobsFile}`);
-        return { id: documentId };
+        this.logger.log(
+          `⚠️  Book will be committed to DB only after batch succeeds`,
+        );
+        return { id: documentId, staged: true, stagingFilePath };
       }
 
       if (dryRun) {

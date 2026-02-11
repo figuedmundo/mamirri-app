@@ -10,8 +10,42 @@
   {
     "batchId": "batch-7vYXgwDH716JA8KvZ3MB1wajbqRBPhend39cu",
     "bookTitle": "Anatomía Humana",
-    "status": "pending",
+    "status": "failed",
     "chunkCount": 1326,
-    "timestamp": "2026-02-11T11:02:36.544Z"
+    "timestamp": "2026-02-11T11:02:36.544Z",
+    "failedAt": "2026-02-11T11:39:56.428Z"
+  },
+  {
+    "batchId": "batch-7vYXhmDFRVMFP2rJ9Hz3PGQp3Zd5NnvaeYRsH",
+    "bookTitle": "Anatomía Humana",
+    "status": "failed",
+    "chunkCount": 1326,
+    "timestamp": "2026-02-11T12:19:14.407Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batch-staging/anatom_a_humana_1770812350470.json",
+    "failedAt": "2026-02-11T13:04:04.804Z",
+    "error": "All 1326 requests failed"
+  },
+  {
+    "batchId": "batch-7vYXixdiSpk6f6YFBM9ub7deGq9WiRAD2PLC2",
+    "bookTitle": "Anatomía Humana",
+    "status": "failed",
+    "chunkCount": 1326,
+    "timestamp": "2026-02-11T13:20:26.053Z",
+    "failedAt": "2026-02-11T13:45:45.848Z",
+    "error": "All 1326 requests failed"
+  },
+  {
+    "batchId": "batch-7vYXjJxTYtgorYv4v6o8UvJXjVRnU5NKtyRxm",
+    "bookTitle": "Anatomía Humana",
+    "status": "completed",
+    "chunkCount": 1326,
+    "timestamp": "2026-02-11T13:48:48.726Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batch-staging/anatom_a_humana_1770817724508.json",
+    "documentId": "9e06a3ba-e955-447c-a3a9-ccac1614b26b",
+    "completedAt": "2026-02-11T14:06:04.875Z",
+    "stats": {
+      "success": 1326,
+      "errors": 0
+    }
   }
 ]
