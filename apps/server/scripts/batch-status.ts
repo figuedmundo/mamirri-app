@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import { NestFactory } from '@nestjs/core';
 import { Module, Logger } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PrismaClient } from '@prisma/client';
+import { PrismaService } from '../src/prisma/prisma.service';
 
 // Load env
 const envPath = path.resolve(__dirname, '../../../.env');
@@ -23,14 +23,14 @@ import { VoyageEmbeddingService } from '../src/modules/knowledge-base/services/v
       load: [voyageConfig],
     }),
   ],
-  providers: [VoyageEmbeddingService],
+  providers: [VoyageEmbeddingService, PrismaService],
 })
 class BatchStatusAppModule {}
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(BatchStatusAppModule);
   const voyageService = app.get(VoyageEmbeddingService);
-  const prisma = new PrismaClient();
+  const prisma = app.get(PrismaService);
   const logger = new Logger('BatchStatus');
 
   const batchJobsFile = path.resolve(__dirname, '../data/batch-jobs.json');
@@ -137,7 +137,6 @@ async function bootstrap() {
     }
   }
 
-  await prisma.$disconnect();
   await app.close();
 }
 

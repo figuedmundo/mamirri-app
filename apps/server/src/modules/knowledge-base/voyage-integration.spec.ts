@@ -72,7 +72,7 @@ describe('VoyageIntegration', () => {
 
     await service.ingestFile('test.pdf');
 
-    expect(voyageService.generateDocumentEmbedding).toHaveBeenCalled();
+    expect(voyageService.generateDocumentEmbeddingsBatch).toHaveBeenCalled();
     // Verify it uses document embedding (voyage-4-large)
     expect(mockPrisma.$executeRaw).toHaveBeenCalledWith(
       expect.arrayContaining([expect.stringContaining('vector')]),
@@ -95,7 +95,7 @@ describe('VoyageIntegration', () => {
 
   it('should use asymmetric retrieval (query model for search)', async () => {
     // This is implicitly tested by generateQueryEmbedding being called in findSimilar
-    // and generateDocumentEmbedding being called in ingestFile
+    // and generateDocumentEmbeddingsBatch being called in ingestFile
     await service.findSimilar('query');
     expect(voyageService.generateQueryEmbedding).toHaveBeenCalled();
   });

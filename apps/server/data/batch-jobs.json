@@ -2,8 +2,16 @@
   {
     "batchId": "batch-7vYXFX68KZCpvuorp1qz67xLWsfsyhcMaSwGo",
     "bookTitle": "Anatomía Humana",
+    "status": "failed",
+    "chunkCount": 1326,
+    "timestamp": "2026-02-11T00:27:25.255Z",
+    "failedAt": "2026-02-11T09:46:41.317Z"
+  },
+  {
+    "batchId": "batch-7vYXgwDH716JA8KvZ3MB1wajbqRBPhend39cu",
+    "bookTitle": "Anatomía Humana",
     "status": "pending",
     "chunkCount": 1326,
-    "timestamp": "2026-02-11T00:27:25.255Z"
+    "timestamp": "2026-02-11T11:02:36.544Z"
   }
 ]

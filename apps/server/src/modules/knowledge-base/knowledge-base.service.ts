@@ -630,7 +630,6 @@ export class KnowledgeBaseService {
         const batchId = await this.voyageEmbeddingService.createBatchJob(
           batchInputs,
           {
-            model: 'voyage-4-large',
             inputType: 'document',
           },
         );

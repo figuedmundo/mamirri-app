@@ -645,7 +645,18 @@ export class VoyageEmbeddingService {
 
     try {
       const jsonlContent = inputs
-        .map((item) => JSON.stringify(item))
+        .map((item) =>
+          JSON.stringify({
+            custom_id: item.id,
+            method: 'POST',
+            url: '/v1/embeddings',
+            body: {
+              input: [item.text],
+              model: options.model || this.documentModel,
+              input_type: options.inputType || 'document',
+            },
+          }),
+        )
         .join('\n');
       fs.writeFileSync(filePath, jsonlContent, 'utf-8');
 
@@ -856,12 +867,18 @@ export class VoyageEmbeddingService {
 
     for (const line of lines) {
       try {
-        const result = JSON.parse(line) as VoyageEmbeddingResult;
+        const result = JSON.parse(line);
 
-        if (result.embedding && result.embedding.length > 0) {
-          embeddings.set(result.id, result.embedding);
-        } else if ((result as any).error) {
-          errors.set(result.id, (result as any).error);
+        if (result.response?.body?.data?.length > 0) {
+          const embeddingData = result.response.body.data;
+          embeddings.set(result.custom_id, embeddingData[0].embedding);
+        } else if (result.error) {
+          errors.set(
+            result.custom_id,
+            result.error.message || JSON.stringify(result.error),
+          );
+        } else if (result.embedding?.length > 0) {
+          embeddings.set(result.id || result.custom_id, result.embedding);
         }
       } catch (error) {
         this.logger.warn(`Failed to parse line: ${line}`, error);

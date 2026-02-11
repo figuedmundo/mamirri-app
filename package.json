@@ -14,6 +14,8 @@
     "db:deploy": "pnpm --filter server db:deploy",
     "knowledge:list": "pnpm --filter server knowledge:list",
     "knowledge:ingest": "pnpm --filter server knowledge:ingest",
+    "knowledge:batch-status": "pnpm --filter server knowledge:batch-status",
+    "knowledge:verify": "pnpm --filter server knowledge:verify",
     "knowledge:convert": "pnpm --filter server knowledge:convert",
     "knowledge:search": "pnpm --filter server knowledge:search",
     "knowledge:clean": "pnpm --filter server knowledge:clean",
