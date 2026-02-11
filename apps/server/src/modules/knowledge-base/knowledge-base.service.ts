@@ -4,15 +4,9 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { VoyageEmbeddingService } from './services/voyage-embedding.service';
 import * as fs from 'fs';
 import * as path from 'path';
-import { withRetry } from '../transcription/utils/retry';
-import { promisify } from 'util';
-
-const sleep = promisify(setTimeout);
-
 import { execSync, spawn } from 'child_process';
 import { PDFParse } from 'pdf-parse';
 import { randomUUID } from 'crypto';
-import { TokenRateLimiter } from './utils/token-rate-limiter';
 
 import { Prisma } from '@prisma/client';
 import { CohereClient } from 'cohere-ai';
@@ -667,7 +661,7 @@ export class KnowledgeBaseService {
         if (fs.existsSync(batchJobsFile)) {
           try {
             batchJobs = JSON.parse(fs.readFileSync(batchJobsFile, 'utf-8'));
-          } catch (e) {
+          } catch {
             this.logger.warn(
               'Failed to parse existing batch-jobs.json, creating new one',
             );
@@ -1369,7 +1363,6 @@ export class KnowledgeBaseService {
     const pages: { pageNumber: number; content: string }[] = [];
     const pageRegex = /<!-- PAGE_NUMBER: (\d+) -->/g;
     let match;
-    const lastIndex = 0;
 
     // Handle content before the first page marker (if any)
     // Usually metadata or frontmatter, treat as page 0 or 1

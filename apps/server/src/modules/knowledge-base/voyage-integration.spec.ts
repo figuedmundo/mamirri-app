@@ -3,7 +3,6 @@ import { KnowledgeBaseService } from './knowledge-base.service';
 import { VoyageEmbeddingService } from './services/voyage-embedding.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
-import * as fs from 'fs';
 
 jest.mock('fs', () => ({
   ...jest.requireActual('fs'),

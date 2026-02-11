@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { VoyageAIClient } from 'voyageai';
-import { createHash, randomUUID } from 'crypto';
+import { createHash } from 'crypto';
 import { withRetry } from '../../transcription/utils/retry';
 import FormData from 'form-data';
 import * as fs from 'fs';
