@@ -1,5 +1,5 @@
 ---
-title: 'Fisiología Articular: Esquemas Comentados de Mecánica Humana'
+title: Fisiología Articular
 author: A. I. Kapandji
 volume: Tomo 1
 edition: 6ª edición

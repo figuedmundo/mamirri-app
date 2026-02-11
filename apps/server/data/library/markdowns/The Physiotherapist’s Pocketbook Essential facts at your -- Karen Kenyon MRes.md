@@ -4,9 +4,7 @@ author: 'Karen Kenyon, Jonathan Kenyon'
 volume: null
 edition: Third Edition
 year: '2018'
-original_file: >-
-  The Physiotherapist’s Pocketbook Essential facts at your -- Karen Kenyon
-  MRes.pdf
+original_file: The Physiotherapist’s Pocketbook Essential facts at your -- Karen Kenyon MRes.pdf
 extraction_date: '2026-02-10T01:07:33.484Z'
 ---
 

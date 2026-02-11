@@ -329,7 +329,7 @@ export class KnowledgeBaseService {
 
           await (this.prisma as any).$executeRaw`
             INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
-            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${content.content})
+            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${content.content})
           `;
 
           if ((i + 1) % 10 === 0 || i === parentChunks.length - 1) {
@@ -373,7 +373,7 @@ export class KnowledgeBaseService {
 
         await (this.prisma as any).$executeRaw`
           INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
+          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
         `;
 
         if ((i + 1) % 50 === 0 || i === chunks.length - 1) {
@@ -589,7 +589,7 @@ export class KnowledgeBaseService {
             voyagePayload: batchInputs,
           };
 
-          const logDir = path.resolve(process.cwd(), 'data/ingestion-logs');
+          const logDir = path.resolve(process.cwd(), 'data/logs/ingestion');
           if (!fs.existsSync(logDir)) {
             fs.mkdirSync(logDir, { recursive: true });
           }
@@ -609,7 +609,7 @@ export class KnowledgeBaseService {
           // LOGGING LOGIC END
 
           // Also generate the JSONL file that would be uploaded
-          const jsonlDir = path.resolve(process.cwd(), 'data/batch-payloads');
+          const jsonlDir = path.resolve(process.cwd(), 'data/batches/payloads');
           if (!fs.existsSync(jsonlDir)) {
             fs.mkdirSync(jsonlDir, { recursive: true });
           }
@@ -626,12 +626,12 @@ export class KnowledgeBaseService {
           );
 
           this.logger.log(`[DRY RUN] Would submit batch job to Voyage API`);
-          this.logger.log(`[DRY RUN] Would track job in batch-jobs.json`);
+          this.logger.log(`[DRY RUN] Would track job in batches/jobs.json`);
           return { id: documentId, staged: true };
         }
 
         // Create staging file with all data needed for later commit
-        const stagingDir = path.resolve(process.cwd(), 'data/batch-staging');
+        const stagingDir = path.resolve(process.cwd(), 'data/batches/staging');
         if (!fs.existsSync(stagingDir)) {
           fs.mkdirSync(stagingDir, { recursive: true });
         }
@@ -677,7 +677,7 @@ export class KnowledgeBaseService {
 
         const batchJobsFile = path.resolve(
           process.cwd(),
-          'data/batch-jobs.json',
+          'data/batches/jobs.json',
         );
         let batchJobs: any[] = [];
 
@@ -691,7 +691,7 @@ export class KnowledgeBaseService {
             batchJobs = JSON.parse(fs.readFileSync(batchJobsFile, 'utf-8'));
           } catch {
             this.logger.warn(
-              'Failed to parse existing batch-jobs.json, creating new one',
+              'Failed to parse existing batches/jobs.json, creating new one',
             );
           }
         }
@@ -732,7 +732,7 @@ export class KnowledgeBaseService {
           },
         };
 
-        const logDir = path.resolve(process.cwd(), 'data/ingestion-logs');
+        const logDir = path.resolve(process.cwd(), 'data/logs/ingestion');
         if (!fs.existsSync(logDir)) {
           fs.mkdirSync(logDir, { recursive: true });
         }
@@ -779,7 +779,7 @@ export class KnowledgeBaseService {
           if (!dryRun) {
             await (this.prisma as any).$executeRaw`
             INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
-            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${documentId}, ${vectorString}::vector, ${content.content})
+            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${documentId}::uuid, ${vectorString}::vector, ${content.content})
           `;
           }
 
@@ -826,7 +826,7 @@ export class KnowledgeBaseService {
         if (!dryRun) {
           await (this.prisma as any).$executeRaw`
           INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${documentId}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
+          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${documentId}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
         `;
         }
 
@@ -993,7 +993,7 @@ export class KnowledgeBaseService {
     let whereClause = Prisma.sql``;
 
     if (filters?.documentIds?.length) {
-      whereClause = Prisma.sql`${whereClause} AND e."documentId" = ANY(${filters.documentIds}::text[])`;
+      whereClause = Prisma.sql`${whereClause} AND e."documentId" = ANY(${filters.documentIds}::uuid[])`;
     }
 
     if (filters?.minYear) {
@@ -1038,7 +1038,7 @@ export class KnowledgeBaseService {
     let whereClause = Prisma.sql``;
 
     if (filters?.documentIds?.length) {
-      whereClause = Prisma.sql`${whereClause} AND e."documentId" = ANY(${filters.documentIds}::text[])`;
+      whereClause = Prisma.sql`${whereClause} AND e."documentId" = ANY(${filters.documentIds}::uuid[])`;
     }
 
     if (filters?.minYear) {

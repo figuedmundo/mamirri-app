@@ -36,22 +36,18 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
-
-batch-payloads/
-ingestion-logs/
-.docs/
-*.pdf
 *.log
-*.epub
 
 playwright-report/
 test-results/
 
 # App Data
-apps/server/data/books/
-backups/*.sql*
-apps/server/data/archive/
-*.sql.gz
+apps/server/data/library/
+apps/server/data/batches/
+apps/server/data/logs/
+backups/*
+!backups/.gitkeep
+.tmp/
 
 # Python
 __pycache__/

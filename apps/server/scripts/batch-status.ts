@@ -74,7 +74,7 @@ async function bootstrap() {
   const prisma = app.get(PrismaService);
   const logger = new Logger('BatchStatus');
 
-  const batchJobsFile = path.resolve(__dirname, '../data/batch-jobs.json');
+  const batchJobsFile = path.resolve(__dirname, '../data/batches/jobs.json');
 
   if (!fs.existsSync(batchJobsFile)) {
     logger.log('No batch jobs file found. No pending jobs.');
@@ -94,7 +94,7 @@ async function bootstrap() {
   logger.log(`Found ${pendingJobs.length} pending batch jobs.`);
 
   const serverDir = path.resolve(__dirname, '..');
-  const booksDir = path.join(serverDir, 'data/books');
+  const booksDir = path.join(serverDir, 'data/library/markdowns');
 
   if (!fs.existsSync(booksDir)) {
     fs.mkdirSync(booksDir, { recursive: true });
@@ -179,7 +179,7 @@ async function bootstrap() {
             logger.log(`Cleaned up staging file: ${job.stagingFilePath}`);
           }
 
-          logger.log('Book remains in data/markdowns/ for retry');
+          logger.log('Book remains in data/library/temporal/ for retry');
           logger.log(
             'The JSON format issue has been fixed - please re-run ingestion',
           );
@@ -248,7 +248,7 @@ async function bootstrap() {
               try {
                 await (prisma as any).$executeRaw`
                   INSERT INTO embeddings (id, content, "pageNumber", "documentId", "parentContent", vector)
-                  VALUES (${parent.id}::uuid, ${parent.content}, ${parent.pageNumber}, ${document.id}, ${parent.content}, ${vectorString}::vector)
+                  VALUES (${parent.id}::uuid, ${parent.content}, ${parent.pageNumber}, ${document.id}::uuid, ${parent.content}, ${vectorString}::vector)
                 `;
                 successCount++;
               } catch (err: any) {
@@ -284,7 +284,7 @@ async function bootstrap() {
               try {
                 await (prisma as any).$executeRaw`
                   INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-                  VALUES (gen_random_uuid(), ${child.content}, ${child.pageNumber}, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
+                  VALUES (gen_random_uuid(), ${child.content}, ${child.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
                 `;
                 successCount++;
               } catch (err: any) {
@@ -302,12 +302,18 @@ async function bootstrap() {
 
           await (prisma as any).document.update({
             where: { id: document.id },
-            data: { filePath: 'data/books/' + fileName },
+            data: { filePath: 'data/library/markdowns/' + fileName },
           });
           logger.log('Updated document filePath in database');
 
-          fs.unlinkSync(job.stagingFilePath);
-          logger.log('Cleaned up staging file: ' + job.stagingFilePath);
+          if (errorCount === 0) {
+            fs.unlinkSync(job.stagingFilePath);
+            logger.log('Cleaned up staging file: ' + job.stagingFilePath);
+          } else {
+            logger.warn(
+              'Keeping staging file due to ' + errorCount + ' errors',
+            );
+          }
 
           job.documentId = document.id;
         } else {
@@ -338,8 +344,14 @@ async function bootstrap() {
             errorCount,
         );
 
-        job.status = 'completed';
-        job.completedAt = new Date().toISOString();
+        if (successCount > 0 || (successCount === 0 && errorCount === 0)) {
+          job.status = 'completed';
+          job.completedAt = new Date().toISOString();
+        } else {
+          job.status = 'failed';
+          job.failedAt = new Date().toISOString();
+          job.error = 'Database commit failed - see logs';
+        }
         job.stats = {
           success: successCount,
           errors: errorCount + (results.errors?.size || 0),
@@ -382,7 +394,7 @@ async function bootstrap() {
           logger.log('Cleaned up staging file: ' + job.stagingFilePath);
         }
 
-        logger.log('Book remains in data/markdowns/ for retry');
+        logger.log('Book remains in data/library/temporal/ for retry');
 
         job.status = batchStatus.status;
         job.failedAt = new Date().toISOString();

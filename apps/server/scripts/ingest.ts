@@ -73,8 +73,8 @@ async function bootstrap() {
   const prisma = app.get(PrismaService);
 
   const serverDir = path.resolve(__dirname, '..');
-  const markdownsDir = path.join(serverDir, 'data/markdowns');
-  const booksDir = path.join(serverDir, 'data/books');
+  const markdownsDir = path.join(serverDir, 'data/library/temporal');
+  const booksDir = path.join(serverDir, 'data/library/markdowns');
 
   if (!fs.existsSync(markdownsDir)) {
     console.log(`Creating markdown staging directory at ${markdownsDir}`);
@@ -115,33 +115,49 @@ async function bootstrap() {
       }
 
       // Call the service with parsed content and metadata
-      const { id: docId } = await knowledgeBaseService.ingestMarkdown(
+      const result = await knowledgeBaseService.ingestMarkdown(
         parsed.content,
         metadata,
-        `data/markdowns/${file}`, // Use staging path as the "file path" reference
+        `data/library/temporal/${file}`, // Use staging path as the "file path" reference
         useSemanticChunking,
         useBatchApi,
         dryRun,
       );
 
+      const docId = result.id;
+      const staged = (result as any).staged;
+
       if (useBatchApi) {
-        console.log(
-          `   ⏳ Batch job submitted. File stays in data/markdowns/ until batch completes.`,
-        );
-        console.log(
-          `   Run 'pnpm knowledge:batch-status' to check progress and commit when ready.`,
-        );
+        if (staged) {
+          console.log(
+            `   ⏳ Batch job submitted. File stays in data/library/temporal/ until batch completes.`,
+          );
+          console.log(
+            `   Run 'pnpm knowledge:batch-status' to check progress and commit when ready.`,
+          );
+        } else {
+          console.log(
+            `   ⏭️  Document already exists. Moving to library/markdowns/`,
+          );
+          const newAbsPath = path.join(booksDir, file);
+          fs.renameSync(filePath, newAbsPath);
+        }
       } else if (dryRun) {
         console.log(`   [DRY RUN] Skipping atomic backup creation`);
       } else {
         // Archive the markdown file (only for real-time ingestion)
         const newAbsPath = path.join(booksDir, file);
+        if (fs.existsSync(newAbsPath)) {
+          console.log(
+            `   ⚠️  File already exists in library/markdowns/. Overwriting.`,
+          );
+        }
         fs.renameSync(filePath, newAbsPath);
-        console.log(`   📦 Archived MD to: data/books/${file}`);
+        console.log(`   📦 Archived MD to: data/library/markdowns/${file}`);
 
         await prisma.document.update({
           where: { id: docId },
-          data: { filePath: `data/books/${file}` },
+          data: { filePath: `data/library/markdowns/${file}` },
         });
         console.log(`   🗂️ Updated Document path in database`);
       }

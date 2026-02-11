@@ -5,7 +5,7 @@ import * as path from 'path';
 const prisma = new PrismaClient();
 
 async function verifyIngestion() {
-  const markdownDir = path.resolve(__dirname, '../data/markdowns');
+  const markdownDir = path.resolve(__dirname, '../data/library/markdowns');
   const files = fs.readdirSync(markdownDir).filter((f) => f.endsWith('.md'));
 
   console.log(`\n🔍 Verifying ${files.length} books in knowledge base...\n`);

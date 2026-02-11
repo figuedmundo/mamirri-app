@@ -24,30 +24,30 @@ The ingestion process is decoupled into two steps to ensure high-quality data an
 
 First, we convert raw PDF files into a clean, reviewable Markdown format.
 
-1.  **Input**: Place PDF files in `apps/server/data/pdfs/`.
+1.  **Input**: Place PDF files in `apps/server/data/library/temporal/`.
 2.  **Extraction**: The system uses **IBM Docling** to extract text from the PDF. This tool uses computer vision to preserve complex layouts, tables, and headers.
 3.  **Metadata Extraction**: **Gemini 3 Flash** analyzes the first few pages to extract:
     - Title
     - Author
     - Volume / Edition
     - Publication Year
-4.  **Staging**: The result is saved as a Markdown file in `apps/server/data/markdowns/`.
+4.  **Staging**: The result is saved as a Markdown file in `apps/server/data/library/temporal/`.
     - **Frontmatter**: A YAML header containing the extracted metadata (which you can manually edit if needed).
     - **Content**: The full text of the book in Markdown.
-5.  **Archive**: The original PDF is moved to `apps/server/data/archive/pdfs/`.
+5.  **Archive**: The original PDF is moved to `apps/server/data/library/originals/`.
 
 #### Step 2: Ingestion (Markdown → Vector DB)
 
-Once the Markdown files are in the staging area (`data/markdowns/`), they are processed into vectors.
+Once the Markdown files are in the staging area (`data/library/temporal/`), they are processed into vectors.
 
-1.  **Input**: Reads `.md` files from `apps/server/data/markdowns/`.
+1.  **Input**: Reads `.md` files from `apps/server/data/library/temporal/`.
 2.  **Chunking**: Breaks the text into chunks.
     - **Naive Chunking** (default): ~500 words with overlap.
     - **Semantic Chunking** (opt-in): Uses embeddings to find topic boundaries.
 3.  **Embedding**: Converts chunks to vectors using **Voyage AI** (`voyage-4-large`, 1024 dim).
 4.  **Storage**: Saves vectors to PostgreSQL (`pgvector`).
 5.  **Finalizing**:
-    - Moves the Markdown file to the final library folder: `apps/server/data/books/`.
+    - Moves the Markdown file to the final library folder: `apps/server/data/library/markdowns/`.
     - Updates the document's file path in the database.
 
 #### Chunking Strategy Comparison
@@ -98,7 +98,7 @@ You can manage the knowledge base using these commands from the project root:
 | `pnpm knowledge:convert`                     | (Default) High-fidelity extraction using IBM Docling OCR for complex medical textbooks.                   |
 | `pnpm knowledge:convert -- --engine=pymupdf` | Fast, rule-based extraction (legacy fallback).                                                            |
 | `pnpm knowledge:convert -- --pages=1,10`     | Converts only a specific page range (useful for testing quality).                                         |
-| `pnpm knowledge:ingest`                      | Ingests Markdown files from `data/markdowns/` into the Vector DB. (Default: naive chunking).              |
+| `pnpm knowledge:ingest`                      | Ingests Markdown files from `data/library/temporal/` into the Vector DB. (Default: naive chunking).       |
 | `pnpm knowledge:batch-status`                | Checks status of async batch ingestion jobs and downloads results when ready.                             |
 | `pnpm knowledge:search "query"`              | Performs a semantic search across all ingested books.                                                     |
 | `pnpm knowledge:list`                        | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.                  |
@@ -144,7 +144,7 @@ Creates a standalone backup of a **single book** and its associated embeddings. 
 pnpm knowledge:export 550e8400-e29b-41d4-a716-446655440000
 
 # Export using the original File Path
-pnpm knowledge:export data/books/anatomy_atlas.md
+pnpm knowledge:export data/library/markdowns/anatomy_atlas.md
 ```
 
 _Creates: `backups/library/[Book_Title].sql.gz`_
@@ -165,12 +165,12 @@ _Note: Full restores will overwrite current data, while library-only imports wil
 
 ### Adding books to the library
 
-1.  **Place PDFs**: Put your PDF files in `apps/server/data/pdfs/`.
+1.  **Place PDFs**: Put your PDF files in `apps/server/data/library/temporal/`.
 2.  **Convert**: Run the conversion script to generate Markdown.
     ```bash
     pnpm knowledge:convert
     ```
-3.  **Review**: Check the generated files in `apps/server/data/markdowns/`. You can edit the YAML frontmatter (Title, Author, Year) if needed.
+3.  **Review**: Check the generated files in `apps/server/data/library/temporal/`. You can edit the YAML frontmatter (Title, Author, Year) if needed.
 4.  **Ingest**: Run the ingestion command to vectorize.
 
     ```bash

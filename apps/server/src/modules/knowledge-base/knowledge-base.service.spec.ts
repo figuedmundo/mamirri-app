@@ -116,7 +116,7 @@ describe('KnowledgeBaseService', () => {
     it('should ingest a file and create document and embeddings', async () => {
       mockPrisma.document.findUnique.mockResolvedValue(null);
 
-      await service.ingestFile('data/books/test.pdf');
+      await service.ingestFile('data/library/markdowns/test.pdf');
 
       expect((prisma as any).document.create).toHaveBeenCalled();
       expect(prisma.$executeRaw).toHaveBeenCalled();
@@ -125,7 +125,7 @@ describe('KnowledgeBaseService', () => {
     it('should skip already ingested files', async () => {
       mockPrisma.document.findUnique.mockResolvedValue({ id: 'existing' });
 
-      await service.ingestFile('data/books/test.pdf');
+      await service.ingestFile('data/library/markdowns/test.pdf');
 
       expect((prisma as any).document.create).not.toHaveBeenCalled();
     });
@@ -135,7 +135,7 @@ describe('KnowledgeBaseService', () => {
       const chunkTextSpy = jest.spyOn(service as any, 'chunkText');
       const semanticChunkSpy = jest.spyOn(service as any, 'semanticChunk');
 
-      await service.ingestFile('data/books/test.pdf');
+      await service.ingestFile('data/library/markdowns/test.pdf');
 
       expect(chunkTextSpy).toHaveBeenCalled();
       expect(semanticChunkSpy).not.toHaveBeenCalled();
@@ -147,7 +147,7 @@ describe('KnowledgeBaseService', () => {
         .spyOn(service as any, 'semanticChunk')
         .mockResolvedValue({ chunks: ['chunk1'], parentChunks: ['parent1'] });
 
-      await service.ingestFile('data/books/test.pdf', true);
+      await service.ingestFile('data/library/markdowns/test.pdf', true);
 
       expect(semanticChunkSpy).toHaveBeenCalled();
     }, 30000);

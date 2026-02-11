@@ -1,10 +1,6 @@
 ---
-title: >-
-  Manual Mobilization of the Joints: The Kaltenborn Method of Joint Examination
-  and Treatment, Volume II: The Spine
-author: >-
-  Freddy M. Kaltenborn, Olaf Evjenth, Traudi Baldauf Kaltenborn, Dennis Morgan,
-  Eileen Vollowitz
+title: 'Manual Mobilization of the Joints: The Kaltenborn Method of Joint Examination and Treatment'
+author: Freddy M. Kaltenborn 
 volume: Volume II
 edition: 4th Edition
 year: '2003'

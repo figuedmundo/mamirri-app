@@ -3,7 +3,7 @@ title: 'Neurología ortopédica: Exploración diagnóstica de los niveles medula
 author: 'J.D. Hoppenfeld, Stanley Hoppenfeld'
 volume: null
 edition: 2.ª edición
-year: null
+year: '2017'
 original_file: Neurología ortopédica; Hoppenfeld.pdf
 extraction_date: '2026-02-09T23:54:40.955Z'
 ---

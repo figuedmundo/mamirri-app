@@ -173,7 +173,7 @@ pnpm --filter server knowledge:export
 pnpm --filter server knowledge:export 550e8400-e29b-41d4-a716-446655440000
 
 # Using File Path
-pnpm --filter server knowledge:export data/books/anatomy_atlas.md
+pnpm --filter server knowledge:export data/library/markdowns/anatomy_atlas.md
 ```
 
 ### CI/CD Pipelines

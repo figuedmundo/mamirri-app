@@ -213,7 +213,7 @@ Total Tasks: 6 Task Groups (Backend Infrastructure)
     - Verify embeddings table is empty
     - Keep document metadata for reference
   - [x] 6.3 Re-ingest all documents with new chunking
-    - Move archived books back to `data/books/`
+    - Move archived books back to `data/library/originals/`
     - Run `pnpm knowledge:ingest`
     - Monitor for rate limit errors
     - Expect 2-3x longer ingestion time due to semantic chunking

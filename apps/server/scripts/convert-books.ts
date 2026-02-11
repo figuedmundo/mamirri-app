@@ -33,10 +33,10 @@ async function bootstrap() {
   const knowledgeBaseService = app.get(KnowledgeBaseService);
 
   const serverDir = path.resolve(__dirname, '..');
-  const pdfsDir = path.join(serverDir, 'data/pdfs');
-  const markdownsDir = path.join(serverDir, 'data/markdowns');
-  const archiveDir = path.join(serverDir, 'data/archive');
-  const booksDir = path.join(serverDir, 'data/books');
+  const pdfsDir = path.join(serverDir, 'data/library/temporal');
+  const markdownsDir = path.join(serverDir, 'data/library/temporal');
+  const archiveDir = path.join(serverDir, 'data/library/originals');
+  const booksDir = path.join(serverDir, 'data/library/temporal');
 
   if (!fs.existsSync(pdfsDir)) {
     console.log(`Creating PDF input directory at ${pdfsDir}`);
@@ -97,7 +97,7 @@ async function bootstrap() {
   let failureCount = 0;
 
   for (const file of files) {
-    const relFilePath = `data/pdfs/${file}`;
+    const relFilePath = `data/library/temporal/${file}`;
     const absFilePath = path.join(serverDir, relFilePath);
     const fileNameNoExt = file.replace(/\.pdf$/i, '');
 
@@ -135,13 +135,13 @@ async function bootstrap() {
       const stagingPath = path.join(markdownsDir, `${fileNameNoExt}.md`);
       fs.writeFileSync(stagingPath, fileContent);
       console.log(
-        `   ✅ Saved markdown to: data/markdowns/${fileNameNoExt}.md`,
+        `   ✅ Saved markdown to: data/library/temporal/${fileNameNoExt}.md`,
       );
 
       // 5. Archive Original PDF
       const newAbsPath = path.join(archiveDir, file);
       fs.renameSync(absFilePath, newAbsPath);
-      console.log(`   📦 Archived PDF to: data/archive/${file}`);
+      console.log(`   📦 Archived PDF to: data/library/originals/${file}`);
 
       successCount++;
     } catch (error) {

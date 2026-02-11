@@ -1,10 +1,8 @@
 ---
-title: >-
-  Daniels y Worthingham. Técnicas de balance muscular: Técnicas de exploración
-  manual y pruebas funcionales
-author: 'Dale Avers, Marybeth Brown'
+title: Daniels y Worthingham. Técnicas de balance muscular
+author:  Helen J. Hislop, Marybeth Brown, Dale Avers, Elsevier
 volume: null
-edition: 10.ª edición
+edition: 10th edición
 year: '2020'
 original_file: Daniels y Worthingham_ Técnicas de balance muscular - 10a edición.pdf
 extraction_date: '2026-02-09T20:29:49.529Z'

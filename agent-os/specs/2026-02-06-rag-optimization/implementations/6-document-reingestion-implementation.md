@@ -44,7 +44,7 @@ DELETE FROM embeddings;
 ### Step 3: Re-ingest Documents
 
 ```bash
-# Move books from archive to data/books/ if needed
+# Move books from archive to data/library/originals/ if needed
 # Then run ingestion with semantic chunking (default)
 pnpm --filter server knowledge:ingest
 ```

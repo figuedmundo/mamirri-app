@@ -1,12 +1,10 @@
 ---
-title: Fundamentals of Pain Medicine   How to Diagnose and Treat   J  D  Hoppenfeld
-author: Unknown Author
+title: 'Fundamentals of Pain Medicine: How to Diagnose and Treat Your Patients'
+author: J.D. Hoppenfeld
 volume: null
-edition: null
-year: null
-original_file: >-
-  Fundamentals of Pain Medicine _ How to Diagnose and Treat - J_ D_
-  Hoppenfeld.pdf
+edition: 1st Edition
+year: '2014'
+original_file: Fundamentals of Pain Medicine _ How to Diagnose and Treat - J_ D_Hoppenfeld.pdf
 extraction_date: '2026-02-09T23:04:47.176Z'
 ---
 

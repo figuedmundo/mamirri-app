@@ -52,7 +52,7 @@ describe('Knowledge Base Database Integration', () => {
     const documentData = {
       title: 'Test Anatomy Book',
       author: 'Dr. Test',
-      filePath: `data/books/test-anatomy-${Date.now()}.pdf`,
+      filePath: `data/library/markdowns/test-anatomy-${Date.now()}.pdf`,
     };
 
     const document = await (prisma as any).document.create({
