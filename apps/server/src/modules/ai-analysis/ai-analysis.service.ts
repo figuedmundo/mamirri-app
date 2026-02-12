@@ -243,7 +243,37 @@ export class AiAnalysisService {
           }
         } catch (hydeError) {
           this.logger.warn(
-            `HyDE generation failed, falling back to standard queries: ${hydeError.message}`,
+            `HyDE generation failed, falling back to query translation: ${hydeError.message}`,
+          );
+          // Fallback: Translate queries to English for better retrieval against English docs
+          try {
+            const [transDiagnosis, transTreatment] = await Promise.all([
+              this.translatorService.translateToEnglish(diagnosisQuery),
+              this.translatorService.translateToEnglish(treatmentQuery),
+            ]);
+            finalDiagnosisQuery = transDiagnosis;
+            finalTreatmentQuery = transTreatment;
+            this.logger.debug('Translated queries to English (HyDE fallback)');
+          } catch (transError) {
+            this.logger.warn(
+              `Translation fallback failed: ${transError.message}. Using original queries.`,
+            );
+          }
+        }
+      } else {
+        // If HyDE is disabled, we still want to translate Spanish queries to English
+        // to ensure they match the English-heavy medical library.
+        try {
+          const [transDiagnosis, transTreatment] = await Promise.all([
+            this.translatorService.translateToEnglish(diagnosisQuery),
+            this.translatorService.translateToEnglish(treatmentQuery),
+          ]);
+          finalDiagnosisQuery = transDiagnosis;
+          finalTreatmentQuery = transTreatment;
+          this.logger.debug('Translated queries to English (HyDE disabled)');
+        } catch (transError) {
+          this.logger.warn(
+            `Direct translation failed: ${transError.message}. Using original queries.`,
           );
         }
       }

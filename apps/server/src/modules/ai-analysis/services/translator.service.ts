@@ -81,7 +81,9 @@ export class TranslatorService {
 
     try {
       const model = this.genAI.getGenerativeModel({
-        model: 'gemini-3-flash',
+        model:
+          this.configService.get<string>('AI_MODEL') ||
+          'gemini-3-flash-preview',
       });
 
       const prompt = `Translate the following medical text from English to Spanish. 
@@ -112,6 +114,39 @@ ${text}`;
         language: 'en',
         wasCached: false,
       };
+    }
+  }
+
+  async translateToEnglish(text: string): Promise<string> {
+    const detectedLanguage = this.detectLanguage(text);
+
+    if (detectedLanguage === 'en') {
+      return text;
+    }
+
+    const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
+    if (!apiKey) {
+      return text;
+    }
+
+    try {
+      const model = this.genAI.getGenerativeModel({
+        model:
+          this.configService.get<string>('AI_MODEL') ||
+          'gemini-3-flash-preview',
+      });
+
+      const prompt = `Translate the following medical text from Spanish to English. 
+Preserve medical terminology accuracy. Only return the translation, no explanations.
+
+Text to translate:
+${text}`;
+
+      const result = await model.generateContent(prompt);
+      return result.response.text().trim();
+    } catch (error) {
+      this.logger.warn(`English translation failed: ${error.message}`);
+      return text;
     }
   }
 

@@ -941,8 +941,23 @@ export class KnowledgeBaseService {
       results = this.combineWithRRF(denseResults, bm25Results);
     }
 
+    // Deduplicate by parentId to avoid redundant nearby chunks
+    const seenParents = new Set<string>();
+    results = results.filter((r) => {
+      const pId = r.parentId || r.id;
+      if (seenParents.has(pId)) return false;
+      seenParents.add(pId);
+      return true;
+    });
+
+    // If no reranking, still add fullContext for consistency
+    const finalizedResults = results.slice(0, limit).map((r) => ({
+      ...r,
+      fullContext: r.parentContent || r.content,
+    }));
+
     // Apply Cross-Encoder Reranking
-    const reranked = await this.rerank(query, results, limit);
+    const reranked = await this.rerank(query, finalizedResults, limit);
     return reranked;
   }
 
@@ -970,8 +985,9 @@ export class KnowledgeBaseService {
         return {
           ...originalDoc,
           rerankScore: r.relevanceScore,
-          // Optimization: Return parent content as main content for LLM context
-          content: originalDoc.parentContent || originalDoc.content,
+          // Store parent content separately so the UI can show the specific match
+          // but the AI can still use the full context.
+          fullContext: originalDoc.parentContent || originalDoc.content,
         };
       });
     } catch (error) {
@@ -1008,6 +1024,7 @@ export class KnowledgeBaseService {
       SELECT 
         e.id,
         e.content,
+        e."parentId",
         e."parentContent",
         e."pageNumber", 
         d.title as "documentTitle",
@@ -1017,7 +1034,7 @@ export class KnowledgeBaseService {
         1 - (e.vector <=> ${vectorString}::vector) as similarity
       FROM embeddings e
       JOIN documents d ON e."documentId" = d.id
-      WHERE 1=1 ${whereClause}
+      WHERE e."parentId" IS NOT NULL ${whereClause}
       ORDER BY e.vector <=> ${vectorString}::vector
       LIMIT ${limit}
     `;
@@ -1049,21 +1066,24 @@ export class KnowledgeBaseService {
       whereClause = Prisma.sql`${whereClause} AND d.metadata->>'volume' = ${filters.volume}`;
     }
 
-    // Using plainto_tsquery for natural language query handling
+    // Using simple config for BM25 to avoid language-specific stemming issues in medical terms
+    // and better support cross-lingual exact matches where possible.
     const results: any[] = await (this.prisma as any).$queryRaw`
       SELECT 
         e.id,
         e.content,
+        e."parentId",
         e."parentContent",
         e."pageNumber",
         d.title as "documentTitle",
         d.author as "documentAuthor",
         d."filePath" as "documentFilePath",
         d.metadata as "documentMetadata",
-        ts_rank(to_tsvector('english', e.content), plainto_tsquery('english', ${query})) as "bm25Score"
+        ts_rank(to_tsvector('simple', e.content), plainto_tsquery('simple', ${query})) as "bm25Score"
       FROM embeddings e
       JOIN documents d ON e."documentId" = d.id
-      WHERE to_tsvector('english', e.content) @@ plainto_tsquery('english', ${query})
+      WHERE e."parentId" IS NOT NULL 
+      AND to_tsvector('simple', e.content) @@ plainto_tsquery('simple', ${query})
       ${whereClause}
       ORDER BY "bm25Score" DESC
       LIMIT ${limit}
