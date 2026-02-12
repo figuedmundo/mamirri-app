@@ -14,50 +14,87 @@ Think of it like an open-book exam:
 
 ## How Mamirri uses RAG
 
-The process is divided into two main phases: Ingestion and Retrieval.
+Mamirri uses a sophisticated Clinical Knowledge Engineering (CKE) approach to building its library. This process is divided into two main phases: Ingestion and Retrieval.
 
-### Phase 1: Ingestion (Building the Library)
+### Phase 1: Ingestion (Knowledge Engineering)
 
-The ingestion process is decoupled into two steps to ensure high-quality data and allow for manual review.
+The ingestion process is decoupled to ensure high-quality data and allow for **Human-in-the-Loop (HITL)** curation.
 
 #### Step 1: Conversion (PDF → Markdown)
 
 First, we convert raw PDF files into a clean, reviewable Markdown format.
 
 1.  **Input**: Place PDF files in `apps/server/data/library/temporal/`.
-2.  **Extraction**: The system uses **IBM Docling** to extract text from the PDF. This tool uses computer vision to preserve complex layouts, tables, and headers.
-3.  **Metadata Extraction**: **Gemini 3 Flash** analyzes the first few pages to extract:
-    - Title
-    - Author
-    - Volume / Edition
-    - Publication Year
+2.  **Extraction**: The system uses **IBM Docling** to extract text from the PDF.
+3.  **Metadata Extraction**: **Gemini 3 Flash** identifies the Title, Author, Volume, and Year.
 4.  **Staging**: The result is saved as a Markdown file in `apps/server/data/library/temporal/`.
-    - **Frontmatter**: A YAML header containing the extracted metadata (which you can manually edit if needed).
-    - **Content**: The full text of the book in Markdown.
-5.  **Archive**: The original PDF is moved to `apps/server/data/library/originals/`.
 
-#### Step 2: Ingestion (Markdown → Vector DB)
+#### Step 2: Human-in-the-Loop Curation (CRITICAL)
 
-Once the Markdown files are in the staging area (`data/library/temporal/`), they are processed into vectors.
+Before vectorizing the book, a human expert should review the Markdown file in `temporal/` and apply **CKE Tags**. This is the single most important step for search quality.
 
-1.  **Input**: Reads `.md` files from `apps/server/data/library/temporal/`.
-2.  **Chunking**: Breaks the text into chunks.
-    - **Naive Chunking** (default): ~500 words with overlap.
-    - **Semantic Chunking** (opt-in): Uses embeddings to find topic boundaries.
-3.  **Embedding**: Converts chunks to vectors using **Voyage AI** (`voyage-4-large`, 1024 dim).
-4.  **Storage**: Saves vectors to PostgreSQL (`pgvector`).
-5.  **Finalizing**:
-    - Moves the Markdown file to the final library folder: `apps/server/data/library/markdowns/`.
-    - Updates the document's file path in the database.
+##### A. File Archetypes (The Book's Role)
 
-#### Chunking Strategy Comparison
+Add a YAML header at the very top of the file to define the book's clinical role. This affects search weighting (e.g., Practical books get boosted for "How-to" questions).
 
-| Strategy              | Embeddings per Book | API Quota Needed        | Best For                               |
-| --------------------- | ------------------- | ----------------------- | -------------------------------------- |
-| **Naive** (default)   | ~800-1,000          | Fits free tier (1K/day) | Most use cases, hobby projects         |
-| **Semantic** (opt-in) | ~25,000-30,000      | Requires paid tier      | Production with high-quality retrieval |
+```yaml
+---
+title: "The Physiotherapist's Pocketbook"
+author: 'Kenyon & Kenyon'
+archetype: PRACTICAL # OPTIONS: PRACTICAL, ACADEMIC, ATLAS, CASE_STUDY, GENERAL
+specialty: physiotherapy
+---
+```
 
-**Why the difference?** Semantic chunking embeds every sentence to calculate similarity scores between adjacent sentences, then groups similar sentences into coherent chunks. This produces better topical boundaries but consumes ~30x more API quota.
+| Archetype      | Description                                       | AI Search Weight                                |
+| :------------- | :------------------------------------------------ | :---------------------------------------------- |
+| **PRACTICAL**  | Pocketbooks, treatment guides, "cheat sheets".    | **Boosted by 20%** for action-oriented queries. |
+| **ACADEMIC**   | Deep physiology, anatomy theory, large textbooks. | Primary source for "Why" and mechanisms.        |
+| **CASE_STUDY** | Detailed patient scenarios and outcomes.          | Boosted for symptom-matching queries.           |
+| **ATLAS**      | High density of structural/anatomical data.       | Used for physical/spatial relationships.        |
+
+##### B. Manual Control Tags (The Overrides)
+
+Use HTML comments to fix specific pages or sections.
+
+- **`<!-- chunk: exclude -->` (Noise Control)**: Wrap this around pages with zero clinical value (Preface, Author list, Index, Bibliography). The system will physically delete this content before it touches the database.
+- **`<!-- chunk: merge -->` (Cohesion Control)**: Use this to "glue" related text together into a single unbreakable chunk. Essential for keeping a medical definition next to its data table.
+- **`<!-- section: [TYPE] -->` (Clinical Label)**: Tag a specific section as a `clinical-case` or `protocol` to help the Reranker identify high-value data.
+
+**Example of a perfectly curated section:**
+
+```markdown
+<!-- section: clinical-case -->
+<!-- chunk: merge -->
+
+### Case Study: L5 Radiculopathy
+
+A 45-year-old male presents with acute lower back pain...
+[...Table of symptoms...]
+The outcome after manual therapy was...
+
+<!-- chunk: end -->
+<!-- section: end -->
+
+<!-- chunk: exclude -->
+
+## Index of Authors
+
+Abbott, R. 12, 45...
+
+<!-- chunk: end -->
+```
+
+#### Step 3: Final Ingestion (Markdown → Vector DB)
+
+Once the Markdown is curated, process it into vectors:
+
+1.  **Parsing**: The system reads your manual tags and filters out the `exclude` blocks.
+2.  **Tagging**: Chunks inside a `section` tag are labeled in the database.
+3.  **Embedding**: Text is converted to 1024-dim vectors using **Voyage AI**.
+4.  **Storage**: Vectors and metadata (including Archetypes) are saved to PostgreSQL.
+
+---
 
 ### Phase 2: Retrieval (Finding the Answer)
 
@@ -100,7 +137,8 @@ You can manage the knowledge base using these commands from the project root:
 | `pnpm knowledge:convert -- --pages=1,10`     | Converts only a specific page range (useful for testing quality).                                         |
 | `pnpm knowledge:ingest`                      | Ingests Markdown files from `data/library/temporal/` into the Vector DB. (Default: naive chunking).       |
 | `pnpm knowledge:batch-status`                | Checks status of async batch ingestion jobs and downloads results when ready.                             |
-| `pnpm knowledge:search "query"`              | Performs a semantic search across all ingested books.                                                     |
+| `pnpm knowledge:search "query"`              | Performs a semantic search across all ingested books (Raw).                                               |
+| `pnpm knowledge:rag "query"`                 | Performs the FULL AI retrieval pipeline (HyDE + Translation + Rerank).                                    |
 | `pnpm knowledge:list`                        | Displays a clean list of all ingested books with their ID, Title, Volume, and File Path.                  |
 | `pnpm knowledge:update "ID" --options`       | Manually corrects or updates a book's metadata (title, author, volume, edition, year).                    |
 | `pnpm knowledge:clean "ID or filename.pdf"`  | Removes a specific book and its embeddings from the database to allow re-ingestion.                       |
@@ -233,6 +271,27 @@ To test that the AI can actually "understand" the content:
 
 ```bash
 pnpm knowledge:search "huesos del carpo"
+```
+
+### Clinical Retrieval Pipeline (The "Brain")
+
+When a user asks a clinical question, the system uses a high-sophistication pipeline to ensure accuracy across languages:
+
+1.  **Input**: Spanish query (e.g., _"fascitis plantar"_).
+2.  **Cross-Lingual Normalization**:
+    - **HyDE (Primary)**: If `ENABLE_HYDE=true`, generates a 4,000+ character hypothetical clinical document **in English**. This bridges the gap between Spanish user terminology and deep English medical literature.
+    - **Translation (Fallback)**: If HyDE is disabled or fails, the system performs direct Spanish $\rightarrow$ English technical translation.
+3.  **Deduplicated Retrieval**:
+    - Fetches 8 candidates per query (Total ~24 chunks).
+    - **Deduplication**: Automatically groups results by `parentId`. We only show the single most relevant chunk from any given parent section to ensure diversity and avoid redundant results.
+4.  **Cohere Rerank v4-pro**: Re-evaluates all chunks against the original query using a multilingual cross-encoder for the final top 8.
+
+#### CLI Testing
+
+Use the following command to test the full "Brain" logic:
+
+```bash
+pnpm --filter server knowledge:rag "your query"
 ```
 
 ## Troubleshooting Failures

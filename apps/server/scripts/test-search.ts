@@ -21,10 +21,12 @@ async function bootstrap() {
   const knowledgeBaseService = app.get(KnowledgeBaseService);
 
   const query = process.argv[2] || 'anatomical structures of the hand';
-  console.log(`Searching for: "${query}"`);
+  const limit = parseInt(process.argv[3], 10) || 8;
+
+  console.log(`Searching for: "${query}" (Limit: ${limit})`);
 
   try {
-    const results = await knowledgeBaseService.findSimilar(query, 5);
+    const results = await knowledgeBaseService.findSimilar(query, limit);
     console.log('--- Search Results ---');
     results.forEach((res, i) => {
       const vol = res.documentMetadata?.volume

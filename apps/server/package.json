@@ -27,6 +27,7 @@
     "knowledge:verify": "ts-node scripts/verify-ingestion.ts",
     "knowledge:convert": "ts-node scripts/convert-books.ts",
     "knowledge:search": "ts-node scripts/test-search.ts",
+    "knowledge:rag": "ts-node scripts/test-rag-full.ts",
     "knowledge:clean": "ts-node scripts/clean-book.ts",
     "knowledge:list": "ts-node scripts/list-books.ts",
     "knowledge:update": "ts-node scripts/update-book.ts",

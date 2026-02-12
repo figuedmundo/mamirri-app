@@ -215,5 +215,159 @@
       "success": 420,
       "errors": 0
     }
+  },
+  {
+    "batchId": "batch-7vYYunPupQr1d5HTmszupW1JkK7MYY2QfAxeq",
+    "bookTitle": "Daniels y Worthingham. Técnicas de balance muscular",
+    "status": "completed",
+    "chunkCount": 646,
+    "timestamp": "2026-02-12T13:50:19.377Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/daniels_y_worthingham__t_cnicas_de_balance_muscular_1770904216816.json",
+    "documentId": "be123449-8cc4-48d4-a3db-a5697e51ac7b",
+    "completedAt": "2026-02-12T14:04:06.893Z",
+    "stats": {
+      "success": 646,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vYYunQnYQtkpM9sdriQ7fhDR34CimCGnxJQf",
+    "bookTitle": "Fisiología Articular",
+    "status": "completed",
+    "chunkCount": 545,
+    "timestamp": "2026-02-12T13:50:20.977Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/fisiolog_a_articular_1770904219420.json",
+    "documentId": "cfa872fc-40d6-4349-bac9-bb682fc06fd6",
+    "completedAt": "2026-02-12T14:04:12.608Z",
+    "stats": {
+      "success": 545,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vYYunQubGK6UwG4exYtnCXJH1vnU3HQTHu3G",
+    "bookTitle": "Fisiología Articular",
+    "status": "completed",
+    "chunkCount": 497,
+    "timestamp": "2026-02-12T13:50:22.626Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/fisiolog_a_articular_1770904221012.json",
+    "documentId": "f8ee2961-cc04-4b73-b9e9-dc36929e2b14",
+    "completedAt": "2026-02-12T14:04:18.597Z",
+    "stats": {
+      "success": 497,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vYYunR1J371VoejRsNR69y8uZbaisZ2XecYr",
+    "bookTitle": "Fisiología Articular",
+    "status": "completed",
+    "chunkCount": 473,
+    "timestamp": "2026-02-12T13:50:24.229Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/fisiolog_a_articular_1770904222655.json",
+    "documentId": "d7c80f36-6404-46d7-9488-27d3e33f73a4",
+    "completedAt": "2026-02-12T14:04:23.591Z",
+    "stats": {
+      "success": 473,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vYYunR4JVEjGmVt6fi39KH7Rue4MqNtqu2Dt",
+    "bookTitle": "Fundamentals of Pain Medicine: How to Diagnose and Treat Your Patients",
+    "status": "completed",
+    "chunkCount": 479,
+    "timestamp": "2026-02-12T13:50:26.027Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/fundamentals_of_pain_medicine__how_to_diagnose_and_treat_your_patients_1770904224266.json",
+    "documentId": "28beae06-c50b-4aa0-b87d-94c95b965c4f",
+    "completedAt": "2026-02-12T14:04:29.336Z",
+    "stats": {
+      "success": 479,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vYYunR6DMestuf4QBQNYp5J8sfAHNinKmD8Z",
+    "bookTitle": "Goniometría: Una herramienta para la evaluación de las incapacidades laborales",
+    "status": "completed",
+    "chunkCount": 158,
+    "timestamp": "2026-02-12T13:50:27.226Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/goniometr_a__una_herramienta_para_la_evaluaci_n_de_las_incapacidades_laborales_1770904226039.json",
+    "documentId": "8f07f93e-ca4c-4d9d-8ddd-c71059ae9fee",
+    "completedAt": "2026-02-12T14:04:32.488Z",
+    "stats": {
+      "success": 158,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vYYunS8QASdkt4PNnVhErDiHf5JisdjBgTSa",
+    "bookTitle": "Anatomía Humana",
+    "status": "completed",
+    "chunkCount": 1326,
+    "timestamp": "2026-02-12T13:50:31.076Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/anatom_a_humana_1770904227306.json",
+    "documentId": "d6b9c237-7db2-4561-b40d-31150f9b5c04",
+    "completedAt": "2026-02-12T14:04:43.305Z",
+    "stats": {
+      "success": 1326,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vYYunSANMdnjJLj4yWGp5nbpMyyAB6cShca2",
+    "bookTitle": "Manual Mobilization of the Joints: The Kaltenborn Method of Joint Examination and Treatment",
+    "status": "completed",
+    "chunkCount": 420,
+    "timestamp": "2026-02-12T13:50:32.397Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/manual_mobilization_of_the_joints__the_kaltenborn_method_of_joint_examination_and_treatment_1770904231116.json",
+    "documentId": "3444717f-584b-4878-beed-d0eafea5f1e9",
+    "completedAt": "2026-02-12T14:04:49.190Z",
+    "stats": {
+      "success": 420,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vYYunSExFQYpSg8QMFnr6bD45WnA7Q8ZnGqw",
+    "bookTitle": "Neurología ortopédica: Exploración diagnóstica de los niveles medulares",
+    "status": "completed",
+    "chunkCount": 272,
+    "timestamp": "2026-02-12T13:50:33.377Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/neurolog_a_ortop_dica__exploraci_n_diagn_stica_de_los_niveles_medulares_1770904232416.json",
+    "documentId": "97ab07e1-c61a-4262-81a2-568884b8d443",
+    "completedAt": "2026-02-12T14:04:53.059Z",
+    "stats": {
+      "success": 272,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vYYunSG2U8W5V6U6bb59Uec95pW2PmSn77U1",
+    "bookTitle": "ATLAS OF HUMAN ANATOMY",
+    "status": "completed",
+    "chunkCount": 645,
+    "timestamp": "2026-02-12T13:50:34.876Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/atlas_of_human_anatomy_1770904233413.json",
+    "documentId": "7c924816-0347-472d-9412-42b46c3850bf",
+    "completedAt": "2026-02-12T14:04:58.607Z",
+    "stats": {
+      "success": 645,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vYYunTBGQJUgr3CHWrqwSPTk8oRRNh1PnUxS",
+    "bookTitle": "The Physiotherapist's Pocketbook: Essential facts at your fingertips",
+    "status": "completed",
+    "chunkCount": 521,
+    "timestamp": "2026-02-12T13:50:36.182Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/the_physiotherapist_s_pocketbook__essential_facts_at_your_fingertips_1770904234911.json",
+    "documentId": "e1c1014a-6dd4-401c-a87d-1b879c5ca118",
+    "completedAt": "2026-02-12T14:05:03.548Z",
+    "stats": {
+      "success": 521,
+      "errors": 0
+    }
   }
 ]

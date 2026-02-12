@@ -24,8 +24,20 @@ interface StagingData {
     year?: string;
   };
   sourceFilePath: string;
-  parentChunks: { id: string; content: string; pageNumber: number }[];
-  childChunks: { content: string; pageNumber: number; parentIndex: number }[];
+  parentChunks: {
+    id: string;
+    content: string;
+    pageNumber: number;
+    chunkType?: string;
+    sectionType?: string;
+  }[];
+  childChunks: {
+    content: string;
+    pageNumber: number;
+    parentIndex: number;
+    chunkType?: string;
+    sectionType?: string;
+  }[];
   batchInputs: { id: string; text: string }[];
   chunksPerParent: number;
   timestamp: string;
@@ -236,6 +248,7 @@ async function bootstrap() {
               title: metadata.title,
               author: metadata.author,
               filePath: sourceFilePath,
+              archetype: (metadata as any).archetype || 'GENERAL',
               metadata: metadata,
             },
           });
@@ -247,8 +260,8 @@ async function bootstrap() {
               const vectorString = '[' + embedding.join(',') + ']';
               try {
                 await (prisma as any).$executeRaw`
-                  INSERT INTO embeddings (id, content, "pageNumber", "documentId", "parentContent", vector)
-                  VALUES (${parent.id}::uuid, ${parent.content}, ${parent.pageNumber}, ${document.id}::uuid, ${parent.content}, ${vectorString}::vector)
+                  INSERT INTO embeddings (id, content, "pageNumber", "documentId", "parentContent", vector, "chunkType", "sectionType")
+                  VALUES (${parent.id}::uuid, ${parent.content}, ${parent.pageNumber}, ${document.id}::uuid, ${parent.content}, ${vectorString}::vector, ${parent.chunkType || 'NARRATIVE'}::"ChunkType", ${parent.sectionType || null})
                 `;
                 successCount++;
               } catch (err: any) {
@@ -283,8 +296,8 @@ async function bootstrap() {
 
               try {
                 await (prisma as any).$executeRaw`
-                  INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-                  VALUES (gen_random_uuid(), ${child.content}, ${child.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
+                  INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent", "chunkType", "sectionType")
+                  VALUES (gen_random_uuid(), ${child.content}, ${child.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent}, ${child.chunkType || 'NARRATIVE'}::"ChunkType", ${child.sectionType || null})
                 `;
                 successCount++;
               } catch (err: any) {

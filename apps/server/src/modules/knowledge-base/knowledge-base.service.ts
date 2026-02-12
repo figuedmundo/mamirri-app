@@ -9,6 +9,16 @@ import { PDFParse } from 'pdf-parse';
 import { randomUUID } from 'crypto';
 
 import { Prisma } from '@prisma/client';
+
+import matter from 'gray-matter';
+
+export enum ChunkType {
+  NARRATIVE = 'NARRATIVE',
+  INDEX = 'INDEX',
+  TOC = 'TOC',
+  REFERENCES = 'REFERENCES',
+}
+
 import { CohereClient } from 'cohere-ai';
 import { GoogleGenAI } from '@google/genai';
 
@@ -303,6 +313,15 @@ export class KnowledgeBaseService {
         `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${meta.title}`,
       );
 
+      let counts = { NARRATIVE: 0, INDEX: 0, TOC: 0, REFERENCES: 0 };
+      for (const chunk of chunks) {
+        const type = this.detectChunkType(chunk.content);
+        counts[type]++;
+      }
+      this.logger.log(
+        `Classification: ${counts.NARRATIVE} Narrative, ${counts.INDEX} Index, ${counts.TOC} TOC, ${counts.REFERENCES} Refs`,
+      );
+
       const parentIds: string[] = [];
 
       if (parentChunks.length > 0) {
@@ -327,9 +346,11 @@ export class KnowledgeBaseService {
           const parentId = randomUUID();
           parentIds.push(parentId);
 
+          const chunkType = this.detectChunkType(content.content);
+
           await (this.prisma as any).$executeRaw`
-            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
-            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${content.content})
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent", "chunkType")
+            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${content.content}, ${chunkType}::"ChunkType")
           `;
 
           if ((i + 1) % 10 === 0 || i === parentChunks.length - 1) {
@@ -371,10 +392,12 @@ export class KnowledgeBaseService {
           }
         }
 
+        const chunkType = this.detectChunkType(content.content);
+
         await (this.prisma as any).$executeRaw`
-          INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
-        `;
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent", "chunkType")
+            VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent}, ${chunkType}::"ChunkType")
+          `;
 
         if ((i + 1) % 50 === 0 || i === chunks.length - 1) {
           this.logger.log(
@@ -402,14 +425,68 @@ export class KnowledgeBaseService {
       volume?: string;
       edition?: string;
       year?: string;
+      archetype?: any;
     },
     filePath: string,
     useSemanticChunking: boolean = false,
     useBatchApi: boolean = false,
     dryRun: boolean = false,
   ): Promise<{ id: string; staged?: boolean; stagingFilePath?: string }> {
+    // 1. Parse Frontmatter and Manual Tags
+    const { data: frontmatter, content: rawBody } = matter(markdown);
+
+    // Merge provided metadata with frontmatter (frontmatter wins)
+    const mergedMetadata = {
+      ...metadata,
+      ...frontmatter,
+    };
+
+    const finalArchetype = (mergedMetadata as any).archetype || 'GENERAL';
+
+    let body = rawBody.replace(
+      /<!-- chunk: exclude -->[\s\S]*?<!-- chunk: end -->/g,
+      () => '',
+    );
+
+    const manualChunks: {
+      content: string;
+      pageNumber: number;
+      sectionType?: string;
+    }[] = [];
+
+    // Process section tags first (we keep content but want to label chunks)
+    const sectionMatches: { type: string; content: string }[] = [];
+    body = body.replace(
+      /<!-- section: ([a-z-]+) -->([\s\S]*?)<!-- section: end -->/g,
+      (match, type, content) => {
+        sectionMatches.push({ type, content: content.trim() });
+        return content;
+      },
+    );
+
+    body = body.replace(
+      /<!-- chunk: merge -->([\s\S]*?)<!-- chunk: end -->/g,
+      (match, p1, offset) => {
+        const pageMatch = body
+          .slice(0, offset)
+          .match(/<!-- PAGE_NUMBER: (\d+) -->/g);
+        let pageNum = 1;
+        if (pageMatch && pageMatch.length > 0) {
+          const lastMatch = pageMatch[pageMatch.length - 1];
+          const numMatch = lastMatch.match(/\d+/);
+          if (numMatch) pageNum = parseInt(numMatch[0]);
+        }
+
+        manualChunks.push({
+          content: p1.trim(),
+          pageNumber: pageNum,
+        });
+        return '';
+      },
+    );
+
     const existingDoc = await (this.prisma as any).document.findFirst({
-      where: { title: metadata.title },
+      where: { title: mergedMetadata.title },
     });
 
     if (existingDoc) {
@@ -431,10 +508,11 @@ export class KnowledgeBaseService {
       if (!existingDoc) {
         const document = await (this.prisma as any).document.create({
           data: {
-            title: metadata.title,
-            author: metadata.author,
+            title: mergedMetadata.title,
+            author: mergedMetadata.author,
             filePath: filePath,
-            metadata: metadata,
+            archetype: finalArchetype,
+            metadata: mergedMetadata,
           },
         });
         documentId = document.id;
@@ -449,7 +527,7 @@ export class KnowledgeBaseService {
       );
     }
 
-    this.logger.log(`Ingesting markdown: ${metadata.title}`);
+    this.logger.log(`Ingesting markdown: ${mergedMetadata.title}`);
 
     try {
       let chunks: { content: string; pageNumber: number }[] = [];
@@ -457,7 +535,7 @@ export class KnowledgeBaseService {
 
       if (useSemanticChunking) {
         try {
-          const pages = this.splitByPages(markdown);
+          const pages = this.splitByPages(body);
           const result = await this.semanticChunk(pages, { dryRun });
           chunks = result.chunks;
           parentChunks = result.parentChunks;
@@ -465,7 +543,7 @@ export class KnowledgeBaseService {
           this.logger.warn(
             `Semantic chunking failed: ${error.message}. Falling back to naive chunking.`,
           );
-          const pages = this.splitByPages(markdown);
+          const pages = this.splitByPages(body);
           chunks = this.chunkText(pages);
           for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
             const batch = chunks.slice(i, i + this.chunksPerParent);
@@ -476,7 +554,7 @@ export class KnowledgeBaseService {
           }
         }
       } else {
-        const pages = this.splitByPages(markdown);
+        const pages = this.splitByPages(body);
         chunks = this.chunkText(pages);
         for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
           const batch = chunks.slice(i, i + this.chunksPerParent);
@@ -487,8 +565,28 @@ export class KnowledgeBaseService {
         }
       }
 
+      if (manualChunks.length > 0) {
+        this.logger.log(`Adding ${manualChunks.length} manual chunks`);
+        chunks = [...chunks, ...manualChunks];
+        manualChunks.forEach((mc) => {
+          parentChunks.push({
+            content: mc.content,
+            pageNumber: mc.pageNumber,
+          });
+        });
+      }
+
       this.logger.log(
-        `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${metadata.title}`,
+        `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${mergedMetadata.title}`,
+      );
+
+      let counts = { NARRATIVE: 0, INDEX: 0, TOC: 0, REFERENCES: 0 };
+      for (const chunk of chunks) {
+        const type = this.detectChunkType(chunk.content);
+        counts[type]++;
+      }
+      this.logger.log(
+        `Classification: ${counts.NARRATIVE} Narrative, ${counts.INDEX} Index, ${counts.TOC} TOC, ${counts.REFERENCES} Refs`,
       );
 
       // DEBUG: Log sample chunks to verify quality
@@ -521,20 +619,31 @@ export class KnowledgeBaseService {
           id: string;
           content: string;
           pageNumber: number;
+          chunkType: ChunkType;
+          sectionType?: string;
         }[] = [];
         const childChunkData: {
           content: string;
           pageNumber: number;
           parentIndex: number;
+          chunkType: ChunkType;
+          sectionType?: string;
         }[] = [];
 
         // Prepare parent chunks with IDs
         for (const chunk of parentChunks) {
           const id = randomUUID();
+          const chunkType = this.detectChunkType(chunk.content);
+          const sectionType = this.getSectionType(
+            chunk.content,
+            sectionMatches,
+          );
           parentChunkData.push({
             id,
             content: chunk.content,
             pageNumber: chunk.pageNumber,
+            chunkType,
+            sectionType: sectionType || undefined,
           });
           batchInputs.push({ id, text: chunk.content });
         }
@@ -552,10 +661,18 @@ export class KnowledgeBaseService {
             }
           }
 
+          const chunkType = this.detectChunkType(chunk.content);
+          const sectionType = this.getSectionType(
+            chunk.content,
+            sectionMatches,
+          );
+
           childChunkData.push({
             content: chunk.content,
             pageNumber: chunk.pageNumber,
             parentIndex: parentIndex !== null ? parentIndex : -1,
+            chunkType,
+            sectionType: sectionType || undefined,
           });
           batchInputs.push({ id, text: chunk.content });
         }
@@ -776,10 +893,16 @@ export class KnowledgeBaseService {
           const parentId = randomUUID();
           parentIds.push(parentId);
 
+          const chunkType = this.detectChunkType(content.content);
+          const sectionType = this.getSectionType(
+            content.content,
+            sectionMatches,
+          );
+
           if (!dryRun) {
             await (this.prisma as any).$executeRaw`
-            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
-            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${documentId}::uuid, ${vectorString}::vector, ${content.content})
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent", "chunkType", "sectionType")
+            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${documentId}::uuid, ${vectorString}::vector, ${content.content}, ${chunkType}::"ChunkType", ${sectionType})
           `;
           }
 
@@ -823,11 +946,17 @@ export class KnowledgeBaseService {
           }
         }
 
+        const chunkType = this.detectChunkType(content.content);
+        const sectionType = this.getSectionType(
+          content.content,
+          sectionMatches,
+        );
+
         if (!dryRun) {
           await (this.prisma as any).$executeRaw`
-          INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${documentId}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
-        `;
+              INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent", "chunkType", "sectionType")
+              VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${documentId}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent}, ${chunkType}::"ChunkType", ${sectionType})
+            `;
         }
 
         if ((i + 1) % 50 === 0 || i === chunks.length - 1) {
@@ -1027,15 +1156,25 @@ export class KnowledgeBaseService {
         e."parentId",
         e."parentContent",
         e."pageNumber", 
+        e."sectionType",
         d.title as "documentTitle",
         d.author as "documentAuthor",
         d."filePath" as "documentFilePath",
         d.metadata as "documentMetadata",
-        1 - (e.vector <=> ${vectorString}::vector) as similarity
+        d.archetype as "documentArchetype",
+        (1 - (e.vector <=> ${vectorString}::vector)) * (
+          CASE 
+            WHEN d.archetype = 'PRACTICAL'::"Archetype" THEN 1.2
+            WHEN d.archetype = 'CASE_STUDY'::"Archetype" THEN 1.1
+            ELSE 1.0
+          END
+        ) as similarity
       FROM embeddings e
       JOIN documents d ON e."documentId" = d.id
-      WHERE e."parentId" IS NOT NULL ${whereClause}
-      ORDER BY e.vector <=> ${vectorString}::vector
+      WHERE e."parentId" IS NOT NULL 
+      AND e."chunkType" = 'NARRATIVE'::"ChunkType"
+      ${whereClause}
+      ORDER BY similarity DESC
       LIMIT ${limit}
     `;
 
@@ -1075,14 +1214,23 @@ export class KnowledgeBaseService {
         e."parentId",
         e."parentContent",
         e."pageNumber",
+        e."sectionType",
         d.title as "documentTitle",
         d.author as "documentAuthor",
         d."filePath" as "documentFilePath",
         d.metadata as "documentMetadata",
-        ts_rank(to_tsvector('simple', e.content), plainto_tsquery('simple', ${query})) as "bm25Score"
+        d.archetype as "documentArchetype",
+        ts_rank(to_tsvector('simple', e.content), plainto_tsquery('simple', ${query})) * (
+          CASE 
+            WHEN d.archetype = 'PRACTICAL'::"Archetype" THEN 1.2
+            WHEN d.archetype = 'CASE_STUDY'::"Archetype" THEN 1.1
+            ELSE 1.0
+          END
+        ) as "bm25Score"
       FROM embeddings e
       JOIN documents d ON e."documentId" = d.id
       WHERE e."parentId" IS NOT NULL 
+      AND e."chunkType" = 'NARRATIVE'::"ChunkType"
       AND to_tsvector('simple', e.content) @@ plainto_tsquery('simple', ${query})
       ${whereClause}
       ORDER BY "bm25Score" DESC
@@ -1256,6 +1404,197 @@ export class KnowledgeBaseService {
       );
       return { title: beautified, author: 'Unknown Author' };
     }
+  }
+
+  private getSectionType(
+    content: string,
+    sections: { type: string; content: string }[],
+  ): string | null {
+    for (const section of sections) {
+      if (section.content.includes(content)) {
+        return section.type;
+      }
+    }
+    return null;
+  }
+
+  private detectChunkType(content: string): ChunkType {
+    const lines = content.split('\n').map((l) => l.trim());
+    const firstLines = lines.slice(0, 5).join(' ').toLowerCase();
+
+    // 1. Header/Title based detection
+    if (
+      firstLines.includes('contents') ||
+      firstLines.includes('contenido') ||
+      firstLines.includes('table of contents') ||
+      /##\s+(índice|indice)(\s+de)?/i.test(firstLines)
+    ) {
+      return ChunkType.TOC;
+    }
+
+    if (
+      firstLines.includes('index') ||
+      firstLines.includes('índice alfabético') ||
+      firstLines.includes('indice alfabetico') ||
+      firstLines.includes('index of subjects')
+    ) {
+      return ChunkType.INDEX;
+    }
+
+    if (
+      firstLines.includes('references') ||
+      firstLines.includes('bibliography') ||
+      firstLines.includes('bibliografía') ||
+      firstLines.includes('bibliografia') ||
+      firstLines.includes('literatura citada')
+    ) {
+      return ChunkType.REFERENCES;
+    }
+
+    // 2. Metrics calculation
+    const textOnly = content.replace(/[#*|]/g, '');
+    const words = textOnly.toLowerCase().match(/\b\w+\b/g) || [];
+
+    const anatomyKeywords = [
+      'action:',
+      'origin:',
+      'insertion:',
+      'nerve:',
+      'innervation:',
+      'reflex:',
+      'testing:',
+    ];
+    let anatomyScore = 0;
+    for (const kw of anatomyKeywords) {
+      if (content.toLowerCase().includes(kw)) anatomyScore++;
+    }
+    if (anatomyScore >= 2) return ChunkType.NARRATIVE;
+
+    if (words.length < 15 && !content.includes('|')) return ChunkType.NARRATIVE;
+
+    const enStopwords = new Set([
+      'the',
+      'and',
+      'for',
+      'with',
+      'was',
+      'were',
+      'from',
+      'that',
+      'this',
+      'these',
+      'those',
+      'but',
+      'not',
+      'are',
+      'is',
+      'of',
+      'in',
+      'on',
+      'at',
+      'by',
+      'an',
+      'as',
+      'be',
+      'to',
+    ]);
+    const esStopwords = new Set([
+      'el',
+      'la',
+      'los',
+      'las',
+      'un',
+      'una',
+      'y',
+      'en',
+      'de',
+      'con',
+      'para',
+      'por',
+      'que',
+      'este',
+      'esta',
+      'estos',
+      'estas',
+      'pero',
+      'no',
+      'son',
+      'es',
+      'al',
+      'del',
+      'su',
+      'o',
+    ]);
+
+    let stopwordCount = 0;
+    for (const w of words) {
+      if (enStopwords.has(w) || esStopwords.has(w)) stopwordCount++;
+    }
+    const stopwordDensity = words.length > 0 ? stopwordCount / words.length : 0;
+
+    const digitCount = content.replace(/\D/g, '').length;
+    const digitDensity = digitCount / content.length;
+
+    const pipeCount = (content.match(/\|/g) || []).length;
+    const pipeDensity = pipeCount / content.length;
+
+    const seeAlsoCount = (
+      content.match(/see also|véase también|vid\.|cfr\./gi) || []
+    ).length;
+
+    const indexPattern = /\b[a-z]{3,},\s*\d+[a-z]?\b/gi;
+    const indexMatches = (content.match(indexPattern) || []).length;
+    const indexDensity = words.length > 0 ? indexMatches / words.length : 0;
+
+    const isHighPipeDensity = pipeDensity > 0.02;
+    const isNumberList = digitDensity > 0.08 && stopwordDensity < 0.2;
+    const isNonNarrativeList = stopwordDensity < 0.15 && words.length > 20;
+    const isSeeAlsoIndex = seeAlsoCount >= 1 && stopwordDensity < 0.25;
+    const isIndexPattern = indexDensity > 0.1;
+
+    if (
+      isHighPipeDensity ||
+      isNumberList ||
+      isNonNarrativeList ||
+      isSeeAlsoIndex ||
+      isIndexPattern
+    ) {
+      return ChunkType.INDEX;
+    }
+
+    // References
+    const referenceKeywords = [
+      'pp.',
+      'vol.',
+      'ed.',
+      'journal',
+      'university',
+      'press',
+      'inc.',
+      'wilkins',
+      'saunders',
+      'elsevier',
+      'springer',
+      'medicina',
+      'clinical',
+      'et al',
+      'doi:',
+    ];
+    let refMatchCount = 0;
+    for (const kw of referenceKeywords) {
+      if (content.toLowerCase().includes(kw)) refMatchCount++;
+    }
+
+    // Increased stopword density limit from 0.12 to 0.25 (titles have stopwords).
+    const isReferenceStyle =
+      stopwordDensity < 0.25 &&
+      (refMatchCount >= 2 || /19\d{2}|20\d{2}/.test(content));
+
+    if (isReferenceStyle) {
+      return ChunkType.REFERENCES;
+    }
+
+    return ChunkType.NARRATIVE;
   }
 
   private cosineSimilarity(a: number[], b: number[]): number {

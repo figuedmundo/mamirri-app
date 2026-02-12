@@ -195,16 +195,32 @@ model Session {
   @@map("sessions")
 }
 
+enum Archetype {
+  PRACTICAL
+  ACADEMIC
+  ATLAS
+  CASE_STUDY
+  GENERAL
+}
+
 model Document {
   id         String      @id @default(uuid()) @db.Uuid
   title      String
   author     String?
   filePath   String      @unique
+  archetype  Archetype   @default(GENERAL)
   createdAt  DateTime    @default(now())
   metadata   Json?
   embeddings Embedding[]
 
   @@map("documents")
+}
+
+enum ChunkType {
+  NARRATIVE
+  INDEX
+  TOC
+  REFERENCES
 }
 
 /// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
@@ -213,6 +229,9 @@ model Embedding {
   content       String
   vector        Unsupported("vector")
   pageNumber    Int
+  chunkType     ChunkType             @default(NARRATIVE)
+  isExcluded    Boolean               @default(false)
+  sectionType   String?
   documentId    String                @db.Uuid
   parentContent String?
   parentId      String?               @db.Uuid
