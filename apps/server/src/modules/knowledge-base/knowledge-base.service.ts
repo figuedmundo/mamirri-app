@@ -442,7 +442,7 @@ export class KnowledgeBaseService {
         `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${meta.title}`,
       );
 
-      let counts = { NARRATIVE: 0, INDEX: 0, TOC: 0, REFERENCES: 0 };
+      const counts = { NARRATIVE: 0, INDEX: 0, TOC: 0, REFERENCES: 0 };
       for (const chunk of chunks) {
         const type = this.detectChunkType(chunk.content);
         counts[type]++;
@@ -709,7 +709,7 @@ export class KnowledgeBaseService {
         `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${mergedMetadata.title}`,
       );
 
-      let counts = { NARRATIVE: 0, INDEX: 0, TOC: 0, REFERENCES: 0 };
+      const counts = { NARRATIVE: 0, INDEX: 0, TOC: 0, REFERENCES: 0 };
       for (const chunk of chunks) {
         const type = this.detectChunkType(chunk.content);
         counts[type]++;
@@ -1548,6 +1548,7 @@ export class KnowledgeBaseService {
   }
 
   private detectChunkType(content: string): ChunkType {
+    if (!content) return ChunkType.NARRATIVE;
     const lines = content.split('\n').map((l) => l.trim());
     const firstLines = lines.slice(0, 5).join(' ').toLowerCase();
 

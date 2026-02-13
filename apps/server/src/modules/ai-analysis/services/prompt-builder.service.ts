@@ -129,7 +129,21 @@ ${chunk.content}
    * @returns A prompt that asks the LLM to generate clinical descriptions and differential diagnoses
    */
   buildHydeDiagnosisPrompt(symptoms: string): string {
-    return `Based on the following patient symptoms (provided in Spanish), generate a hypothetical medical document **in English**. This is crucial for matching with English medical literature.
+    return `Basado en los siguientes síntomas del paciente (proporcionados en español), genera un documento médico hipotético **en inglés**. Esto es crucial para coincidir con la literatura médica en inglés.
+
+Síntomas del Paciente: ${symptoms}
+
+Por favor, genera un texto clínico técnico que incluya:
+1. **Clinical Descriptions**: Descripciones clínicas detalladas de las posibles afecciones.
+2. **Differential Diagnoses**: Diagnósticos diferenciales con características distintivas.
+3. **Etiology and Pathogenesis**: Etiología y patogénesis (causas y mecanismos posibles).
+4. **Clinical Manifestations**: Manifestaciones clínicas (Signos y síntomas típicos y asociados).
+
+El documento debe ser técnico, profesional, utilizando evidencia médica actual y terminología médica estándar en inglés. No te limites a una única condición; explora múltiples posibilidades diagnósticas (No te limites a una única condición).
+
+---
+
+Based on the following patient symptoms (provided in Spanish), generate a hypothetical medical document **in English**. This is crucial for matching with English medical literature.
 
 Patient Symptoms: ${symptoms}
 
@@ -150,7 +164,21 @@ The document must be technical, professional, using standard medical English ter
    * @returns A prompt that asks the LLM to generate clinical treatment descriptions
    */
   buildHydeTreatmentPrompt(condition: string): string {
-    return `Based on the following medical condition (provided in Spanish), generate a hypothetical medical document **in English**. This is crucial for matching with English medical literature.
+    return `Basado en la siguiente condición médica (proporcionada en español), genera un documento médico hipotético **en inglés**. Esto es crucial para coincidir con la literatura médica en inglés.
+
+Condición: ${condition}
+
+Por favor, genera un texto clínico técnico que incluya:
+1. **Clinical Descriptions**: Descripciones clínicas de los tratamientos fisioterapéuticos recomendados (fisioterapia).
+2. **Treatment Strategies**: Estrategias de tratamiento (Enfoques terapéuticos y sus fundamentos fisiopatológicos).
+3. **Specific Techniques**: Técnicas específicas (Modalidades de intervención y su aplicación práctica).
+4. **Scientific Evidence**: Evidencia científica (respaldo de la literatura científica para las intervenciones recomendadas).
+
+El documento debe ser técnico, profesional, utilizando evidencia médica actual y terminología médica estándar en inglés. Describe un enfoque de tratamiento fisioterapéutico integral para esta condición.
+
+---
+
+Based on the following medical condition (provided in Spanish), generate a hypothetical medical document **in English**. This is crucial for matching with English medical literature.
 
 Condition: ${condition}
 
