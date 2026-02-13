@@ -9,8 +9,8 @@ A "Smart Biomechanical Tailor" that combines AI automation with precise manual c
 - **Data Import:** User starts a design for a specific Patient/Case -> System automatically imports findings (e.g., "Pie Talo", "Pelvic Retroversion") and generates a base insole model.
 
 - **Hybrid Editing:**
-    - **Structural:** User adjusts global parameters (Arch Height, Heel Wedge) via precision sliders.
-    - **Relief:** User utilizes a "Brush" tool to paint relief zones (soft spots) on 3D model corresponding to pain points found during palpation.
+  - **Structural:** User adjusts global parameters (Arch Height, Heel Wedge) via precision sliders.
+  - **Relief:** User utilizes a "Brush" tool to paint relief zones (soft spots) on 3D model corresponding to pain points found during palpation.
 
 - **Biomechanical Validation:** User views 3D model alongside of patient's kinetic diagnosis (side-by-side) to ensure that insole addresses global chain (e.g., correcting foot position to aid lumbar rectification).
 
@@ -46,16 +46,15 @@ See `screenshot.png` for the target UI design.
 
 ## Callback Props
 
-| Callback | Description |
-|----------|-------------|
-| `onSave` | Called when user saves the insole design |
-| `onExportPDF` | Called when user wants to generate technical spec sheet |
+| Callback             | Description                                                |
+| -------------------- | ---------------------------------------------------------- |
+| `onSave`             | Called when user saves the insole design                   |
+| `onExportPDF`        | Called when user wants to generate technical spec sheet    |
 | `onChangeProperties` | Called when user adjusts structural parameters via sliders |
-| `onPaintRelief` | Called when user paints relief zone with brush tool |
-| `onToggleTool` | Called when user switches between Slider and Brush modes |
-| `onSelectMaterial` | Called when user selects material for a layer |
-| `onClose` | Called when user wants to exit full-screen editor |
-| `onAddLayer` | Called when user adds new material layer |
-| `onRemoveLayer` | Called when user removes a layer |
-| `onReorderLayers` | Called when user changes layer stacking order |
-
+| `onPaintRelief`      | Called when user paints relief zone with brush tool        |
+| `onToggleTool`       | Called when user switches between Slider and Brush modes   |
+| `onSelectMaterial`   | Called when user selects material for a layer              |
+| `onClose`            | Called when user wants to exit full-screen editor          |
+| `onAddLayer`         | Called when user adds new material layer                   |
+| `onRemoveLayer`      | Called when user removes a layer                           |
+| `onReorderLayers`    | Called when user changes layer stacking order              |

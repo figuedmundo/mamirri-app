@@ -19,6 +19,21 @@ export async function withRetry<T>(
 
       let delay = Math.min(initialDelay * Math.pow(2, attempt - 1), 16000);
 
+      const isRateLimit =
+        error.status === 429 ||
+        error.statusCode === 429 ||
+        (error.error && error.error.code === 429) ||
+        error.code === 429 ||
+        (error.message && error.message.includes('Status code: 429'));
+
+      if (isRateLimit) {
+        if (logger)
+          logger.warn(
+            `Rate limit hit (429). Waiting 60s to clear quota window...`,
+          );
+        delay = 60000;
+      }
+
       const retryAfterHeader = error?.headers?.['retry-after'];
       if (retryAfterHeader) {
         const retryAfter = parseInt(retryAfterHeader, 10);

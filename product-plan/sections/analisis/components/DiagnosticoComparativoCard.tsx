@@ -1,22 +1,22 @@
-import type { DiagnosticoPeriodo } from '../types'
+import type { DiagnosticoPeriodo } from '../types';
 
 interface DiagnosticoComparativoCardProps {
-  diagnosticoComparativo: DiagnosticoPeriodo
-  conclusion?: string
+  diagnosticoComparativo: DiagnosticoPeriodo;
+  conclusion?: string;
 }
 
 export function DiagnosticoComparativoCard({
   diagnosticoComparativo,
-  conclusion
+  conclusion,
 }: DiagnosticoComparativoCardProps) {
   const DiagnosisSection = ({
     title,
     initial,
-    final
+    final,
   }: {
-    title: string
-    initial: string
-    final: string
+    title: string;
+    initial: string;
+    final: string;
   }) => (
     <div className="space-y-2">
       <h4 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
@@ -41,7 +41,7 @@ export function DiagnosticoComparativoCard({
         </div>
       </div>
     </div>
-  )
+  );
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm border border-slate-200 dark:border-slate-700">
@@ -112,5 +112,5 @@ export function DiagnosticoComparativoCard({
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -33,17 +33,20 @@ async function bootstrap() {
 
   let identifier = idOrFilename;
   if (!isUuid && !idOrFilename.includes('/')) {
-    identifier = `data/books/${idOrFilename}`;
+    identifier = `data/library/processed/${idOrFilename}`;
   }
 
-  console.log(`🧹 Attempting to clean data for identifier: ${identifier}`);
+  console.log(`\n🧹 Attempting to clean data for identifier: ${identifier}`);
 
   try {
     await knowledgeBaseService.removeDocument(identifier);
     console.log('✅ Cleanup complete.');
   } catch (error) {
-    if (!isUuid && identifier.startsWith('data/books/')) {
-      const archivePath = identifier.replace('data/books/', 'data/archive/');
+    if (!isUuid && identifier.startsWith('data/library/processed/')) {
+      const archivePath = identifier.replace(
+        'data/library/processed/',
+        'data/library/originals/',
+      );
       console.log(`🔍 Not found in books. Trying archive path: ${archivePath}`);
       try {
         await knowledgeBaseService.removeDocument(archivePath);

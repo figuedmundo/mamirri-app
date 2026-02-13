@@ -43,12 +43,11 @@ See `screenshot.png` for the target UI design.
 
 ## Callback Props
 
-| Callback | Description |
-|----------|-------------|
-| `onSearch` | Called when user enters search query or submits search |
-| `onSelectCategory` | Called when user clicks a category filter |
-| `onSelectProtocol` | Called when user clicks a technique/protocol card |
-| `onToggleLanguage` | Called when user toggles between EN/ES translation |
-| `onViewReference` | Called when user clicks to view full bibliographic reference |
-| `onAddToCase` | Called when user wants to add reference to treatment plan |
-
+| Callback           | Description                                                  |
+| ------------------ | ------------------------------------------------------------ |
+| `onSearch`         | Called when user enters search query or submits search       |
+| `onSelectCategory` | Called when user clicks a category filter                    |
+| `onSelectProtocol` | Called when user clicks a technique/protocol card            |
+| `onToggleLanguage` | Called when user toggles between EN/ES translation           |
+| `onViewReference`  | Called when user clicks to view full bibliographic reference |
+| `onAddToCase`      | Called when user wants to add reference to treatment plan    |

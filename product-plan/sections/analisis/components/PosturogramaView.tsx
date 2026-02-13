@@ -1,14 +1,18 @@
-import type { Posturograma, DesviacionDetectada, PuntoAnatomico } from '../../../../product/sections/analisis/types'
+import type {
+  Posturograma,
+  DesviacionDetectada,
+  PuntoAnatomico,
+} from '../../../../product/sections/analisis/types';
 
 interface PosturogramaViewProps {
-  pacienteNombre: string
-  tipoEvaluacion: 'inicial' | 'final' | 'seguimiento'
-  posturograma: Posturograma
-  desviacionesDetectadas: DesviacionDetectada[]
-  onEditarMarcadores?: () => void
-  onCompararConAnterior?: () => void
-  onExportar?: () => void
-  onVolver?: () => void
+  pacienteNombre: string;
+  tipoEvaluacion: 'inicial' | 'final' | 'seguimiento';
+  posturograma: Posturograma;
+  desviacionesDetectadas: DesviacionDetectada[];
+  onEditarMarcadores?: () => void;
+  onCompararConAnterior?: () => void;
+  onExportar?: () => void;
+  onVolver?: () => void;
 }
 
 export function PosturogramaView({
@@ -24,27 +28,29 @@ export function PosturogramaView({
   const getTipoBadgeClass = () => {
     const classes: Record<string, string> = {
       inicial: 'bg-teal-100 text-teal-700 dark:bg-teal-200 dark:text-teal-800',
-      final: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-200 dark:text-emerald-800',
+      final:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-200 dark:text-emerald-800',
       seguimiento: 'bg-sky-100 text-sky-700 dark:bg-sky-200 dark:text-sky-800',
-    }
-    return classes[tipoEvaluacion] || 'bg-slate-100 text-slate-700'
-  }
+    };
+    return classes[tipoEvaluacion] || 'bg-slate-100 text-slate-700';
+  };
 
   const getDesviacionSeverityColor = (severidad: string) => {
     const colors: Record<string, string> = {
       leve: 'bg-amber-100 text-amber-700 dark:bg-amber-200 dark:text-amber-800',
-      moderada: 'bg-orange-100 text-orange-700 dark:bg-orange-200 dark:text-orange-800',
+      moderada:
+        'bg-orange-100 text-orange-700 dark:bg-orange-200 dark:text-orange-800',
       severa: 'bg-rose-100 text-rose-700 dark:bg-rose-200 dark:text-rose-800',
-    }
-    return colors[severidad] || 'bg-slate-100 text-slate-700'
-  }
+    };
+    return colors[severidad] || 'bg-slate-100 text-slate-700';
+  };
 
   const getDesviacionEstadoIcon = (estado?: string) => {
-    if (estado === 'mejorada') return '✓'
-    if (estado === 'empeorada') return '✗'
-    if (estado === 'estable') return '→'
-    return null
-  }
+    if (estado === 'mejorada') return '✓';
+    if (estado === 'empeorada') return '✗';
+    if (estado === 'estable') return '→';
+    return null;
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-6 lg:p-8">
@@ -65,8 +71,11 @@ export function PosturogramaView({
                 <p className="text-sm text-slate-600 dark:text-slate-400">
                   {pacienteNombre}
                 </p>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getTipoBadgeClass()}`}>
-                  {tipoEvaluacion.charAt(0).toUpperCase() + tipoEvaluacion.slice(1)}
+                <span
+                  className={`px-2 py-0.5 rounded-full text-xs font-medium ${getTipoBadgeClass()}`}
+                >
+                  {tipoEvaluacion.charAt(0).toUpperCase() +
+                    tipoEvaluacion.slice(1)}
                 </span>
               </div>
             </div>
@@ -152,7 +161,9 @@ export function PosturogramaView({
                 <DesviacionCard
                   key={idx}
                   desviacion={desviacion}
-                  severityColor={getDesviacionSeverityColor(desviacion.severidad)}
+                  severityColor={getDesviacionSeverityColor(
+                    desviacion.severidad,
+                  )}
                   estadoIcon={getDesviacionEstadoIcon(desviacion.estado)}
                 />
               ))}
@@ -161,31 +172,35 @@ export function PosturogramaView({
         )}
       </div>
     </div>
-  )
+  );
 }
 
 interface VistaPosturogramaProps {
-  title: string
+  title: string;
   puntos: Partial<{
-    cabeza: PuntoAnatomico
-    hombros: PuntoAnatomico
-    columna: PuntoAnatomico
-    pelvis: PuntoAnatomico
-    rodillas: PuntoAnatomico | { izquierda: PuntoAnatomico; derecha: PuntoAnatomico }
-    pies: PuntoAnatomico | { izquierdo: PuntoAnatomico; derecho: PuntoAnatomico }
-  }>
+    cabeza: PuntoAnatomico;
+    hombros: PuntoAnatomico;
+    columna: PuntoAnatomico;
+    pelvis: PuntoAnatomico;
+    rodillas:
+      | PuntoAnatomico
+      | { izquierda: PuntoAnatomico; derecha: PuntoAnatomico };
+    pies:
+      | PuntoAnatomico
+      | { izquierdo: PuntoAnatomico; derecho: PuntoAnatomico };
+  }>;
 }
 
 function VistaPosturograma({ title, puntos }: VistaPosturogramaProps) {
   const getMarcadorColor = (desviacion: string) => {
-    if (desviacion === 'normal') return 'bg-teal-500 border-teal-600'
-    return 'bg-rose-500 border-rose-600'
-  }
+    if (desviacion === 'normal') return 'bg-teal-500 border-teal-600';
+    return 'bg-rose-500 border-rose-600';
+  };
 
   const renderMarcador = (punto?: PuntoAnatomico, label?: string) => {
-    if (!punto) return null
+    if (!punto) return null;
 
-    const color = getMarcadorColor(punto.desviacion)
+    const color = getMarcadorColor(punto.desviacion);
 
     return (
       <div
@@ -198,21 +213,21 @@ function VistaPosturograma({ title, puntos }: VistaPosturogramaProps) {
       >
         <div className={`w-full h-full rounded-full ${color}`} />
       </div>
-    )
-  }
+    );
+  };
 
   const renderMarcadorPair = (
     par?: { izquierda: PuntoAnatomico; derecha: PuntoAnatomico },
-    label?: string
+    label?: string,
   ) => {
-    if (!par) return null
+    if (!par) return null;
     return (
       <>
         {renderMarcador(par.izquierda, `${label} (izquierdo)`)}
         {renderMarcador(par.derecha, `${label} (derecho)`)}
       </>
-    )
-  }
+    );
+  };
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
@@ -229,7 +244,9 @@ function VistaPosturograma({ title, puntos }: VistaPosturogramaProps) {
               <div className="w-32 h-48 mx-auto bg-gradient-to-br from-slate-300 to-slate-400 dark:from-slate-600 dark:to-slate-700 rounded-lg flex items-center justify-center opacity-30">
                 <span className="text-6xl">🚶</span>
               </div>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Silueta de postura</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Silueta de postura
+              </p>
             </div>
           </div>
 
@@ -242,25 +259,29 @@ function VistaPosturograma({ title, puntos }: VistaPosturogramaProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 interface DesviacionCardProps {
-  desviacion: DesviacionDetectada
-  severityColor: string
-  estadoIcon?: string | null
+  desviacion: DesviacionDetectada;
+  severityColor: string;
+  estadoIcon?: string | null;
 }
 
-function DesviacionCard({ desviacion, severityColor, estadoIcon }: DesviacionCardProps) {
+function DesviacionCard({
+  desviacion,
+  severityColor,
+  estadoIcon,
+}: DesviacionCardProps) {
   const getVistaLabel = (vista: string) => {
     const labels: Record<string, string> = {
       vistaAnterior: 'Anterior',
       vistaPosterior: 'Posterior',
       vistaLateralDerecha: 'Lateral Der.',
       vistaLateralIzquierda: 'Lateral Izq.',
-    }
-    return labels[vista] || vista
-  }
+    };
+    return labels[vista] || vista;
+  };
 
   return (
     <div className={`p-4 rounded-xl border-2 ${severityColor} border-current`}>
@@ -268,9 +289,7 @@ function DesviacionCard({ desviacion, severityColor, estadoIcon }: DesviacionCar
         <span className="text-xs font-medium opacity-75">
           {getVistaLabel(desviacion.vista)}
         </span>
-        {estadoIcon && (
-          <span className="text-sm font-bold">{estadoIcon}</span>
-        )}
+        {estadoIcon && <span className="text-sm font-bold">{estadoIcon}</span>}
       </div>
 
       <h3 className="text-lg font-bold mb-2 capitalize">
@@ -287,5 +306,5 @@ function DesviacionCard({ desviacion, severityColor, estadoIcon }: DesviacionCar
         </span>
       </div>
     </div>
-  )
+  );
 }

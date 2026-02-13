@@ -1,31 +1,31 @@
-import type { DolorComparativo } from '../types'
+import type { DolorComparativo } from '../types';
 
 interface DolorChartProps {
-  dolorComparativo: DolorComparativo
+  dolorComparativo: DolorComparativo;
 }
 
 export function DolorChart({ dolorComparativo }: DolorChartProps) {
   const getPainColor = (level: number) => {
-    if (level <= 2) return 'teal'
-    if (level <= 4) return 'sky'
-    if (level <= 6) return 'yellow'
-    if (level <= 8) return 'orange'
-    return 'red'
-  }
+    if (level <= 2) return 'teal';
+    if (level <= 4) return 'sky';
+    if (level <= 6) return 'yellow';
+    if (level <= 8) return 'orange';
+    return 'red';
+  };
 
   const PainBar = ({
     label,
     initial,
     final,
-    improvement
+    improvement,
   }: {
-    label: string
-    initial: number
-    final: number
-    improvement: string
+    label: string;
+    initial: number;
+    final: number;
+    improvement: string;
   }) => {
-    const initialColor = getPainColor(initial)
-    const finalColor = getPainColor(final)
+    const initialColor = getPainColor(initial);
+    const finalColor = getPainColor(final);
 
     return (
       <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
@@ -33,7 +33,9 @@ export function DolorChart({ dolorComparativo }: DolorChartProps) {
           <h4 className="font-semibold text-slate-800 dark:text-slate-200">
             {label}
           </h4>
-          <span className={`text-sm font-bold ${final < initial ? 'text-teal-600 dark:text-teal-400' : final > initial ? 'text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400'}`}>
+          <span
+            className={`text-sm font-bold ${final < initial ? 'text-teal-600 dark:text-teal-400' : final > initial ? 'text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400'}`}
+          >
             {improvement}
           </span>
         </div>
@@ -41,7 +43,9 @@ export function DolorChart({ dolorComparativo }: DolorChartProps) {
         <div className="space-y-2">
           <div>
             <div className="flex items-center justify-between text-xs mb-1">
-              <span className="text-slate-600 dark:text-slate-400">Inicial</span>
+              <span className="text-slate-600 dark:text-slate-400">
+                Inicial
+              </span>
               <span className="font-semibold text-slate-700 dark:text-slate-300">
                 {initial}/10
               </span>
@@ -72,15 +76,17 @@ export function DolorChart({ dolorComparativo }: DolorChartProps) {
 
         <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-500 dark:text-slate-400">Reducción:</span>
+            <span className="text-slate-500 dark:text-slate-400">
+              Reducción:
+            </span>
             <span className="font-semibold text-slate-700 dark:text-slate-300">
               {Math.max(0, initial - final)}/10
             </span>
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="space-y-4">
@@ -134,5 +140,5 @@ export function DolorChart({ dolorComparativo }: DolorChartProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

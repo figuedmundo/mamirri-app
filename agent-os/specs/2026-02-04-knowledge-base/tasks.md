@@ -18,8 +18,8 @@ Total Tasks: 10
   - [x] 0.2 Add npm script to `apps/server/package.json`
     - Add `"knowledge:ingest": "ts-node scripts/ingest-books.ts"` to scripts section
   - [x] 0.3 Create data directory
-    - Create `apps/server/data/books/` directory
-    - Add `data/books/` to `.gitignore` if not already present
+    - Create `apps/server/data/library/originals/` directory
+    - Add `data/library/originals/` to `.gitignore` if not already present
   - [x] 0.4 Add GOOGLE_API_KEY to environment
     - Document that `GOOGLE_API_KEY` should be added to `.env`
     - Follow pattern from TranscriptionService for ConfigService usage
@@ -74,7 +74,7 @@ Total Tasks: 10
     - Integration with `@google/generative-ai`
   - [x] 2.3 Implement PDF Ingestion Script
     - Create `scripts/ingest-books.ts`
-    - Scan `data/books` folder
+    - Scan `data/library/originals` folder
     - Call service for processing
   - [x] 2.4 Ensure backend tests pass
     - Run ONLY tests from 2.1

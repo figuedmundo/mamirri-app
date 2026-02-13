@@ -7,8 +7,13 @@ PhysioCopilot uses a modular monolith architecture built with:
 - **Frontend:** React + Vite + Shadcn/UI
 - **Backend:** NestJS + Prisma ORM
 - **Database:** PostgreSQL (with pgvector extension)
-- **AI Infrastructure:** Google Gemini 3 (Embeddings + Vision + Orchestration)
-- **Knowledge Base:** RAG-based literature retrieval
+- **AI Infrastructure:**
+  - **LLM/Vision:** Google Gemini 3 Flash
+  - **Embeddings:** Voyage AI (Voyage-4 series, 1024 dimensions)
+  - **Reranking:** Cohere Rerank v4.0-pro
+- **Knowledge Base:** RAG-based literature retrieval with pgvector (1024 dims)
+- **Anonymization:** Reversible PII-stripping service
+- **Translation:** Bidirectional EN-ES medical terminology service
 - **Storage:** MinIO (S3-compatible)
 - **Cache:** Redis
 - **Logging:** Structured JSON (NestJS + React)
@@ -48,10 +53,15 @@ The application uses **Driver Adapters** (`@prisma/adapter-pg`) to manage runtim
 ### Data Management Patterns
 
 - **Knowledge Base (RAG)**: Medical books are ingested, chunked, and stored as vectors in PostgreSQL. Semantic search uses cosine similarity via `pgvector` to retrieve relevant clinical context for AI suggestions.
+- **AI Analysis Pipeline**: Orchestrates a multi-step flow:
+  1. **Anonymization**: Strips PII (Name, Email, Phone) and calculates age from birthdates.
+  2. **Multi-Query RAG**: Executes 3 parallel searches for diagnosis, treatment, and contraindications.
+  3. **Reasoning**: Uses Gemini 3 Flash with Chain-of-Thought prompting in Spanish.
+  4. **Translation**: Automatically translates English literature citations to Spanish.
+  5. **Rehydration**: Restores patient names in the final response for the therapist.
 - **Soft Deletes**: Critical entities (like `Patient`) implement soft deletes using a `deletedAt` timestamp.
-  Records are not physically removed from the database to maintain audit trails.
 - **Tenant Isolation**: Data access is strictly scoped to the authenticated user (`therapistId`). Service layers enforce this isolation in all queries.
 
 ---
 
-**Last Updated:** 2026-02-04
+**Last Updated:** 2026-02-05

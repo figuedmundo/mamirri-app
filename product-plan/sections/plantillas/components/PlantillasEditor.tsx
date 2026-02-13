@@ -1,12 +1,12 @@
-import type { PlantillasEditorProps, Plantilla, ZonaAlivio } from '../types'
-import { PropertiesPanel } from './PropertiesPanel'
-import { ClinicalSidePanel } from './ClinicalSidePanel'
-import { Toolbar } from './Toolbar'
-import { InsoleViewer3D } from './InsoleViewer3D'
-import { useState } from 'react'
+import type { PlantillasEditorProps, Plantilla, ZonaAlivio } from '../types';
+import { PropertiesPanel } from './PropertiesPanel';
+import { ClinicalSidePanel } from './ClinicalSidePanel';
+import { Toolbar } from './Toolbar';
+import { InsoleViewer3D } from './InsoleViewer3D';
+import { useState } from 'react';
 
 interface ExtendedEditorProps extends PlantillasEditorProps {
-  onExit?: () => void
+  onExit?: () => void;
 }
 
 export function PlantillasEditor({
@@ -17,40 +17,44 @@ export function PlantillasEditor({
   onUpdateLayer,
   onUpdateReliefZone,
   onExport,
-  onExit
+  onExit,
 }: ExtendedEditorProps) {
-  const [activeTool, setActiveTool] = useState<'select' | 'brush' | 'measure'>('select')
-  const [plantilla, setPlantilla] = useState<Plantilla>(initialPlantilla)
+  const [activeTool, setActiveTool] = useState<'select' | 'brush' | 'measure'>(
+    'select',
+  );
+  const [plantilla, setPlantilla] = useState<Plantilla>(initialPlantilla);
 
-  const handleParamUpdate = (param: keyof Plantilla['parametros'], value: number | boolean) => {
-    setPlantilla(prev => ({
+  const handleParamUpdate = (
+    param: keyof Plantilla['parametros'],
+    value: number | boolean,
+  ) => {
+    setPlantilla((prev) => ({
       ...prev,
-      parametros: { ...prev.parametros, [param]: value }
-    }))
-    onUpdateParameter(param, value)
-  }
+      parametros: { ...prev.parametros, [param]: value },
+    }));
+    onUpdateParameter(param, value);
+  };
 
   const handleReliefAdd = (x: number, y: number) => {
-    const newZone: ZonaAlivio = { x, y, radio: 20, intensidad: 1 }
-    setPlantilla(prev => ({
+    const newZone: ZonaAlivio = { x, y, radio: 20, intensidad: 1 };
+    setPlantilla((prev) => ({
       ...prev,
-      zonasAlivio: [...prev.zonasAlivio, newZone]
-    }))
-    onUpdateReliefZone(newZone)
-  }
+      zonasAlivio: [...prev.zonasAlivio, newZone],
+    }));
+    onUpdateReliefZone(newZone);
+  };
 
   const handleExit = () => {
     if (onExit) {
-      onExit()
+      onExit();
     } else {
-      console.log('Exiting editor...')
+      console.log('Exiting editor...');
     }
-  }
+  };
 
   return (
     <div className="flex h-screen w-screen bg-black overflow-hidden font-sans text-slate-200">
-      
-      <PropertiesPanel 
+      <PropertiesPanel
         plantilla={plantilla}
         materiales={materiales}
         onUpdateParameter={handleParamUpdate}
@@ -58,14 +62,14 @@ export function PlantillasEditor({
       />
 
       <div className="flex-1 relative flex flex-col">
-        <Toolbar 
-          activeTool={activeTool} 
-          onSelectTool={setActiveTool} 
+        <Toolbar
+          activeTool={activeTool}
+          onSelectTool={setActiveTool}
           onExport={onExport}
           onExit={handleExit}
         />
-        
-        <InsoleViewer3D 
+
+        <InsoleViewer3D
           plantilla={plantilla}
           activeTool={activeTool}
           onAddRelief={handleReliefAdd}
@@ -73,7 +77,6 @@ export function PlantillasEditor({
       </div>
 
       <ClinicalSidePanel caso={caso} />
-
     </div>
-  )
+  );
 }

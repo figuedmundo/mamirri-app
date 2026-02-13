@@ -33,15 +33,15 @@ Crearemos una aplicación para Tablet (iPad/Android) que funciona con **Voz y Fo
 ### ¿Cómo funcionará en la consulta?
 
 1. **Ingreso sin Esfuerzo:**
-    - Usted habla: *"Paciente María, dolor lumbar que aumenta al estar de pie..."* (La App lo transcribe y ordena).
-    - Usted saca fotos: Foto de la postura y foto de la huella en el papel.
+   - Usted habla: _"Paciente María, dolor lumbar que aumenta al estar de pie..."_ (La App lo transcribe y ordena).
+   - Usted saca fotos: Foto de la postura y foto de la huella en el papel.
 2. **Análisis Visual Avanzado:**
-    - El sistema "mira" la huella del pie, detecta los arcos y puntos de presión, y los compara con sesiones anteriores para ver la evolución objetiva.
+   - El sistema "mira" la huella del pie, detecta los arcos y puntos de presión, y los compara con sesiones anteriores para ver la evolución objetiva.
 3. **Consulta a la "Biblioteca Infinita":**
-    - El sistema tiene "leídos" cientos de libros de fisioterapia y biomecánica.
-    - Al analizar al paciente, el sistema busca en segundos referencias en esos libros y le dice: *"Para este tipo de pie plano, el autor Kapandji sugiere fortalecer el tibial posterior y una plantilla con soporte de 15mm"*.
+   - El sistema tiene "leídos" cientos de libros de fisioterapia y biomecánica.
+   - Al analizar al paciente, el sistema busca en segundos referencias en esos libros y le dice: _"Para este tipo de pie plano, el autor Kapandji sugiere fortalecer el tibial posterior y una plantilla con soporte de 15mm"_.
 4. **Diseño de Tratamiento:**
-    - La App genera un borrador del tratamiento y diseño de la plantilla. Usted solo tiene que decir "Sí" o corregirlo.
+   - La App genera un borrador del tratamiento y diseño de la plantilla. Usted solo tiene que decir "Sí" o corregirlo.
 
 ---
 

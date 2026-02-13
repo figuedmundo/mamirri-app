@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { User, LogOut } from 'lucide-react'
+import { useState } from 'react';
+import { User, LogOut } from 'lucide-react';
 
 export interface UserMenuProps {
-  user: { name: string; avatarUrl?: string }
-  onLogout?: () => void
+  user: { name: string; avatarUrl?: string };
+  onLogout?: () => void;
 }
 
 export function UserMenu({ user, onLogout }: UserMenuProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="relative">
@@ -45,8 +45,8 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
               </div>
               <button
                 onClick={() => {
-                  onLogout?.()
-                  setIsOpen(false)
+                  onLogout?.();
+                  setIsOpen(false);
                 }}
                 className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 flex items-center space-x-2"
               >
@@ -58,5 +58,5 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
         </>
       )}
     </div>
-  )
+  );
 }

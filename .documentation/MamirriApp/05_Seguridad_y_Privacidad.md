@@ -13,21 +13,20 @@ El sistema **no está orientado a investigación**, **no entrena modelos externo
 ## 2. Principios de Seguridad
 
 1. **Minimización de datos**
-    
-    Solo se almacenan los datos estrictamente necesarios para la práctica clínica.
-    
+
+   Solo se almacenan los datos estrictamente necesarios para la práctica clínica.
+
 2. **Decisión humana central**
-    
-    Ningún proceso automatizado toma decisiones clínicas ni actúa sin supervisión humana.
-    
+
+   Ningún proceso automatizado toma decisiones clínicas ni actúa sin supervisión humana.
+
 3. **Simplicidad segura**
-    
-    Se priorizan soluciones simples, probadas y mantenibles frente a arquitecturas complejas.
-    
+
+   Se priorizan soluciones simples, probadas y mantenibles frente a arquitecturas complejas.
+
 4. **Cero pérdida de datos**
-    
-    La pérdida de información clínica se considera un fallo crítico.
-    
+
+   La pérdida de información clínica se considera un fallo crítico.
 
 ---
 
@@ -71,9 +70,9 @@ El sistema **no está orientado a investigación**, **no entrena modelos externo
 - Acceso únicamente mediante URLs firmadas con expiración.
 - No existen URLs públicas permanentes.
 - Cada imagen debe estar obligatoriamente asociada a:
-    - Un paciente
-    - Una sesión
-    - Una fecha
+  - Un paciente
+  - Una sesión
+  - Una fecha
 
 Esto garantiza trazabilidad clínica y evita archivos huérfanos.
 
@@ -92,9 +91,9 @@ Esto garantiza trazabilidad clínica y evita archivos huérfanos.
 ## 8. Auditoría y Trazabilidad
 
 - Registro de:
-    - Cuándo se crea un paciente
-    - Cuándo se añade una sesión
-    - Cuándo se modifican observaciones
+  - Cuándo se crea un paciente
+  - Cuándo se añade una sesión
+  - Cuándo se modifican observaciones
 - Historial clínico inmutable por sesión.
 - El sistema **no borra información clínica**, solo permite añadir correcciones o nuevas observaciones.
 
@@ -105,9 +104,9 @@ Esto garantiza trazabilidad clínica y evita archivos huérfanos.
 - Acceso exclusivo del profesional responsable.
 - No se comparten datos con terceros.
 - No se utilizan datos para:
-    - entrenamiento de modelos externos
-    - análisis comerciales
-    - estudios agregados
+  - entrenamiento de modelos externos
+  - análisis comerciales
+  - estudios agregados
 - No existe exportación automática de datos en el MVP.
 
 ---
@@ -136,7 +135,107 @@ Nada de esto se activa en el MVP.
 
 ---
 
-## 12. Cierre
+## 12. Inteligencia Artificial y Privacidad (Fase 15)
+
+### 12.1 Anonimización antes de enviar a IA
+
+Cuando utilizas la función **"Analizar con IA"**, el sistema protege la privacidad de tus pacientes mediante un proceso de anonimización automática:
+
+**Datos que se protegen:**
+
+| Dato Original          | Lo que ve la IA                    | Protección                 |
+| ---------------------- | ---------------------------------- | -------------------------- |
+| Nombre del paciente    | `[PACIENTE]`                       | Identidad oculta           |
+| Fecha de nacimiento    | `[EDAD] años (36)`                 | Solo edad, no fecha exacta |
+| Teléfono               | **Eliminado**                      | No se envía                |
+| Email                  | **Eliminado**                      | No se envía                |
+| Contacto de emergencia | **Eliminado**                      | No se envía                |
+| Fechas específicas     | Tiempo relativo ("hace 3 semanas") | Sin fechas exactas         |
+
+**Ejemplo real:**
+
+```
+ANTES DE ANONIMIZAR:
+"Juan Pérez, nacido el 15/03/1990, teléfono 600123456,
+reporta dolor lumbar desde el 10/01/2024"
+
+DESPUÉS DE ANONIMIZAR:
+"[PACIENTE], [EDAD] años (36),
+reporta dolor lumbar desde hace 3 semanas"
+```
+
+### 12.2 Qué nunca sale de tu servidor
+
+**Nunca abandonan tu infraestructura:**
+
+- Nombres reales de pacientes
+- Teléfonos y correos electrónicos
+- Grabaciones de voz originales
+- Imágenes médicas y posturogramas
+- Datos completos de evaluación
+
+**Mapeos temporales:**
+
+- El sistema recuerda temporalmente qué placeholder pertenece a qué paciente
+- Esta memoria se borra automáticamente después de mostrarte los resultados
+- No se almacena permanentemente información que identifique al paciente
+
+### 12.3 Qué llega a la IA externa
+
+**Únicamente esta información llega a Google Gemini:**
+
+- Descripciones clínicas anonimizadas
+- Escalas de dolor y síntomas
+- Resultados de análisis de posturogramas
+- Resúmenes de sesiones de tratamiento
+- Citas de literatura médica
+
+### 12.4 Compromisos de privacidad
+
+- **Sin datos de entrenamiento** - Google no utiliza tus datos de pacientes para entrenar modelos
+- **Sin retención** - Los datos anonimizados no se almacenan en servidores externos
+- **Solo citas de libros** - Las recomendaciones citan contenido de libros médicos, nunca casos de pacientes
+- **Audit trail mínimo** - El sistema solo registra ID de caso y timestamp, nunca datos del paciente
+
+### 12.5 Flujo de datos
+
+**Versión simple:** Los datos del paciente permanecen en tu servidor → Solo descripciones anonimizadas van a Google → Los resultados regresan con placeholders → Tu servidor completa con los nombres reales
+
+```mermaid
+flowchart TD
+    A["Datos del Paciente: Juan Pérez, 600123456"] --> B["Tu Servidor"]
+    B -->|AnonymizerService| C["Datos Anonimizados: [PACIENTE], [EDAD] años"]
+    C -->|HTTPS| D["Google Gemini"]
+    D -->|Devuelve análisis| E["Resultados con placeholders"]
+    E -->|Tu Servidor| F["Resultados con nombres reales mostrados a ti"]
+
+    style A fill:#e1f5e1,stroke:#333
+    style B fill:#fff3cd,stroke:#333
+    style F fill:#e1f5e1,stroke:#333
+    style D fill:#ffe6e6,stroke:#333
+```
+
+### 12.6 Notas de cumplimiento
+
+**Lo que hace el software:**
+
+- Elimina toda la información de identificación personal antes de las llamadas a la API externa
+- No almacena datos de pacientes en servidores externos
+- No utiliza datos de pacientes para entrenar modelos de IA
+- Mantiene logs de auditoría sin información que identifique al paciente
+
+**Lo que necesitas verificar:**
+
+- Asegúrate de que tu cuenta de Google Cloud tenga acuerdos de procesamiento de datos apropiados
+- Verifica si tu región requiere consentimiento específico para herramientas clínicas asistidas por IA
+- Comprueba el cumplimiento con regulaciones locales de datos de salud (HIPAA, GDPR, etc.)
+- Considera las políticas de consentimiento del paciente para análisis asistido por IA
+
+Las salvaguardas técnicas están en su lugar, pero el cumplimiento regulatorio depende de tu jurisdicción específica y los requisitos de tu práctica.
+
+---
+
+## 13. Cierre
 
 La seguridad y la privacidad no son funcionalidades añadidas, sino **condiciones de existencia del sistema**.
 

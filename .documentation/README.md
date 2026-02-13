@@ -37,6 +37,7 @@ Comprehensive documentation is available in the [`.documentation/`](.documentati
 - **[Security & Privacy](.documentation/technical/security.md)**: Data encryption and anonymization requirements.
 - **[Logging System](.documentation/technical/logging-system.md)**: Structured logging, sanitization, and observability.
 - **[Knowledge Base & RAG](.documentation/technical/knowledge-base-rag.md)**: AI semantic search and medical literature retrieval.
+- **[AI Analysis Guide](.documentation/technical/ai-analysis-feature-guide.md)**: Multi-modal AI orchestration (Voice + Vision + RAG + LLM) for clinical suggestions.
 - **[Frontend Auth](.documentation/technical/frontend-authentication.md)**: Implementation details for JWT and protected routes.
 
 ### 🇪🇸 Original Project Proposal (ES)
@@ -111,6 +112,7 @@ documentation/
 │   ├── database-schema.md            # Prisma models and relationships
 │   ├── api-reference.md            # API endpoint documentation
 │   ├── knowledge-base-rag.md         # RAG and Knowledge Base infrastructure
+│   ├── ai-analysis-feature-guide.md    # AI Clinical suggestions pipeline
 │   ├── security.md                   # Security and privacy requirements
 │   ├── logging-system.md              # Logging, sanitization, and observability
 │   └── frontend-authentication.md      # Frontend auth implementation

@@ -17,6 +17,7 @@ Una app de tablet o celulares para fisioterapeutas que captura datos por voz y f
 ## Data Model
 
 **Core Entities:**
+
 - Paciente — La persona que recibe tratamiento, con su historial completo
 - Caso clínico — Un episodio de atención para una condición específica
 - Evaluación — Sesión de diagnóstico con fotos, videos y hallazgos iniciales
@@ -30,11 +31,13 @@ Una app de tablet o celulares para fisioterapeutas que captura datos por voz y f
 ## Design System
 
 **Colors:**
+
 - Primary: Teal — Used for buttons, links, key accents
 - Secondary: Sky — Used for tags, highlights, secondary elements
 - Neutral: Slate — Used for backgrounds, text, borders
 
 **Typography:**
+
 - Heading: DM Sans
 - Body: DM Sans
 - Mono: IBM Plex Mono

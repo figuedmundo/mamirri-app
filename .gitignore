@@ -36,16 +36,23 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
-
-.docs/
-
 *.log
 
 playwright-report/
 test-results/
 
 # App Data
-apps/server/data/books/
-backups/*.sql*
-apps/server/data/archive/
-*.sql.gz
+apps/server/data/library/
+apps/server/data/batches/
+apps/server/data/logs/
+backups/*
+!backups/.gitkeep
+.tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.cache/

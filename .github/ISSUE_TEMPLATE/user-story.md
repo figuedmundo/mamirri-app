@@ -20,14 +20,17 @@ assignees: ''
 ## Technical Tasks
 
 ### Backend
+
 - [ ] Task 1
 - [ ] Task 2
 
 ### Frontend
+
 - [ ] Task 1
 - [ ] Task 2
 
 ## Definition of Done
+
 - [ ] Code merged to main
 - [ ] Tests pass
 - [ ] Reviewed by peer

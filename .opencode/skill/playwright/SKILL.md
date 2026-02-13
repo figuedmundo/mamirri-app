@@ -6,9 +6,9 @@ description: >
 license: Apache-2.0
 metadata:
   author: prowler-cloud
-  version: "1.0"
+  version: '1.0'
   scope: [root, ui]
-  auto_invoke: "Writing Playwright E2E tests"
+  auto_invoke: 'Writing Playwright E2E tests'
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, WebFetch, WebSearch, Task
 ---
 
@@ -27,6 +27,7 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash, WebFetch, WebSearch, Task
 **If MCP NOT available:** Proceed with test creation based on docs and code analysis.
 
 **Why This Matters:**
+
 - ✅ Precise tests - exact steps needed, no assumptions
 - ✅ Accurate selectors - real DOM structure, not imagined
 - ✅ Real flow validation - verify journey actually works
@@ -47,6 +48,7 @@ tests/
 ```
 
 **File Naming:**
+
 - ✅ `sign-up.spec.ts` (all sign-up tests)
 - ✅ `sign-up-page.ts` (page object)
 - ✅ `sign-up.md` (documentation)
@@ -57,33 +59,34 @@ tests/
 
 ```typescript
 // 1. BEST - getByRole for interactive elements
-this.submitButton = page.getByRole("button", { name: "Submit" });
-this.navLink = page.getByRole("link", { name: "Dashboard" });
+this.submitButton = page.getByRole('button', { name: 'Submit' });
+this.navLink = page.getByRole('link', { name: 'Dashboard' });
 
 // 2. BEST - getByLabel for form controls
-this.emailInput = page.getByLabel("Email");
-this.passwordInput = page.getByLabel("Password");
+this.emailInput = page.getByLabel('Email');
+this.passwordInput = page.getByLabel('Password');
 
 // 3. SPARINGLY - getByText for static content only
-this.errorMessage = page.getByText("Invalid credentials");
-this.pageTitle = page.getByText("Welcome");
+this.errorMessage = page.getByText('Invalid credentials');
+this.pageTitle = page.getByText('Welcome');
 
 // 4. LAST RESORT - getByTestId when above fail
-this.customWidget = page.getByTestId("date-picker");
+this.customWidget = page.getByTestId('date-picker');
 
 // ❌ AVOID fragile selectors
-this.button = page.locator(".btn-primary");  // NO
-this.input = page.locator("#email");         // NO
+this.button = page.locator('.btn-primary'); // NO
+this.input = page.locator('#email'); // NO
 ```
 
 ## Scope Detection (ASK IF AMBIGUOUS)
 
-| User Says | Action |
-|-----------|--------|
-| "a test", "one test", "new test", "add test" | Create ONE test() in existing spec |
-| "comprehensive tests", "all tests", "test suite", "generate tests" | Create full suite |
+| User Says                                                          | Action                             |
+| ------------------------------------------------------------------ | ---------------------------------- |
+| "a test", "one test", "new test", "add test"                       | Create ONE test() in existing spec |
+| "comprehensive tests", "all tests", "test suite", "generate tests" | Create full suite                  |
 
 **Examples:**
+
 - "Create a test for user sign-up" → ONE test only
 - "Generate E2E tests for login page" → Full suite
 - "Add a test to verify form validation" → ONE test to existing spec
@@ -91,7 +94,7 @@ this.input = page.locator("#email");         // NO
 ## Page Object Pattern
 
 ```typescript
-import { Page, Locator, expect } from "@playwright/test";
+import { Page, Locator, expect } from '@playwright/test';
 
 // BasePage - ALL pages extend this
 export class BasePage {
@@ -99,7 +102,7 @@ export class BasePage {
 
   async goto(path: string): Promise<void> {
     await this.page.goto(path);
-    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForLoadState('networkidle');
   }
 
   // Common methods go here (see Refactoring Guidelines)
@@ -126,13 +129,13 @@ export class LoginPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.emailInput = page.getByLabel("Email");
-    this.passwordInput = page.getByLabel("Password");
-    this.submitButton = page.getByRole("button", { name: "Sign in" });
+    this.emailInput = page.getByLabel('Email');
+    this.passwordInput = page.getByLabel('Password');
+    this.submitButton = page.getByRole('button', { name: 'Sign in' });
   }
 
   async goto(): Promise<void> {
-    await super.goto("/login");
+    await super.goto('/login');
   }
 
   async login(data: LoginData): Promise<void> {
@@ -142,7 +145,7 @@ export class LoginPage extends BasePage {
   }
 
   async verifyCriticalOutcome(): Promise<void> {
-    await expect(this.page).toHaveURL("/dashboard");
+    await expect(this.page).toHaveURL('/dashboard');
   }
 }
 ```
@@ -153,28 +156,33 @@ export class LoginPage extends BasePage {
 
 ```typescript
 // ✅ GOOD: Reuse existing page objects
-import { SignInPage } from "../sign-in/sign-in-page";
-import { HomePage } from "../home/home-page";
+import { SignInPage } from '../sign-in/sign-in-page';
+import { HomePage } from '../home/home-page';
 
-test("User can sign up and login", async ({ page }) => {
+test('User can sign up and login', async ({ page }) => {
   const signUpPage = new SignUpPage(page);
-  const signInPage = new SignInPage(page);  // REUSE
-  const homePage = new HomePage(page);      // REUSE
+  const signInPage = new SignInPage(page); // REUSE
+  const homePage = new HomePage(page); // REUSE
 
   await signUpPage.signUp(userData);
-  await homePage.verifyPageLoaded();  // REUSE method
-  await homePage.signOut();           // REUSE method
+  await homePage.verifyPageLoaded(); // REUSE method
+  await homePage.signOut(); // REUSE method
   await signInPage.login(credentials); // REUSE method
 });
 
 // ❌ BAD: Recreating existing functionality
 export class SignUpPage extends BasePage {
-  async logout() { /* ... */ }  // ❌ HomePage already has this
-  async login() { /* ... */ }   // ❌ SignInPage already has this
+  async logout() {
+    /* ... */
+  } // ❌ HomePage already has this
+  async login() {
+    /* ... */
+  } // ❌ SignInPage already has this
 }
 ```
 
 **Guidelines:**
+
 - Check `tests/` for existing page objects first
 - Import and reuse existing pages
 - Create page objects only when page doesn't exist
@@ -183,6 +191,7 @@ export class SignUpPage extends BasePage {
 ## Refactoring Guidelines
 
 ### Move to `BasePage` when:
+
 - ✅ Navigation helpers used by multiple pages (`waitForPageLoad()`, `getCurrentUrl()`)
 - ✅ Common UI interactions (notifications, modals, theme toggles)
 - ✅ Verification patterns repeated across pages (`isVisible()`, `waitForVisible()`)
@@ -190,6 +199,7 @@ export class SignUpPage extends BasePage {
 - ✅ Screenshot utilities for debugging
 
 ### Move to `helpers.ts` when:
+
 - ✅ Test data generation (`generateUniqueEmail()`, `generateTestUser()`)
 - ✅ Setup/teardown utilities (`createTestUser()`, `cleanupTestData()`)
 - ✅ Custom assertions (`expectNotificationToContain()`)
@@ -197,6 +207,7 @@ export class SignUpPage extends BasePage {
 - ✅ Time utilities (`waitForCondition()`, `retryAction()`)
 
 **Before (BAD):**
+
 ```typescript
 // Repeated in multiple page objects
 export class SignUpPage extends BasePage {
@@ -206,12 +217,13 @@ export class SignUpPage extends BasePage {
 }
 export class SignInPage extends BasePage {
   async waitForNotification(): Promise<void> {
-    await this.page.waitForSelector('[role="status"]');  // DUPLICATED!
+    await this.page.waitForSelector('[role="status"]'); // DUPLICATED!
   }
 }
 ```
 
 **After (GOOD):**
+
 ```typescript
 // BasePage - shared across all pages
 export class BasePage {
@@ -227,9 +239,9 @@ export function generateUniqueEmail(): string {
 
 export function generateTestUser() {
   return {
-    name: "Test User",
+    name: 'Test User',
     email: generateUniqueEmail(),
-    password: "TestPassword123!",
+    password: 'TestPassword123!',
   };
 }
 ```
@@ -237,25 +249,27 @@ export function generateTestUser() {
 ## Test Pattern with Tags
 
 ```typescript
-import { test, expect } from "@playwright/test";
-import { LoginPage } from "./login-page";
+import { test, expect } from '@playwright/test';
+import { LoginPage } from './login-page';
 
-test.describe("Login", () => {
-  test("User can login successfully",
-    { tag: ["@critical", "@e2e", "@login", "@LOGIN-E2E-001"] },
+test.describe('Login', () => {
+  test(
+    'User can login successfully',
+    { tag: ['@critical', '@e2e', '@login', '@LOGIN-E2E-001'] },
     async ({ page }) => {
       const loginPage = new LoginPage(page);
 
       await loginPage.goto();
-      await loginPage.login({ email: "user@test.com", password: "pass123" });
+      await loginPage.login({ email: 'user@test.com', password: 'pass123' });
 
-      await expect(page).toHaveURL("/dashboard");
-    }
+      await expect(page).toHaveURL('/dashboard');
+    },
   );
 });
 ```
 
 **Tag Categories:**
+
 - Priority: `@critical`, `@high`, `@medium`, `@low`
 - Type: `@e2e`
 - Feature: `@signup`, `@signin`, `@dashboard`
@@ -276,33 +290,40 @@ test.describe("Login", () => {
 **Priority:** `{critical|high|medium|low}`
 
 **Tags:**
+
 - type → @e2e
 - feature → @{feature-name}
 
 **Description/Objective:** {Brief description}
 
 **Preconditions:**
+
 - {Prerequisites for test to run}
 - {Required data or state}
 
 ### Flow Steps:
+
 1. {Step 1}
 2. {Step 2}
 3. {Step 3}
 
 ### Expected Result:
+
 - {Expected outcome 1}
 - {Expected outcome 2}
 
 ### Key verification points:
+
 - {Assertion 1}
 - {Assertion 2}
 
 ### Notes:
+
 - {Additional considerations}
 ```
 
 **Documentation Rules:**
+
 - ❌ NO general test running instructions
 - ❌ NO file structure explanations
 - ❌ NO code examples or tutorials
@@ -323,4 +344,5 @@ npx playwright test tests/login/       # Run specific folder
 ## Prowler-Specific Patterns
 
 For Prowler UI E2E testing with authentication setup, environment variables, and test IDs, see:
+
 - **Documentation**: [references/prowler-e2e.md](references/prowler-e2e.md)

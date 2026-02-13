@@ -16,15 +16,16 @@ model User {
   role              String             @default("THERAPIST")
   createdAt         DateTime           @default(now())
   pinHash           String?
-  phone             String?
-  profilePhotoUrl   String?
   clinicName        String?
   licenseNumber     String?
+  phone             String?
+  profilePhotoUrl   String?
   specialty         String?
   yearsExperience   Int?
   patients          Patient[]
   sessions          Session[]
   treatmentSessions TreatmentSession[]
+  aiAnalyses        AiAnalysis[]
 
   @@index([email])
   @@map("users")
@@ -49,7 +50,7 @@ model Patient {
   medicalFlagsOther     String?
   referralSourceDetails String?
   clinicalCases         ClinicalCase[]
-  therapist             User           @relation(fields: [therapistId], references: [id])
+  therapist             User           @relation(fields: [therapistId], references: [id], onDelete: Cascade)
   sessions              Session[]
 
   @@index([name])
@@ -74,6 +75,7 @@ model ClinicalCase {
   insoles                 Insole[]
   treatmentPlan           TreatmentPlan?
   treatmentSessions       TreatmentSession[]
+  aiAnalyses              AiAnalysis[]
 
   @@map("clinical_cases")
 }
@@ -151,6 +153,7 @@ model Footprint {
   comparison   Json?
   evaluationId String
   side         String     @default("unknown")
+  analyzedAt   DateTime?
   evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
 
   @@map("footprints")
@@ -194,11 +197,20 @@ model Session {
   @@map("sessions")
 }
 
+enum Archetype {
+  PRACTICAL
+  ACADEMIC
+  ATLAS
+  CASE_STUDY
+  GENERAL
+}
+
 model Document {
-  id         String      @id @default(uuid())
+  id         String      @id @default(uuid()) @db.Uuid
   title      String
   author     String?
   filePath   String      @unique
+  archetype  Archetype   @default(GENERAL)
   createdAt  DateTime    @default(now())
   metadata   Json?
   embeddings Embedding[]
@@ -206,13 +218,57 @@ model Document {
   @@map("documents")
 }
 
-model Embedding {
-  id         String                @id @default(uuid())
-  content    String
-  vector     Unsupported("vector")
-  pageNumber Int
-  documentId String
-  document   Document              @relation(fields: [documentId], references: [id], onDelete: Cascade)
+enum ChunkType {
+  NARRATIVE
+  INDEX
+  TOC
+  REFERENCES
+}
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model Embedding {
+  id            String                @id @default(uuid()) @db.Uuid
+  content       String
+  vector        Unsupported("vector")
+  pageNumber    Int
+  chunkType     ChunkType             @default(NARRATIVE)
+  isExcluded    Boolean               @default(false)
+  sectionType   String?
+  documentId    String                @db.Uuid
+  parentContent String?
+  parentId      String?               @db.Uuid
+  document      Document              @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  parent        Embedding?            @relation("ParentChild", fields: [parentId], references: [id])
+  children      Embedding[]           @relation("ParentChild")
+
+  @@index([vector])
   @@map("embeddings")
+}
+
+model AiAnalysis {
+  id             String       @id @default(cuid())
+  clinicalCaseId String
+  therapistId     String
+  result         Json
+  createdAt      DateTime     @default(now())
+  clinicalCase   ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+  therapist      User         @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+  feedbacks      AiFeedback[]
+
+  @@index([clinicalCaseId])
+  @@map("ai_analyses")
+}
+
+model AiFeedback {
+  id              String     @id @default(cuid())
+  aiAnalysisId    String
+  suggestionIndex Int
+  isPositive      Boolean
+  comment         String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  aiAnalysis      AiAnalysis @relation(fields: [aiAnalysisId], references: [id], onDelete: Cascade)
+
+  @@unique([aiAnalysisId, suggestionIndex])
+  @@map("ai_feedbacks")
 }

@@ -9,6 +9,7 @@
 ## 2.1 Knowledge Base (RAG Initial)
 
 ### Components
+
 - Vector database (pgvector)
 - Documents:
   - Physiotherapy textbooks
@@ -17,6 +18,7 @@
   - Multilingual texts
 
 ### Function
+
 - Semantic search
 - Answers in Spanish
 - Clinical context, not generic
@@ -28,10 +30,12 @@
 ## 2.2 Theoretical Consultation Assistant
 
 ### Examples
+
 - "What do authors say about lumbar pain and pronated gait?"
 - "Relationship between knee valgus and plantar fasciitis?"
 
 ### Hard Limitations
+
 - ❌ No treatment suggestions
 - ❌ No patient mentions
 - ❌ No diagnoses
@@ -49,6 +53,7 @@
 ## Success Criteria
 
 **The system is ready when:**
+
 1. ✅ Knowledge base contains 5+ key textbooks
 2. ✅ Search returns relevant passages 80% of the time
 3. ✅ Therapist uses search feature 3+ times per week

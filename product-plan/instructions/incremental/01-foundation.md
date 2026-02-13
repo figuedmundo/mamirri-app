@@ -8,6 +8,7 @@
 ## About These Instructions
 
 **What you're receiving:**
+
 - Finished UI designs (React components with full styling)
 - Data model definitions (TypeScript types and sample data)
 - UI/UX specifications (user flows, requirements, screenshots)
@@ -15,6 +16,7 @@
 - Test-writing instructions for each section (for TDD approach)
 
 **What you need to build:**
+
 - Backend API endpoints and database schema
 - Authentication and authorization
 - Data fetching and state management
@@ -22,6 +24,7 @@
 - Integration of the provided UI components with real data
 
 **Important guidelines:**
+
 - **DO NOT** redesign or restyle the provided components — use them as-is
 - **DO** wire up the callback props to your routing and API calls
 - **DO** replace sample data with real data from your backend
@@ -47,11 +50,13 @@ Configure your styling system with these tokens:
 - See `product-plan/design-system/fonts.md` for Google Fonts setup
 
 **Colors:**
+
 - Primary: `teal` — Buttons, links, key accents
 - Secondary: `sky` — Tags, highlights, secondary elements
 - Neutral: `slate` — Backgrounds, text, borders
 
 **Typography:**
+
 - Heading: DM Sans
 - Body: DM Sans
 - Mono: IBM Plex Mono
@@ -64,6 +69,7 @@ Create TypeScript interfaces for your core entities:
 - See `product-plan/data-model/README.md` for entity relationships
 
 **Core Entities:**
+
 - Paciente — Patient with medical history
 - CasoClinico — Treatment episode for a specific condition
 - Evaluación — Diagnostic session with findings
@@ -106,6 +112,7 @@ Connect navigation to your routing:
 **User Menu:**
 
 The user menu expects:
+
 - User name
 - Avatar URL (optional)
 - Logout callback

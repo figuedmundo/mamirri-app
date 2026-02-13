@@ -68,12 +68,12 @@ Dictate these full scenarios at a natural, conversational pace.
 Did you observe any dangerous substitutions? (e.g., "hipotensión" instead of "hipertensión", "derecho" instead of "izquierdo")
 
 - [ ] No critical errors observed.
-- [ ] Critical errors observed: ************\_\_************
+- [ ] Critical errors observed: ****\*\*\*\*****\_\_****\*\*\*\*****
 
 ## Results Summary
 
-- **Device Used:** ************\_\_************
-- **OS Version:** ************\_\_************
-- **Network:** ************\_\_************
+- **Device Used:** ****\*\*\*\*****\_\_****\*\*\*\*****
+- **OS Version:** ****\*\*\*\*****\_\_****\*\*\*\*****
+- **Network:** ****\*\*\*\*****\_\_****\*\*\*\*****
 - **Total Terms Passed:** **\_** / 25
 - **Overall Experience:** [ ] Excellent [ ] Good [ ] Poor

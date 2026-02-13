@@ -1,12 +1,12 @@
-import type { AnalisisProps } from '../types'
-import { TestsComparativosChart } from './TestsComparativosChart'
-import { DolorChart } from './DolorChart'
-import { DiagnosticoComparativoCard } from './DiagnosticoComparativoCard'
+import type { AnalisisProps } from '../types';
+import { TestsComparativosChart } from './TestsComparativosChart';
+import { DolorChart } from './DolorChart';
+import { DiagnosticoComparativoCard } from './DiagnosticoComparativoCard';
 
 export function EvolucionDashboard({
   evoluciones = [],
   onVerEvaluacion,
-  onVerEvolucion
+  onVerEvolucion,
 }: AnalisisProps) {
   if (!evoluciones || evoluciones.length === 0) {
     return (
@@ -24,12 +24,15 @@ export function EvolucionDashboard({
             d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
           />
         </svg>
-        <p className="text-lg font-medium mb-2">No hay evoluciones registradas</p>
+        <p className="text-lg font-medium mb-2">
+          No hay evoluciones registradas
+        </p>
         <p className="text-sm text-center max-w-md">
-          Las evoluciones aparecen aquí cuando se completan evaluaciones iniciales y finales de un paciente.
+          Las evoluciones aparecen aquí cuando se completan evaluaciones
+          iniciales y finales de un paciente.
         </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -90,7 +93,9 @@ export function EvolucionDashboard({
                   </div>
                   {onVerEvaluacion && (
                     <button
-                      onClick={() => onVerEvaluacion?.(evolucion.evaluacionFinalId)}
+                      onClick={() =>
+                        onVerEvaluacion?.(evolucion.evaluacionFinalId)
+                      }
                       className="text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 font-medium transition-colors"
                     >
                       Ver Evaluaciones →
@@ -122,5 +127,5 @@ export function EvolucionDashboard({
         ))}
       </div>
     </div>
-  )
+  );
 }

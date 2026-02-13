@@ -3,7 +3,7 @@
   "mcp": {
     "markitdown": {
       "type": "local",
-      "enabled": true,
+      "enabled": false,
       "command": [
         "uvx",
         "markitdown-mcp"
@@ -23,7 +23,7 @@
     },
     "context7": {
       "type": "local",
-      "enabled": true,
+      "enabled": false,
       "command": [
         "npx",
         "-y",
@@ -33,7 +33,11 @@
     "chrome-devtools": {
       "type": "local",
       "enabled": false,
-      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+      "command": [
+        "npx",
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ]
     },
     "playwright": {
       "type": "local",
@@ -43,6 +47,43 @@
         "@playwright/mcp@latest"
       ],
       "enabled": false
+    },
+    "web-search-prime": {
+      "enabled": true,
+      "type": "remote",
+      "url": "https://api.z.ai/api/mcp/web_search_prime/mcp",
+      "headers": {
+        "Authorization": "Bearer 2abc7127803b4c66b16f73158aca25b5.yVVpgpSFyqAVdod4"
+      }
+    },
+    "web-reader": {
+      "enabled": true,
+      "type": "remote",
+      "url": "https://api.z.ai/api/mcp/web_reader/mcp",
+      "headers": {
+        "Authorization": "Bearer 2abc7127803b4c66b16f73158aca25b5.yVVpgpSFyqAVdod4"
+      }
+    },
+    "zread": {
+      "enabled": false,
+      "type": "remote",
+      "url": "https://api.z.ai/api/mcp/zread/mcp",
+      "headers": {
+        "Authorization": "Bearer 2abc7127803b4c66b16f73158aca25b5.yVVpgpSFyqAVdod4"
+      }
+    },
+    "zai-vision": {
+      "enabled": false,
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@z_ai/mcp-server"
+      ],
+      "environment": {
+        "Z_AI_API_KEY": "2abc7127803b4c66b16f73158aca25b5.yVVpgpSFyqAVdod4",
+        "Z_AI_MODE": "ZAI"
+      }
     }
   }
 }

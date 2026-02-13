@@ -47,8 +47,8 @@ async function bootstrap() {
   const serverDir = path.resolve(__dirname, '..');
   const oldPath = path.resolve(serverDir, doc.filePath);
   const fileName = path.basename(doc.filePath);
-  const archiveDir = path.join(serverDir, 'data/archive');
-  const newRelPath = `data/archive/${fileName}`;
+  const archiveDir = path.join(serverDir, 'data/library/originals');
+  const newRelPath = `data/library/originals/${fileName}`;
   const newAbsPath = path.join(archiveDir, fileName);
 
   if (!fs.existsSync(oldPath)) {

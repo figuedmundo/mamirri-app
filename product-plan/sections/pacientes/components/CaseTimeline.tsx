@@ -1,13 +1,17 @@
-import type { CasoClinico } from '../types'
-import { FileText } from 'lucide-react'
+import type { CasoClinico } from '../types';
+import { FileText } from 'lucide-react';
 
 interface CaseTimelineProps {
-  caso: CasoClinico
-  activeSessionId?: string
-  onSelectSession: (id: string) => void
+  caso: CasoClinico;
+  activeSessionId?: string;
+  onSelectSession: (id: string) => void;
 }
 
-export function CaseTimeline({ caso, activeSessionId, onSelectSession }: CaseTimelineProps) {
+export function CaseTimeline({
+  caso,
+  activeSessionId,
+  onSelectSession,
+}: CaseTimelineProps) {
   return (
     <div className="h-full overflow-y-auto bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 w-80 flex-shrink-0">
       <div className="p-5 border-b border-slate-200 dark:border-slate-800">
@@ -20,21 +24,27 @@ export function CaseTimeline({ caso, activeSessionId, onSelectSession }: CaseTim
       </div>
 
       <div className="p-4 space-y-6">
-        
         {caso.planDeTratamiento.fases.map((fase) => {
-          const sessionsInPhase = caso.sesionesTratamiento.filter(s => s.faseNumero === fase.numero)
-          
+          const sessionsInPhase = caso.sesionesTratamiento.filter(
+            (s) => s.faseNumero === fase.numero,
+          );
+
           return (
-            <div key={fase.numero} className="relative pl-4 border-l-2 border-slate-200 dark:border-slate-800">
+            <div
+              key={fase.numero}
+              className="relative pl-4 border-l-2 border-slate-200 dark:border-slate-800"
+            >
               <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-400 flex items-center justify-center text-[10px] font-bold border-2 border-white dark:border-slate-900">
                 {fase.numero}
               </div>
-              
+
               <div className="mb-3 pl-2">
                 <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">
                   Fase {fase.numero}: {fase.nombre}
                 </h4>
-                <p className="text-xs text-slate-500">{fase.duracionSemanas} semanas</p>
+                <p className="text-xs text-slate-500">
+                  {fase.duracionSemanas} semanas
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -53,7 +63,10 @@ export function CaseTimeline({ caso, activeSessionId, onSelectSession }: CaseTim
                         Sesión {sesion.id.split('-')[1]}
                       </span>
                       <span className="text-[10px] text-slate-400">
-                        {new Date(sesion.fecha).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        {new Date(sesion.fecha).toLocaleDateString(undefined, {
+                          month: 'short',
+                          day: 'numeric',
+                        })}
                       </span>
                     </div>
                     <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
@@ -69,10 +82,9 @@ export function CaseTimeline({ caso, activeSessionId, onSelectSession }: CaseTim
                 ))}
               </div>
             </div>
-          )
+          );
         })}
-
       </div>
     </div>
-  )
+  );
 }

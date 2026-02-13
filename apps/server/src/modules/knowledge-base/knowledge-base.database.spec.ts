@@ -52,7 +52,7 @@ describe('Knowledge Base Database Integration', () => {
     const documentData = {
       title: 'Test Anatomy Book',
       author: 'Dr. Test',
-      filePath: `data/books/test-anatomy-${Date.now()}.pdf`,
+      filePath: `data/library/markdowns/test-anatomy-${Date.now()}.pdf`,
     };
 
     const document = await (prisma as any).document.create({
@@ -66,7 +66,7 @@ describe('Knowledge Base Database Integration', () => {
   });
 
   it('should create an Embedding record associated with a Document', async () => {
-    const testVector = Array(768).fill(0);
+    const testVector = Array(1024).fill(0);
     const vectorString = `[${testVector.join(',')}]`;
     const embeddingId = crypto.randomUUID();
 
@@ -86,7 +86,7 @@ describe('Knowledge Base Database Integration', () => {
 
   it('should perform a similarity search using pgvector', async () => {
     const uniqueContent = `Unique search test chunk ${Date.now()}`;
-    const testVector = Array(768).fill(0.5);
+    const testVector = Array(1024).fill(0.5);
     testVector[0] = 0.99;
     const vectorString = `[${testVector.join(',')}]`;
 
