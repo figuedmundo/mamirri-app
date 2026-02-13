@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { Suggestion } from '@/types/analysis';
 import {
   Card,
@@ -31,10 +31,14 @@ export function SuggestionCard({
   onFeedbackChange,
 }: SuggestionCardProps) {
   const [comment, setComment] = useState(feedback?.comment || '');
+  const [prevFeedbackComment, setPrevFeedbackComment] = useState(
+    feedback?.comment,
+  );
 
-  useEffect(() => {
+  if (feedback?.comment !== prevFeedbackComment) {
+    setPrevFeedbackComment(feedback?.comment);
     setComment(feedback?.comment || '');
-  }, [feedback?.comment]);
+  }
 
   const confidenceColor = {
     HIGH: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',

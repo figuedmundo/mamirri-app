@@ -8,7 +8,11 @@ import type { AnalysisResult } from '@/types/analysis';
 
 const mockAnalysisResultsPanel = vi.fn();
 vi.mock('./AnalysisResultsPanel', () => ({
-  AnalysisResultsPanel: (props: any) => {
+  AnalysisResultsPanel: (props: {
+    analysisResult: AnalysisResult | null;
+    isOpen: boolean;
+    onClose: () => void;
+  }) => {
     mockAnalysisResultsPanel(props);
     if (!props.isOpen) return null;
     return (
@@ -144,7 +148,15 @@ const mockAnalysisResult: AnalysisResult = {
 };
 
 vi.mock('../AnalyzeButton', () => ({
-  AnalyzeButton: ({ onAnalysisComplete, onViewResults, hasResults }: any) => (
+  AnalyzeButton: ({
+    onAnalysisComplete,
+    onViewResults,
+    hasResults,
+  }: {
+    onAnalysisComplete: (result: AnalysisResult) => void;
+    onViewResults: () => void;
+    hasResults: boolean;
+  }) => (
     <div>
       <button onClick={() => onAnalysisComplete(mockAnalysisResult)}>
         Analyze

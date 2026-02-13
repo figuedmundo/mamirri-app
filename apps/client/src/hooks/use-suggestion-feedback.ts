@@ -15,8 +15,8 @@ export function useSuggestionFeedback(analysisId: string | undefined) {
       const feedbackMap = new Map<number, Feedback>();
       data.forEach((f) => feedbackMap.set(f.suggestionIndex, f));
       setFeedbacks(feedbackMap);
-    } catch (error) {
-      console.error('Failed to fetch feedbacks', error);
+    } catch {
+      console.error('Failed to fetch feedbacks');
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +63,7 @@ export function useSuggestionFeedback(analysisId: string | undefined) {
         next.set(suggestionIndex, saved);
         return next;
       });
-    } catch (error) {
+    } catch {
       setFeedbacks((prev) => {
         const next = new Map(prev);
         if (previousFeedback) {
@@ -97,7 +97,7 @@ export function useSuggestionFeedback(analysisId: string | undefined) {
 
     try {
       await aiAnalysisApi.deleteFeedback(analysisId, suggestionIndex);
-    } catch (error) {
+    } catch {
       setFeedbacks((prev) => {
         const next = new Map(prev);
         next.set(suggestionIndex, previousFeedback);
