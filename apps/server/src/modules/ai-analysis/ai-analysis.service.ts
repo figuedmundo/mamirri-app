@@ -215,7 +215,9 @@ export class AiAnalysisService {
           },
         },
       });
-    } catch (error) {}
+    } catch {
+      // ignore
+    }
   }
 
   async getFeedbacks(analysisId: string, therapistId: string) {
