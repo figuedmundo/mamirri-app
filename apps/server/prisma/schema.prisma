@@ -25,6 +25,7 @@ model User {
   patients          Patient[]
   sessions          Session[]
   treatmentSessions TreatmentSession[]
+  aiAnalyses        AiAnalysis[]
 
   @@index([email])
   @@map("users")
@@ -49,7 +50,7 @@ model Patient {
   medicalFlagsOther     String?
   referralSourceDetails String?
   clinicalCases         ClinicalCase[]
-  therapist             User           @relation(fields: [therapistId], references: [id])
+  therapist             User           @relation(fields: [therapistId], references: [id], onDelete: Cascade)
   sessions              Session[]
 
   @@index([name])
@@ -74,6 +75,7 @@ model ClinicalCase {
   insoles                 Insole[]
   treatmentPlan           TreatmentPlan?
   treatmentSessions       TreatmentSession[]
+  aiAnalyses              AiAnalysis[]
 
   @@map("clinical_cases")
 }
@@ -241,4 +243,32 @@ model Embedding {
 
   @@index([vector])
   @@map("embeddings")
+}
+
+model AiAnalysis {
+  id             String       @id @default(cuid())
+  clinicalCaseId String
+  therapistId     String
+  result         Json
+  createdAt      DateTime     @default(now())
+  clinicalCase   ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+  therapist      User         @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+  feedbacks      AiFeedback[]
+
+  @@index([clinicalCaseId])
+  @@map("ai_analyses")
+}
+
+model AiFeedback {
+  id              String     @id @default(cuid())
+  aiAnalysisId    String
+  suggestionIndex Int
+  isPositive      Boolean
+  comment         String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  aiAnalysis      AiAnalysis @relation(fields: [aiAnalysisId], references: [id], onDelete: Cascade)
+
+  @@unique([aiAnalysisId, suggestionIndex])
+  @@map("ai_feedbacks")
 }
