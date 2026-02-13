@@ -1,26 +1,35 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Loader2, Check } from 'lucide-react';
+import { Sparkles, Loader2, Check, Eye, RotateCcw } from 'lucide-react';
 import { useCaseAnalysis } from '@/hooks/use-case-analysis';
 import type { AnalysisResult } from '@/types/analysis';
 
 interface AnalyzeButtonProps {
   caseId: string;
   evaluationCount: number;
+  hasResults?: boolean;
   onAnalysisComplete: (result: AnalysisResult) => void;
+  onViewResults?: () => void;
   onError?: (error: Error) => void;
 }
 
 export function AnalyzeButton({
   caseId,
   evaluationCount,
+  hasResults,
   onAnalysisComplete,
+  onViewResults,
   onError,
 }: AnalyzeButtonProps) {
-  const { analyzeCase, isAnalyzing } = useCaseAnalysis();
+  const { analyzeCase, isAnalyzing, error } = useCaseAnalysis();
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleClick = async () => {
+    if (hasResults && !error && onViewResults) {
+      onViewResults();
+      return;
+    }
+
     const result = await analyzeCase(caseId);
     if (result) {
       setShowSuccess(true);
@@ -37,10 +46,39 @@ export function AnalyzeButton({
     return (
       <Button
         variant="outline"
+        size="sm"
         className="gap-2 text-green-600 border-green-200 bg-green-50"
       >
         <Check size={16} />
         <span>Analizado</span>
+      </Button>
+    );
+  }
+
+  if (error && !isAnalyzing) {
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        className="gap-2 text-rose-600 border-rose-200 hover:bg-rose-50 dark:text-rose-400 dark:border-rose-800 dark:hover:bg-rose-900/20"
+        onClick={handleClick}
+      >
+        <RotateCcw size={16} />
+        <span>Reintentar</span>
+      </Button>
+    );
+  }
+
+  if (hasResults && !isAnalyzing) {
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        className="gap-2 text-indigo-600 border-indigo-200 hover:bg-indigo-50 dark:text-indigo-400 dark:border-indigo-800 dark:hover:bg-indigo-900/20"
+        onClick={handleClick}
+      >
+        <Eye size={16} />
+        <span>Ver resultados</span>
       </Button>
     );
   }

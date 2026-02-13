@@ -288,7 +288,9 @@ Methodology: Agile Development (1-week Sprints).
 - [x] **15.1** Gemini Vision: Image description API
 - [x] **15.2** Orchestration: Combine Voice + Vision + RAG + LLM
 - [x] **15.3** "Analyze Case" endpoint (orchestrates all services)
-- [ ] **15.4** Frontend: Suggestions UI (cards, citations)
+- [x] **15.4** Frontend: Suggestions UI (cards, citations) ✅
+  - **Implementation:** Complete wiring with AnalysisResultsPanel, citation authors, warning banners, and re-open/retry states.
+  - **Tests:** 22/22 feature-specific tests passing (100% coverage of core wiring and enhancements)
 - [ ] **15.5** Feedback loop: Like/Dislike buttons
 - [ ] **15.6** Test: Complete flow with real patient data
 

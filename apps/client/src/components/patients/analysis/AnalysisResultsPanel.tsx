@@ -7,6 +7,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { AlertTriangle } from 'lucide-react';
 import { SuggestionCard } from './SuggestionCard';
 import { CitationsSection } from './CitationsSection';
 import { PatternRecognitionSection } from './PatternRecognitionSection';
@@ -28,7 +29,7 @@ export function AnalysisResultsPanel({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl h-[85vh] flex flex-col p-0 gap-0">
+      <DialogContent className="max-w-3xl sm:max-w-3xl max-w-[95vw] h-[85vh] flex flex-col p-0 gap-0">
         <DialogHeader className="p-6 border-b border-slate-200 dark:border-slate-800">
           <div className="flex justify-between items-center mr-8">
             <DialogTitle>Análisis Clínico IA</DialogTitle>
@@ -41,6 +42,21 @@ export function AnalysisResultsPanel({
             literarias y datos del paciente.
           </DialogDescription>
         </DialogHeader>
+
+        {analysisResult.metadata.warnings &&
+          analysisResult.metadata.warnings.length > 0 && (
+            <div className="px-6 py-3 space-y-2">
+              {analysisResult.metadata.warnings.map((warning, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-2 p-2 text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200 rounded-md dark:bg-amber-950/30 dark:text-amber-200 dark:border-amber-800"
+                >
+                  <AlertTriangle size={14} className="shrink-0" />
+                  <span>{warning}</span>
+                </div>
+              ))}
+            </div>
+          )}
 
         <ScrollArea className="flex-1 p-6">
           <PatternRecognitionSection reasoning={analysisResult.reasoning} />

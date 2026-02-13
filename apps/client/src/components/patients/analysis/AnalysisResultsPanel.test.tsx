@@ -107,4 +107,69 @@ describe('AnalysisResultsPanel', () => {
     );
     expect(screen.getByText(/AI-generated suggestion/)).toBeInTheDocument();
   });
+
+  it('renders warning banners when present', () => {
+    const resultWithWarnings: AnalysisResult = {
+      ...mockResult,
+      metadata: {
+        ...mockResult.metadata,
+        warnings: ['Warning 1', 'Warning 2'],
+      },
+    };
+    render(
+      <AnalysisResultsPanel
+        analysisResult={resultWithWarnings}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+    expect(screen.getByText('Warning 1')).toBeInTheDocument();
+    expect(screen.getByText('Warning 2')).toBeInTheDocument();
+  });
+
+  it('does not render warnings section when empty', () => {
+    render(
+      <AnalysisResultsPanel
+        analysisResult={mockResult}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+    expect(screen.queryByText('Warning 1')).not.toBeInTheDocument();
+  });
+
+  it('displays citation author when present', () => {
+    render(
+      <AnalysisResultsPanel
+        analysisResult={mockResult}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+    expect(screen.getByText('Doc')).toBeInTheDocument();
+    expect(screen.getByText('— Author')).toBeInTheDocument();
+  });
+
+  it('falls back to title only when author is missing', () => {
+    const resultNoAuthor: AnalysisResult = {
+      ...mockResult,
+      citations: [
+        {
+          quote: 'Quote',
+          documentTitle: 'Only Title',
+          author: '',
+          relevance: 0.9,
+        },
+      ],
+    };
+    render(
+      <AnalysisResultsPanel
+        analysisResult={resultNoAuthor}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+    expect(screen.getByText('Only Title')).toBeInTheDocument();
+    expect(screen.queryByText(/Only Title — /)).not.toBeInTheDocument();
+  });
 });
