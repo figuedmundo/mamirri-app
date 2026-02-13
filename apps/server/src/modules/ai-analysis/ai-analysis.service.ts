@@ -1,4 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
 import { KnowledgeBaseService } from '../knowledge-base/knowledge-base.service';
@@ -127,7 +132,7 @@ export class AiAnalysisService {
 
     const processingTimeMs = Date.now() - startTime;
 
-    return {
+    const resultWithoutId: AnalysisResult = {
       ...rehydratedResult,
       citations: translatedCitations,
       metadata: {
@@ -141,17 +146,110 @@ export class AiAnalysisService {
         visionAnalysis: caseData.visionStats,
       },
     };
+
+    let analysisId: string | undefined;
+    try {
+      const persisted = await (this.prisma as any).aiAnalysis.create({
+        data: {
+          clinicalCaseId,
+          therapistId,
+          result: resultWithoutId as any,
+        },
+      });
+      analysisId = persisted.id;
+    } catch (error) {
+      this.logger.error(`Failed to persist AI analysis: ${error.message}`);
+    }
+
+    return {
+      ...resultWithoutId,
+      metadata: {
+        ...resultWithoutId.metadata,
+        analysisId,
+      },
+    };
   }
 
-  /**
-   * Reranks RAG chunks using Cohere Rerank v3 API
-   * Falls back to original order if API fails
-   *
-   * @param query - The search query
-   * @param chunks - Chunks to rerank (max 100 recommended)
-   * @param topN - Number of top results to return
-   * @returns Reranked chunks sorted by relevance
-   */
+  async submitFeedback(
+    analysisId: string,
+    suggestionIndex: number,
+    isPositive: boolean,
+    comment: string | undefined,
+    therapistId: string,
+  ) {
+    await this.verifyAnalysisOwnership(analysisId, therapistId);
+
+    return await (this.prisma as any).aiFeedback.upsert({
+      where: {
+        aiAnalysisId_suggestionIndex: {
+          aiAnalysisId: analysisId,
+          suggestionIndex,
+        },
+      },
+      update: {
+        isPositive,
+        comment,
+      },
+      create: {
+        aiAnalysisId: analysisId,
+        suggestionIndex,
+        isPositive,
+        comment,
+      },
+    });
+  }
+
+  async deleteFeedback(
+    analysisId: string,
+    suggestionIndex: number,
+    therapistId: string,
+  ) {
+    await this.verifyAnalysisOwnership(analysisId, therapistId);
+
+    try {
+      await (this.prisma as any).aiFeedback.delete({
+        where: {
+          aiAnalysisId_suggestionIndex: {
+            aiAnalysisId: analysisId,
+            suggestionIndex,
+          },
+        },
+      });
+    } catch (error) {}
+  }
+
+  async getFeedbacks(analysisId: string, therapistId: string) {
+    await this.verifyAnalysisOwnership(analysisId, therapistId);
+
+    return await (this.prisma as any).aiFeedback.findMany({
+      where: { aiAnalysisId: analysisId },
+    });
+  }
+
+  private async verifyAnalysisOwnership(
+    analysisId: string,
+    therapistId: string,
+  ) {
+    const analysis = await (this.prisma as any).aiAnalysis.findUnique({
+      where: { id: analysisId },
+      include: {
+        clinicalCase: {
+          include: {
+            patient: true,
+          },
+        },
+      },
+    });
+
+    if (!analysis) {
+      throw new NotFoundException('Analysis not found');
+    }
+
+    if (analysis.clinicalCase.patient.therapistId !== therapistId) {
+      throw new ForbiddenException('You do not have access to this analysis');
+    }
+  }
+
   private async rerankChunks(
     query: string,
     chunks: RagChunk[],

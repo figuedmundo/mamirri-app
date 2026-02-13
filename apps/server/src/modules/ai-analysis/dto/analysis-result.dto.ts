@@ -95,6 +95,12 @@ class VisionAnalysisDto {
 }
 
 class MetadataDto {
+  @ApiProperty({
+    description: 'Unique ID of the persisted analysis',
+    required: false,
+  })
+  analysisId?: string;
+
   @ApiProperty({ description: 'Number of tokens in the query' })
   queryTokens: number;
 

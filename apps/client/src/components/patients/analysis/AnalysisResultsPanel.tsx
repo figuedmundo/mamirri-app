@@ -13,6 +13,7 @@ import { CitationsSection } from './CitationsSection';
 import { PatternRecognitionSection } from './PatternRecognitionSection';
 import { ServiceStatusIndicator } from './ServiceStatusIndicator';
 import { AnalysisDisclaimer } from './AnalysisDisclaimer';
+import { useSuggestionFeedback } from '@/hooks/use-suggestion-feedback';
 
 interface AnalysisResultsPanelProps {
   analysisResult: AnalysisResult | null;
@@ -25,7 +26,23 @@ export function AnalysisResultsPanel({
   isOpen,
   onClose,
 }: AnalysisResultsPanelProps) {
+  const { feedbacks, submitFeedback, removeFeedback } = useSuggestionFeedback(
+    analysisResult?.metadata.analysisId,
+  );
+
   if (!analysisResult) return null;
+
+  const handleFeedbackChange = (
+    index: number,
+    isPositive: boolean | null,
+    comment?: string,
+  ) => {
+    if (isPositive === null) {
+      removeFeedback(index);
+    } else {
+      submitFeedback(index, isPositive, comment);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -65,13 +82,28 @@ export function AnalysisResultsPanel({
           <SuggestionCard
             suggestion={analysisResult.primarySuggestion}
             type="primary"
+            analysisId={analysisResult.metadata.analysisId}
+            suggestionIndex={0}
+            feedback={feedbacks.get(0)}
+            onFeedbackChange={(isPositive, comment) =>
+              handleFeedbackChange(0, isPositive, comment)
+            }
           />
 
           {analysisResult.alternatives.length > 0 && (
             <>
               <h3 className="font-semibold mb-3 mt-6">Alternativas</h3>
               {analysisResult.alternatives.map((alt, i) => (
-                <SuggestionCard key={i} suggestion={alt} />
+                <SuggestionCard
+                  key={i}
+                  suggestion={alt}
+                  analysisId={analysisResult.metadata.analysisId}
+                  suggestionIndex={i + 1}
+                  feedback={feedbacks.get(i + 1)}
+                  onFeedbackChange={(isPositive, comment) =>
+                    handleFeedbackChange(i + 1, isPositive, comment)
+                  }
+                />
               ))}
             </>
           )}

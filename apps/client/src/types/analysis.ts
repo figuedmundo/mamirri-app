@@ -24,6 +24,7 @@ export interface ServiceStatus {
 }
 
 export interface AnalysisMetadata {
+  analysisId?: string;
   queryTokens: number;
   responseTokens: number;
   processingTimeMs: number;
