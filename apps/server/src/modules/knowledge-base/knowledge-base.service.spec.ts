@@ -145,7 +145,10 @@ describe('KnowledgeBaseService', () => {
       mockPrisma.document.findUnique.mockResolvedValue(null);
       const semanticChunkSpy = jest
         .spyOn(service as any, 'semanticChunk')
-        .mockResolvedValue({ chunks: ['chunk1'], parentChunks: ['parent1'] });
+        .mockResolvedValue({
+          chunks: [{ content: 'chunk1', pageNumber: 1 }],
+          parentChunks: [{ content: 'parent1', pageNumber: 1 }],
+        });
 
       await service.ingestFile('data/library/markdowns/test.pdf', true);
 

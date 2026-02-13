@@ -1240,12 +1240,14 @@ export class KnowledgeBaseService {
       // Map rerank results back to original documents
       return response.results.map((r) => {
         const originalDoc = documents[r.index];
+        const parentContent = originalDoc.parentContent || originalDoc.content;
         return {
           ...originalDoc,
           rerankScore: r.relevanceScore,
           // Store parent content separately so the UI can show the specific match
           // but the AI can still use the full context.
-          fullContext: originalDoc.parentContent || originalDoc.content,
+          content: parentContent,
+          fullContext: parentContent,
         };
       });
     } catch (error) {

@@ -82,6 +82,7 @@ describe('VoyageIntegration', () => {
       expect.anything(),
       expect.stringContaining('[0.1,0.1'), // Matches our mock vector
       expect.anything(),
+      expect.anything(),
     );
   });
 
