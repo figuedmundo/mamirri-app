@@ -16,11 +16,14 @@ import { ComparisonBoard } from './ComparisonBoard';
 import { ObjectivesView } from './ObjectivesView';
 import { RecordingFloatingBar } from './RecordingFloatingBar';
 import { useVoiceRecorder } from '@/hooks/use-voice-recorder';
-import { generateComparisonReport } from '../../lib/pdf';
+import { generateComparisonReport } from '../../lib/pdf/generateComparisonReport';
 import { useToast } from '../../hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
-import { patientsApi } from '../../api/patients';
-import { mediaApi } from '../../api/media';
+import {
+  useUpdateEvaluation,
+  useUpdateTreatmentPlanObjectives,
+} from '../../hooks/use-patients';
+import { useUploadEvaluationVoiceNote } from '../../hooks/use-media';
 import { AnalyzeButton } from './AnalyzeButton';
 import { AnalysisResultsPanel } from './analysis/AnalysisResultsPanel';
 import type { AnalysisResult } from '@/types/analysis';
@@ -59,6 +62,10 @@ export function CaseDetailLayout({
   const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
   const { toast } = useToast();
 
+  const updateEvaluation = useUpdateEvaluation();
+  const updateObjectives = useUpdateTreatmentPlanObjectives();
+  const uploadVoiceNote = useUploadEvaluationVoiceNote();
+
   const activeEval = getActiveEvaluation(localCase);
   const activeEvalType = activeEval?.type;
 
@@ -78,20 +85,11 @@ export function CaseDetailLayout({
         description: 'Asociando a la evolución actual.',
       });
 
-      const note = await mediaApi.uploadEvaluationVoiceNote(
-        activeEval.id,
-        blob,
-        duration,
-      );
-
-      setLocalCase((prev) => ({
-        ...prev,
-        evaluations: prev.evaluations.map((e) =>
-          e.id === activeEval.id
-            ? { ...e, voiceNotes: [...(e.voiceNotes || []), note] }
-            : e,
-        ),
-      }));
+      await uploadVoiceNote.mutateAsync({
+        evaluationId: activeEval.id,
+        file: blob,
+        durationSeconds: duration,
+      });
 
       toast({
         title: 'Éxito',
@@ -218,18 +216,18 @@ export function CaseDetailLayout({
       if (!localCase.evaluations.find((e) => e.id === evaluation.id)) {
         updatedEvaluations.push(evaluation);
       }
+      setLocalCase({ ...localCase, evaluations: updatedEvaluations });
 
-      const updatedCase = { ...localCase, evaluations: updatedEvaluations };
-      setLocalCase(updatedCase);
-
-      await patientsApi.updateEvaluation(evaluation.id, evaluation);
+      await updateEvaluation.mutateAsync({
+        id: evaluation.id,
+        data: evaluation,
+      });
 
       toast({
         title: 'Evaluacion actualizada',
         description: 'Los cambios se han guardado correctamente.',
       });
     } catch {
-      setLocalCase(localCase);
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -247,15 +245,11 @@ export function CaseDetailLayout({
       const updatedEvaluations = localCase.evaluations.map((e) =>
         e.id === updatedEval.id ? updatedEval : e,
       );
+      setLocalCase({ ...localCase, evaluations: updatedEvaluations });
 
-      const updatedCase = {
-        ...localCase,
-        evaluations: updatedEvaluations,
-      };
-      setLocalCase(updatedCase);
-
-      await patientsApi.updateEvaluation(activeEval.id, {
-        posturogram,
+      await updateEvaluation.mutateAsync({
+        id: activeEval.id,
+        data: { posturogram },
       });
     } catch {
       toast({
@@ -275,15 +269,11 @@ export function CaseDetailLayout({
       const updatedEvaluations = localCase.evaluations.map((e) =>
         e.id === updatedEval.id ? updatedEval : e,
       );
+      setLocalCase({ ...localCase, evaluations: updatedEvaluations });
 
-      const updatedCase = {
-        ...localCase,
-        evaluations: updatedEvaluations,
-      };
-      setLocalCase(updatedCase);
-
-      await patientsApi.updateEvaluation(activeEval.id, {
-        painScale,
+      await updateEvaluation.mutateAsync({
+        id: activeEval.id,
+        data: { painScale },
       });
     } catch {
       toast({
@@ -312,23 +302,16 @@ export function CaseDetailLayout({
   };
 
   const handleObjectivesChange = async (objectives: TreatmentObjectives) => {
-    const previousCase = localCase;
     try {
-      const updatedCase = {
+      setLocalCase({
         ...localCase,
-        treatmentPlan: {
-          ...localCase.treatmentPlan,
-          objectives,
-        },
-      };
-      setLocalCase(updatedCase);
-
-      await patientsApi.updateTreatmentPlanObjectives(
-        localCase.treatmentPlan.id,
-        objectives,
-      );
+        treatmentPlan: { ...localCase.treatmentPlan, objectives },
+      });
+      await updateObjectives.mutateAsync({
+        planId: localCase.treatmentPlan.id,
+        data: objectives,
+      });
     } catch {
-      setLocalCase(previousCase);
       throw new Error('Failed to save objectives');
     }
   };

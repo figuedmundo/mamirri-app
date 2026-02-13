@@ -4,34 +4,31 @@ Define your technical stack below. This serves as a reference for all team membe
 
 ### Framework & Runtime
 
-- **Application Framework:** [e.g., Rails, Django, Next.js, Express]
-- **Language/Runtime:** [e.g., Ruby, Python, Node.js, Java]
-- **Package Manager:** [e.g., bundler, pip, npm, yarn]
+- **Application Framework:** NestJS (Backend), React 19 + Vite (Frontend)
+- **Language/Runtime:** TypeScript / Node.js
+- **Package Manager:** pnpm
 
 ### Frontend
 
-- **JavaScript Framework:** [e.g., React, Vue, Svelte, Alpine, vanilla JS]
-- **CSS Framework:** [e.g., Tailwind CSS, Bootstrap, custom]
-- **UI Components:** [e.g., shadcn/ui, Material UI, custom library]
+- **JavaScript Framework:** React 19.2
+- **Data Fetching:** TanStack Query (React Query) v5
+- **CSS Framework:** Tailwind CSS
+- **UI Components:** Shadcn/UI
 
 ### Database & Storage
 
-- **Database:** [e.g., PostgreSQL, MySQL, MongoDB]
-- **ORM/Query Builder:** [e.g., ActiveRecord, Prisma, Sequelize]
-- **Caching:** [e.g., Redis, Memcached]
+- **Database:** PostgreSQL 16 (with pgvector for RAG)
+- **ORM/Query Builder:** Prisma
+- **Storage:** S3 Compatible (MinIO / AWS S3)
 
 ### Testing & Quality
 
-- **Test Framework:** [e.g., Jest, RSpec, pytest]
-- **Linting/Formatting:** [e.g., ESLint, Prettier, RuboCop]
-
-### Deployment & Infrastructure
-
-- **Hosting:** [e.g., Heroku, AWS, Vercel, Railway]
-- **CI/CD:** [e.g., GitHub Actions, CircleCI]
+- **Test Framework:** Vitest
+- **Testing Utilities:** Testing Library (React)
+- **Linting/Formatting:** ESLint, Prettier
 
 ### Third-Party Services
 
-- **Authentication:** [e.g., Auth0, Devise, NextAuth]
-- **Email:** [e.g., SendGrid, Postmark]
-- **Monitoring:** [e.g., Sentry, Datadog]
+- **Error Monitoring:** Sentry (Deferred load)
+- **AI Models:** Gemini 3 (Vision/Text), OpenAI Whisper (Transcription)
+- **Vector Search:** Voyage AI (Embeddings), Cohere (Rerank)

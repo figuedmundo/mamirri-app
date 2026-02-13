@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { MainLayout } from './components/MainLayout';
 import { Dashboard } from './pages/Dashboard';
 import { AuthProvider } from './context/AuthProvider';
@@ -14,21 +16,30 @@ import { UpdateNotification } from './components/pwa/UpdateNotification';
 import { OfflineBanner } from './components/pwa/OfflineBanner';
 import Patients from './pages/Patients';
 import PatientDetail from './pages/PatientDetail';
-import Analisis from './pages/Analisis';
-import Biblioteca from './pages/Biblioteca';
-import Plantillas from './pages/Plantillas';
+const Analisis = lazy(() => import('./pages/Analisis'));
+const Biblioteca = lazy(() => import('./pages/Biblioteca'));
+const Plantillas = lazy(() => import('./pages/Plantillas'));
 import Ajustes from './pages/Ajustes';
 import Perfil from './pages/Perfil';
 import CaseDetail from './pages/CaseDetail';
-import {
-  LoggerErrorBoundary,
-  useInteractionLogger,
-  usePerformanceLogger,
-} from './lib/logger';
+import { LoggerErrorBoundary } from './lib/logger/error-boundary';
+import { useInteractionLogger } from './lib/logger/hooks/useInteractionLogger';
+import { usePerformanceLogger } from './lib/logger/hooks/usePerformanceLogger';
 import { api } from './lib/axios';
 import { setupInterceptors } from './lib/logger/axios-logger';
+import { Loader2 } from 'lucide-react';
+import { queryClient } from './lib/query-client';
+import { initSentry } from './lib/sentry-init';
 
 setupInterceptors(api);
+
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center h-64">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    </div>
+  );
+}
 
 function AppContent() {
   useInteractionLogger();
@@ -90,7 +101,9 @@ function AppContent() {
         element={
           <ProtectedRoute>
             <MainLayout>
-              <Analisis />
+              <Suspense fallback={<PageLoader />}>
+                <Analisis />
+              </Suspense>
             </MainLayout>
           </ProtectedRoute>
         }
@@ -101,7 +114,9 @@ function AppContent() {
         element={
           <ProtectedRoute>
             <MainLayout>
-              <Biblioteca />
+              <Suspense fallback={<PageLoader />}>
+                <Biblioteca />
+              </Suspense>
             </MainLayout>
           </ProtectedRoute>
         }
@@ -112,7 +127,9 @@ function AppContent() {
         element={
           <ProtectedRoute>
             <MainLayout>
-              <Plantillas />
+              <Suspense fallback={<PageLoader />}>
+                <Plantillas />
+              </Suspense>
             </MainLayout>
           </ProtectedRoute>
         }
@@ -146,19 +163,27 @@ function AppContent() {
 }
 
 function App() {
+  useEffect(() => {
+    initSentry().catch((error) => {
+      console.error('Sentry initialization failed:', error);
+    });
+  }, []);
+
   return (
-    <LoggerErrorBoundary>
-      <ErrorBoundary>
-        <BrowserRouter>
-          <AuthProvider>
-            <AppContent />
-          </AuthProvider>
-        </BrowserRouter>
-        <Toaster />
-        <UpdateNotification />
-        <OfflineBanner />
-      </ErrorBoundary>
-    </LoggerErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <LoggerErrorBoundary>
+        <ErrorBoundary>
+          <BrowserRouter>
+            <AuthProvider>
+              <AppContent />
+            </AuthProvider>
+          </BrowserRouter>
+          <Toaster />
+          <UpdateNotification />
+          <OfflineBanner />
+        </ErrorBoundary>
+      </LoggerErrorBoundary>
+    </QueryClientProvider>
   );
 }
 

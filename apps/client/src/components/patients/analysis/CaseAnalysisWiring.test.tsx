@@ -5,6 +5,8 @@ import { CaseDetailLayout } from '../CaseDetailLayout';
 import type { Patient, ClinicalCase } from '../../../types/patient';
 import { EvaluationType } from '../../../types/patient';
 import type { AnalysisResult } from '@/types/analysis';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
 
 const mockAnalysisResultsPanel = vi.fn();
 vi.mock('./AnalysisResultsPanel', () => ({
@@ -40,6 +42,32 @@ vi.mock('@/hooks/use-voice-recorder', () => ({
     cancelRecording: vi.fn(),
   }),
 }));
+
+vi.mock('../../../api/patients', () => ({
+  patientsApi: {
+    updateEvaluation: vi.fn(),
+    updateTreatmentPlanObjectives: vi.fn(),
+  },
+}));
+
+vi.mock('../../../api/media', () => ({
+  mediaApi: {
+    uploadEvaluationVoiceNote: vi.fn(),
+  },
+}));
+
+const renderWithQuery = (ui: React.ReactElement) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+  );
+};
 
 const mockPatient: Patient = {
   id: 'pac-001',
@@ -174,7 +202,7 @@ describe('Case Analysis Wiring', () => {
   });
 
   it('AnalysisResultsPanel does not render when analysisResult is null', () => {
-    render(
+    renderWithQuery(
       <CaseDetailLayout
         patient={mockPatient}
         clinicalCase={mockClinicalCase}
@@ -188,7 +216,7 @@ describe('Case Analysis Wiring', () => {
   });
 
   it('AnalysisResultsPanel opens when onAnalysisComplete fires with a result', async () => {
-    render(
+    renderWithQuery(
       <CaseDetailLayout
         patient={mockPatient}
         clinicalCase={mockClinicalCase}
@@ -209,7 +237,7 @@ describe('Case Analysis Wiring', () => {
   });
 
   it('Dialog closes when onClose is invoked', async () => {
-    render(
+    renderWithQuery(
       <CaseDetailLayout
         patient={mockPatient}
         clinicalCase={mockClinicalCase}
@@ -229,7 +257,7 @@ describe('Case Analysis Wiring', () => {
   });
 
   it('Closing dialog preserves result in state', async () => {
-    render(
+    renderWithQuery(
       <CaseDetailLayout
         patient={mockPatient}
         clinicalCase={mockClinicalCase}
@@ -250,7 +278,7 @@ describe('Case Analysis Wiring', () => {
   });
 
   it('re-opens dialog when AnalyzeButton onViewResults is called', async () => {
-    render(
+    renderWithQuery(
       <CaseDetailLayout
         patient={mockPatient}
         clinicalCase={mockClinicalCase}
