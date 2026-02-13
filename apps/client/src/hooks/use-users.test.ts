@@ -42,7 +42,9 @@ describe('use-users hooks', () => {
         name: 'Test User',
         email: 'test@example.com',
       };
-      vi.mocked(usersApi.getMe).mockResolvedValue(mockUser as any);
+      vi.mocked(usersApi.getMe).mockResolvedValue(
+        mockUser as unknown as Awaited<ReturnType<typeof usersApi.getMe>>,
+      );
 
       const { result } = renderHook(() => useUserQuery(), {
         wrapper: createWrapper(),
@@ -56,7 +58,11 @@ describe('use-users hooks', () => {
   describe('useUpdateUserMutation', () => {
     it('updates user profile', async () => {
       const updatedUser = { id: '1', name: 'Updated Name' };
-      vi.mocked(usersApi.updateProfile).mockResolvedValue(updatedUser as any);
+      vi.mocked(usersApi.updateProfile).mockResolvedValue(
+        updatedUser as unknown as Awaited<
+          ReturnType<typeof usersApi.updateProfile>
+        >,
+      );
 
       const { result } = renderHook(() => useUpdateUserMutation(), {
         wrapper: createWrapper(),

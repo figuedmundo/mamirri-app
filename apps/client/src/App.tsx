@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { MainLayout } from './components/MainLayout';
 import { Dashboard } from './pages/Dashboard';
@@ -29,6 +29,7 @@ import { api } from './lib/axios';
 import { setupInterceptors } from './lib/logger/axios-logger';
 import { Loader2 } from 'lucide-react';
 import { queryClient } from './lib/query-client';
+import { initSentry } from './lib/sentry-init';
 
 setupInterceptors(api);
 
@@ -162,6 +163,12 @@ function AppContent() {
 }
 
 function App() {
+  useEffect(() => {
+    initSentry().catch((error) => {
+      console.error('Sentry initialization failed:', error);
+    });
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <LoggerErrorBoundary>

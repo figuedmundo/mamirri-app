@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -33,20 +33,23 @@ export default function Perfil() {
     yearsExperience: '',
   });
 
-  useEffect(() => {
-    const currentUser = remoteUser || user;
-    if (currentUser) {
-      setFormData({
-        name: currentUser.name || '',
-        email: currentUser.email || '',
-        phone: currentUser.phone || '',
-        clinicName: currentUser.clinicName || '',
-        licenseNumber: currentUser.licenseNumber || '',
-        specialty: currentUser.specialty || '',
-        yearsExperience: currentUser.yearsExperience?.toString() || '',
-      });
-    }
-  }, [remoteUser, user]);
+  const [prevUserId, setPrevUserId] = useState<string | null>(null);
+
+  const currentUser = remoteUser || user;
+  const currentUserId = currentUser?.id || null;
+
+  if (currentUserId !== prevUserId && currentUser) {
+    setPrevUserId(currentUserId);
+    setFormData({
+      name: currentUser.name || '',
+      email: currentUser.email || '',
+      phone: currentUser.phone || '',
+      clinicName: currentUser.clinicName || '',
+      licenseNumber: currentUser.licenseNumber || '',
+      specialty: currentUser.specialty || '',
+      yearsExperience: currentUser.yearsExperience?.toString() || '',
+    });
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
