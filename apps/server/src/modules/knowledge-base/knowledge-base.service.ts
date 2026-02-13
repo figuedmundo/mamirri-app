@@ -59,26 +59,34 @@ export class KnowledgeBaseService {
   }
 
   /**
-   * Extract text from PDF using the specified engine.
+   * Extract text from Document (PDF, EPUB) using the specified engine.
    *
-   * This method orchestrates external Python scripts to handle PDF processing.
+   * This method orchestrates external Python scripts to handle document processing.
    * It supports two engines:
-   * - 'pymupdf': Fast, rule-based extraction (legacy/default).
-   * - 'docling': High-fidelity computer vision based extraction (best for complex layouts).
+   * - 'pymupdf': Fast, rule-based extraction (legacy/default). Supports PDF and EPUB.
+   * - 'docling': High-fidelity computer vision based extraction (best for complex PDF layouts).
    *
-   * @param filePath - Absolute path to the PDF file.
+   * @param filePath - Absolute path to the document file.
    * @param engine - The extraction engine to use ('pymupdf' | 'docling').
    * @param options - Optional configuration for partial extraction.
    * @param options.startPage - Start page (1-indexed, inclusive).
    * @param options.endPage - End page (1-indexed, inclusive).
    * @returns A promise resolving to the extracted Markdown string.
    */
-  async extractPdf(
+  async extractDocument(
     filePath: string,
     engine: 'pymupdf' | 'docling' = 'pymupdf',
     options: { startPage?: number; endPage?: number } = {},
   ): Promise<string> {
-    const isDocling = engine === 'docling';
+    const isEpub = filePath.toLowerCase().endsWith('.epub');
+    // Force pymupdf for EPUBs as Docling (via our worker) is PDF-specific
+    const isDocling = engine === 'docling' && !isEpub;
+
+    if (isEpub && engine === 'docling') {
+      this.logger.warn(
+        'Docling engine does not support EPUB in the current worker setup. Falling back to PyMuPDF.',
+      );
+    }
 
     let pythonCommand = 'python3';
     let scriptPath = '';
@@ -105,14 +113,14 @@ export class KnowledgeBaseService {
         pythonCommand = 'python3';
       }
     } else {
-      // Legacy PyMuPDF script
-      scriptPath = path.resolve(__dirname, '../../../scripts/extract-pdf.py');
-      // Arguments for PyMuPDF script: file --json
+      // PyMuPDF script (handles PDF and EPUB)
+      scriptPath = path.resolve(__dirname, '../../../scripts/extract-doc.py');
+      // Arguments: file --json
       args = [filePath, '--json'];
 
       if (options.startPage !== undefined && options.endPage !== undefined) {
         // PyMuPDF script is 0-indexed in code but often scripts are 1-indexed for users.
-        // Looking at extract-pdf.py, it says "0-indexed, inclusive" in docstring.
+        // Looking at extract-doc.py, it says "0-indexed, inclusive" in docstring.
         // We will keep it consistent with what convert-books passes (1-indexed based on user input usually).
         // Let's adjust to 0-indexed for the script.
         args.push(
@@ -144,9 +152,9 @@ export class KnowledgeBaseService {
       process.on('close', (code) => {
         if (code !== 0) {
           this.logger.error(
-            `PDF extraction failed with code ${code}. Error: ${stderrData}`,
+            `Document extraction failed with code ${code}. Error: ${stderrData}`,
           );
-          return reject(new Error(`PDF extraction failed: ${stderrData}`));
+          return reject(new Error(`Document extraction failed: ${stderrData}`));
         }
 
         try {
@@ -159,7 +167,9 @@ export class KnowledgeBaseService {
               `No valid JSON found in extraction output. Raw stdout: ${stdoutData}`,
             );
             return reject(
-              new Error(`Failed to parse PDF extraction output: No JSON found`),
+              new Error(
+                `Failed to parse document extraction output: No JSON found`,
+              ),
             );
           }
 
@@ -175,7 +185,112 @@ export class KnowledgeBaseService {
           this.logger.error(
             `Failed to parse extraction output: ${e.message}. Raw stdout: ${stdoutData}`,
           );
-          reject(new Error(`Failed to parse PDF extraction output`));
+          reject(new Error(`Failed to parse document extraction output`));
+        }
+      });
+    });
+  }
+
+  /**
+   * Extract text from EPUB using ebooklib + pandoc for high-quality conversion.
+   *
+   * This method uses the dedicated EPUB worker which:
+   * - Respects EPUB spine reading order (not arbitrary item order)
+   * - Extracts full Dublin Core metadata
+   * - Uses pandoc for best-in-class HTML→Markdown conversion
+   * - Handles tables, lists, and formatting better than PyMuPDF
+   *
+   * @param filePath - Absolute path to the EPUB file.
+   * @param options - Optional configuration for partial extraction.
+   * @param options.startPage - Start chapter (1-indexed, inclusive).
+   * @param options.endPage - End chapter (1-indexed, inclusive).
+   * @returns A promise resolving to the extracted Markdown string.
+   */
+  async extractEpub(
+    filePath: string,
+    options: { startPage?: number; endPage?: number } = {},
+  ): Promise<string> {
+    const workerDir = path.resolve(__dirname, '../../../../workers/epub');
+    const pythonCommand = path.join(workerDir, '.venv/bin/python');
+    const scriptPath = path.join(workerDir, 'main.py');
+
+    // Fallback to system python if venv doesn't exist
+    const pythonCmd = fs.existsSync(pythonCommand) ? pythonCommand : 'python3';
+
+    const args: string[] = [filePath];
+
+    if (options.startPage !== undefined && options.endPage !== undefined) {
+      args.push(
+        '--pages',
+        options.startPage.toString(),
+        options.endPage.toString(),
+      );
+    }
+
+    this.logger.log(
+      `Using EPUB worker (ebooklib + pandoc) for: ${path.basename(filePath)}`,
+    );
+
+    return new Promise((resolve, reject) => {
+      const process = spawn(pythonCmd, [scriptPath, ...args]);
+
+      let stdoutData = '';
+      let stderrData = '';
+
+      process.stdout.on('data', (data) => {
+        stdoutData += data.toString();
+      });
+
+      process.stderr.on('data', (data) => {
+        const str = data.toString();
+        stderrData += str;
+        if (str.includes('Processing chapter') || str.includes('pandoc')) {
+          this.logger.log(str.trim());
+        }
+      });
+
+      process.on('close', (code) => {
+        if (code !== 0) {
+          this.logger.error(
+            `EPUB extraction failed with code ${code}. Error: ${stderrData}`,
+          );
+          return reject(new Error(`EPUB extraction failed: ${stderrData}`));
+        }
+
+        try {
+          const jsonStart = stdoutData.indexOf('{');
+          const jsonEnd = stdoutData.lastIndexOf('}');
+
+          if (jsonStart === -1 || jsonEnd === -1 || jsonEnd < jsonStart) {
+            this.logger.error(
+              `No valid JSON found in EPUB extraction output. Raw stdout: ${stdoutData}`,
+            );
+            return reject(
+              new Error(
+                `Failed to parse EPUB extraction output: No JSON found`,
+              ),
+            );
+          }
+
+          const jsonStr = stdoutData.substring(jsonStart, jsonEnd + 1);
+          const result = JSON.parse(jsonStr);
+
+          if (result.error) {
+            reject(new Error(result.error));
+          } else {
+            this.logger.log(
+              `EPUB extraction complete: ${result.pages_processed}/${result.total_pages} chapters processed`,
+            );
+            if (result.metadata?.title) {
+              this.logger.log(`  Title: ${result.metadata.title}`);
+            }
+            resolve(result.markdown);
+          }
+        } catch (e) {
+          this.logger.error(
+            `Failed to parse EPUB extraction output: ${e.message}. Raw stdout: ${stdoutData}`,
+          );
+          reject(new Error(`Failed to parse EPUB extraction output`));
         }
       });
     });
@@ -184,8 +299,22 @@ export class KnowledgeBaseService {
   /**
    * Legacy method wrapper for backward compatibility
    */
+  async extractDocumentWithPyMuPDF(filePath: string): Promise<string> {
+    return this.extractDocument(filePath, 'pymupdf');
+  }
+
+  // Backwards compatibility alias
+  async extractPdf(
+    filePath: string,
+    engine: 'pymupdf' | 'docling' = 'pymupdf',
+    options: { startPage?: number; endPage?: number } = {},
+  ): Promise<string> {
+    return this.extractDocument(filePath, engine, options);
+  }
+
+  // Backwards compatibility alias
   async extractPdfWithPyMuPDF(filePath: string): Promise<string> {
-    return this.extractPdf(filePath, 'pymupdf');
+    return this.extractDocumentWithPyMuPDF(filePath);
   }
 
   private runPythonScript(scriptPath: string, args: string[]): Promise<string> {

@@ -3,7 +3,7 @@
   "mcp": {
     "markitdown": {
       "type": "local",
-      "enabled": true,
+      "enabled": false,
       "command": [
         "uvx",
         "markitdown-mcp"
@@ -23,7 +23,7 @@
     },
     "context7": {
       "type": "local",
-      "enabled": true,
+      "enabled": false,
       "command": [
         "npx",
         "-y",
