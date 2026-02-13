@@ -7,42 +7,52 @@
 - When start working in a new feature don't forget read `CONTRIBUTING.md` for guidance to use git
 
 ## Source Control (Git)
+
 - when invoking `git commit`, always use `--author="[my-name] AI <my-name+ai@gmail.com>"`
 
 ## Useful Command-Line Tools
 
 ### JSON
+
 - Use the `jq` command to read and extract information from JSON files.
 
 ### RipGrep
+
 - The `rg` (ripgrep) command is available for fast searches in text files.
 
 ### Clipboard
+
 - Pipe content into `pbcopy` to copy it into the clipboard. Example: `echo "hello" | pbcopy`.
 - Pipe from `pbpaste` to get the contents of the clipboard. Example: `pbpaste > fromclipboard.txt`.
 
 ### Web (HTTP/S)
+
 - Use `curl` to fetch web pages.
 
 ## MCP Tools
 
 ### markitdown
+
 - Use this to convert various file formats to markdown.
 - Very useful if you need to read files that are not supported natively by the model.
 
 ### tavily
+
 - Use this to run web searches. It is always better to search the web than to rely on your own knowledge, which may be outdated.
 - You can also retrieve content in a format easy for ingestion. Use that if needed, but you can also just use curl if you have a URL.
 
 ### Context7
+
 - Use the Context7 MCP tool to read the documentation for many libraries and tools.
 - If you're asked to use a library, framework, or tool, it often makes sense to review its documentation first with Context7.
 
 ## JavaScript / TypeScript
+
 - Unless instructed otherwise, always use `deno` to run .js or .ts scripts.
 - Use `npx` for running commands directly from npm packages.
 
 ## Documentation Sources
+
 - If working with a new library or tool, consider looking for its documentation from its website, GitHub project, or the relevant llms.txt.
   - It is always better to have accurate, up-to-date documentation at your disposal, rather than relying on your pre-trained knowledge.
 - You can search the following directories for llms.txt collections for many projects:
@@ -63,4 +73,4 @@ You have new skills. If any skill might be relevant then you MUST read it.
 - [systematic-debugging](.opencode/skill/systematic-debugging/SKILL.md) - Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes - four-phase framework (root cause investigation, pattern analysis, hypothesis testing, implementation) that ensures understanding before attempting solutions
 - [test-writer](.opencode/skill/test-writer/SKILL.md) - Generate comprehensive Vitest tests for code examples in JavaScript concept documentation pages, following project conventions and referencing source lines
 - [web-artifacts-builder](.opencode/skill/web-artifacts-builder/SKILL.md) - Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.
-</skills>
+  </skills>

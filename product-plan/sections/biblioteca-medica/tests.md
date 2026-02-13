@@ -17,10 +17,12 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 #### Success Path
 
 **Setup:**
+
 - Bibliography database is indexed and available
 - User is authenticated
 
 **Steps:**
+
 1. User navigates to `/biblioteca`
 2. User sees prominent search bar
 3. User types "88-year-old patient with hyperkyphosis" in search
@@ -29,6 +31,7 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 6. User scrolls through results
 
 **Expected Results:**
+
 - [ ] Search input accepts natural language queries
 - [ ] Results display with relevant protocols sorted by relevance
 - [ ] Each result shows protocol name and brief description
@@ -40,14 +43,17 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 #### Failure Path: No Results
 
 **Setup:**
+
 - User searches for non-existent or very specific query
 
 **Steps:**
+
 1. User types "quantum therapy protocol for martian physiology"
 2. System searches database
 3. No results found
 
 **Expected Results:**
+
 - [ ] Empty state message: "No se encontraron resultados"
 - [ ] Helpful text: "Intenta con otros términos o navega por categorías."
 - [ ] Search input remains enabled for refinement
@@ -62,9 +68,11 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 #### Success Path
 
 **Setup:**
+
 - Categories are defined (Osteology, Myology, Elasticity Tests, etc.)
 
 **Steps:**
+
 1. User sees category chips below search bar
 2. User clicks "Osteology" category
 3. System filters protocols to show only osteology-related content
@@ -72,6 +80,7 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 5. Results update to myology protocols
 
 **Expected Results:**
+
 - [ ] Category chips are visible and labeled
 - [ ] Clicking category highlights it as active (teal background)
 - [ ] Only protocols in selected category display
@@ -82,13 +91,16 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 #### Failure Path: Empty Category
 
 **Setup:**
+
 - Selected category has no protocols yet
 
 **Steps:**
+
 1. User clicks on category with no content
 2. System filters to empty set
 
 **Expected Results:**
+
 - [ ] Empty state message: "No hay protocolos en esta categoría"
 - [ ] Suggestion: "Añade nuevos protocolos o busca en todas las categorías"
 - [ ] User can navigate to other categories
@@ -103,10 +115,12 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 #### Success Path
 
 **Setup:**
+
 - Protocol is selected (e.g., "Sphinx Position")
 - Protocol has definition, justification, procedure steps
 
 **Steps:**
+
 1. User clicks on protocol card from search results
 2. "Ficha Explicativa" modal/panel opens
 3. User reads definition in Spanish
@@ -116,6 +130,7 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 7. Content changes to English source language
 
 **Expected Results:**
+
 - [ ] Ficha modal displays with clear sections (Definition, Justification, Procedure)
 - [ ] Procedure steps are numbered and easy to follow
 - [ ] Toggle switch shows current language (EN or ES)
@@ -127,14 +142,17 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 #### Failure Path: Missing Translation
 
 **Setup:**
+
 - Protocol exists in database but no Spanish translation available
 
 **Steps:**
+
 1. User selects protocol
 2. User toggles to Spanish
 3. System has no ES translation
 
 **Expected Results:**
+
 - [ ] Message: "Traducción no disponible"
 - [ ] Original English text displays with fallback
 - [ ] Toggle shows English as active
@@ -149,15 +167,18 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 #### Success Path
 
 **Setup:**
+
 - Protocol has associated bibliography
 
 **Steps:**
+
 1. User scrolls to "Referencias Bibliográficas" section
 2. User sees list of citations
 3. User clicks on a reference
 4. Full reference details display or link opens
 
 **Expected Results:**
+
 - [ ] Bibliography panel displays with proper formatting
 - [ ] Each citation includes: Author, Year, Title, Source
 - [ ] Links to original source are clickable
@@ -167,13 +188,16 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 #### Failure Path: No References
 
 **Setup:**
+
 - Protocol has no associated bibliography
 
 **Steps:**
+
 1. User views protocol details
 2. User scrolls to reference section
 
 **Expected Results:**
+
 - [ ] Message: "No hay referencias disponibles"
 - [ ] No broken UI or empty space
 - [ ] Rest of protocol content displays normally
@@ -187,10 +211,12 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 **Scenario:** User navigates to biblioteca with no search query
 
 **Setup:**
+
 - No search term entered
 - No category selected
 
 **Expected Results:**
+
 - [ ] Welcome message or placeholder text visible
 - [ ] Search bar is prominent and focused
 - [ ] Category chips display all available categories
@@ -203,9 +229,11 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 **Scenario:** Search returns no matches
 
 **Setup:**
+
 - Search term yields no protocols
 
 **Expected Results:**
+
 - [ ] Clear message: "No se encontraron resultados para [query]"
 - [ ] Suggestion: "Intenta con otros términos"
 - [ ] "Ver todas las categorías" link visible
@@ -219,12 +247,14 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 ### BibliotecaDashboard
 
 **Renders correctly:**
+
 - [ ] Search bar is prominent and centrally positioned
 - [ ] Category chips display in scrollable row below search
 - [ ] Results area shows protocols or empty state
 - [ ] Recent searches or "protocolos destacados" display if available
 
 **User interactions:**
+
 - [ ] Typing in search triggers search after debounce (300-500ms)
 - [ ] Pressing Enter submits search immediately
 - [ ] Clicking category chip filters results
@@ -233,11 +263,13 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 ### SearchBar
 
 **Renders correctly:**
+
 - [ ] Input field with placeholder text is visible
 - [ ] Search icon shows on left side
 - [ ] Clear button (X) appears when text is entered
 
 **User interactions:**
+
 - [ ] Typing updates search state
 - [ ] Clicking clear button empties input and clears results
 - [ ] Focus shows ring or highlight effect
@@ -246,11 +278,13 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 ### CategoryNav
 
 **Renders correctly:**
+
 - [ ] All categories display as chips/buttons
 - [ ] Category names are clearly labeled
 - [ ] Active category has distinct styling (teal background)
 
 **User interactions:**
+
 - [ ] Hover effect shows on category chips
 - [ ] Clicking selects category and filters results
 - [ ] Active category deselects when clicking different category
@@ -259,12 +293,14 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 ### ProtocolList
 
 **Renders correctly:**
+
 - [ ] Protocol cards display in grid or list layout
 - [ ] Each card shows protocol name and brief description
 - [ ] Search terms are highlighted in description
 - [ ] Protocol card shows type or category badge
 
 **User interactions:**
+
 - [ ] Hover effect on protocol cards
 - [ ] Clicking card opens protocol details
 - [ ] Infinite scroll or "Load More" works if many results
@@ -273,11 +309,13 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 ### BibliographyPanel
 
 **Renders correctly:**
+
 - [ ] Panel displays with heading "Referencias"
 - [ ] Citations list in proper format (APA or similar)
 - [ ] Each citation has link indicator if URL exists
 
 **User interactions:**
+
 - [ ] Clicking citation opens reference in new tab or shows details
 - [ ] Panel scrolls if many citations
 - [ ] Copy citation button (if present) works
@@ -309,7 +347,7 @@ Biblioteca Médica is a smart clinical research assistant with natural language 
 - [ ] Modal/panel can be dismissed with Escape key
 - [ ] Focus is trapped within modal when open
 - [ ] Language toggle has aria-label indicating current state (EN/ES)
-- [ ] Links to external references open in new tab (target="_blank")
+- [ ] Links to external references open in new tab (target="\_blank")
 - [ ] Search results are announced to screen readers (count, first result)
 - [ ] Empty state messages are clear and descriptive
 - [ ] Error messages are announced immediately
@@ -324,41 +362,46 @@ Use the data from `sample-data.json` or create variations:
 // Example test data - search results
 const mockSearchResults: Protocol[] = [
   {
-    id: "prot-001",
-    nombre: "Posición de Esfinge",
-    categoria: "Osteology",
-    definicionES: "Decúbito prono con apoyo antebrazos y flexión de cervical",
-    definicionEN: "Prone position with forearm support and cervical flexion",
-    justificacion: "Reducir carga sobre columna cervical y mejorar alineación",
+    id: 'prot-001',
+    nombre: 'Posición de Esfinge',
+    categoria: 'Osteology',
+    definicionES: 'Decúbito prono con apoyo antebrazos y flexión de cervical',
+    definicionEN: 'Prone position with forearm support and cervical flexion',
+    justificacion: 'Reducir carga sobre columna cervical y mejorar alineación',
     pasos: [
-      "1. Colocar paciente en decúbito prono",
-      "2. Flexionar rodillas a 90°",
-      "3. Colocar antebrazos debajo de la cabeza",
-      "4. Mantener 5-10 minutos"
+      '1. Colocar paciente en decúbito prono',
+      '2. Flexionar rodillas a 90°',
+      '3. Colocar antebrazos debajo de la cabeza',
+      '4. Mantener 5-10 minutos',
     ],
     referencias: [
-      { autor: "McKenzie, R.", año: 1981, titulo: "The Lumbar Spine: Mechanical Diagnosis", fuente: "Journal of Manual Medicine" }
-    ]
-  }
-]
+      {
+        autor: 'McKenzie, R.',
+        año: 1981,
+        titulo: 'The Lumbar Spine: Mechanical Diagnosis',
+        fuente: 'Journal of Manual Medicine',
+      },
+    ],
+  },
+];
 
 // Example test data - categories
 const mockCategories: Category[] = [
-  { id: "cat-001", nombre: "Osteology", protocolosCount: 45 },
-  { id: "cat-002", nombre: "Myology", protocolosCount: 32 },
-  { id: "cat-003", nombre: "Elasticity Tests", protocolosCount: 18 },
-  { id: "cat-004", nombre: "Propiocepción", protocolosCount: 24 }
-]
+  { id: 'cat-001', nombre: 'Osteology', protocolosCount: 45 },
+  { id: 'cat-002', nombre: 'Myology', protocolosCount: 32 },
+  { id: 'cat-003', nombre: 'Elasticity Tests', protocolosCount: 18 },
+  { id: 'cat-004', nombre: 'Propiocepción', protocolosCount: 24 },
+];
 
 // Example test data - empty states
-const mockEmptyResults: Protocol[] = []
+const mockEmptyResults: Protocol[] = [];
 
 const mockNoBibliografia: Protocol = {
-  id: "prot-999",
-  nombre: "Técnica Personalizada",
-  categoria: "Custom",
-  referencias: []
-}
+  id: 'prot-999',
+  nombre: 'Técnica Personalizada',
+  categoria: 'Custom',
+  referencias: [],
+};
 ```
 
 ---

@@ -4,7 +4,322 @@
 
 The AI Analysis feature provides physiotherapists with evidence-based clinical suggestions by combining multiple data sources: voice transcripts from evaluations, vision analysis of posturograms and footprints, medical literature (RAG), and structured clinical data. This multi-modal approach gives the AI a complete picture of the patient, resulting in more accurate and contextually relevant recommendations.
 
-**Last Modified:** 2026-02-07
+---
+
+## What Makes This Different
+
+Traditional AI analysis looks only at structured form data. Mamirri's orchestration layer goes further by incorporating:
+
+- **Voice transcripts**: Natural language descriptions recorded during sessions
+- **Vision findings**: AI-analyzed posturograms and footprint scans
+- **Medical literature**: Evidence from ingested textbooks (RAG using Voyage AI)
+- **Clinical history**: Evaluations, pain scales, and treatment sessions
+
+This gives therapists suggestions grounded in both the patient's complete clinical picture and published medical evidence from state-of-the-art retrieval models.
+
+---
+
+## How It Works
+
+### The Analysis Pipeline
+
+When you click **Analyze with AI**, the system runs this pipeline:
+
+```
+1. Gather Data (Parallel)
+   ├── Fetch all evaluations (Initial, Progress, Final)
+    ├── Fetch last 3 treatment sessions
+    ├── Extract vision findings (uses [hybrid caching](ai-vision-integration.md))
+    └── Collect voice transcripts from evaluations and sessions
+
+
+2. Anonymize (Privacy Protection)
+   ├── Replace names with "Patient"
+   ├── Convert dates to relative time ("3 weeks ago")
+   └── Remove identifying information
+
+3. Retrieve Evidence (Parallel RAG)
+   ├── Search: Diagnosis confirmation
+   ├── Search: Treatment options
+   ├── Search: Contraindications
+   └── Search: Prognosis indicators
+
+4. Generate Analysis (LLM)
+   ├── Combine all context sources
+   ├── Apply clinical reasoning (Chain-of-Thought)
+   └── Structure response with citations
+
+5. Deliver Results
+   ├── Pattern recognition summary
+   ├── Suggestion cards (diagnosis/treatment/contraindication)
+   ├── Citations from medical books
+   └── Service status indicators
+```
+
+### Parallel Processing for Speed
+
+The system performs data gathering and RAG searches in parallel to keep response times under 2.5 seconds:
+
+- Data fetching: ~100ms (parallel DB queries)
+- RAG retrieval: ~500ms (4 parallel similarity searches)
+- LLM synthesis: ~1500ms (with retry logic)
+- **Total: ~2.1 seconds average**
+
+---
+
+## Using the Feature
+
+### From the Frontend
+
+1. Navigate to a patient's clinical case
+2. Ensure at least 1 evaluation exists (button is disabled otherwise)
+3. Click **Analizar con IA** in the header
+4. Wait for analysis (shows loading spinner)
+5. Review results in the slide-out panel:
+   - **Pattern Recognized**: Clinical patterns identified
+   - **Suggestions**: Cards with diagnosis, treatment, and contraindications
+   - **Citations**: Expandable quotes from medical literature
+   - **Status Indicator**: Green/yellow/red showing which services contributed
+
+### Service Status Indicators
+
+The colored dot tells you what data was used:
+
+| Color     | Meaning                  | When You'll See It                                            |
+| --------- | ------------------------ | ------------------------------------------------------------- |
+| 🟢 Green  | All services operational | Everything worked perfectly                                   |
+| 🟡 Yellow | Partial results          | Some services unavailable (e.g., no vision data, RAG timeout) |
+| 🔴 Red    | Analysis failed          | LLM service unavailable or major error                        |
+
+**Example yellow states:**
+
+- "Limited knowledge base results" - RAG timed out, but LLM still generated suggestions
+- "No image analysis available" - Case has no posturograms or footprints
+
+### API Endpoint
+
+**POST** `/api/v1/ai/cases/:caseId/analyze`
+
+Analyzes a clinical case using all available data sources.
+
+**Authentication:** Bearer token required
+
+**Path Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| caseId | string | UUID of the clinical case |
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| forceVision | boolean | (Optional) Bypass cache and force fresh image analysis. Defaults to `false`. |
+
+**Response:**
+
+```json
+{
+  "primarySuggestion": {
+    "title": "Fascitis plantar bilateral",
+    "description": "El patrón de dolor matutino y la distribución en la planta del pie sugieren fascitis plantar bilateral...",
+    "confidence": "HIGH",
+    "reasoning": "Basado en la escala de dolor EVA 7/10 y el hallazgo de hiperpronación en el posturograma..."
+  },
+  "alternatives": [...],
+  "citations": [
+    {
+      "quote": "El estiramiento específico de la fascia plantar es el pilar del tratamiento conservador...",
+      "documentTitle": "Manual de Fisioterapia",
+      "author": "Kapandji",
+      "pageNumber": 234,
+      "relevance": 0.95
+    }
+  ],
+  "reasoning": {
+    "step1_understanding": "Paciente presenta dolor en planta...",
+    "step2_literature": "La literatura indica que el 80% responden...",
+    "step3_synthesis": "Se recomienda iniciar con estiramientos..."
+  },
+  "metadata": {
+    "processingTimeMs": 2150,
+    "anonymizationApplied": true,
+    "serviceStatus": {
+      "rag": true,
+      "vision": true,
+      "voice": false,
+      "llm": true
+    },
+    "visionAnalysis": {
+      "totalImages": 2,
+      "cacheHits": 1,
+      "apiCalls": 1,
+      "failures": 0
+    },
+    "warnings": []
+  }
+}
+```
+
+**Status Codes:**
+| Code | Meaning |
+|------|---------|
+| 200 | Success - Analysis complete |
+| 400 | Bad Request - No evaluations for this case |
+| 403 | Forbidden - You don't own this case |
+| 404 | Not Found - Case doesn't exist |
+| 503 | Service Unavailable - LLM service down |
+
+---
+
+## Technical Architecture
+
+### Services
+
+**DataAggregationService**
+: Fetches and combines data from multiple sources in parallel. Returns a `CaseDataAggregate` containing evaluations, sessions, vision findings, and voice transcripts.
+
+**AiAnalysisService**
+: Orchestrates the analysis pipeline. Coordinates data aggregation, anonymization, RAG retrieval, and LLM generation.
+
+**AnonymizerService**
+: Strips PII before sending to external LLM. Uses reversible masking so patient data never leaves your infrastructure.
+
+**PromptBuilderService**
+: Constructs specialized prompts for different query types and formats multi-modal context for the LLM.
+
+**KnowledgeBaseService**
+: Performs semantic search over ingested medical literature using pgvector.
+
+**VoyageEmbeddingService**
+: Provider-specific service for generating text embeddings using Voyage AI models (`voyage-4-large` and `voyage-4`).
+
+### Data Flow
+
+```
+User clicks "Analyze"
+  ↓
+DataAggregationService.aggregateCaseData()
+  ├── Prisma: Fetch evaluations
+  ├── Prisma: Fetch sessions (last 3)
+  ├── Vision AI: Analyze unanalyzed footprints (in parallel)
+  ├── Extract: cached vision findings JSON
+  └── Extract: voice notes arrays
+  ↓
+AnonymizerService.anonymize()
+  ↓
+AiAnalysisService.executeMultiQueryRag() [Parallel]
+  ├── Diagnosis query (HyDE) → top 8 chunks
+  ├── Treatment query (HyDE) → top 8 chunks
+  └── Contraindications query → top 4 chunks
+  ↓
+Rerank (Cohere v4.0-pro)
+  ↓
+PromptBuilderService.buildUserPrompt()
+  ├── Case context (anonymized)
+  ├── Vision findings summary
+  ├── Voice transcript excerpts
+  └── Reranked RAG passages
+  ↓
+Gemini 3 Flash.generateContent()
+  ↓
+Parse response → AnalysisResultDto
+  ↓
+Return to client
+```
+
+---
+
+## Privacy & Security
+
+### Privacy Guarantees for Therapists
+
+**Your patients' data is protected.** Before any information leaves your server to the AI, all personally identifiable information (PII) is removed or masked.
+
+### What Gets Anonymized
+
+When you click **Analyze with AI**, the system processes patient data through an anonymization pipeline:
+
+| Original Data                     | What the AI Sees              | Why                                |
+| --------------------------------- | ----------------------------- | ---------------------------------- |
+| Patient name (e.g., "Juan Pérez") | `[PATIENT]`                   | Identity protected                 |
+| Birth date (e.g., "1990-03-15")   | `[AGE] años (36)`             | Age preserved for clinical context |
+| Email address                     | **Removed entirely**          | No contact info sent               |
+| Phone number                      | **Removed entirely**          | No contact info sent               |
+| Emergency contact                 | **Removed entirely**          | No third-party data sent           |
+| Specific dates                    | Relative time ("3 weeks ago") | Timeline preserved without dates   |
+
+**Example transformation:**
+
+```
+BEFORE ANONYMIZATION:
+"Juan Pérez, born March 15 1990, phone 600123456,
+reports lower back pain starting January 10 2024"
+
+AFTER ANONYMIZATION:
+"[PATIENT], [AGE] años (36),
+reports lower back pain starting 3 weeks ago"
+```
+
+### What Stays on Your Server
+
+**Never leaves your infrastructure:**
+
+- Original patient names and demographics
+- Phone numbers and email addresses
+- Voice recordings and transcriptions
+- Medical images and posturograms
+- Complete evaluation data
+
+**Temporary mappings:**
+
+- The system temporarily remembers which placeholder belongs to which patient
+- This memory is automatically erased after showing you the results
+- No patient-identifying information is stored permanently
+
+### What Goes to the AI
+
+**Only this information reaches the external AI providers (Google/Voyage/Cohere):**
+
+- Anonymized clinical descriptions
+- Pain scales and symptoms
+- Posturogram analysis results
+- Treatment session summaries
+- Anonymized queries for literature retrieval
+
+### GDPR Compliance
+
+- **No PII sent externally** - All identifying data stripped before API calls
+- **No training on your data** - Providers do not use your patient data to train models
+- **Book citations only** - AI recommendations cite original textbook content, never patient cases
+- **Audit trail** - System logs only case ID and timestamp, no patient details
+
+---
+
+## Troubleshooting
+
+### Analysis taking too long (>3 seconds)
+
+**Check:**
+
+1. RAG query performance: `pnpm knowledge:stats`
+2. Database connection pool
+3. External API rate limits (Google/Voyage/Cohere)
+
+**Solutions:**
+
+- System degrades gracefully - you'll get partial results with warnings
+- Check server logs for timing breakdown
+
+---
+
+## Related Documentation
+
+- [Knowledge Base & RAG](knowledge-base-rag.md) - Managing medical literature
+- [API Reference](api-reference.md) - Complete API documentation
+- [Security & Privacy](security.md) - Data protection details
+
+---
+
+**Last Modified:** 2026-02-10
 
 ---
 
@@ -14,10 +329,10 @@ Traditional AI analysis looks only at structured form data. Mamirri's orchestrat
 
 - **Voice transcripts**: Natural language descriptions recorded during sessions
 - **Vision findings**: AI-analyzed posturograms and footprint scans
-- **Medical literature**: Evidence from ingested textbooks (RAG)
+- **Medical literature**: Evidence from ingested textbooks (RAG using Voyage AI)
 - **Clinical history**: Evaluations, pain scales, and treatment sessions
 
-This gives therapists suggestions grounded in both the patient's complete clinical picture and published medical evidence.
+This gives therapists suggestions grounded in both the patient's complete clinical picture and published medical evidence from state-of-the-art retrieval models.
 
 ---
 
@@ -437,7 +752,7 @@ The technical safeguards are in place, but regulatory compliance depends on your
 
 ---
 
-## Appendix: Future Architecture Considerations
+**Last Modified:** 2026-02-10
 
 ### Provider-Agnostic AI Architecture (Option B)
 

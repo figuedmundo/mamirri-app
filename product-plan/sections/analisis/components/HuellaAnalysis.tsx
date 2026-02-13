@@ -1,13 +1,13 @@
-import type { Huella } from '../../../../product/sections/analisis/types'
+import type { Huella } from '../../../../product/sections/analisis/types';
 
 interface HuellaAnalysisProps {
-  pacienteNombre: string
-  huellas: Huella[]
-  tipoEvaluacion: 'inicial' | 'final' | 'seguimiento'
-  onLoadHuella?: (lado: 'izquierdo' | 'derecho') => void
-  onCompararConAnterior?: () => void
-  onExportar?: () => void
-  onVolver?: () => void
+  pacienteNombre: string;
+  huellas: Huella[];
+  tipoEvaluacion: 'inicial' | 'final' | 'seguimiento';
+  onLoadHuella?: (lado: 'izquierdo' | 'derecho') => void;
+  onCompararConAnterior?: () => void;
+  onExportar?: () => void;
+  onVolver?: () => void;
 }
 
 export function HuellaAnalysis({
@@ -19,44 +19,73 @@ export function HuellaAnalysis({
   onExportar,
   onVolver,
 }: HuellaAnalysisProps) {
-  const huellaIzquierda = huellas.find(h => h.lado === 'izquierdo')
-  const huellaDerecha = huellas.find(h => h.lado === 'derecho')
+  const huellaIzquierda = huellas.find((h) => h.lado === 'izquierdo');
+  const huellaDerecha = huellas.find((h) => h.lado === 'derecho');
 
   const getTipoBadgeClass = () => {
     const classes: Record<string, string> = {
       inicial: 'bg-teal-100 text-teal-700 dark:bg-teal-200 dark:text-teal-800',
-      final: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-200 dark:text-emerald-800',
+      final:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-200 dark:text-emerald-800',
       seguimiento: 'bg-sky-100 text-sky-700 dark:bg-sky-200 dark:text-sky-800',
-    }
-    return classes[tipoEvaluacion] || 'bg-slate-100 text-slate-700'
-  }
+    };
+    return classes[tipoEvaluacion] || 'bg-slate-100 text-slate-700';
+  };
 
   const getArcoBadge = (arco: string) => {
     const badges: Record<string, { class: string; label: string }> = {
-      normal: { class: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-200 dark:text-emerald-800', label: 'Normal' },
-      colapsado: { class: 'bg-rose-100 text-rose-700 dark:bg-rose-200 dark:text-rose-800', label: 'Colapsado' },
-      cavo: { class: 'bg-amber-100 text-amber-700 dark:bg-amber-200 dark:text-amber-800', label: 'Cavo' },
-    }
-    return badges[arco] || { class: 'bg-slate-100 text-slate-700', label: arco }
-  }
+      normal: {
+        class:
+          'bg-emerald-100 text-emerald-700 dark:bg-emerald-200 dark:text-emerald-800',
+        label: 'Normal',
+      },
+      colapsado: {
+        class: 'bg-rose-100 text-rose-700 dark:bg-rose-200 dark:text-rose-800',
+        label: 'Colapsado',
+      },
+      cavo: {
+        class:
+          'bg-amber-100 text-amber-700 dark:bg-amber-200 dark:text-amber-800',
+        label: 'Cavo',
+      },
+    };
+    return (
+      badges[arco] || { class: 'bg-slate-100 text-slate-700', label: arco }
+    );
+  };
 
   const getPresionColor = (presion: string) => {
     const colors: Record<string, string> = {
       normal: 'text-emerald-600 dark:text-emerald-400',
       alta: 'text-rose-600 dark:text-rose-400',
       baja: 'text-amber-600 dark:text-amber-400',
-    }
-    return colors[presion] || 'text-slate-600'
-  }
+    };
+    return colors[presion] || 'text-slate-600';
+  };
 
   const getDesviacionBadge = (desviacion: string) => {
     const badges: Record<string, { class: string; label: string }> = {
-      normal: { class: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-200 dark:text-emerald-800', label: 'Normal' },
-      valgo: { class: 'bg-rose-100 text-rose-700 dark:bg-rose-200 dark:text-rose-800', label: 'Valgo' },
-      varo: { class: 'bg-sky-100 text-sky-700 dark:bg-sky-200 dark:text-sky-800', label: 'Varo' },
-    }
-    return badges[desviacion] || { class: 'bg-slate-100 text-slate-700', label: desviacion }
-  }
+      normal: {
+        class:
+          'bg-emerald-100 text-emerald-700 dark:bg-emerald-200 dark:text-emerald-800',
+        label: 'Normal',
+      },
+      valgo: {
+        class: 'bg-rose-100 text-rose-700 dark:bg-rose-200 dark:text-rose-800',
+        label: 'Valgo',
+      },
+      varo: {
+        class: 'bg-sky-100 text-sky-700 dark:bg-sky-200 dark:text-sky-800',
+        label: 'Varo',
+      },
+    };
+    return (
+      badges[desviacion] || {
+        class: 'bg-slate-100 text-slate-700',
+        label: desviacion,
+      }
+    );
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-6 lg:p-8">
@@ -77,8 +106,11 @@ export function HuellaAnalysis({
                 <p className="text-sm text-slate-600 dark:text-slate-400">
                   {pacienteNombre}
                 </p>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getTipoBadgeClass()}`}>
-                  {tipoEvaluacion.charAt(0).toUpperCase() + tipoEvaluacion.slice(1)}
+                <span
+                  className={`px-2 py-0.5 rounded-full text-xs font-medium ${getTipoBadgeClass()}`}
+                >
+                  {tipoEvaluacion.charAt(0).toUpperCase() +
+                    tipoEvaluacion.slice(1)}
                 </span>
               </div>
             </div>
@@ -155,19 +187,24 @@ export function HuellaAnalysis({
         )}
       </div>
     </div>
-  )
+  );
 }
 
 interface HuellaViewProps {
-  huella: Huella
-  getArcoBadge: (arco: string) => { class: string; label: string }
-  getPresionColor: (presion: string) => string
-  getDesviacionBadge: (desviacion: string) => { class: string; label: string }
+  huella: Huella;
+  getArcoBadge: (arco: string) => { class: string; label: string };
+  getPresionColor: (presion: string) => string;
+  getDesviacionBadge: (desviacion: string) => { class: string; label: string };
 }
 
-function HuellaView({ huella, getArcoBadge, getPresionColor, getDesviacionBadge }: HuellaViewProps) {
-  const arcoBadge = getArcoBadge(huella.analisis.arco)
-  const desviacionBadge = getDesviacionBadge(huella.analisis.desviacion)
+function HuellaView({
+  huella,
+  getArcoBadge,
+  getPresionColor,
+  getDesviacionBadge,
+}: HuellaViewProps) {
+  const arcoBadge = getArcoBadge(huella.analisis.arco);
+  const desviacionBadge = getDesviacionBadge(huella.analisis.desviacion);
 
   return (
     <div className="space-y-6">
@@ -178,7 +215,9 @@ function HuellaView({ huella, getArcoBadge, getPresionColor, getDesviacionBadge 
               <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-teal-400/20 to-teal-600/20 border-4 border-teal-500/30 flex items-center justify-center">
                 <span className="text-4xl">🦶</span>
               </div>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Imagen de huella</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Imagen de huella
+              </p>
             </div>
           </div>
 
@@ -193,27 +232,41 @@ function HuellaView({ huella, getArcoBadge, getPresionColor, getDesviacionBadge 
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <span className={`px-3 py-1 rounded-full text-sm font-medium ${arcoBadge.class}`}>
+        <span
+          className={`px-3 py-1 rounded-full text-sm font-medium ${arcoBadge.class}`}
+        >
           Arco: {arcoBadge.label}
         </span>
-        <span className={`px-3 py-1 rounded-full text-sm font-medium ${desviacionBadge.class}`}>
+        <span
+          className={`px-3 py-1 rounded-full text-sm font-medium ${desviacionBadge.class}`}
+        >
           Desviación: {desviacionBadge.label}
         </span>
       </div>
 
       <div className="bg-slate-50 dark:bg-slate-700 rounded-xl p-4 space-y-3">
-        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">Análisis de Presión</h3>
+        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+          Análisis de Presión
+        </h3>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <p className="text-xs text-slate-500 dark:text-slate-400">Talón</p>
-            <p className={`text-sm font-medium ${getPresionColor(huella.analisis.presionTalon)}`}>
-              {huella.analisis.presionTalon.charAt(0).toUpperCase() + huella.analisis.presionTalon.slice(1)}
+            <p
+              className={`text-sm font-medium ${getPresionColor(huella.analisis.presionTalon)}`}
+            >
+              {huella.analisis.presionTalon.charAt(0).toUpperCase() +
+                huella.analisis.presionTalon.slice(1)}
             </p>
           </div>
           <div className="space-y-1">
-            <p className="text-xs text-slate-500 dark:text-slate-400">Antepié</p>
-            <p className={`text-sm font-medium ${getPresionColor(huella.analisis.presionAntepie)}`}>
-              {huella.analisis.presionAntepie.charAt(0).toUpperCase() + huella.analisis.presionAntepie.slice(1)}
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Antepié
+            </p>
+            <p
+              className={`text-sm font-medium ${getPresionColor(huella.analisis.presionAntepie)}`}
+            >
+              {huella.analisis.presionAntepie.charAt(0).toUpperCase() +
+                huella.analisis.presionAntepie.slice(1)}
             </p>
           </div>
         </div>
@@ -221,7 +274,9 @@ function HuellaView({ huella, getArcoBadge, getPresionColor, getDesviacionBadge 
 
       {huella.analisis.zonasSensibles.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">Zonas Sensibles</h3>
+          <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            Zonas Sensibles
+          </h3>
           <div className="flex flex-wrap gap-2">
             {huella.analisis.zonasSensibles.map((zona, idx) => (
               <ZonaSensibleBadge key={idx} zona={zona} />
@@ -232,18 +287,24 @@ function HuellaView({ huella, getArcoBadge, getPresionColor, getDesviacionBadge 
 
       {huella.comparacion && (
         <div className="bg-sky-50 dark:bg-slate-700 rounded-xl p-4 space-y-2 border border-sky-200 dark:border-sky-800">
-          <h3 className="text-sm font-semibold text-sky-700 dark:text-sky-300">Comparación con Evaluación Inicial</h3>
-          <p className="text-sm text-slate-600 dark:text-slate-300">{huella.comparacion.mejoraDolor}</p>
-          <p className="text-sm text-slate-600 dark:text-slate-300">{huella.comparacion.recuperacionROM}</p>
+          <h3 className="text-sm font-semibold text-sky-700 dark:text-sky-300">
+            Comparación con Evaluación Inicial
+          </h3>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            {huella.comparacion.mejoraDolor}
+          </p>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            {huella.comparacion.recuperacionROM}
+          </p>
         </div>
       )}
     </div>
-  )
+  );
 }
 
 interface HuellaEmptyStateProps {
-  lado: 'izquierdo' | 'derecho'
-  onLoadHuella: () => void
+  lado: 'izquierdo' | 'derecho';
+  onLoadHuella: () => void;
 }
 
 function HuellaEmptyState({ lado, onLoadHuella }: HuellaEmptyStateProps) {
@@ -254,7 +315,8 @@ function HuellaEmptyState({ lado, onLoadHuella }: HuellaEmptyStateProps) {
       </div>
       <div className="text-center space-y-2">
         <p className="text-slate-600 dark:text-slate-300 font-medium">
-          No hay huella del {lado === 'izquierdo' ? 'pie izquierdo' : 'pie derecho'}
+          No hay huella del{' '}
+          {lado === 'izquierdo' ? 'pie izquierdo' : 'pie derecho'}
         </p>
         <button
           onClick={onLoadHuella}
@@ -264,12 +326,12 @@ function HuellaEmptyState({ lado, onLoadHuella }: HuellaEmptyStateProps) {
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 interface SimmetryAnalysisProps {
-  izquierda: Huella
-  derecha: Huella
+  izquierda: Huella;
+  derecha: Huella;
 }
 
 function SimmetryAnalysis({ izquierda, derecha }: SimmetryAnalysisProps) {
@@ -277,18 +339,20 @@ function SimmetryAnalysis({ izquierda, derecha }: SimmetryAnalysisProps) {
     if (izquierda.analisis.arco === derecha.analisis.arco) {
       return {
         status: 'simetrico',
-        class: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-200 dark:text-emerald-800',
+        class:
+          'bg-emerald-100 text-emerald-700 dark:bg-emerald-200 dark:text-emerald-800',
         label: 'Simétrico',
-      }
+      };
     }
     return {
       status: 'asimetrico',
-      class: 'bg-amber-100 text-amber-700 dark:bg-amber-200 dark:text-amber-800',
+      class:
+        'bg-amber-100 text-amber-700 dark:bg-amber-200 dark:text-amber-800',
       label: 'Asimétrico',
-    }
-  }
+    };
+  };
 
-  const simmetry = getSimmetryStatus()
+  const simmetry = getSimmetryStatus();
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-6">
@@ -304,63 +368,82 @@ function SimmetryAnalysis({ izquierda, derecha }: SimmetryAnalysisProps) {
         </div>
 
         <div className="bg-slate-50 dark:bg-slate-700 rounded-xl p-4">
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">Comparación de Arcos</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+            Comparación de Arcos
+          </p>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-600 dark:text-slate-300">Izquierdo:</span>
+              <span className="text-slate-600 dark:text-slate-300">
+                Izquierdo:
+              </span>
               <span className="font-medium text-slate-800 dark:text-slate-100">
-                {izquierda.analisis.arco.charAt(0).toUpperCase() + izquierda.analisis.arco.slice(1)}
+                {izquierda.analisis.arco.charAt(0).toUpperCase() +
+                  izquierda.analisis.arco.slice(1)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-600 dark:text-slate-300">Derecho:</span>
+              <span className="text-slate-600 dark:text-slate-300">
+                Derecho:
+              </span>
               <span className="font-medium text-slate-800 dark:text-slate-100">
-                {derecha.analisis.arco.charAt(0).toUpperCase() + derecha.analisis.arco.slice(1)}
+                {derecha.analisis.arco.charAt(0).toUpperCase() +
+                  derecha.analisis.arco.slice(1)}
               </span>
             </div>
           </div>
         </div>
 
         <div className="bg-slate-50 dark:bg-slate-700 rounded-xl p-4">
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">Comparación de Desviación</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+            Comparación de Desviación
+          </p>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-600 dark:text-slate-300">Izquierdo:</span>
+              <span className="text-slate-600 dark:text-slate-300">
+                Izquierdo:
+              </span>
               <span className="font-medium text-slate-800 dark:text-slate-100">
-                {izquierda.analisis.desviacion.charAt(0).toUpperCase() + izquierda.analisis.desviacion.slice(1)}
+                {izquierda.analisis.desviacion.charAt(0).toUpperCase() +
+                  izquierda.analisis.desviacion.slice(1)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-600 dark:text-slate-300">Derecho:</span>
+              <span className="text-slate-600 dark:text-slate-300">
+                Derecho:
+              </span>
               <span className="font-medium text-slate-800 dark:text-slate-100">
-                {derecha.analisis.desviacion.charAt(0).toUpperCase() + derecha.analisis.desviacion.slice(1)}
+                {derecha.analisis.desviacion.charAt(0).toUpperCase() +
+                  derecha.analisis.desviacion.slice(1)}
               </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 interface PressureHeatmapOverlayProps {
   presionMapa: {
-    talon: number
-    medio: number
-    antepie: number
-    borde: number
-  }
+    talon: number;
+    medio: number;
+    antepie: number;
+    borde: number;
+  };
   zonasSensibles: Array<{
-    zona: string
-    intensidad: 'baja' | 'media' | 'alta' | 'muy-alta'
-    color: string
-  }>
+    zona: string;
+    intensidad: 'baja' | 'media' | 'alta' | 'muy-alta';
+    color: string;
+  }>;
 }
 
-function PressureHeatmapOverlay({ presionMapa, zonasSensibles }: PressureHeatmapOverlayProps) {
+function PressureHeatmapOverlay({
+  presionMapa,
+  zonasSensibles,
+}: PressureHeatmapOverlayProps) {
   const getHeatmapOpacity = (value: number) => {
-    return Math.min(value / 100 * 0.6, 0.6)
-  }
+    return Math.min((value / 100) * 0.6, 0.6);
+  };
 
   return (
     <div className="absolute inset-4 pointer-events-none">
@@ -388,11 +471,11 @@ function PressureHeatmapOverlay({ presionMapa, zonasSensibles }: PressureHeatmap
 
       {zonasSensibles.map((zona, idx) => {
         const intensidadOpacity = {
-          'baja': 0.2,
-          'media': 0.4,
-          'alta': 0.6,
+          baja: 0.2,
+          media: 0.4,
+          alta: 0.6,
           'muy-alta': 0.8,
-        }[zona.intensidad]
+        }[zona.intensidad];
 
         return (
           <div
@@ -404,23 +487,29 @@ function PressureHeatmapOverlay({ presionMapa, zonasSensibles }: PressureHeatmap
             }}
             title={`${zona.zona}: ${zona.intensidad}`}
           />
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
-function ZonaSensibleBadge({ zona }: { zona: { zona: string; intensidad: string; color: string } }) {
+function ZonaSensibleBadge({
+  zona,
+}: {
+  zona: { zona: string; intensidad: string; color: string };
+}) {
   const intensidadClass = {
-    'baja': 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300',
-    'media': 'bg-amber-100 text-amber-700 dark:bg-amber-200 dark:text-amber-800',
-    'alta': 'bg-orange-100 text-orange-700 dark:bg-orange-200 dark:text-orange-800',
+    baja: 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300',
+    media: 'bg-amber-100 text-amber-700 dark:bg-amber-200 dark:text-amber-800',
+    alta: 'bg-orange-100 text-orange-700 dark:bg-orange-200 dark:text-orange-800',
     'muy-alta': 'bg-rose-100 text-rose-700 dark:bg-rose-200 dark:text-rose-800',
-  }[zona.intensidad]
+  }[zona.intensidad];
 
   return (
-    <span className={`px-3 py-1 rounded-full text-sm font-medium ${intensidadClass}`}>
+    <span
+      className={`px-3 py-1 rounded-full text-sm font-medium ${intensidadClass}`}
+    >
       {zona.zona.charAt(0).toUpperCase() + zona.zona.slice(1)}
     </span>
-  )
+  );
 }

@@ -33,10 +33,10 @@ async function bootstrap() {
   const knowledgeBaseService = app.get(KnowledgeBaseService);
 
   const serverDir = path.resolve(__dirname, '..');
-  const pdfsDir = path.join(serverDir, 'data/pdfs');
-  const markdownsDir = path.join(serverDir, 'data/markdowns');
-  const archiveDir = path.join(serverDir, 'data/archive');
-  const booksDir = path.join(serverDir, 'data/books');
+  const pdfsDir = path.join(serverDir, 'data/library/temporal');
+  const markdownsDir = path.join(serverDir, 'data/library/temporal');
+  const archiveDir = path.join(serverDir, 'data/library/originals');
+  const booksDir = path.join(serverDir, 'data/library/temporal');
 
   if (!fs.existsSync(pdfsDir)) {
     console.log(`Creating PDF input directory at ${pdfsDir}`);
@@ -58,8 +58,10 @@ async function bootstrap() {
     fs.mkdirSync(booksDir, { recursive: true });
   }
 
-  const files = fs.readdirSync(pdfsDir).filter((f) => f.endsWith('.pdf'));
-  console.log(`Found ${files.length} new PDF files in ${pdfsDir}`);
+  const files = fs
+    .readdirSync(pdfsDir)
+    .filter((f) => f.endsWith('.pdf') || f.endsWith('.epub'));
+  console.log(`Found ${files.length} new documents (PDF/EPUB) in ${pdfsDir}`);
 
   // Parse args for engine and pages
   const args = process.argv.slice(2);
@@ -83,13 +85,13 @@ async function bootstrap() {
     }
   }
 
-  console.log(`🚀 Using extraction engine: ${engine.toUpperCase()}`);
+  console.log(`🚀 Default extraction engine: ${engine.toUpperCase()}`);
   if (pageRange) {
     console.log(`   📄 Page range: ${pageRange.start} to ${pageRange.end}`);
   }
   if (engine === 'docling') {
     console.log(
-      '   (Note: Docling is slower but handles layouts/images better)',
+      '   (Note: Docling is slower but handles layouts/images better for PDFs)',
     );
   }
 
@@ -97,20 +99,35 @@ async function bootstrap() {
   let failureCount = 0;
 
   for (const file of files) {
-    const relFilePath = `data/pdfs/${file}`;
+    const relFilePath = `data/library/temporal/${file}`;
     const absFilePath = path.join(serverDir, relFilePath);
-    const fileNameNoExt = file.replace(/\.pdf$/i, '');
+    const fileNameNoExt = file.replace(/\.(pdf|epub)$/i, '');
+    const isEpub = file.toLowerCase().endsWith('.epub');
 
     console.log(`\n📘 Processing: ${file}`);
 
     try {
       // 1. Extract Markdown
-      console.log(`   Running PDF extraction (${engine})...`);
-      const markdown = await knowledgeBaseService.extractPdf(
-        absFilePath,
-        engine,
-        pageRange ? { startPage: pageRange.start, endPage: pageRange.end } : {},
-      );
+      let markdown: string;
+
+      if (isEpub) {
+        console.log(`   Running EPUB extraction (ebooklib + pandoc)...`);
+        markdown = await knowledgeBaseService.extractEpub(
+          absFilePath,
+          pageRange
+            ? { startPage: pageRange.start, endPage: pageRange.end }
+            : {},
+        );
+      } else {
+        console.log(`   Running PDF extraction (${engine})...`);
+        markdown = await knowledgeBaseService.extractDocument(
+          absFilePath,
+          engine,
+          pageRange
+            ? { startPage: pageRange.start, endPage: pageRange.end }
+            : {},
+        );
+      }
 
       // 2. Extract Metadata
       console.log('   Extracting metadata with AI...');
@@ -135,13 +152,13 @@ async function bootstrap() {
       const stagingPath = path.join(markdownsDir, `${fileNameNoExt}.md`);
       fs.writeFileSync(stagingPath, fileContent);
       console.log(
-        `   ✅ Saved markdown to: data/markdowns/${fileNameNoExt}.md`,
+        `   ✅ Saved markdown to: data/library/temporal/${fileNameNoExt}.md`,
       );
 
-      // 5. Archive Original PDF
+      // 5. Archive Original PDF/EPUB
       const newAbsPath = path.join(archiveDir, file);
       fs.renameSync(absFilePath, newAbsPath);
-      console.log(`   📦 Archived PDF to: data/archive/${file}`);
+      console.log(`   📦 Archived file to: data/library/originals/${file}`);
 
       successCount++;
     } catch (error) {

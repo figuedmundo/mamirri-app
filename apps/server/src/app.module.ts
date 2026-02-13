@@ -14,13 +14,14 @@ import { LoggerModule } from './common/logger/logger.module';
 import { AiAnalysisModule } from './modules/ai-analysis/ai-analysis.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import transcriptionConfig from './config/transcription.config';
+import voyageConfig from './config/voyage.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '../../.env'],
-      load: [transcriptionConfig],
+      load: [transcriptionConfig, voyageConfig],
     }),
     ScheduleModule.forRoot(),
     PrismaModule,

@@ -17,10 +17,12 @@ Patients section is the central clinical records system acting as a "Professiona
 #### Success Path
 
 **Setup:**
+
 - User is authenticated and has permission to create patients
 - Device has microphone access for voice dictation
 
 **Steps:**
+
 1. User navigates to `/pacientes`
 2. User sees "Pacientes" heading and search/filter controls
 3. User clicks "Nuevo Paciente" button (primary teal button)
@@ -30,6 +32,7 @@ Patients section is the central clinical records system acting as a "Professiona
 7. User clicks "Guardar Anamnesis" to transcribe and structure the data
 
 **Expected Results:**
+
 - [ ] New patient profile is created and appears in pacientes list
 - [ ] Voice dictation UI appears with recording indicator
 - [ ] Audio is transcribed and structured into clinical fields
@@ -39,13 +42,16 @@ Patients section is the central clinical records system acting as a "Professiona
 #### Failure Path: Validation Error
 
 **Setup:**
+
 - User leaves required field empty (nombre)
 
 **Steps:**
+
 1. User leaves nombre field empty
 2. User clicks "Guardar"
 
 **Expected Results:**
+
 - [ ] Validation error appears: "El nombre es obligatorio"
 - [ ] Form is not submitted
 - [ ] Nombre field gets focus and shows error state (red border)
@@ -53,13 +59,16 @@ Patients section is the central clinical records system acting as a "Professiona
 #### Failure Path: Voice Dictation Error
 
 **Setup:**
+
 - Microphone access denied or no microphone available
 
 **Steps:**
+
 1. User clicks "Iniciar Anamnesis por Voz"
 2. System cannot access microphone
 
 **Expected Results:**
+
 - [ ] Error message appears: "No se pudo acceder al micrófono. Verifica los permisos."
 - [ ] Voice dictation button remains enabled for retry
 - [ ] Manual text input fields are available as fallback
@@ -73,10 +82,12 @@ Patients section is the central clinical records system acting as a "Professiona
 #### Success Path
 
 **Setup:**
+
 - Active case exists for a patient
 - User is viewing patient profile
 
 **Steps:**
+
 1. User clicks on patient card to open profile
 2. User sees active case with current metrics (dolor, sesiones)
 3. User clicks floating action button (FAB) to add "Evolución Diaria"
@@ -85,6 +96,7 @@ Patients section is the central clinical records system acting as a "Professiona
 6. User clicks "Guardar Evolución"
 
 **Expected Results:**
+
 - [ ] New treatment session is added to clinical case
 - [ ] Session appears in cronograma timeline
 - [ ] Session number increments (e.g., Sesión 1 → Sesión 2)
@@ -94,13 +106,16 @@ Patients section is the central clinical records system acting as a "Professiona
 #### Failure Path: Invalid Pain Scale Value
 
 **Setup:**
+
 - User enters pain value outside valid range (negative or > 10)
 
 **Steps:**
+
 1. User enters dolor value of 15
 2. User clicks "Guardar Evolución"
 
 **Expected Results:**
+
 - [ ] Validation error: "La escala de dolor debe estar entre 0 y 10"
 - [ ] Form prevents submission
 - [ ] Error field highlighted with red border
@@ -114,10 +129,12 @@ Patients section is the central clinical records system acting as a "Professiona
 #### Success Path
 
 **Setup:**
+
 - Clinical case has initial and final evaluations
 - Both evaluations have posturogram images
 
 **Steps:**
+
 1. User opens "Comparación" view for clinical case
 2. User sees split slider with "Inicial" and "Actual" labels
 3. User drags slider handle to compare postures
@@ -125,6 +142,7 @@ Patients section is the central clinical records system acting as a "Professiona
 5. User verifies symmetry indicators
 
 **Expected Results:**
+
 - [ ] Both posturogram images display side by side
 - [ ] Slider handle moves smoothly between 0% and 100%
 - [ ] Anatomical deviation markers overlay correctly on both images
@@ -140,9 +158,11 @@ Patients section is the central clinical records system acting as a "Professiona
 **Scenario:** No patients exist in system (first-time use or all deleted)
 
 **Setup:**
+
 - Pacientes array is empty (`[]`)
 
 **Expected Results:**
+
 - [ ] Empty state heading is visible: "No se encontraron pacientes"
 - [ ] Helpful description shows: "Intenta ajustar los filtros o agrega un nuevo paciente al sistema."
 - [ ] "Nuevo Paciente" primary CTA button is visible
@@ -154,9 +174,11 @@ Patients section is the central clinical records system acting as a "Professiona
 **Scenario:** Search or filter returns no matching patients
 
 **Setup:**
+
 - Patients exist but search term or active filter matches none
 
 **Expected Results:**
+
 - [ ] Empty state message: "No se encontraron pacientes"
 - [ ] Context-specific text: "Intenta ajustar los filtros o agrega un nuevo paciente al sistema."
 - [ ] "Nuevo Paciente" button is visible
@@ -168,9 +190,11 @@ Patients section is the central clinical records system acting as a "Professiona
 **Scenario:** Patient exists but has no active clinical case
 
 **Setup:**
+
 - Paciente has no CasoClinico with estado 'activo'
 
 **Expected Results:**
+
 - [ ] "Sin caso activo actualmente" message appears in card
 - [ ] Dashed border container indicates no active case
 - [ ] Pain and session count metrics don't display
@@ -183,12 +207,14 @@ Patients section is the central clinical records system acting as a "Professiona
 ### PacientesList
 
 **Renders correctly:**
+
 - [ ] Displays heading "Pacientes" with subtext
 - [ ] Shows all filter buttons (Todos, Activos, Recientes, Cita hoy)
 - [ ] Search input field is visible with search icon
 - [ ] "Nuevo Paciente" button renders with plus icon
 
 **Filtering:**
+
 - [ ] Clicking "Activos" filter shows only pacientes.activo === true
 - [ ] Clicking "Recientes" shows patients with fechaCreacion in last 30 days
 - [ ] Clicking "Cita hoy" shows patients with session scheduled today
@@ -196,11 +222,13 @@ Patients section is the central clinical records system acting as a "Professiona
 - [ ] Active filter button has teal background, inactive has gray
 
 **Search:**
+
 - [ ] Typing in search filters by nombre in real-time
 - [ ] Search is case-insensitive
 - [ ] Clearing search shows all patients again
 
 **Patient Card Display:**
+
 - [ ] Shows paciente.nombre and edad
 - [ ] Active/inactivo status badge displays correctly (green/gray)
 - [ ] Active case title displays when exists
@@ -208,6 +236,7 @@ Patients section is the central clinical records system acting as a "Professiona
 - [ ] Session count displays (e.g., "8 / 15")
 
 **User interactions:**
+
 - [ ] Clicking patient card calls onView with patient id
 - [ ] Clicking edit icon calls onEdit with patient id
 - [ ] Clicking delete icon calls onDelete with patient id
@@ -216,12 +245,14 @@ Patients section is the central clinical records system acting as a "Professiona
 ### PacienteProfile
 
 **Renders correctly:**
+
 - [ ] Displays patient personal info (nombre, edad, ocupacion, contacto)
 - [ ] Shows active case with current metrics
 - [ ] Lists all clinical cases in timeline
 - [ ] Action buttons render with correct labels
 
 **User interactions:**
+
 - [ ] Clicking "Agendar en Google Calendar" calls onSchedule
 - [ ] Clicking "Capturar Huella" calls onCaptureHuella
 - [ ] Clicking "Capturar Video Postura" calls onCaptureVideo
@@ -231,6 +262,7 @@ Patients section is the central clinical records system acting as a "Professiona
 ### EvaluacionForm
 
 **Renders correctly:**
+
 - [ ] Displays current clinical case info
 - [ ] Posturograma view shows 4 anatomical views
 - [ ] Orthopedic tests (Thomas, Ely, Ober, Schober) display with inputs
@@ -238,6 +270,7 @@ Patients section is the central clinical records system acting as a "Professiona
 - [ ] Barthel and Lawton score forms display with all sub-scores
 
 **User interactions:**
+
 - [ ] Clicking anatomical points toggles deviation markers
 - [ ] Inputting test results updates interpretation text
 - [ ] Updating pain values recalculates average or displays individual
@@ -245,6 +278,7 @@ Patients section is the central clinical records system acting as a "Professiona
 - [ ] Clicking "Dictar por Voz" calls onVoiceDictation
 
 **Validation:**
+
 - [ ] Required fields show validation when empty
 - [ ] Pain values only accept 0-10 range
 - [ ] Barthel sub-scores sum matches total
@@ -252,12 +286,14 @@ Patients section is the central clinical records system acting as a "Professiona
 ### Cronograma
 
 **Renders correctly:**
+
 - [ ] Displays sessions in chronological order
 - [ ] Phase indicators show progression (Fase 1, Fase 2, Fase 3)
 - [ ] Each session shows fecha, techniques applied, and response
 - [ ] Pain level displays color-coded
 
 **User interactions:**
+
 - [ ] Clicking session calls onViewSession
 - [ ] Clicking "Añadir Sesión" calls onAddSession
 - [ ] Clicking edit on session calls onEditSession
@@ -299,57 +335,59 @@ Use the data from `sample-data.json` or create variations:
 ```typescript
 // Example test data - populated state
 const mockPatient: Paciente = {
-  id: "pac-001",
-  nombre: "Juan Pérez",
+  id: 'pac-001',
+  nombre: 'Juan Pérez',
   edad: 45,
-  ocupacion: "Camarero",
-  telefono: "+34 612 345 678",
-  fechaNacimiento: "1979-03-15",
+  ocupacion: 'Camarero',
+  telefono: '+34 612 345 678',
+  fechaNacimiento: '1979-03-15',
   activo: true,
-  fechaCreacion: "2025-01-05",
+  fechaCreacion: '2025-01-05',
   casosClinicos: [
     {
-      id: "caso-001",
-      pacienteId: "pac-001",
-      titulo: "Fascitis Plantar - Pie Derecho",
-      estado: "activo",
-      fechaInicio: "2025-01-05",
-      evaluacion: { /* ... */ },
-      sesionesTratamiento: []
-    }
-  ]
-}
+      id: 'caso-001',
+      pacienteId: 'pac-001',
+      titulo: 'Fascitis Plantar - Pie Derecho',
+      estado: 'activo',
+      fechaInicio: '2025-01-05',
+      evaluacion: {
+        /* ... */
+      },
+      sesionesTratamiento: [],
+    },
+  ],
+};
 
 // Example test data - empty states
-const mockEmptyList: Paciente[] = []
+const mockEmptyList: Paciente[] = [];
 
 const mockPatientNoActiveCase: Paciente = {
-  id: "pac-002",
-  nombre: "María García",
+  id: 'pac-002',
+  nombre: 'María García',
   edad: 32,
-  ocupacion: "Profesora",
-  telefono: "+34 678 901 234",
-  fechaNacimiento: "1992-07-12",
+  ocupacion: 'Profesora',
+  telefono: '+34 678 901 234',
+  fechaNacimiento: '1992-07-12',
   activo: true,
-  fechaCreacion: "2024-11-20",
-  casosClinicos: []
-}
+  fechaCreacion: '2024-11-20',
+  casosClinicos: [],
+};
 
 // Example test data - high pain level
 const mockHighPainCase: CasoClinico = {
-  id: "caso-999",
-  pacienteId: "pac-999",
-  titulo: "Dolor Lumbar Agudo",
-  estado: "activo",
+  id: 'caso-999',
+  pacienteId: 'pac-999',
+  titulo: 'Dolor Lumbar Agudo',
+  estado: 'activo',
   evaluacion: {
     escalaDolor: {
       actividad: 9,
       reposo: 10,
       palpacion: 9,
-      tipo: "agudo"
-    }
-  }
-}
+      tipo: 'agudo',
+    },
+  },
+};
 ```
 
 ---

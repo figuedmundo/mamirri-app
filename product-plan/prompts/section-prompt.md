@@ -5,6 +5,7 @@
 - **SECTION_NAME** = Pacientes
 - **SECTION_ID** = pacientes
 - **NN** = Milestone 2
+
 ---
 
 I need you to implement the **SECTION_NAME** section of my application.
@@ -17,6 +18,7 @@ Please carefully read and analyze the following files:
 2. **@product-plan/instructions/incremental/NN-SECTION_ID.md** — Specific instructions for this section
 
 Also review the section assets:
+
 - **@product-plan/sections/SECTION_ID/README.md** — Feature overview and design intent
 - **@product-plan/sections/SECTION_ID/tests.md** — Test-writing instructions (use TDD approach)
 - **@product-plan/sections/SECTION_ID/components/** — React components to integrate
@@ -51,6 +53,7 @@ Please ask me clarifying questions about:
 ## Implementation Approach
 
 Use test-driven development:
+
 1. Read the `tests.md` file and write failing tests first
 2. Implement the feature to make tests pass
 3. Refactor while keeping tests green

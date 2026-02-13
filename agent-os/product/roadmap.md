@@ -350,6 +350,16 @@ Methodology: Agile Development (1-week Sprints).
 - [x] **16.5.3** Multi-Engine Pipeline — Fallback to PyMuPDF if Docling worker is not initialized
 - [x] **16.5.4** CLI Integration — Update `pnpm knowledge:convert` to support `--engine=docling`
 
+### Week 17: Embedding Model Upgrade (Voyage AI) ✅ COMPLETE
+
+> **Spec:** `agent-os/specs/2026-02-10-migrate-to-voyage-4-embeddings/`
+> **Goal:** Migrate to state-of-the-art Voyage-4-large embeddings with asymmetric retrieval.
+
+- [x] **17.1** Voyage AI Integration — Implement VoyageEmbeddingService with SDK
+- [x] **17.2** Asymmetric Retrieval — Use voyage-4-large for docs, voyage-4 for queries
+- [x] **17.3** 1024-Dim Migration — Update pgvector schema to support new dimensions
+- [x] **17.4** Batch Optimization — Implemented Async Batch API to bypass rate limits
+
 **Expected Combined Improvement: 2-3x over current baseline**
 
 | Improvement       | Expected Gain           |

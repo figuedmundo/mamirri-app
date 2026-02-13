@@ -1,14 +1,12 @@
 # 04. Arquitectura Técnica del MVP
 
 > Versión: 1.0.0
-> 
-> 
+>
 > Estado: Aprobado para Desarrollo
-> 
+>
 > Stack: React + NestJS + PostgreSQL
-> 
+>
 > Enfoque: Monolito Modular (Modular Monolith)
-> 
 
 ---
 
@@ -23,16 +21,16 @@ El objetivo es construir una plataforma clínica robusta que priorice la **integ
 
 ## 2. Stack Tecnológico & Decisiones
 
-| **Capa** | **Tecnología** | **Decisión / Racional** |
-| --- | --- | --- |
-| **Frontend** | **React 18 + Vite** | Estándar de la industria. Vite ofrece un *Hot Module Replacement* instantáneo para desarrollo rápido. |
-| **Lenguaje FE** | **TypeScript** | Tipado estático para prevenir errores en tiempo de ejecución (vital para app médica). |
-| **UI Framework** | **Shadcn/UI + Tailwind** | Componentes accesibles, ligeros y altamente personalizables. Diseño "Mobile-First" nativo. |
-| **Backend** | **NestJS (Node.js)** | Framework progresivo. Ofrece inyección de dependencias, módulos y validación (Pipes) out-of-the-box. |
-| **Base de Datos** | **PostgreSQL 16** | Base de datos relacional robusta. Soporte nativo de JSONB (para flexibilidad) y pgvector (preparado para Fase 2). |
-| **ORM** | **Prisma** | Ofrece la mejor experiencia de desarrollo (DX) y seguridad de tipos entre la DB y el Backend. |
-| **Almacenamiento** | **S3 Compatible** | AWS S3 o Supabase Storage para guardar imágenes y audios. Desacopla los binarios de la base de datos. |
-| **IA (Utility)** | **OpenAI Whisper API** | Modelo SOTA (State of the Art) para transcripción de voz a texto. Alta precisión en español médico. |
+| **Capa**           | **Tecnología**           | **Decisión / Racional**                                                                                           |
+| ------------------ | ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| **Frontend**       | **React 18 + Vite**      | Estándar de la industria. Vite ofrece un _Hot Module Replacement_ instantáneo para desarrollo rápido.             |
+| **Lenguaje FE**    | **TypeScript**           | Tipado estático para prevenir errores en tiempo de ejecución (vital para app médica).                             |
+| **UI Framework**   | **Shadcn/UI + Tailwind** | Componentes accesibles, ligeros y altamente personalizables. Diseño "Mobile-First" nativo.                        |
+| **Backend**        | **NestJS (Node.js)**     | Framework progresivo. Ofrece inyección de dependencias, módulos y validación (Pipes) out-of-the-box.              |
+| **Base de Datos**  | **PostgreSQL 16**        | Base de datos relacional robusta. Soporte nativo de JSONB (para flexibilidad) y pgvector (preparado para Fase 2). |
+| **ORM**            | **Prisma**               | Ofrece la mejor experiencia de desarrollo (DX) y seguridad de tipos entre la DB y el Backend.                     |
+| **Almacenamiento** | **S3 Compatible**        | AWS S3 o Supabase Storage para guardar imágenes y audios. Desacopla los binarios de la base de datos.             |
+| **IA (Utility)**   | **OpenAI Whisper API**   | Modelo SOTA (State of the Art) para transcripción de voz a texto. Alta precisión en español médico.               |
 
 ---
 
@@ -55,7 +53,7 @@ graph TD
         PatC[Patient Controller]
         ClinC[Clinical Controller]
         UtilC[Utility Controller]
-        
+
         AuthS[Auth Service]
         PatS[Patient Service]
         ClinS[Clinical Service]
@@ -74,7 +72,7 @@ graph TD
     UI -->|HTTPS/JSON| AuthC
     UI -->|HTTPS/JSON| PatC
     UI -->|HTTPS/JSON| ClinC
-    
+
     %% Flujo Dictado
     AudioMod -->|File Upload .webm| UtilC
     UtilC --> TransS
@@ -85,10 +83,10 @@ graph TD
     %% Flujo Datos
     PatC --> PatS
     PatS -->|Prisma| DB
-    
+
     ClinC --> ClinS
     ClinS -->|Prisma| DB
-    
+
     %% Flujo Imagen
     CamMod -->|Multipart Upload| ClinC
     ClinS --> MediaS
@@ -109,12 +107,12 @@ El backend se organizará en **Módulos de Dominio**. Cada módulo encapsula su 
 2. **`PatientsModule`**: CRUD de pacientes.
 3. **`SessionsModule`**: Lógica de la visita (Crear sesión, finalizar sesión).
 4. **`MediaModule`**: Lógica de subida a S3 y generación de URLs.
-5. **`TranscribeModule`**: Servicio *Stateless* (sin base de datos) que recibe audio y devuelve texto.
+5. **`TranscribeModule`**: Servicio _Stateless_ (sin base de datos) que recibe audio y devuelve texto.
 
 ### 4.2 Patrones de Diseño
 
 - **DTOs (Data Transfer Objects):** Usaremos `class-validator` para asegurar que los datos que entran cumplen las reglas.
-    - *Ejemplo:* `CreatePatientDto` valida que el nombre no esté vacío.
+  - _Ejemplo:_ `CreatePatientDto` valida que el nombre no esté vacío.
 - **Guards:** Protección de endpoints. Solo usuarios autenticados pueden acceder.
 - **Interceptors:** Para transformar la respuesta estándar (ej: quitar contraseñas de los objetos de usuario antes de enviarlos).
 
@@ -164,7 +162,7 @@ model User {
   passwordHash  String
   name          String
   createdAt     DateTime  @default(now())
-  
+
   // Relaciones
   // En MVP single-user, un usuario ve todos los pacientes.
   // En futuro multi-tenant, aquí iría la relación con Clinics.
@@ -187,9 +185,9 @@ model Session {
   patientId   String
   date        DateTime      @default(now())
   status      SessionStatus @default(DRAFT)
-  
+
   patient     Patient       @relation(fields: [patientId], references: [id])
-  
+
   observations Observation[]
   attachments  Attachment[]
 }
@@ -223,10 +221,10 @@ model Attachment {
 ### Dominio: Transcripción (Utility)
 
 - `POST /api/transcribe`
-    - **Input:** `multipart/form-data` (archivo audio).
-    - **Proceso:** Envía a Whisper API.
-    - **Output:** `{ "text": "El paciente refiere dolor..." }`.
-    - **Nota:** No guarda en BD. El frontend recibe el texto y lo pone en el formulario.
+  - **Input:** `multipart/form-data` (archivo audio).
+  - **Proceso:** Envía a Whisper API.
+  - **Output:** `{ "text": "El paciente refiere dolor..." }`.
+  - **Nota:** No guarda en BD. El frontend recibe el texto y lo pone en el formulario.
 
 ### Dominio: Pacientes
 
@@ -237,14 +235,14 @@ model Attachment {
 ### Dominio: Sesiones (Flujo Diario)
 
 - `POST /api/sessions`
-    - Input: `{ patientId: "uuid" }`. Crea una sesión `DRAFT`.
+  - Input: `{ patientId: "uuid" }`. Crea una sesión `DRAFT`.
 - `POST /api/sessions/:id/observations`
-    - Input: `{ type: "ANAMNESIS", content: "Texto..." }`.
+  - Input: `{ type: "ANAMNESIS", content: "Texto..." }`.
 - `POST /api/sessions/:id/attachments`
-    - Input: `multipart/form-data` (Imagen) + `mediaType`.
-    - Proceso: Sube a S3 -> Guarda URL en BD -> Retorna objeto Attachment.
+  - Input: `multipart/form-data` (Imagen) + `mediaType`.
+  - Proceso: Sube a S3 -> Guarda URL en BD -> Retorna objeto Attachment.
 - `PATCH /api/sessions/:id/finalize`
-    - Proceso: Cambia status a `FINALIZED`. Bloquea edición futura.
+  - Proceso: Cambia status a `FINALIZED`. Bloquea edición futura.
 
 ---
 
@@ -253,17 +251,17 @@ model Attachment {
 Para cumplir el requisito de "Simplicidad Extrema":
 
 1. **Cache Local (React Query):**
-    - Si internet parpadea, la app no se bloquea.
-    - Usaremos `TanStack Query` para manejar el estado del servidor y cachear la lista de pacientes.
+   - Si internet parpadea, la app no se bloquea.
+   - Usaremos `TanStack Query` para manejar el estado del servidor y cachear la lista de pacientes.
 2. **Componente `<VoiceInput />`:**
-    - Un componente de React reutilizable.
-    - **UI:** Un botón de micrófono flotante al lado de cada `Textarea`.
-    - **Lógica:**
-        - `onPressIn`: Empieza a grabar (MediaRecorder API).
-        - `onPressOut`: Detiene grabación -> Envía a `/api/transcribe` -> Pega el texto en el input padre.
+   - Un componente de React reutilizable.
+   - **UI:** Un botón de micrófono flotante al lado de cada `Textarea`.
+   - **Lógica:**
+     - `onPressIn`: Empieza a grabar (MediaRecorder API).
+     - `onPressOut`: Detiene grabación -> Envía a `/api/transcribe` -> Pega el texto en el input padre.
 3. **Componente `<CameraCapture />`:**
-    - Usa `react-webcam`.
-    - Muestra una capa semitransparente (overlay) con la forma de un pie para guiar a tu madre a tomar la foto a la distancia correcta.
+   - Usa `react-webcam`.
+   - Muestra una capa semitransparente (overlay) con la forma de un pie para guiar a tu madre a tomar la foto a la distancia correcta.
 
 ---
 
@@ -296,18 +294,18 @@ AWS_BUCKET_NAME="physio-media-bucket"
 ## 9. Plan de Implementación (Paso a Paso)
 
 1. **Setup Inicial (Día 1):**
-    - Inicializar Repo Monorepo (carpeta `client` y `server`).
-    - Levantar Postgres (Docker) y configurar Prisma.
+   - Inicializar Repo Monorepo (carpeta `client` y `server`).
+   - Levantar Postgres (Docker) y configurar Prisma.
 2. **Backend Core (Día 2-3):**
-    - Implementar Auth y Patients CRUD.
-    - Probar con Postman.
+   - Implementar Auth y Patients CRUD.
+   - Probar con Postman.
 3. **Integración Whisper (Día 4):**
-    - Crear endpoint `/transcribe`.
-    - Validar calidad de transcripción en español.
+   - Crear endpoint `/transcribe`.
+   - Validar calidad de transcripción en español.
 4. **Frontend Esqueleto (Día 5-6):**
-    - Login y Lista de Pacientes.
-    - Ficha de Paciente.
+   - Login y Lista de Pacientes.
+   - Ficha de Paciente.
 5. **Flujo Clínico (Día 7-10):**
-    - Implementar `<VoiceInput />`.
-    - Implementar subida de imágenes a S3.
-    - Conectar todo en la vista "Nueva Sesión".
+   - Implementar `<VoiceInput />`.
+   - Implementar subida de imágenes a S3.
+   - Conectar todo en la vista "Nueva Sesión".

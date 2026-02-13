@@ -150,24 +150,24 @@ echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg
 // .versionrc.js
 module.exports = {
   types: [
-    { type: "feat", section: "Features" },
-    { type: "fix", section: "Bug Fixes" },
-    { type: "perf", section: "Performance Improvements" },
-    { type: "revert", section: "Reverts" },
-    { type: "docs", section: "Documentation", hidden: true },
-    { type: "style", section: "Styles", hidden: true },
-    { type: "chore", section: "Miscellaneous", hidden: true },
-    { type: "refactor", section: "Code Refactoring", hidden: true },
-    { type: "test", section: "Tests", hidden: true },
-    { type: "build", section: "Build System", hidden: true },
-    { type: "ci", section: "CI/CD", hidden: true },
+    { type: 'feat', section: 'Features' },
+    { type: 'fix', section: 'Bug Fixes' },
+    { type: 'perf', section: 'Performance Improvements' },
+    { type: 'revert', section: 'Reverts' },
+    { type: 'docs', section: 'Documentation', hidden: true },
+    { type: 'style', section: 'Styles', hidden: true },
+    { type: 'chore', section: 'Miscellaneous', hidden: true },
+    { type: 'refactor', section: 'Code Refactoring', hidden: true },
+    { type: 'test', section: 'Tests', hidden: true },
+    { type: 'build', section: 'Build System', hidden: true },
+    { type: 'ci', section: 'CI/CD', hidden: true },
   ],
-  commitUrlFormat: "{{host}}/{{owner}}/{{repository}}/commit/{{hash}}",
+  commitUrlFormat: '{{host}}/{{owner}}/{{repository}}/commit/{{hash}}',
   compareUrlFormat:
-    "{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
-  issueUrlFormat: "{{host}}/{{owner}}/{{repository}}/issues/{{id}}",
-  userUrlFormat: "{{host}}/{{user}}",
-  releaseCommitMessageFormat: "chore(release): {{currentTag}}",
+    '{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}',
+  issueUrlFormat: '{{host}}/{{owner}}/{{repository}}/issues/{{id}}',
+  userUrlFormat: '{{host}}/{{user}}',
+  releaseCommitMessageFormat: 'chore(release): {{currentTag}}',
   scripts: {
     prebump: 'echo "Running prebump"',
     postbump: 'echo "Running postbump"',
@@ -196,37 +196,37 @@ module.exports = {
 // release.config.js
 module.exports = {
   branches: [
-    "main",
-    { name: "beta", prerelease: true },
-    { name: "alpha", prerelease: true },
+    'main',
+    { name: 'beta', prerelease: true },
+    { name: 'alpha', prerelease: true },
   ],
   plugins: [
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
+    '@semantic-release/commit-analyzer',
+    '@semantic-release/release-notes-generator',
     [
-      "@semantic-release/changelog",
+      '@semantic-release/changelog',
       {
-        changelogFile: "CHANGELOG.md",
+        changelogFile: 'CHANGELOG.md',
       },
     ],
     [
-      "@semantic-release/npm",
+      '@semantic-release/npm',
       {
         npmPublish: true,
       },
     ],
     [
-      "@semantic-release/github",
+      '@semantic-release/github',
       {
-        assets: ["dist/**/*.js", "dist/**/*.css"],
+        assets: ['dist/**/*.js', 'dist/**/*.css'],
       },
     ],
     [
-      "@semantic-release/git",
+      '@semantic-release/git',
       {
-        assets: ["CHANGELOG.md", "package.json"],
+        assets: ['CHANGELOG.md', 'package.json'],
         message:
-          "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
+          'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },
     ],
   ],
@@ -245,9 +245,9 @@ on:
   workflow_dispatch:
     inputs:
       release_type:
-        description: "Release type"
+        description: 'Release type'
         required: true
-        default: "patch"
+        default: 'patch'
         type: choice
         options:
           - patch
@@ -269,8 +269,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: '20'
+          cache: 'npm'
 
       - run: npm ci
 
@@ -296,7 +296,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
       - run: npm ci
 

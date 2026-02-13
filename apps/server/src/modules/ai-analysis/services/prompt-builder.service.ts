@@ -129,17 +129,31 @@ ${chunk.content}
    * @returns A prompt that asks the LLM to generate clinical descriptions and differential diagnoses
    */
   buildHydeDiagnosisPrompt(symptoms: string): string {
-    return `Basado en los siguientes síntomas, genera un documento médico hipotético que describa en detalle:
+    return `Basado en los siguientes síntomas del paciente (proporcionados en español), genera un documento médico hipotético **en inglés**. Esto es crucial para coincidir con la literatura médica en inglés.
 
-Síntomas del paciente: ${symptoms}
+Síntomas del Paciente: ${symptoms}
 
-Por favor, genera un texto que incluya:
-1. **Clinical Descriptions**: Descripciones clínicas detalladas de las posibles condiciones basadas en los síntomas
-2. **Differential Diagnoses**: Diagnósticos diferenciales considerados con sus características distintivas
-3. **Etiología y patogénesis**: Posibles causas y mecanismos de desarrollo
-4. **Manifestaciones clínicas**: Signos y síntomas típicos asociados
+Por favor, genera un texto clínico técnico que incluya:
+1. **Clinical Descriptions**: Descripciones clínicas detalladas de las posibles afecciones.
+2. **Differential Diagnoses**: Diagnósticos diferenciales con características distintivas.
+3. **Etiology and Pathogenesis**: Etiología y patogénesis (causas y mecanismos posibles).
+4. **Clinical Manifestations**: Manifestaciones clínicas (Signos y síntomas típicos y asociados).
 
-El documento debe ser técnico, profesional y basarse en evidencia médica actual. No te limites a una única condición; explora múltiples posibilidades diagnósticas.`;
+El documento debe ser técnico, profesional, utilizando evidencia médica actual y terminología médica estándar en inglés. No te limites a una única condición; explora múltiples posibilidades diagnósticas (No te limites a una única condición).
+
+---
+
+Based on the following patient symptoms (provided in Spanish), generate a hypothetical medical document **in English**. This is crucial for matching with English medical literature.
+
+Patient Symptoms: ${symptoms}
+
+Please generate a technical clinical text including:
+1. **Clinical Descriptions**: Detailed clinical descriptions of potential conditions.
+2. **Differential Diagnoses**: Differential diagnoses with distinctive characteristics.
+3. **Etiology and Pathogenesis**: Possible causes and mechanisms.
+4. **Clinical Manifestations**: Typical signs and associated symptoms.
+
+The document must be technical, professional, using standard medical English terminology. Do not limit to a single condition; explore multiple diagnostic possibilities.`;
   }
 
   /**
@@ -150,16 +164,30 @@ El documento debe ser técnico, profesional y basarse en evidencia médica actua
    * @returns A prompt that asks the LLM to generate clinical treatment descriptions
    */
   buildHydeTreatmentPrompt(condition: string): string {
-    return `Basado en la siguiente condición médica, genera un documento médico hipotético que describa en detalle:
+    return `Basado en la siguiente condición médica (proporcionada en español), genera un documento médico hipotético **en inglés**. Esto es crucial para coincidir con la literatura médica en inglés.
 
 Condición: ${condition}
 
-Por favor, genera un texto que incluya:
-1. **Clinical Descriptions**: Descripciones clínicas del tratamiento fisioterapéutico recomendado
-2. **Estrategias de tratamiento**: Enfoques terapéuticos y sus fundamentos fisiopatológicos
-3. **Técnicas específicas**: Modalidades de intervención y su aplicación práctica
-4. **Evidencia científica**: Apoyo de la literatura científica para las intervenciones recomendadas
+Por favor, genera un texto clínico técnico que incluya:
+1. **Clinical Descriptions**: Descripciones clínicas de los tratamientos fisioterapéuticos recomendados (fisioterapia).
+2. **Treatment Strategies**: Estrategias de tratamiento (Enfoques terapéuticos y sus fundamentos fisiopatológicos).
+3. **Specific Techniques**: Técnicas específicas (Modalidades de intervención y su aplicación práctica).
+4. **Scientific Evidence**: Evidencia científica (respaldo de la literatura científica para las intervenciones recomendadas).
 
-El documento debe ser técnico, profesional y basarse en evidencia médica actual. Describe un abordaje completo de fisioterapia para esta condición.`;
+El documento debe ser técnico, profesional, utilizando evidencia médica actual y terminología médica estándar en inglés. Describe un enfoque de tratamiento fisioterapéutico integral para esta condición.
+
+---
+
+Based on the following medical condition (provided in Spanish), generate a hypothetical medical document **in English**. This is crucial for matching with English medical literature.
+
+Condition: ${condition}
+
+Please generate a technical clinical text including:
+1. **Clinical Descriptions**: Clinical descriptions of recommended physiotherapy treatments.
+2. **Treatment Strategies**: Therapeutic approaches and their pathophysiological foundations.
+3. **Specific Techniques**: Intervention modalities and their practical application.
+4. **Scientific Evidence**: Support from scientific literature for the recommended interventions.
+
+The document must be technical, professional, using standard medical English terminology. Describe a comprehensive physiotherapy approach for this condition.`;
   }
 }

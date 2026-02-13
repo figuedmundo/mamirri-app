@@ -10,20 +10,23 @@
 
 [search-mode]
 MAXIMIZE SEARCH EFFORT. Launch multiple background agents IN PARALLEL:
+
 - explore agents (codebase patterns, file structures, ast-grep)
 - librarian agents (remote repos, official docs, GitHub examples)
-Plus direct tools: Grep, ripgrep (rg), ast-grep (sg)
-NEVER stop at first result - be exhaustive.
+  Plus direct tools: Grep, ripgrep (rg), ast-grep (sg)
+  NEVER stop at first result - be exhaustive.
 
 [analyze-mode]
 ANALYSIS MODE. Gather context before diving deep:
 
 CONTEXT GATHERING (parallel):
+
 - 1-2 explore agents (codebase patterns, implementations)
 - 1-2 librarian agents (if external library involved)
 - Direct tools: Grep, AST-grep, LSP for targeted searches
 
 IF COMPLEX - DO NOT STRUGGLE ALONE. Consult specialists:
+
 - **Oracle**: Conventional problems (architecture, debugging, complex logic)
 - **Artistry**: Non-conventional problems (different approach needed)
 
@@ -597,7 +600,6 @@ async def evaluate_rag_system(
 - **Hallucinations**: Improve grounding prompt, add verification step
 - **Context Too Long**: Use compression or parent document retriever
 
-
 please make a deep research of the rag implemenation in this project with the skill suggestion, what we can impruve ??
 
 ---
@@ -614,6 +616,7 @@ The user wants me to do a deep research on RAG implementation in this project. L
 4. Identifying areas for improvement
 
 I should launch multiple parallel agents to explore:
+
 - Codebase patterns for RAG/embeddings/vector stores
 - External documentation for best practices
 - Direct tool searches for specific patterns
@@ -625,6 +628,7 @@ I'll launch a comprehensive parallel investigation of RAG implementation in this
 **Tool: task**
 
 **Input:**
+
 ```json
 {
   "subagent_type": "explore",
@@ -636,6 +640,7 @@ I'll launch a comprehensive parallel investigation of RAG implementation in this
 ```
 
 **Output:**
+
 ```
 Background task launched.
 
@@ -656,6 +661,7 @@ to continue: task(session_id="ses_3c5e12edbffeRfVLPEBUkL7Kv5", prompt="...")
 **Tool: task**
 
 **Input:**
+
 ```json
 {
   "description": "Find LangChain/LangGraph usage patterns",
@@ -667,6 +673,7 @@ to continue: task(session_id="ses_3c5e12edbffeRfVLPEBUkL7Kv5", prompt="...")
 ```
 
 **Output:**
+
 ```
 Background task launched.
 
@@ -687,6 +694,7 @@ to continue: task(session_id="ses_3c5e11d86ffe7bhoGiLYBsG9JI", prompt="...")
 **Tool: task**
 
 **Input:**
+
 ```json
 {
   "description": "Find document processing and indexing pipelines",
@@ -698,6 +706,7 @@ to continue: task(session_id="ses_3c5e11d86ffe7bhoGiLYBsG9JI", prompt="...")
 ```
 
 **Output:**
+
 ```
 Background task launched.
 
@@ -718,6 +727,7 @@ to continue: task(session_id="ses_3c5e10c3bffe64jmB7eFHRN6A6", prompt="...")
 **Tool: glob**
 
 **Input:**
+
 ```json
 {
   "pattern": "**/*.py"
@@ -725,6 +735,7 @@ to continue: task(session_id="ses_3c5e10c3bffe64jmB7eFHRN6A6", prompt="...")
 ```
 
 **Output:**
+
 ```
 Found 7 file(s)
 
@@ -740,6 +751,7 @@ Found 7 file(s)
 **Tool: glob**
 
 **Input:**
+
 ```json
 {
   "pattern": "**/*.ts"
@@ -747,6 +759,7 @@ Found 7 file(s)
 ```
 
 **Output:**
+
 ```
 Found 100 file(s)
 
@@ -857,6 +870,7 @@ Found 100 file(s)
 **Tool: glob**
 
 **Input:**
+
 ```json
 {
   "pattern": "**/package.json"
@@ -864,6 +878,7 @@ Found 100 file(s)
 ```
 
 **Output:**
+
 ```
 Found 8 file(s)
 
@@ -880,6 +895,7 @@ Found 8 file(s)
 **Tool: glob**
 
 **Input:**
+
 ```json
 {
   "pattern": "**/requirements*.txt"
@@ -887,6 +903,7 @@ Found 8 file(s)
 ```
 
 **Output:**
+
 ```
 No files found
 ```
@@ -894,6 +911,7 @@ No files found
 **Tool: glob**
 
 **Input:**
+
 ```json
 {
   "pattern": "**/pyproject.toml"
@@ -901,6 +919,7 @@ No files found
 ```
 
 **Output:**
+
 ```
 No files found
 ```
@@ -908,6 +927,7 @@ No files found
 **Tool: grep**
 
 **Input:**
+
 ```json
 {
   "pattern": "embedding|vectorstore|retriever|RAG|langchain|langgraph",
@@ -916,6 +936,7 @@ No files found
 ```
 
 **Output:**
+
 ```
 Found 47 match(es) in 13 file(s)
 
@@ -997,6 +1018,7 @@ Found 47 match(es) in 13 file(s)
 **Tool: grep**
 
 **Input:**
+
 ```json
 {
   "include": "*.{py,ts,js,json,yaml,yml,toml}",
@@ -1005,6 +1027,7 @@ Found 47 match(es) in 13 file(s)
 ```
 
 **Output:**
+
 ```
 Found 5 match(es) in 3 file(s)
 
@@ -1024,6 +1047,7 @@ Found 5 match(es) in 3 file(s)
 **Tool: grep**
 
 **Input:**
+
 ```json
 {
   "include": "*.{py,ts,js,json,yaml,yml,toml}",
@@ -1032,6 +1056,7 @@ Found 5 match(es) in 3 file(s)
 ```
 
 **Output:**
+
 ```
 No matches found
 ```
@@ -1043,6 +1068,7 @@ No matches found
 _Thinking:_
 
 Now I'm finding interesting patterns. This project uses:
+
 1. pgvector for vector storage
 2. Gemini embeddings (gemini-embedding-001)
 3. Multi-query RAG strategy
@@ -1055,6 +1081,7 @@ Found RAG components. Let me dig deeper into the core implementation files:
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/src/modules/knowledge-base/knowledge-base.service.ts"
@@ -1062,7 +1089,8 @@ Found RAG components. Let me dig deeper into the core implementation files:
 ```
 
 **Output:**
-```
+
+````
 <file>
 00001| import { Injectable, Logger } from '@nestjs/common';
 00002| import { ConfigService } from '@nestjs/config';
@@ -1072,17 +1100,17 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00006| import * as path from 'path';
 00007| import { withRetry } from '../transcription/utils/retry';
 00008| import { promisify } from 'util';
-00009| 
+00009|
 00010| const sleep = promisify(setTimeout);
-00011| 
+00011|
 00012| import { PDFParse } from 'pdf-parse';
 00013| import { execSync } from 'child_process';
-00014| 
+00014|
 00015| @Injectable()
 00016| export class KnowledgeBaseService {
 00017|   private readonly logger = new Logger(KnowledgeBaseService.name);
 00018|   private readonly genAI: GoogleGenAI;
-00019| 
+00019|
 00020|   constructor(
 00021|     private readonly prisma: PrismaService,
 00022|     private readonly configService: ConfigService,
@@ -1095,35 +1123,35 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00029|     }
 00030|     this.genAI = new GoogleGenAI({ apiKey: apiKey || 'mock-key' });
 00031|   }
-00032| 
+00032|
 00033|   async ingestFile(filePath: string): Promise<void> {
 00034|     const absolutePath = path.resolve(filePath);
 00035|     if (!fs.existsSync(absolutePath)) {
 00036|       throw new Error(`File not found: ${absolutePath}`);
 00037|     }
-00038| 
+00038|
 00039|     const existingDoc = await (this.prisma as any).document.findUnique({
 00040|       where: { filePath },
 00041|     });
-00042| 
+00042|
 00043|     if (existingDoc) {
 00044|       this.logger.log(`File already ingested: ${filePath}`);
 00045|       return;
 00046|     }
-00047| 
+00047|
 00048|     this.logger.log(`Ingesting file: ${filePath}`);
 00049|     const dataBuffer = fs.readFileSync(absolutePath);
 00050|     const parser = new PDFParse({ data: dataBuffer });
 00051|     const pdfData = await parser.getText();
 00052|     await parser.destroy();
-00053| 
+00053|
 00054|     const firstPageText = pdfData.text.substring(0, 2000);
-00055| 
+00055|
 00056|     const meta = await this.extractMetadata(
 00057|       firstPageText,
 00058|       path.basename(filePath, '.pdf'),
 00059|     );
-00060| 
+00060|
 00061|     const document = await (this.prisma as any).document.create({
 00062|       data: {
 00063|         title: meta.title,
@@ -1136,11 +1164,11 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00070|         },
 00071|       },
 00072|     });
-00073| 
+00073|
 00074|     try {
 00075|       const chunks = this.chunkText(pdfData.text);
 00076|       this.logger.log(`Generated ${chunks.length} chunks for ${meta.title}`);
-00077| 
+00077|
 00078|       for (let i = 0; i < chunks.length; i++) {
 00079|         const content = chunks[i];
 00080|         const vector = await this.generateEmbedding(
@@ -1148,18 +1176,18 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00082|           'RETRIEVAL_DOCUMENT',
 00083|         );
 00084|         const vectorString = `[${vector.join(',')}]`;
-00085| 
+00085|
 00086|         await this.prisma.$executeRaw`
 00087|           INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector)
 00088|           VALUES (gen_random_uuid(), ${content}, 1, ${document.id}, ${vectorString}::vector)
 00089|         `;
-00090| 
+00090|
 00091|         if ((i + 1) % 10 === 0) {
 00092|           this.logger.log(
 00093|             `Processed ${i + 1}/${chunks.length} chunks for ${meta.title}`,
 00094|           );
 00095|         }
-00096| 
+00096|
 00097|         await sleep(1500);
 00098|       }
 00099|       this.logger.log(`Successfully ingested ${meta.title}`);
@@ -1173,22 +1201,22 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00107|       throw error;
 00108|     }
 00109|   }
-00110| 
+00110|
 00111|   async removeDocument(idOrPath: string): Promise<void> {
 00112|     const isUuid =
 00113|       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
 00114|         idOrPath,
 00115|       );
-00116| 
+00116|
 00117|     const doc = await (this.prisma as any).document.findUnique({
 00118|       where: isUuid ? { id: idOrPath } : { filePath: idOrPath },
 00119|     });
-00120| 
+00120|
 00121|     if (!doc) {
 00122|       this.logger.warn(`No document found with ID or path: ${idOrPath}`);
 00123|       return;
 00124|     }
-00125| 
+00125|
 00126|     await (this.prisma as any).document.delete({
 00127|       where: { id: doc.id },
 00128|     });
@@ -1196,23 +1224,23 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00130|       `Successfully removed document and all embeddings for: ${doc.title} (${doc.filePath})`,
 00131|     );
 00132|   }
-00133| 
+00133|
 00134|   async exportDocument(idOrPath: string, outputPath: string): Promise<void> {
 00135|     const isUuid =
 00136|       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
 00137|         idOrPath,
 00138|       );
-00139| 
+00139|
 00140|     const doc = await (this.prisma as any).document.findUnique({
 00141|       where: isUuid ? { id: idOrPath } : { filePath: idOrPath },
 00142|     });
-00143| 
+00143|
 00144|     if (!doc) {
 00145|       throw new Error(`Document not found: ${idOrPath}`);
 00146|     }
-00147| 
+00147|
 00148|     const tempSchema = `temp_exp_${doc.id.replace(/-/g, '_')}`;
-00149| 
+00149|
 00150|     try {
 00151|       const setupCmd = `docker exec -t physio_db psql -U physio_user -d physio_db -c "
 00152|         DROP SCHEMA IF EXISTS ${tempSchema} CASCADE;
@@ -1221,12 +1249,12 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00155|         CREATE TABLE ${tempSchema}.embeddings AS SELECT * FROM public.embeddings WHERE \\"documentId\\" = '${doc.id}';
 00156|       "`;
 00157|       execSync(setupCmd);
-00158| 
+00158|
 00159|       const dumpCmd = `docker exec -t physio_db pg_dump -U physio_user -d physio_db \
 00160|         --data-only --column-inserts --schema=${tempSchema} \
 00161|         | sed 's/${tempSchema}\\.//g' | gzip > "${outputPath}"`;
 00162|       execSync(dumpCmd);
-00163| 
+00163|
 00164|       this.logger.log(
 00165|         `Atomic backup created for "${doc.title}" at: ${outputPath}`,
 00166|       );
@@ -1235,15 +1263,15 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00169|       execSync(cleanupCmd);
 00170|     }
 00171|   }
-00172| 
+00172|
 00173|   async findSimilar(query: string, limit: number = 5): Promise<any[]> {
 00174|     const vector = await this.generateEmbedding(query, 'RETRIEVAL_QUERY');
 00175|     const vectorString = `[${vector.join(',')}]`;
-00176| 
+00176|
 00177|     const results: any[] = await this.prisma.$queryRaw`
-00178|       SELECT 
-00179|         e.content, 
-00180|         e."pageNumber", 
+00178|       SELECT
+00179|         e.content,
+00180|         e."pageNumber",
 00181|         d.title as "documentTitle",
 00182|         d.author as "documentAuthor",
 00183|         d."filePath" as "documentFilePath",
@@ -1254,10 +1282,10 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00188|       ORDER BY e.vector <=> ${vectorString}::vector
 00189|       LIMIT ${limit}
 00190|     `;
-00191| 
+00191|
 00192|     return results;
 00193|   }
-00194| 
+00194|
 00195|   async updateMetadata(
 00196|     idOrPath: string,
 00197|     updates: {
@@ -1273,15 +1301,15 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00207|       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
 00208|         idOrPath,
 00209|       );
-00210| 
+00210|
 00211|     const doc = await (this.prisma as any).document.findUnique({
 00212|       where: isUuid ? { id: idOrPath } : { filePath: idOrPath },
 00213|     });
-00214| 
+00214|
 00215|     if (!doc) {
 00216|       throw new Error(`Document not found: ${idOrPath}`);
 00217|     }
-00218| 
+00218|
 00219|     const currentMetadata = doc.metadata || {};
 00220|     const newMetadata = {
 00221|       ...currentMetadata,
@@ -1293,7 +1321,7 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00227|           : currentMetadata.edition,
 00228|       year: updates.year !== undefined ? updates.year : currentMetadata.year,
 00229|     };
-00230| 
+00230|
 00231|     await (this.prisma as any).document.update({
 00232|       where: { id: doc.id },
 00233|       data: {
@@ -1303,10 +1331,10 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00237|         metadata: newMetadata,
 00238|       },
 00239|     });
-00240| 
+00240|
 00241|     this.logger.log(`Updated metadata for: ${doc.title}`);
 00242|   }
-00243| 
+00243|
 00244|   private async extractMetadata(
 00245|     text: string,
 00246|     fallback: string,
@@ -1318,38 +1346,38 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00252|     year?: string;
 00253|   }> {
 00254|     const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
-00255| 
+00255|
 00256|     const beautified = fallback.replace(/_/g, ' ').replace(/-/g, ' ').trim();
-00257| 
+00257|
 00258|     if (!apiKey) {
 00259|       return { title: beautified, author: 'Unknown Author' };
 00260|     }
-00261| 
+00261|
 00262|     try {
 00263|       const prompt = `
 00264|         Based on the following text from the beginning of a medical book, identify the official Title, Author(s), Volume (Tomo/Volumen), Edition, and Publication Year.
-00265|         
+00265|
 00266|         TEXT:
 00267|         ${text}
-00268|         
+00268|
 00269|         RULES:
 00270|         - Return ONLY a JSON object: {"title": "...", "author": "...", "volume": "...", "edition": "...", "year": "..."}
 00271|         - If multiple authors, list them separated by commas.
 00272|         - If you cannot find a field, return null for that field.
 00273|         - Use "${beautified}" if the title is not clearly found.
 00274|       `;
-00275| 
+00275|
 00276|       const result = await this.genAI.models.generateContent({
 00277|         model: 'gemini-3-flash-preview',
 00278|         contents: [{ role: 'user', parts: [{ text: prompt }] }],
 00279|       });
-00280| 
+00280|
 00281|       const jsonStr = (result.text || '')
 00282|         .replace(/```json/g, '')
 00283|         .replace(/```/g, '')
 00284|         .trim();
 00285|       const meta = JSON.parse(jsonStr);
-00286| 
+00286|
 00287|       this.logger.log(
 00288|         `AI extracted metadata: ${meta.title} ${meta.volume ? `(${meta.volume})` : ''} by ${meta.author}`,
 00289|       );
@@ -1367,7 +1395,7 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00301|       return { title: beautified, author: 'Unknown Author' };
 00302|     }
 00303|   }
-00304| 
+00304|
 00305|   private chunkText(
 00306|     text: string,
 00307|     wordsPerChunk: number = 500,
@@ -1375,18 +1403,18 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00309|   ): string[] {
 00310|     const words = text.split(/\s+/).filter((w) => w.length > 0);
 00311|     const chunks: string[] = [];
-00312| 
+00312|
 00313|     if (words.length === 0) return [];
-00314| 
+00314|
 00315|     for (let i = 0; i < words.length; i += wordsPerChunk - overlap) {
 00316|       const chunk = words.slice(i, i + wordsPerChunk).join(' ');
 00317|       chunks.push(chunk);
 00318|       if (i + wordsPerChunk >= words.length) break;
 00319|     }
-00320| 
+00320|
 00321|     return chunks;
 00322|   }
-00323| 
+00323|
 00324|   private async generateEmbedding(
 00325|     text: string,
 00326|     taskType: 'RETRIEVAL_DOCUMENT' | 'RETRIEVAL_QUERY' = 'RETRIEVAL_QUERY',
@@ -1397,7 +1425,7 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00331|       vector[0] = text.length / 1000;
 00332|       return vector;
 00333|     }
-00334| 
+00334|
 00335|     return await withRetry(
 00336|       async () => {
 00337|         const result = await this.genAI.models.embedContent({
@@ -1408,7 +1436,7 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00342|             outputDimensionality: 768,
 00343|           },
 00344|         });
-00345| 
+00345|
 00346|         if (
 00347|           !result.embeddings ||
 00348|           result.embeddings.length === 0 ||
@@ -1423,7 +1451,7 @@ Found RAG components. Let me dig deeper into the core implementation files:
 00357|     );
 00358|   }
 00359| }
-00360| 
+00360|
 
 (End of file - total 360 lines)
 </file>
@@ -1501,7 +1529,7 @@ This project is a **Monorepo** managed with [Turborepo](https://turbo.build/repo
 
    ```bash
    pnpm install
-   ```
+````
 
 2. **Start Infrastructure (Database):**
 
@@ -1650,8 +1678,8 @@ crontab -e
 
 See [agent-os/product/roadmap.md](agent-os/product/roadmap.md) for the detailed development plan.
 
-
 [Project README: /Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/README.md]
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -1751,7 +1779,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
-```
+````
 
 **Tool: read**
 
@@ -1760,9 +1788,10 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/src/modules/ai-analysis/ai-analysis.service.ts"
 }
-```
+````
 
 **Output:**
+
 ```
 <file>
 00001| import { Injectable, Logger } from '@nestjs/common';
@@ -1781,7 +1810,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00014|   Citation,
 00015| } from './interfaces/analysis.interfaces';
 00016| import { CaseDataAggregate } from './interfaces/aggregation.interfaces';
-00017| 
+00017|
 00018| @Injectable()
 00019| export class AiAnalysisService {
 00020|   private readonly logger = new Logger(AiAnalysisService.name);
@@ -1789,7 +1818,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00022|   private readonly model: string;
 00023|   private readonly temperature: number;
 00024|   private readonly maxTokens: number;
-00025| 
+00025|
 00026|   constructor(
 00027|     private readonly prisma: PrismaService,
 00028|     private readonly configService: ConfigService,
@@ -1816,30 +1845,30 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00049|       10,
 00050|     );
 00051|   }
-00052| 
+00052|
 00053|   async analyzeCase(
 00054|     clinicalCaseId: string,
 00055|     therapistId: string,
 00056|     forceVision = false,
 00057|   ): Promise<AnalysisResult> {
 00058|     const startTime = Date.now();
-00059| 
+00059|
 00060|     const caseData: CaseDataAggregate =
 00061|       await this.dataAggregationService.aggregateCaseData(
 00062|         clinicalCaseId,
 00063|         therapistId,
 00064|         forceVision,
 00065|       );
-00066| 
+00066|
 00067|     const anonymized = this.anonymizerService.anonymize(caseData as any);
-00068| 
+00068|
 00069|     const ragChunks = await this.executeMultiQueryRag(caseData);
-00070| 
+00070|
 00071|     const warnings: string[] = [];
 00072|     if (ragChunks.length === 0) {
 00073|       warnings.push('No se encontró literatura médica relevante para el caso.');
 00074|     }
-00075| 
+00075|
 00076|     const serviceStatus = {
 00077|       rag: ragChunks.length > 0,
 00078|       vision:
@@ -1849,7 +1878,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00082|       voice: caseData.voiceTranscripts && caseData.voiceTranscripts.length > 0,
 00083|       llm: true,
 00084|     };
-00085| 
+00085|
 00086|     const systemPrompt = this.promptBuilderService.buildSystemPrompt();
 00087|     const userPrompt = this.promptBuilderService.buildUserPrompt(
 00088|       anonymized.text,
@@ -1857,22 +1886,22 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00090|       caseData.visionFindings,
 00091|       caseData.voiceTranscripts,
 00092|     );
-00093| 
+00093|
 00094|     const llmResponse = await this.callLlm(systemPrompt, userPrompt);
-00095| 
+00095|
 00096|     const parsedResult = this.parseResponse(llmResponse);
-00097| 
+00097|
 00098|     const translatedCitations = await this.translateCitationsInternal(
 00099|       parsedResult.citations,
 00100|     );
-00101| 
+00101|
 00102|     const rehydratedResult = this.rehydrateResult(
 00103|       parsedResult,
 00104|       anonymized.mapping,
 00105|     );
-00106| 
+00106|
 00107|     const processingTimeMs = Date.now() - startTime;
-00108| 
+00108|
 00109|     return {
 00110|       ...rehydratedResult,
 00111|       citations: translatedCitations,
@@ -1888,7 +1917,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00121|       },
 00122|     };
 00123|   }
-00124| 
+00124|
 00125|   private async executeMultiQueryRag(caseData: any): Promise<RagChunk[]> {
 00126|     const diagnosisQuery =
 00127|       this.promptBuilderService.buildDiagnosisQuery(caseData);
@@ -1898,9 +1927,9 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00131|       this.promptBuilderService.buildContraindicationsQuery(
 00132|         caseData.pharmacologicalHistory,
 00133|       );
-00134| 
+00134|
 00135|     this.logger.debug('Executing multi-query RAG strategy');
-00136| 
+00136|
 00137|     try {
 00138|       const [diagnosisResults, treatmentResults, contraindicationResults] =
 00139|         await Promise.all([
@@ -1908,30 +1937,30 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00141|           this.knowledgeBaseService.findSimilar(treatmentQuery, 5),
 00142|           this.knowledgeBaseService.findSimilar(contraindicationsQuery, 3),
 00143|         ]);
-00144| 
+00144|
 00145|       const allResults = [
 00146|         ...diagnosisResults,
 00147|         ...treatmentResults,
 00148|         ...contraindicationResults,
 00149|       ];
-00150| 
+00150|
 00151|       const deduplicated = this.deduplicateChunks(allResults);
-00152| 
+00152|
 00153|       this.logger.debug(
 00154|         `RAG returned ${deduplicated.length} unique chunks from ${allResults.length} total`,
 00155|       );
-00156| 
+00156|
 00157|       return deduplicated;
 00158|     } catch (error) {
 00159|       this.logger.error(`RAG query failed: ${error.message}`);
 00160|       return [];
 00161|     }
 00162|   }
-00163| 
+00163|
 00164|   private deduplicateChunks(chunks: any[]): RagChunk[] {
 00165|     const seen = new Set<string>();
 00166|     const unique: RagChunk[] = [];
-00167| 
+00167|
 00168|     for (const chunk of chunks) {
 00169|       const contentHash = chunk.content.slice(0, 100);
 00170|       if (!seen.has(contentHash)) {
@@ -1947,10 +1976,10 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00180|         });
 00181|       }
 00182|     }
-00183| 
+00183|
 00184|     return unique.sort((a, b) => b.similarity - a.similarity);
 00185|   }
-00186| 
+00186|
 00187|   private async callLlm(
 00188|     systemPrompt: string,
 00189|     userPrompt: string,
@@ -1959,7 +1988,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00192|     if (!apiKey) {
 00193|       return this.getMockResponse();
 00194|     }
-00195| 
+00195|
 00196|     return await withRetry(
 00197|       async () => {
 00198|         const response = await this.genAI.models.generateContent({
@@ -1987,23 +2016,23 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00220|             },
 00221|           ],
 00222|         });
-00223| 
+00223|
 00224|         return response.text || '';
 00225|       },
 00226|       { maxRetries: 3 },
 00227|       this.logger,
 00228|     );
 00229|   }
-00230| 
+00230|
 00231|   private parseResponse(llmResponse: string): AnalysisResult {
 00232|     try {
 00233|       const jsonMatch = llmResponse.match(/\{[\s\S]*\}/);
 00234|       if (!jsonMatch) {
 00235|         throw new Error('No JSON found in LLM response');
 00236|       }
-00237| 
+00237|
 00238|       const parsed = JSON.parse(jsonMatch[0]);
-00239| 
+00239|
 00240|       return {
 00241|         primarySuggestion: parsed.primarySuggestion || {
 00242|           title: 'Sin recomendación',
@@ -2030,7 +2059,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00263|       return this.getDefaultResult();
 00264|     }
 00265|   }
-00266| 
+00266|
 00267|   private rehydrateResult(
 00268|     result: AnalysisResult,
 00269|     mapping: Record<string, string>,
@@ -2048,12 +2077,12 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00281|           )
 00282|         : undefined,
 00283|     };
-00284| 
+00284|
 00285|     const rehydratedAlternatives = result.alternatives.map((alt) => ({
 00286|       ...alt,
 00287|       description: this.anonymizerService.rehydrate(alt.description, mapping),
 00288|     }));
-00289| 
+00289|
 00290|     const rehydratedReasoning = {
 00291|       step1_understanding: this.anonymizerService.rehydrate(
 00292|         result.reasoning.step1_understanding,
@@ -2068,7 +2097,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00301|         mapping,
 00302|       ),
 00303|     };
-00304| 
+00304|
 00305|     return {
 00306|       ...result,
 00307|       primarySuggestion: rehydratedPrimary,
@@ -2076,18 +2105,18 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00309|       reasoning: rehydratedReasoning,
 00310|     };
 00311|   }
-00312| 
+00312|
 00313|   private async translateCitationsInternal(
 00314|     citations: Citation[],
 00315|   ): Promise<Citation[]> {
 00316|     const results = await Promise.all(
 00317|       citations.map(async (citation) => {
 00318|         const language = this.translatorService.detectLanguage(citation.quote);
-00319| 
+00319|
 00320|         if (language === 'es') {
 00321|           return citation;
 00322|         }
-00323| 
+00323|
 00324|         const translated = await this.translatorService.translateToSpanish(
 00325|           citation.quote,
 00326|         );
@@ -2098,10 +2127,10 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00331|         };
 00332|       }),
 00333|     );
-00334| 
+00334|
 00335|     return results;
 00336|   }
-00337| 
+00337|
 00338|   private getDefaultResult(): AnalysisResult {
 00339|     return {
 00340|       primarySuggestion: {
@@ -2133,7 +2162,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00366|       },
 00367|     };
 00368|   }
-00369| 
+00369|
 00370|   private getMockResponse(): string {
 00371|     return JSON.stringify({
 00372|       primarySuggestion: {
@@ -2173,7 +2202,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00406|     });
 00407|   }
 00408| }
-00409| 
+00409|
 
 (End of file - total 409 lines)
 </file>
@@ -2182,6 +2211,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/src/modules/ai-analysis/services/prompt-builder.service.ts"
@@ -2189,6 +2219,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 ```
 
 **Output:**
+
 ```
 <file>
 00001| import { Injectable } from '@nestjs/common';
@@ -2198,13 +2229,13 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00005| } from '../constants/system-prompts';
 00006| import { RagChunk } from '../interfaces/analysis.interfaces';
 00007| import { VisionFinding, VoiceNote } from '../interfaces/aggregation.interfaces';
-00008| 
+00008|
 00009| @Injectable()
 00010| export class PromptBuilderService {
 00011|   buildSystemPrompt(): string {
 00012|     return AI_ANALYSIS_SYSTEM_PROMPT;
 00013|   }
-00014| 
+00014|
 00015|   buildUserPrompt(
 00016|     anonymizedCaseText: string,
 00017|     ragChunks: RagChunk[],
@@ -2212,22 +2243,22 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00019|     voiceTranscripts?: VoiceNote[],
 00020|   ): string {
 00021|     const ragContext = this.formatRagContext(ragChunks);
-00022| 
+00022|
 00023|     let expandedCaseText = anonymizedCaseText;
-00024| 
+00024|
 00025|     if (visionFindings && visionFindings.length > 0) {
 00026|       const visionContext = this.buildVisionContext(visionFindings);
 00027|       expandedCaseText += `\n\n### Hallazgos Visuales (IA)\n${visionContext}`;
 00028|     }
-00029| 
+00029|
 00030|     if (voiceTranscripts && voiceTranscripts.length > 0) {
 00031|       const voiceContext = this.buildVoiceContext(voiceTranscripts);
 00032|       expandedCaseText += `\n\n### Transcripciones de Voz (Contexto Adicional)\n${voiceContext}`;
 00033|     }
-00034| 
+00034|
 00035|     return buildUserPrompt(expandedCaseText, ragContext);
 00036|   }
-00037| 
+00037|
 00038|   buildVisionContext(visionFindings: VisionFinding[]): string {
 00039|     return visionFindings
 00040|       .map((finding) => {
@@ -2235,7 +2266,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00042|       })
 00043|       .join('\n');
 00044|   }
-00045| 
+00045|
 00046|   buildVoiceContext(voiceTranscripts: VoiceNote[]): string {
 00047|     return voiceTranscripts
 00048|       .map((note) => {
@@ -2243,75 +2274,75 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00050|       })
 00051|       .join('\n\n');
 00052|   }
-00053| 
+00053|
 00054|   private formatRagContext(chunks: RagChunk[]): string {
 00055|     if (!chunks || chunks.length === 0) {
 00056|       return 'No se encontró literatura médica relevante.';
 00057|     }
-00058| 
+00058|
 00059|     const formattedChunks = chunks.map((chunk, index) => {
 00060|       return `### Fuente ${index + 1}
 00061| **Documento:** ${chunk.documentTitle}
 00062| **Autor:** ${chunk.documentAuthor}
 00063| **Relevancia:** ${(chunk.similarity * 100).toFixed(1)}%
-00064| 
+00064|
 00065| ${chunk.content}
-00066| 
+00066|
 00067| ---`;
 00068|     });
-00069| 
+00069|
 00070|     return formattedChunks.join('\n\n');
 00071|   }
-00072| 
+00072|
 00073|   buildDiagnosisQuery(caseData: {
 00074|     consultationReason?: string;
 00075|     initialMedicalDiagnosis?: string;
 00076|     evaluations?: Array<{ diagnosis?: Record<string, unknown> }>;
 00077|   }): string {
 00078|     const parts: string[] = [];
-00079| 
+00079|
 00080|     if (caseData.consultationReason) {
 00081|       parts.push(caseData.consultationReason);
 00082|     }
-00083| 
+00083|
 00084|     if (caseData.initialMedicalDiagnosis) {
 00085|       parts.push(caseData.initialMedicalDiagnosis);
 00086|     }
-00087| 
+00087|
 00088|     if (caseData.evaluations && caseData.evaluations.length > 0) {
 00089|       const latestEval = caseData.evaluations[caseData.evaluations.length - 1];
 00090|       if (latestEval.diagnosis) {
 00091|         parts.push(JSON.stringify(latestEval.diagnosis));
 00092|       }
 00093|     }
-00094| 
+00094|
 00095|     return parts.join(' ').slice(0, 500);
 00096|   }
-00097| 
+00097|
 00098|   buildTreatmentQuery(caseData: {
 00099|     consultationReason?: string;
 00100|     initialMedicalDiagnosis?: string;
 00101|   }): string {
 00102|     const parts: string[] = ['tratamiento fisioterapia'];
-00103| 
+00103|
 00104|     if (caseData.initialMedicalDiagnosis) {
 00105|       parts.push(caseData.initialMedicalDiagnosis);
 00106|     } else if (caseData.consultationReason) {
 00107|       parts.push(caseData.consultationReason);
 00108|     }
-00109| 
+00109|
 00110|     return parts.join(' ').slice(0, 500);
 00111|   }
-00112| 
+00112|
 00113|   buildContraindicationsQuery(pharmacologicalHistory?: string): string {
 00114|     if (!pharmacologicalHistory) {
 00115|       return 'contraindicaciones fisioterapia medicamentos';
 00116|     }
-00117| 
+00117|
 00118|     return `contraindicaciones ${pharmacologicalHistory}`.slice(0, 500);
 00119|   }
 00120| }
-00121| 
+00121|
 
 (End of file - total 121 lines)
 </file>
@@ -2320,6 +2351,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/package.json"
@@ -2327,6 +2359,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 ```
 
 **Output:**
+
 ```
 <file>
 00001| {
@@ -2455,7 +2488,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 00124|     }
 00125|   }
 00126| }
-00127| 
+00127|
 
 (End of file - total 127 lines)
 </file>
@@ -2464,6 +2497,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 **Tool: glob**
 
 **Input:**
+
 ```json
 {
   "pattern": "**/knowledge-base/**/*.ts"
@@ -2471,6 +2505,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 ```
 
 **Output:**
+
 ```
 Found 4 file(s)
 
@@ -2483,6 +2518,7 @@ Found 4 file(s)
 **Tool: glob**
 
 **Input:**
+
 ```json
 {
   "pattern": "**/ai-analysis/**/*.ts"
@@ -2490,6 +2526,7 @@ Found 4 file(s)
 ```
 
 **Output:**
+
 ```
 Found 27 file(s)
 
@@ -2525,6 +2562,7 @@ Found 27 file(s)
 **Tool: grep**
 
 **Input:**
+
 ```json
 {
   "pattern": "similarity_search|cosine|vector.*search",
@@ -2533,6 +2571,7 @@ Found 27 file(s)
 ```
 
 **Output:**
+
 ```
 No matches found
 ```
@@ -2540,6 +2579,7 @@ No matches found
 **Tool: grep**
 
 **Input:**
+
 ```json
 {
   "include": "*.ts",
@@ -2548,6 +2588,7 @@ No matches found
 ```
 
 **Output:**
+
 ```
 Found 63 match(es) in 18 file(s)
 
@@ -2665,6 +2706,7 @@ Let me read more files to understand the complete RAG architecture:
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/src/modules/ai-analysis/constants/system-prompts.ts"
@@ -2672,42 +2714,43 @@ Let me read more files to understand the complete RAG architecture:
 ```
 
 **Output:**
+
 ```
 <file>
 00001| export const AI_ANALYSIS_SYSTEM_PROMPT = `Eres un asistente de análisis clínico especializado en fisioterapia. Tu rol es analizar casos clínicos y proporcionar recomendaciones de tratamiento basadas en evidencia.
-00002| 
+00002|
 00003| INSTRUCCIONES:
 00004| 1. Analiza el caso clínico presentado de manera sistemática
 00005| 2. Utiliza la literatura médica proporcionada como contexto
 00006| 3. Proporciona recomendaciones con niveles de confianza
 00007| 4. Siempre responde en español
 00008| 5. Cita las fuentes de la literatura proporcionada
-00009| 
+00009|
 00010| PROCESO DE RAZONAMIENTO (Chain-of-Thought):
 00011| Debes seguir estos 3 pasos en tu análisis:
-00012| 
+00012|
 00013| PASO 1 - COMPRENSIÓN:
 00014| Analiza la presentación del paciente, incluyendo:
 00015| - Motivo de consulta
 00016| - Diagnóstico inicial
 00017| - Historia patológica
 00018| - Medicamentos actuales
-00019| 
+00019|
 00020| PASO 2 - REVISIÓN DE LITERATURA:
 00021| Sintetiza la evidencia de los pasajes proporcionados:
 00022| - Identifica protocolos de tratamiento relevantes
 00023| - Nota contraindicaciones
 00024| - Encuentra mejores prácticas
-00025| 
+00025|
 00026| PASO 3 - SÍNTESIS:
 00027| Formula tus recomendaciones:
 00028| - Sugerencia principal con justificación
 00029| - Alternativas cuando sea apropiado
 00030| - Nivel de confianza basado en la evidencia
-00031| 
+00031|
 00032| FORMATO DE RESPUESTA:
 00033| Debes responder ÚNICAMENTE con un objeto JSON válido con esta estructura exacta:
-00034| 
+00034|
 00035| {
 00036|   "primarySuggestion": {
 00037|     "title": "Título breve de la recomendación principal",
@@ -2738,38 +2781,38 @@ Let me read more files to understand the complete RAG architecture:
 00062|     "step3_synthesis": "Tu análisis del paso 3"
 00063|   }
 00064| }
-00065| 
+00065|
 00066| NIVELES DE CONFIANZA:
 00067| - HIGH: Evidencia fuerte, múltiples fuentes coinciden, tratamiento estándar
 00068| - MEDIUM: Evidencia moderada, algunas fuentes, puede requerir ajustes
 00069| - LOW: Evidencia limitada, pocas fuentes, considerar con precaución
-00070| 
+00070|
 00071| REGLAS IMPORTANTES:
 00072| - NO incluyas información personal identificable del paciente
 00073| - NO inventes citas que no estén en el contexto proporcionado
 00074| - SIEMPRE incluye al menos 2 citas de la literatura
 00075| - SIEMPRE responde en español
 00076| - SIEMPRE usa el formato JSON especificado`;
-00077| 
+00077|
 00078| export const buildUserPrompt = (
 00079|   anonymizedCaseData: string,
 00080|   ragContext: string,
 00081| ): string => {
 00082|   return `## CASO CLÍNICO
-00083| 
+00083|
 00084| ${anonymizedCaseData}
-00085| 
+00085|
 00086| ## LITERATURA MÉDICA RELEVANTE
-00087| 
+00087|
 00088| ${ragContext}
-00089| 
+00089|
 00090| ## INSTRUCCIONES
-00091| 
+00091|
 00092| Analiza este caso clínico utilizando la literatura proporcionada y genera recomendaciones de tratamiento siguiendo el proceso de razonamiento Chain-of-Thought.
-00093| 
+00093|
 00094| Responde ÚNICAMENTE con el objeto JSON especificado en el formato de respuesta.`;
 00095| };
-00096| 
+00096|
 
 (End of file - total 96 lines)
 </file>
@@ -2778,6 +2821,7 @@ Let me read more files to understand the complete RAG architecture:
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/src/modules/ai-analysis/interfaces/analysis.interfaces.ts"
@@ -2785,17 +2829,18 @@ Let me read more files to understand the complete RAG architecture:
 ```
 
 **Output:**
+
 ```
 <file>
 00001| export type ConfidenceLevel = 'HIGH' | 'MEDIUM' | 'LOW';
-00002| 
+00002|
 00003| export interface Suggestion {
 00004|   title: string;
 00005|   description: string;
 00006|   confidence: ConfidenceLevel;
 00007|   reasoning?: string;
 00008| }
-00009| 
+00009|
 00010| export interface Citation {
 00011|   quote: string;
 00012|   quoteOriginal?: string;
@@ -2804,20 +2849,20 @@ Let me read more files to understand the complete RAG architecture:
 00015|   pageNumber?: number;
 00016|   relevance: number;
 00017| }
-00018| 
+00018|
 00019| export interface Reasoning {
 00020|   step1_understanding: string;
 00021|   step2_literature: string;
 00022|   step3_synthesis: string;
 00023| }
-00024| 
+00024|
 00025| export interface ServiceStatus {
 00026|   rag: boolean;
 00027|   vision: boolean;
 00028|   voice: boolean;
 00029|   llm: boolean;
 00030| }
-00031| 
+00031|
 00032| export interface AnalysisMetadata {
 00033|   queryTokens: number;
 00034|   responseTokens: number;
@@ -2834,7 +2879,7 @@ Let me read more files to understand the complete RAG architecture:
 00045|     failedImageIds: string[];
 00046|   };
 00047| }
-00048| 
+00048|
 00049| export interface AnalysisResult {
 00050|   primarySuggestion: Suggestion;
 00051|   alternatives: Suggestion[];
@@ -2842,24 +2887,24 @@ Let me read more files to understand the complete RAG architecture:
 00053|   reasoning: Reasoning;
 00054|   metadata: AnalysisMetadata;
 00055| }
-00056| 
+00056|
 00057| export interface AnonymizationMapping {
 00058|   [placeholder: string]: string;
 00059| }
-00060| 
+00060|
 00061| export interface AnonymizedResult {
 00062|   text: string;
 00063|   data: Record<string, unknown>;
 00064|   mapping: AnonymizationMapping;
 00065| }
-00066| 
+00066|
 00067| export interface TranslatedResult {
 00068|   translated: string;
 00069|   original: string;
 00070|   language: 'en' | 'es';
 00071|   wasCached: boolean;
 00072| }
-00073| 
+00073|
 00074| export interface RagChunk {
 00075|   content: string;
 00076|   pageNumber: number;
@@ -2869,7 +2914,7 @@ Let me read more files to understand the complete RAG architecture:
 00080|   documentMetadata: Record<string, unknown>;
 00081|   similarity: number;
 00082| }
-00083| 
+00083|
 
 (End of file - total 83 lines)
 </file>
@@ -2878,6 +2923,7 @@ Let me read more files to understand the complete RAG architecture:
 **Tool: glob**
 
 **Input:**
+
 ```json
 {
   "pattern": "**/prisma/schema.prisma"
@@ -2885,6 +2931,7 @@ Let me read more files to understand the complete RAG architecture:
 ```
 
 **Output:**
+
 ```
 Found 1 file(s)
 
@@ -2894,6 +2941,7 @@ Found 1 file(s)
 **Tool: grep**
 
 **Input:**
+
 ```json
 {
   "include": "*.prisma",
@@ -2902,6 +2950,7 @@ Found 1 file(s)
 ```
 
 **Output:**
+
 ```
 Found 7 match(es) in 1 file(s)
 
@@ -2919,6 +2968,7 @@ Found 7 match(es) in 1 file(s)
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/scripts/ingest-books.ts"
@@ -2926,6 +2976,7 @@ Found 7 match(es) in 1 file(s)
 ```
 
 **Output:**
+
 ```
 <file>
 00001| import { NestFactory } from '@nestjs/core';
@@ -2935,7 +2986,7 @@ Found 7 match(es) in 1 file(s)
 00005| import * as path from 'path';
 00006| import { ConfigModule } from '@nestjs/config';
 00007| import { Module } from '@nestjs/common';
-00008| 
+00008|
 00009| @Module({
 00010|   imports: [
 00011|     ConfigModule.forRoot({
@@ -2946,75 +2997,75 @@ Found 7 match(es) in 1 file(s)
 00016|   ],
 00017| })
 00018| class IngestionAppModule {}
-00019| 
+00019|
 00020| async function bootstrap() {
 00021|   const app = await NestFactory.createApplicationContext(IngestionAppModule);
 00022|   const knowledgeBaseService = app.get(KnowledgeBaseService);
-00023| 
+00023|
 00024|   const serverDir = path.resolve(__dirname, '..');
 00025|   const booksDir = path.join(serverDir, 'data/books');
 00026|   const archiveDir = path.join(serverDir, 'data/archive');
-00027| 
+00027|
 00028|   if (!fs.existsSync(booksDir)) {
 00029|     console.log(`Creating books directory at ${booksDir}`);
 00030|     fs.mkdirSync(booksDir, { recursive: true });
 00031|   }
-00032| 
+00032|
 00033|   if (!fs.existsSync(archiveDir)) {
 00034|     fs.mkdirSync(archiveDir, { recursive: true });
 00035|   }
-00036| 
+00036|
 00037|   const files = fs.readdirSync(booksDir).filter((f) => f.endsWith('.pdf'));
 00038|   console.log(`Found ${files.length} new PDF files in ${booksDir}`);
-00039| 
+00039|
 00040|   let successCount = 0;
 00041|   let failureCount = 0;
-00042| 
+00042|
 00043|   for (const file of files) {
 00044|     const relFilePath = `data/books/${file}`;
 00045|     const absFilePath = path.join(serverDir, relFilePath);
-00046| 
+00046|
 00047|     try {
 00048|       await knowledgeBaseService.ingestFile(relFilePath);
-00049| 
+00049|
 00050|       const safeTitle = file.replace(/\.pdf$/i, '').replace(/[^a-z0-9]/gi, '_');
 00051|       const backupPath = path.resolve(
 00052|         serverDir,
 00053|         `../../backups/library/${safeTitle}.sql.gz`,
 00054|       );
-00055| 
+00055|
 00056|       const libDir = path.dirname(backupPath);
 00057|       if (!fs.existsSync(libDir)) fs.mkdirSync(libDir, { recursive: true });
-00058| 
+00058|
 00059|       await knowledgeBaseService.exportDocument(relFilePath, backupPath);
 00060|       console.log(
 00061|         `💾 Atomic backup saved to: backups/library/${safeTitle}.sql.gz`,
 00062|       );
-00063| 
+00063|
 00064|       const newAbsPath = path.join(archiveDir, file);
 00065|       fs.renameSync(absFilePath, newAbsPath);
 00066|       console.log(`📦 Archived: ${file} -> data/archive/`);
-00067| 
+00067|
 00068|       successCount++;
 00069|     } catch (error) {
 00070|       console.error(`❌ Failed to ingest ${file}:`, error.message);
 00071|       failureCount++;
 00072|     }
 00073|   }
-00074| 
+00074|
 00075|   console.log('\n--- Ingestion Summary ---');
 00076|   console.log(`Total files found: ${files.length}`);
 00077|   console.log(`Successfully processed: ${successCount}`);
 00078|   console.log(`Failed: ${failureCount}`);
-00079| 
+00079|
 00080|   await app.close();
 00081| }
-00082| 
+00082|
 00083| bootstrap().catch((err) => {
 00084|   console.error('Fatal error during ingestion:', err);
 00085|   process.exit(1);
 00086| });
-00087| 
+00087|
 
 (End of file - total 87 lines)
 </file>
@@ -3023,6 +3074,7 @@ Found 7 match(es) in 1 file(s)
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/scripts/test-search.ts"
@@ -3030,6 +3082,7 @@ Found 7 match(es) in 1 file(s)
 ```
 
 **Output:**
+
 ```
 <file>
 00001| import { NestFactory } from '@nestjs/core';
@@ -3038,7 +3091,7 @@ Found 7 match(es) in 1 file(s)
 00004| import { ConfigModule } from '@nestjs/config';
 00005| import { Module } from '@nestjs/common';
 00006| import * as path from 'path';
-00007| 
+00007|
 00008| @Module({
 00009|   imports: [
 00010|     ConfigModule.forRoot({
@@ -3049,14 +3102,14 @@ Found 7 match(es) in 1 file(s)
 00015|   ],
 00016| })
 00017| class SearchAppModule {}
-00018| 
+00018|
 00019| async function bootstrap() {
 00020|   const app = await NestFactory.createApplicationContext(SearchAppModule);
 00021|   const knowledgeBaseService = app.get(KnowledgeBaseService);
-00022| 
+00022|
 00023|   const query = process.argv[2] || 'anatomical structures of the hand';
 00024|   console.log(`Searching for: "${query}"`);
-00025| 
+00025|
 00026|   try {
 00027|     const results = await knowledgeBaseService.findSimilar(query, 5);
 00028|     console.log('--- Search Results ---');
@@ -3074,15 +3127,15 @@ Found 7 match(es) in 1 file(s)
 00040|   } catch (error) {
 00041|     console.error('Search failed:', error.message);
 00042|   }
-00043| 
+00043|
 00044|   await app.close();
 00045| }
-00046| 
+00046|
 00047| bootstrap().catch((err) => {
 00048|   console.error('Fatal error during search test:', err);
 00049|   process.exit(1);
 00050| });
-00051| 
+00051|
 
 (End of file - total 51 lines)
 </file>
@@ -3131,6 +3184,7 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/prisma/schema.prisma"
@@ -3138,18 +3192,19 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 ```
 
 **Output:**
+
 ```
 <file>
 00001| generator client {
 00002|   provider        = "prisma-client-js"
 00003|   previewFeatures = ["postgresqlExtensions"]
 00004| }
-00005| 
+00005|
 00006| datasource db {
 00007|   provider   = "postgresql"
 00008|   extensions = [vector]
 00009| }
-00010| 
+00010|
 00011| model User {
 00012|   id                String             @id @default(cuid())
 00013|   email             String             @unique
@@ -3167,11 +3222,11 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00025|   patients          Patient[]
 00026|   sessions          Session[]
 00027|   treatmentSessions TreatmentSession[]
-00028| 
+00028|
 00029|   @@index([email])
 00030|   @@map("users")
 00031| }
-00032| 
+00032|
 00033| model Patient {
 00034|   id                    String         @id @default(cuid())
 00035|   email                 String?
@@ -3193,11 +3248,11 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00051|   clinicalCases         ClinicalCase[]
 00052|   therapist             User           @relation(fields: [therapistId], references: [id])
 00053|   sessions              Session[]
-00054| 
+00054|
 00055|   @@index([name])
 00056|   @@map("patients")
 00057| }
-00058| 
+00058|
 00059| model ClinicalCase {
 00060|   id                      String             @id @default(cuid())
 00061|   patientId               String
@@ -3216,10 +3271,10 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00074|   insoles                 Insole[]
 00075|   treatmentPlan           TreatmentPlan?
 00076|   treatmentSessions       TreatmentSession[]
-00077| 
+00077|
 00078|   @@map("clinical_cases")
 00079| }
-00080| 
+00080|
 00081| model Evaluation {
 00082|   id              String         @id @default(cuid())
 00083|   clinicalCaseId  String
@@ -3234,10 +3289,10 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00092|   clinicalCase    ClinicalCase   @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
 00093|   footprints      Footprint[]
 00094|   postureVideos   PostureVideo[]
-00095| 
+00095|
 00096|   @@map("evaluations")
 00097| }
-00098| 
+00098|
 00099| model TreatmentPlan {
 00100|   id             String       @id @default(cuid())
 00101|   clinicalCaseId String       @unique
@@ -3246,10 +3301,10 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00104|   objectives     Json
 00105|   phases         Json
 00106|   clinicalCase   ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
-00107| 
+00107|
 00108|   @@map("treatment_plans")
 00109| }
-00110| 
+00110|
 00111| model TreatmentSession {
 00112|   id              String         @id @default(cuid())
 00113|   clinicalCaseId  String
@@ -3267,10 +3322,10 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00125|   photos          SessionPhoto[]
 00126|   clinicalCase    ClinicalCase   @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
 00127|   therapist       User           @relation(fields: [therapistId], references: [id])
-00128| 
+00128|
 00129|   @@map("treatment_sessions")
 00130| }
-00131| 
+00131|
 00132| model SessionPhoto {
 00133|   id         String           @id @default(cuid())
 00134|   sessionId  String
@@ -3279,11 +3334,11 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00137|   capturedAt DateTime
 00138|   createdAt  DateTime         @default(now())
 00139|   session    TreatmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-00140| 
+00140|
 00141|   @@index([sessionId])
 00142|   @@map("session_photos")
 00143| }
-00144| 
+00144|
 00145| model Footprint {
 00146|   id           String     @id @default(cuid())
 00147|   type         String
@@ -3295,10 +3350,10 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00153|   evaluationId String
 00154|   side         String     @default("unknown")
 00155|   evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
-00156| 
+00156|
 00157|   @@map("footprints")
 00158| }
-00159| 
+00159|
 00160| model PostureVideo {
 00161|   id           String     @id @default(cuid())
 00162|   type         String
@@ -3308,10 +3363,10 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00166|   observations String
 00167|   evaluationId String
 00168|   evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
-00169| 
+00169|
 00170|   @@map("posture_videos")
 00171| }
-00172| 
+00172|
 00173| model Insole {
 00174|   id             String       @id @default(cuid())
 00175|   type           String
@@ -3319,10 +3374,10 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00177|   features       Json?
 00178|   clinicalCaseId String
 00179|   clinicalCase   ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
-00180| 
+00180|
 00181|   @@map("insoles")
 00182| }
-00183| 
+00183|
 00184| model Session {
 00185|   id          String   @id @default(cuid())
 00186|   patientId   String
@@ -3333,10 +3388,10 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00191|   status      String   @default("DRAFT")
 00192|   patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
 00193|   therapist   User     @relation(fields: [therapistId], references: [id], onDelete: Cascade)
-00194| 
+00194|
 00195|   @@map("sessions")
 00196| }
-00197| 
+00197|
 00198| model Document {
 00199|   id         String      @id @default(uuid())
 00200|   title      String
@@ -3345,10 +3400,10 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00203|   createdAt  DateTime    @default(now())
 00204|   metadata   Json?
 00205|   embeddings Embedding[]
-00206| 
+00206|
 00207|   @@map("documents")
 00208| }
-00209| 
+00209|
 00210| model Embedding {
 00211|   id         String                @id @default(uuid())
 00212|   content    String
@@ -3356,10 +3411,10 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 00214|   pageNumber Int
 00215|   documentId String
 00216|   document   Document              @relation(fields: [documentId], references: [id], onDelete: Cascade)
-00217| 
+00217|
 00218|   @@map("embeddings")
 00219| }
-00220| 
+00220|
 
 (End of file - total 220 lines)
 </file>
@@ -3368,6 +3423,7 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 **Tool: background_output**
 
 **Input:**
+
 ```json
 {
   "task_id": "bg_097af09f"
@@ -3375,6 +3431,7 @@ Good, background tasks are completing. Let me read the Prisma schema and collect
 ```
 
 **Output:**
+
 ```
 Task Result
 
@@ -3411,7 +3468,7 @@ The document pipeline for the medical knowledge base (RAG system) is primarily i
 
 ### 3. Chunking (Splitting)
 - **Strategy**: Simple word-based sliding window.
-- **Sizes**: 
+- **Sizes**:
   - **Words per chunk**: 500 (default).
   - **Overlap**: 50 words (default).
 - **Implementation**: Splits text by whitespace, then slices the array of words into chunks.
@@ -3445,12 +3502,12 @@ The document pipeline for the medical knowledge base (RAG system) is primarily i
 </files>
 
 <answer>
-The document pipeline follows a "Load -> Parse -> Extract Metadata -> Chunk -> Embed -> Store" flow. 
+The document pipeline follows a "Load -> Parse -> Extract Metadata -> Chunk -> Embed -> Store" flow.
 - **Loading** is file-system based (PDFs).
 - **Parsing** uses `pdf-parse`.
 - **Metadata** is intelligently extracted using Gemini 3 Flash.
 - **Chunking** uses a word-count sliding window (500 words, 50 overlap).
-- **Vectors** are generated via Gemini-embedding-001 and stored in **PostgreSQL (pgvector)**. 
+- **Vectors** are generated via Gemini-embedding-001 and stored in **PostgreSQL (pgvector)**.
 The system is designed for **incremental ingestion** (skips existing paths) and includes an **atomic export mechanism** that packages specific documents and their vectors into SQL dumps for easy redistribution.
 </answer>
 
@@ -3463,6 +3520,7 @@ If you plan to improve the chunking strategy as mentioned in the roadmap (item 1
 **Tool: background_output**
 
 **Input:**
+
 ```json
 {
   "task_id": "bg_ae1c3681"
@@ -3470,6 +3528,7 @@ If you plan to improve the chunking strategy as mentioned in the roadmap (item 1
 ```
 
 **Output:**
+
 ```
 Task Result
 
@@ -3500,7 +3559,7 @@ The project **does not use LangChain or LangGraph**. Instead, it implements a cu
 
 ### Architecture Map:
 1.  **Orchestration**: Managed by `AiAnalysisService`. It follows a sequential "Chain-of-Thought" style process without a formal graph library.
-2.  **RAG Implementation**: 
+2.  **RAG Implementation**:
     *   **Loading**: `KnowledgeBaseService` uses `pdf-parse` for text extraction.
     *   **Chunking**: Manual word-based splitting with overlap in `KnowledgeBaseService.chunkText`.
     *   **Embeddings**: `gemini-embedding-001` via Google GenAI SDK.
@@ -3526,6 +3585,7 @@ If you intended to introduce LangGraph/LangChain, the `AiAnalysisService` and `K
 [ALL BACKGROUND TASKS COMPLETE]
 
 **Completed:**
+
 - `bg_1f9e33eb`: Find RAG, embeddings, vector store implementations
 - `bg_ae1c3681`: Find LangChain/LangGraph usage patterns
 - `bg_097af09f`: Find document processing and indexing pipelines
@@ -3544,6 +3604,7 @@ Let me collect the last background task result and then synthesize all my findin
 **Tool: background_output**
 
 **Input:**
+
 ```json
 {
   "task_id": "bg_1f9e33eb"
@@ -3551,6 +3612,7 @@ Let me collect the last background task result and then synthesize all my findin
 ```
 
 **Output:**
+
 ```
 Task Result
 
@@ -3654,6 +3716,7 @@ The RAG implementation in `mamirri-app` is a robust baseline using a **Dense Ret
 **Tool: task**
 
 **Input:**
+
 ```json
 {
   "description": "Research RAG best practices and advanced patterns",
@@ -3665,6 +3728,7 @@ The RAG implementation in `mamirri-app` is a robust baseline using a **Dense Ret
 ```
 
 **Output:**
+
 ```
 Background task launched.
 
@@ -3695,6 +3759,7 @@ Let me check for existing planning docs and explore additional improvements:
 **Tool: glob**
 
 **Input:**
+
 ```json
 {
   "pattern": "**/agent-os/**/*.md"
@@ -3702,6 +3767,7 @@ Let me check for existing planning docs and explore additional improvements:
 ```
 
 **Output:**
+
 ```
 Found 100 file(s)
 
@@ -3812,6 +3878,7 @@ Found 100 file(s)
 **Tool: glob**
 
 **Input:**
+
 ```json
 {
   "pattern": "**/.documentation/**/*.md"
@@ -3819,6 +3886,7 @@ Found 100 file(s)
 ```
 
 **Output:**
+
 ```
 Found 43 file(s)
 
@@ -3870,6 +3938,7 @@ Found 43 file(s)
 **Tool: grep**
 
 **Input:**
+
 ```json
 {
   "include": "*.md",
@@ -3878,6 +3947,7 @@ Found 43 file(s)
 ```
 
 **Output:**
+
 ```
 Found 151 match(es) in 44 file(s)
 
@@ -4135,6 +4205,7 @@ Let me read the existing planning documents and documentation:
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/specs/2026-02-06-rag-optimization/planning/initialization.md"
@@ -4142,41 +4213,42 @@ Let me read the existing planning documents and documentation:
 ```
 
 **Output:**
+
 ```
 <file>
 00001| # Feature: RAG Optimization & Refinement
-00002| 
+00002|
 00003| ## Description
-00004| 
+00004|
 00005| The user wants to optimize the existing RAG (Retrieval-Augmented Generation) system based on an expert review of the current implementation. The goal is to move from a "Production-Grade" system to a "State-of-the-Art" implementation by addressing specific technical recommendations.
-00006| 
+00006|
 00007| ## Core Objectives (from Expert Review)
-00008| 
+00008|
 00009| 1.  **Upgrade Chunking Logic**: Move from simple word-based splitting to **Recursive Character Splitting** to respect paragraph/sentence boundaries and improve embedding quality.
 00010| 2.  **Implement Reranking**: Introduce a **Cross-Encoder** or **Cohere Rerank** step to refine the top K results from semantic search (e.g., retrieve 20, rerank to top 5).
 00011| 3.  **Parent Document Retriever**: Implement **Small-to-Big Retrieval** (index small chunks for search, retrieve larger parent context for generation).
 00012| 4.  **Hybrid Search**: Combine `pgvector` (semantic) with PostgreSQL `tsvector` (keyword/BM25) using **Reciprocal Rank Fusion (RRF)** to catch specific medical terms.
 00013| 5.  **Vector Indexing**: Add an **HNSW index** to the `vector` column in PostgreSQL to ensure sub-second retrieval as the dataset grows.
-00014| 
+00014|
 00015| ## Roadmap Alignment
-00016| 
+00016|
 00017| This aligns with **Week 16: AI Refinement (Buffer)** in the product roadmap, specifically:
-00018| 
+00018|
 00019| - 16.3 Improve chunking strategy
 00020| - 16.5 Explainability (related to better context)
 00021| - Performance optimization (indexing)
-00022| 
+00022|
 00023| ## Context
-00024| 
+00024|
 00025| The current system uses:
-00026| 
+00026|
 00027| - `KnowledgeBaseService` for ingestion/retrieval.
 00028| - `AiAnalysisService` for orchestration.
 00029| - PostgreSQL 16 with `pgvector`.
 00030| - `gemini-embedding-001` and `gemini-3-flash`.
 00031| - Multi-query strategy is already implemented.
 00032| - Anonymization and Translation services are already in place.
-00033| 
+00033|
 
 (End of file - total 33 lines)
 </file>
@@ -4185,6 +4257,7 @@ Let me read the existing planning documents and documentation:
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/.documentation/technical/knowledge-base-rag.md"
@@ -4192,51 +4265,52 @@ Let me read the existing planning documents and documentation:
 ```
 
 **Output:**
-```
+
+````
 <file>
 00001| # Retrieval-Augmented Generation (RAG) and Knowledge Base
-00002| 
+00002|
 00003| Mamirri uses Retrieval-Augmented Generation (RAG) to provide clinically relevant suggestions based on medical literature. This ensures that AI responses aren't just generic but are grounded in specific, cited medical books.
-00004| 
+00004|
 00005| ## What is RAG?
-00006| 
+00006|
 00007| RAG is a technique that gives an AI model access to external data (like PDFs of medical books) to improve its accuracy. Instead of relying solely on what the model learned during its initial training, it "retrieves" relevant passages from a library before "generating" an answer.
-00008| 
+00008|
 00009| Think of it like an open-book exam:
-00010| 
+00010|
 00011| 1. **Search**: The AI looks through the library for the most relevant pages.
 00012| 2. **Read**: It reads those specific pages.
 00013| 3. **Answer**: It answers the question using only the information it found.
-00014| 
+00014|
 00015| ## How Mamirri uses RAG
-00016| 
+00016|
 00017| The process is divided into two main phases: Ingestion and Retrieval.
-00018| 
+00018|
 00019| ### Phase 1: Ingestion (Building the Library)
-00020| 
+00020|
 00021| Before the AI can search books, they must be processed into a format it can understand:
-00022| 
+00022|
 00023| 1. **Extraction**: Mamirri reads PDF files from `apps/server/data/books`.
 00024| 2. **Chunking**: Large books are broken down into smaller "chunks" of about 500 words. This ensures the AI can pinpoint specific sections rather than reading an entire chapter.
 00025| 3. **Embedding**: Each chunk is converted into a list of numbers called a "vector" using Google Gemini's latest `gemini-embedding-001` model (released in 2025).
 00026|    - **Task Type**: We use `RETRIEVAL_DOCUMENT` during ingestion to optimize the vector for being searched.
 00027|    - **Dimensionality**: We use **768 dimensions** (truncated from 3072). This utilizes Matryoshka Representation Learning (MRL) to save 75% database space with virtually no loss in search quality.
 00028| 4. **Storage**: These vectors are stored in a PostgreSQL database using the `pgvector` extension.
-00029| 
+00029|
 00030| ### Phase 2: Retrieval (Finding the Answer)
-00031| 
+00031|
 00032| When a therapist needs a suggestion or searches the library:
-00033| 
+00033|
 00034| 1. **Query Embedding**: Mamirri converts the search query (e.g., "huesos del cráneo") into a vector.
 00035|    - **Task Type**: We use `RETRIEVAL_QUERY` for the search term to ensure the best semantic match against indexed documents.
 00036| 2. **Semantic Search**: It compares this query vector against all the vectors in the database.
 00037| 3. **Ranking**: It finds the chunks with the most similar meaning using **Cosine Similarity** (`<=>` operator in pgvector).
 00038| 4. **Context**: These relevant chunks are then provided to the AI to generate a grounded response with citations (title and page number).
-00039| 
+00039|
 00040| ## Operational Commands
-00041| 
+00041|
 00042| You can manage the knowledge base using these commands from the project root:
-00043| 
+00043|
 00044| | Command                                     | Description                                                                                                                                |
 00045| | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 00046| | `pnpm knowledge:ingest`                     | Scans `apps/server/data/books/*.pdf` and generates embeddings for new files. AI automatically extracts Title, Author, Volume, and Edition. |
@@ -4248,128 +4322,128 @@ Let me read the existing planning documents and documentation:
 00052| | `pnpm knowledge:restore "path/to/file.sql"` | Restores the database from a backup file (Warning: Overwrites current data).                                                               |
 00053| | `pnpm knowledge:stats`                      | Displays technical database statistics (total chunks per book).                                                                            |
 00054| | `pnpm knowledge:wipe`                       | **DANGER**: Wipes all books and vectors from the database (useful before a clean import).                                                  |
-00055| 
+00055|
 00056| ### Migration & Data Protection
-00057| 
+00057|
 00058| Mamirri uses a high-performance, atomic backup strategy to protect expensive vector data while minimizing disk usage.
-00059| 
+00059|
 00060| #### 1. Individual "Atomic" Book Backups
-00061| 
+00061|
 00062| When you run `pnpm knowledge:ingest`, the system automatically creates a compressed `.sql.gz` file for **each specific book** in `backups/library/`.
-00063| 
+00063|
 00064| - **Benefit**: You only back up each book once. If you add 1,000 books, you have 1,000 small files instead of one giant 10GB file.
-00065| 
+00065|
 00066| #### 2. Full System Backup
-00067| 
+00067|
 00068| Saves everything (Library + Patients + Users) into a compressed file.
-00069| 
+00069|
 00070| ```bash
 00071| pnpm knowledge:backup
 00072| ```
-00073| 
+00073|
 00074| #### 3. Selective Multi-Book Export
-00075| 
+00075|
 00076| Saves **all** currently ingested books into one compressed file.
-00077| 
+00077|
 00078| ```bash
 00079| pnpm knowledge:export
 00080| ```
-00081| 
+00081|
 00082| #### 4. Smart Restore / Import
-00083| 
+00083|
 00084| The `knowledge:import` command automatically handles both compressed (`.gz`) and standard SQL files.
-00085| 
+00085|
 00086| ```bash
 00087| pnpm knowledge:import "backups/library/Anatomia_Tomo1.sql.gz"
 00088| ```
-00089| 
+00089|
 00090| #### 2. Export Library Only (Migration)
-00091| 
+00091|
 00092| Saves **only** the vectorized books and metadata. Perfect for moving your library to production.
-00093| 
+00093|
 00094| ```bash
 00095| pnpm knowledge:export
 00096| ```
-00097| 
+00097|
 00098| #### 3. Import Library
-00099| 
+00099|
 00100| **Crucial**: Always ensure your database schema is up to date before importing data.
-00101| 
+00101|
 00102| ```bash
 00103| # 1. Sync the schema (Migrations)
 00104| pnpm db:deploy
-00105| 
+00105|
 00106| # 2. Import the data
 00107| pnpm knowledge:import "backups/your_file.sql"
 00108| ```
-00109| 
+00109|
 00110| If you use a `library_only_...` file, it will append those books to your database without touching existing patients/users.
-00111| 
+00111|
 00112| #### 4. Clean Slate Import
-00113| 
+00113|
 00114| If you want to replace your current library with a new one:
-00115| 
+00115|
 00116| ```bash
 00117| pnpm knowledge:wipe
 00118| pnpm knowledge:import "backups/your_file.sql"
 00119| ```
-00120| 
+00120|
 00121| To see a list of available backups:
-00122| 
+00122|
 00123| ```bash
 00124| pnpm knowledge:restore
 00125| ```
-00126| 
+00126|
 00127| ### Adding books to the library
-00128| 
+00128|
 00129| 1. Place your PDF files in `apps/server/data/books/`.
 00130| 2. Ensure you have a valid `GOOGLE_API_KEY` in your `.env` file.
 00131| 3. Run the ingestion command:
 00132|    ```bash
 00133|    pnpm knowledge:ingest
 00134|    ```
-00135| 
+00135|
 00136| ### Managing the Library
-00137| 
+00137|
 00138| To see exactly what books are in your database and get their unique IDs:
-00139| 
+00139|
 00140| ```bash
 00141| pnpm knowledge:list
 00142| ```
-00143| 
+00143|
 00144| To manually correct a book's metadata (e.g., if the AI missed a Volume or Edition):
-00145| 
+00145|
 00146| ```bash
 00147| pnpm knowledge:update "BOOK_ID_OR_FILEPATH" --volume "Tomo 1" --edition "5th Ed"
 00148| ```
-00149| 
+00149|
 00150| ### Verifying Ingestion
-00151| 
+00151|
 00152| To see a summary of what is currently in your vector database:
-00153| 
+00153|
 00154| ```bash
 00155| pnpm knowledge:stats
 00156| ```
-00157| 
+00157|
 00158| To test that the AI can actually "understand" the content:
-00159| 
+00159|
 00160| ```bash
 00161| pnpm knowledge:search "huesos del carpo"
 00162| ```
-00163| 
+00163|
 00164| ## Troubleshooting Failures
-00165| 
+00165|
 00166| If an ingestion is interrupted (e.g., due to rate limits or internet failure):
-00167| 
+00167|
 00168| 1.  **Auto-Cleanup**: The system is designed to automatically delete the partial "Document" record if the process crashes. Running `pnpm knowledge:ingest` again will restart the book from the beginning.
 00169| 2.  **Manual Reset**: If a book seems corrupted or incomplete in search results, you can force a reset by running:
 00170|     ```bash
 00171|     pnpm knowledge:clean "Latarjet_Ruiz_Liard_Anatomia_Humana_5a_E.pdf"
 00172|     ```
 00173|     Then, run `pnpm knowledge:ingest` to process it again.
-00174| 
+00174|
 00175| ## Technical Stack
-00176| 
+00176|
 00177| - **Vector Storage**: PostgreSQL + [pgvector](https://github.com/pgvector/pgvector)
 00178| - **Embeddings Model**: Google Gemini (`gemini-embedding-001` - Latest 2025 Model)
 00179| - **Metadata Orchestration**: Google Gemini 3 (`gemini-3-flash-preview`)
@@ -4377,7 +4451,7 @@ Let me read the existing planning documents and documentation:
 00181| - **Database Layer**: Prisma (using `Unsupported("vector(768)")` for vector types)
 00182| - **Indexing**: HNSW (Hierarchical Navigable Small World) for fast similarity searches.
 00183| - **Optimization**: Matryoshka Representation Learning (MRL) for efficient 768-dim storage.
-00184| 
+00184|
 
 (End of file - total 184 lines)
 </file>
@@ -4479,31 +4553,33 @@ To maintain consistency, all documentation should follow these standards:
 
 ### 📖 Documentation Directory Structure
 
-```
+````
+
 documentation/
-├── README.md                          # This file (main index)
-├── product/                           # Product vision, personas, and phases
-│   ├── product-vision.md             # Product vision and strategic goals
-│   ├── user-personas.md               # Target user personas
-│   ├── phases/                         # Development phase breakdown
-│   │   ├── phase-1-core-clinical.md   # Phase 1: Core Clinical
-│   │   ├── phase-2-passive-ai.md       # Phase 2: Passive AI
-│   │   ├── phase-3-supervised-ai.md      # Phase 3: Supervised AI
-│   │   └── phase-4-visual-analysis.md     # Phase 4: Visual Analysis
-│   └── decisions/                     # Architecture Decision Records (ADRs)
-├── technical/                         # Technical specifications
-│   ├── architecture.md                # System design and architecture
-│   ├── ci-cd.md                       # CI/CD pipeline and secrets
-│   ├── database-schema.md            # Prisma models and relationships
-│   ├── api-reference.md            # API endpoint documentation
-│   ├── knowledge-base-rag.md         # RAG and Knowledge Base infrastructure
-│   ├── ai-analysis-feature-guide.md    # AI Clinical suggestions pipeline
-│   ├── security.md                   # Security and privacy requirements
-│   ├── logging-system.md              # Logging, sanitization, and observability
-│   └── frontend-authentication.md      # Frontend auth implementation
-└── onboarding/                         # Getting started guides
-    ├── developer-setup.md            # New developer environment setup
-    └── deployment-guide.md          # Production deployment instructions
+├── README.md # This file (main index)
+├── product/ # Product vision, personas, and phases
+│ ├── product-vision.md # Product vision and strategic goals
+│ ├── user-personas.md # Target user personas
+│ ├── phases/ # Development phase breakdown
+│ │ ├── phase-1-core-clinical.md # Phase 1: Core Clinical
+│ │ ├── phase-2-passive-ai.md # Phase 2: Passive AI
+│ │ ├── phase-3-supervised-ai.md # Phase 3: Supervised AI
+│ │ └── phase-4-visual-analysis.md # Phase 4: Visual Analysis
+│ └── decisions/ # Architecture Decision Records (ADRs)
+├── technical/ # Technical specifications
+│ ├── architecture.md # System design and architecture
+│ ├── ci-cd.md # CI/CD pipeline and secrets
+│ ├── database-schema.md # Prisma models and relationships
+│ ├── api-reference.md # API endpoint documentation
+│ ├── knowledge-base-rag.md # RAG and Knowledge Base infrastructure
+│ ├── ai-analysis-feature-guide.md # AI Clinical suggestions pipeline
+│ ├── security.md # Security and privacy requirements
+│ ├── logging-system.md # Logging, sanitization, and observability
+│ └── frontend-authentication.md # Frontend auth implementation
+└── onboarding/ # Getting started guides
+├── developer-setup.md # New developer environment setup
+└── deployment-guide.md # Production deployment instructions
+
 ```
 
 ---
@@ -4522,6 +4598,7 @@ These documents were created during the initial concept phase and should be **pr
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/product/roadmap.md",
@@ -4531,35 +4608,36 @@ These documents were created during the initial concept phase and should be **pr
 ```
 
 **Output:**
+
 ```
 <file>
 00251| **Pre-requisite Check:**
-00252| 
+00252|
 00253| - [x] Do you have 3-5 reference books (PDFs) ready?
 00254| - [x] Are they legally yours to process?
 00255| - [ ] Is the MVP stable enough to build on?
-00256| 
+00256|
 00257| ---
-00258| 
+00258|
 00259| ### Week 12: Knowledge Base Preparation ✅
-00260| 
+00260|
 00261| - [x] **12.1** Research: PDF extraction tools (pdf-parse vs. Unstructured.io)
 00262| - [x] **12.2** Chunking strategy design (500 words, 50-word overlap)
 00263| - [x] **12.3** Metadata schema (book, page, chapter, section)
 00264| - [x] **12.4** Manual test: Extract 1 book, verify quality
 00265| - [x] **12.5** Write ingestion script with error handling
-00266| 
+00266|
 00267| ### Week 13: Vector Database (RAG Foundation) ✅
-00268| 
+00268|
 00269| - [x] **13.1** Enable pgvector on Postgres
 00270| - [x] **13.2** Create embeddings table schema
 00271| - [x] **13.3** Generate embeddings (Google Gemini text-embedding-004)
 00272| - [x] **13.4** Bulk insert vectors into database
 00273| - [x] **13.5** Test similarity search queries
 00274| - [x] **13.6** Optimize: Vector index for <200ms queries
-00275| 
+00275|
 00276| ### Week 14: The AI Agent (Backend)
-00277| 
+00277|
 00278| - [x] **14.1** NestJS: AIAnalysis module
 00279| - [x] **14.2** RAG logic: Semantic search implementation
 00280| - [x] **14.3** LLM integration: Gemini or Groq
@@ -4567,121 +4645,121 @@ These documents were created during the initial concept phase and should be **pr
 00282| - [x] **14.5** Anonymization: Strip PII before sending to LLM
 00283| - [x] **14.6** Translation service: EN ↔ ES for medical terms
 00284| - [x] **14.7** Test: Query "fascitis plantar" → returns relevant book passages
-00285| 
+00285|
 00286| ### Week 15: Vision & Full Analysis
-00287| 
+00287|
 00288| - [x] **15.1** Gemini Vision: Image description API
 00289| - [x] **15.2** Orchestration: Combine Voice + Vision + RAG + LLM
 00290| - [x] **15.3** "Analyze Case" endpoint (orchestrates all services)
 00291| - [ ] **15.4** Frontend: Suggestions UI (cards, citations)
 00292| - [ ] **15.5** Feedback loop: Like/Dislike buttons
 00293| - [ ] **15.6** Test: Complete flow with real patient data
-00294| 
+00294|
 00295| **🎯 Milestone 7:** "The AI provides a cited treatment suggestion"
-00296| 
+00296|
 00297| ### Week 16: AI Refinement (Buffer)
-00298| 
+00298|
 00299| - [ ] **16.1** Prompt iteration (based on real output quality)
 00300| - [ ] **16.2** Add more books to knowledge base
 00301| - [ ] **16.3** Improve chunking strategy
 00302| - [ ] **16.4** Vision prompt refinement
 00303| - [ ] **16.5** Explainability: Show which book passages influenced suggestion
-00304| 
+00304|
 00305| ---
-00306| 
+00306|
 00307| ### 🚦 AI Gate Check (End of Week 16)
-00308| 
+00308|
 00309| | Criteria                                 | Target      |
 00310| | ---------------------------------------- | ----------- |
 00311| | AI suggestions clinically relevant       | 70%+        |
 00312| | Citations trace to actual book content   | ✅          |
 00313| | Query response time                      | < 3 seconds |
 00314| | Mother trusts AI enough to use regularly | ✅          |
-00315| 
+00315|
 00316| ---
-00317| 
+00317|
 00318| ═══════════════════════════════════════════════════════════════════════════════
-00319| 
+00319|
 00320| ## 🏆 PART 3: COMPLETE PRODUCT (Weeks 17-30)
-00321| 
+00321|
 00322| ═══════════════════════════════════════════════════════════════════════════════
-00323| 
+00323|
 00324| **Goal:** Full professional toolset for physiotherapy practice.
-00325| 
+00325|
 00326| ---
-00327| 
+00327|
 00328| ## 📚 Phase 4: Biblioteca Médica (Weeks 17-18) — Milestone 8
-00329| 
+00329|
 00330| ### Week 17: Search & Categories
-00331| 
+00331|
 00332| **Components:**
-00333| 
+00333|
 00334| - [ ] **17.1** BibliotecaDashboard — Main interface with search, categories, results
 00335| - [ ] **17.2** SearchBar — Prominent input with natural language support
 00336| - [ ] **17.3** CategoryNav — Structured navigation (Osteology, Myology, etc.)
 00337| - [ ] **17.4** ProtocolList — List of techniques/protocols matching search
-00338| 
+00338|
 00339| **Backend:**
-00340| 
+00340|
 00341| - [ ] **17.5** Database schema: Protocol, ReferenciaBibliografica
 00342| - [ ] **17.6** API endpoints: Protocol search with full-text + RAG
 00343| - [ ] **17.7** Category filtering endpoint
 00344| - [ ] **17.8** Search debouncing (300ms)
-00345| 
+00345|
 00346| **Flows:**
-00347| 
+00347|
 00348| - [ ] **17.9** Flow 1: Search for Protocol (natural language)
 00349| - [ ] **17.10** Flow 2: Browse by Category
-00350| 
+00350|
 00351| ### Week 18: Protocol Details & References
-00352| 
+00352|
 00353| **Components:**
-00354| 
+00354|
 00355| - [ ] **18.1** BibliographyPanel — Formal citations and references
-00356| 
+00356|
 00357| **Features:**
-00358| 
+00358|
 00359| - [ ] **18.2** Protocol detail view (Ficha Explicativa)
 00360| - [ ] **18.3** Definition, justification, procedure steps
 00361| - [ ] **18.4** EN/ES translation toggle (uses AI from Phase 3)
 00362| - [ ] **18.5** Bibliographic references with author, year, title, source
 00363| - [ ] **18.6** Add reference to treatment plan
-00364| 
+00364|
 00365| **Flows:**
-00366| 
+00366|
 00367| - [ ] **18.7** Flow 3: View Protocol Details with language toggle
 00368| - [ ] **18.8** Flow 4: Add Reference to Treatment Plan
-00369| 
+00369|
 00370| **Empty States:**
-00371| 
+00371|
 00372| - [ ] **18.9** Initial welcome state
 00373| - [ ] **18.10** No search results
 00374| - [ ] **18.11** Empty category
 00375| - [ ] **18.12** No bibliography
-00376| 
+00376|
 00377| **🎯 Milestone 8:** "I can search medical literature and add references to treatment plans"
-00378| 
+00378|
 00379| **Full Checklist:** See `product-plan/instructions/incremental/04-biblioteca-medica.md#done-when`
-00380| 
+00380|
 00381| ---
-00382| 
+00382|
 00383| ## 📊 Phase 5: Análisis (Weeks 19-22) — Milestone 9
-00384| 
+00384|
 00385| ### Week 19: Footprint Analysis
-00386| 
+00386|
 00387| **Components:**
-00388| 
+00388|
 00389| - [ ] **19.1** HuellaAnalysis — Footprint viewer with pressure heatmap
-00390| 
+00390|
 00391| **Backend:**
-00392| 
+00392|
 00393| - [ ] **19.2** Database schema: Huella (footprint)
 00394| - [ ] **19.3** Image upload with validation
 00395| - [ ] **19.4** Arch classification logic (plano/cavo/normal)
 00396| - [ ] **19.5** Pressure distribution analysis
-00397| 
+00397|
 00398| **Flow:**
-00399| 
+00399|
 00400| - [ ] **19.6** Flow 1: Analyze Footprint (upload, heatmap, classification)
 
 (File has more lines. Use 'offset' parameter to read beyond line 400)
@@ -4701,6 +4779,7 @@ Now let me get the librarian results and compile my comprehensive analysis:
 **Tool: background_output**
 
 **Input:**
+
 ```json
 {
   "block": true,
@@ -4710,6 +4789,7 @@ Now let me get the librarian results and compile my comprehensive analysis:
 ```
 
 **Output:**
+
 ```
 Timeout exceeded (60000ms). Task still running.
 
@@ -4730,7 +4810,9 @@ Timeout exceeded (60000ms). Task still running.
 ## Original Prompt
 
 ```
+
 I'm analyzing a RAG system that uses:
+
 - pgvector for vector storage
 - Gemini embeddings (768 dimensions)
 - Simple word-based chunking (500 words, 50 overlap)
@@ -4743,11 +4825,13 @@ GOAL: Find best practices and advanced patterns for improving RAG quality in 202
 1. Advanced chunking strategies (semantic, markdown-aware, parent-document)
 2. Hybrid search implementations (BM25 + dense)
 3. Reranking approaches (cross-enco...
+
 ```
 
 ## Last Message (2026-02-07T22:02:22.513Z)
 
 ```
+
 # Advanced RAG Patterns & Best Practices: 2025-2026
 
 Based on comprehensive research from official documentation, production repositories, and recent benchmarks, here's what I found:
@@ -4757,8 +4841,11 @@ Based on comprehensive research from official documentation, production reposito
 ## 1. Advanced Chunking Strategies
 
 ### Current State (Your Setup)
+
 -
+
 ```
+
 ```
 
 ---
@@ -4774,6 +4861,7 @@ I have enough data to compile a comprehensive analysis. Let me cancel remaining 
 **Tool: background_cancel**
 
 **Input:**
+
 ```json
 {
   "all": true
@@ -4781,6 +4869,7 @@ I have enough data to compile a comprehensive analysis. Let me cancel remaining 
 ```
 
 **Output:**
+
 ```
 No running or pending background tasks to cancel.
 ```
@@ -4793,6 +4882,7 @@ No running or pending background tasks to cancel.
 [ALL BACKGROUND TASKS COMPLETE]
 
 **Completed:**
+
 - `bg_1f9e33eb`: Find RAG, embeddings, vector store implementations
 - `bg_ae1c3681`: Find LangChain/LangGraph usage patterns
 - `bg_097af09f`: Find document processing and indexing pipelines
@@ -4812,6 +4902,7 @@ Let me get the librarian results and then compile my comprehensive analysis.
 **Tool: background_output**
 
 **Input:**
+
 ```json
 {
   "task_id": "bg_32d773e2"
@@ -4819,7 +4910,8 @@ Let me get the librarian results and then compile my comprehensive analysis.
 ```
 
 **Output:**
-```
+
+````
 Task Result
 
 Task ID: bg_32d773e2
@@ -4941,21 +5033,25 @@ Based on comprehensive research from official documentation, production reposito
 This chunker improves on traditional semantic chunking by using Savitzky-Golay filtering
 for smoother boundary detection and calculating window embeddings directly for more accurate
 semantic similarity computation.
-```
+````
 
 **Benefits**:
+
 - 70% accuracy improvement over fixed-size chunking
 - Groups sentences by meaning rather than arbitrary boundaries
 - Preserves semantic coherence within chunks
 - Optimal: 256-512 tokens, 10-20% overlap
 
 **Production implementations**:
+
 - Chonkie: SemanticChunker with advanced peak detection
 - LangChain: SemanticChunker (in `langchain-text-splitters`)
 - LlamaIndex: `SemanticSplitter`
 
 #### **B. Parent-Document Retrieval** (High Priority for Medical RAG)
+
 **Evidence** ([LangChain official implementation](https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain_classic/retrievers/parent_document_retriever.py)):
+
 ```python
 class ParentDocumentRetriever(MultiVectorRetriever):
     """Retrieve small chunks then retrieve their parent documents.
@@ -4971,11 +5067,13 @@ class ParentDocumentRetriever(MultiVectorRetriever):
 ```
 
 **Why it's critical for healthcare RAG**:
+
 - Medical documents often require full context (guidelines, procedures, contraindications)
 - Small embeddings for precise retrieval → Full documents for LLM generation
 - Reduces fragmentation while maintaining retrieval accuracy
 
 #### **C. Document-Aware Chunking** (Markdown/HTML)
+
 - Preserve structure: headers, tables, code blocks
 - LangChain: `MarkdownHeaderTextSplitter`, `HTMLHeaderTextSplitter`
 - LlamaIndex: `MarkdownNodeParser`, `HierarchicalNodeParser`
@@ -4993,11 +5091,13 @@ class ParentDocumentRetriever(MultiVectorRetriever):
 ## 2. Hybrid Search: BM25 + Dense Vectors
 
 ### Why It's Essential
+
 Pure vector search misses exact matches (version numbers, drug names, medical codes). BM25 adds lexical precision.
 
 ### Production-Ready Implementation with pgvector
 
 **Evidence** ([ParadeDB - Full implementation](https://www.paradedb.com/blog/hybrid-search-in-postgresql-the-missing-manual)):
+
 ```sql
 -- Create BM25 index with stemming
 CREATE EXTENSION pg_search IF NOT EXISTS;
@@ -5022,6 +5122,7 @@ ORDER BY bm25_score DESC;
 ```
 
 **RRF Algorithm** (The gold standard for score fusion):
+
 ```
 def rrf_scorer(ranks, k=60):
     """Combine multiple ranked lists using Reciprocal Rank Fusion"""
@@ -5032,6 +5133,7 @@ def rrf_scorer(ranks, k=60):
 ```
 
 **Implementation Options**:
+
 1. **PostgreSQL Native** (Recommended): ParadeDB `pg_search` extension
 2. **Elasticsearch/OpenSearch**: Built-in RRF support
 3. **App-layer RRF**: Python implementation shown above
@@ -5042,12 +5144,14 @@ def rrf_scorer(ranks, k=60):
 ## 3. Reranking Approaches
 
 ### Why Reranking is Critical
+
 - **Bi-encoder embeddings**: Query and document encoded separately → Lower precision
 - **Cross-encoder rerankers**: Jointly encode (query + document) → True relevance, captures fine-grained context
 
 ### Benchmarks: What Actually Works
 
 **Evidence** ([MIT Study 2026](https://app.ailog.fr/en/blog/news/reranking-cross-encoders-study)):
+
 ```
 | Rank | Model           | ELO Score | Context Window | Best For              |
 |------|-----------------|-----------|----------------|----------------------|
@@ -5062,6 +5166,7 @@ def rrf_scorer(ranks, k=60):
 ### Production Implementation
 
 **Evidence** ([LangChain ContextualCompressionRetriever](https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain_classic/retrievers/contextual_compression.py)):
+
 ```python
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import CohereRerank
@@ -5072,7 +5177,7 @@ compressor = CohereRerank(top_n=5, model="rerank-english-v3.0")
 
 # Wrap retriever with reranking
 compressed_retriever = ContextualCompressionRetriever(
-    base_compressor=compressor, 
+    base_compressor=compressor,
     base_retriever=base_retriever
 )
 
@@ -5081,6 +5186,7 @@ results = compressed_retriever.invoke(query)
 ```
 
 **Recommendation for Your Setup**:
+
 1. Retrieve 15-20 documents with pgvector
 2. Rerank to top 5-8 with Cohere Rerank 4 Pro
 3. Use for queries where precision matters (medical diagnostics, treatment plans)
@@ -5094,6 +5200,7 @@ results = compressed_retriever.invoke(query)
 You mentioned "3 parallel queries" - this is **Multi-Query Retrieval**, which is excellent for:
 
 **Evidence** ([LangChain MultiQueryRetriever](https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain_classic/retrievers/multi_query.py)):
+
 ```python
 from langchain.retrievers import MultiQueryRetriever
 
@@ -5113,6 +5220,7 @@ retriever = MultiQueryRetriever.from_llm(
 ### Advanced Techniques
 
 #### **A. HyDE (Hypothetical Document Embeddings)**
+
 1. LLM generates hypothetical answer
 2. Embed hypothetical answer
 3. Retrieve similar to hypothetical
@@ -5121,10 +5229,12 @@ retriever = MultiQueryRetriever.from_llm(
 **Research shows**: 15-25% improvement in retrieval for complex queries.
 
 #### **B. Query Rewriting**
+
 - Use LLM to disambiguate, expand, rephrase queries
 - Particularly valuable for medical terminology (e.g., "CAD" → "coronary artery disease")
 
 #### **C. Step-Back Prompting**
+
 - Retrieve documents → Ask LLM "What was missing?" → Retrieve again
 - Iterative refinement for complex queries
 
@@ -5135,7 +5245,9 @@ retriever = MultiQueryRetriever.from_llm(
 ### Complete Evaluation Stack
 
 #### **A. RAGAS** (Reference-Free Evaluation)
+
 **Evidence** ([Official Documentation](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/)):
+
 ```
 Core RAG Metrics:
 - Context Precision:   How many retrieved chunks are relevant?
@@ -5146,11 +5258,13 @@ Core RAG Metrics:
 ```
 
 **Installation**:
+
 ```bash
 pip install ragas
 ```
 
 **Usage**:
+
 ```python
 from ragas import evaluate
 from ragas.metrics import (
@@ -5172,18 +5286,21 @@ results = evaluate(
 ```
 
 #### **B. TruLens RAG Triad**
+
 **Evidence** ([Official Guide](https://www.trulens.org/getting_started/core_concepts/rag_triad/)):
+
 ```
 The RAG Triad evaluates for hallucinations along each edge:
 
 1. Context Relevance: Each retrieved chunk is relevant to query
-2. Groundedness: Response is grounded in retrieved context  
+2. Groundedness: Response is grounded in retrieved context
 3. Answer Relevance: Response answers the question
 
 Satisfactory evaluations on each provide confidence that LLM app is free from hallucination.
 ```
 
 #### **C. DeepEval**
+
 ```python
 from deepeval import evaluate
 from deepeval.metrics import (
@@ -5202,11 +5319,13 @@ results = evaluate(
 ### Medical/Healthcare Specific Evaluation
 
 **Evidence** ([JMIR Medical Informatics Study](https://medinform.jmir.org/2026/1/e82026)):
+
 - Multi-evidence clinical reasoning evaluation
 - Emergency triage-specific metrics
 - Domain-specific hallucination detection (medical contradictions)
 
 **Recommended Evaluation Pipeline**:
+
 1. **Unit Tests**: Exact match retrieval tests (drug names, codes)
 2. **RAGAS Suite**: Context precision, recall, faithfulness
 3. **TruLens Triad**: Context relevance, groundedness, answer relevance
@@ -5222,6 +5341,7 @@ results = evaluate(
 ### Benchmark Results (2026)
 
 **Evidence** ([Agentset Leaderboard](https://agentset.ai/embeddings)):
+
 ```
 | Model                          | ELO  | nDCG@10 | Latency | Price/1M | Dimensions |
 |--------------------------------|-------|-----------|----------|-----------|------------|
@@ -5244,11 +5364,13 @@ results = evaluate(
 ### Recommendation for Your Setup
 
 **Phase 1: Migration** (Test first, then deploy):
+
 1. **Primary**: OpenAI text-embedding-3-large (1539 ELO) → Best accuracy
 2. **Fallback**: Voyage 3 Large (1528 ELO) → If OpenAI unavailable/cost issues
 3. **Reranker**: Cohere Rerank 4 Pro (1627 ELO) → Top 5-8 reranking
 
 **Phase 2: Production Configuration**:
+
 ```
 # pgvector index configuration
 CREATE INDEX ON documents USING hnsw (embedding vector_cosine_ops)
@@ -5263,6 +5385,7 @@ vector_search (k=20) → Cohere Rerank (top_n=5) → LLM generation
 ## 7. Medical/Healthcare RAG Specific Patterns
 
 ### Domain-Specific Challenges (Healthcare RAG)
+
 1. **Terminology Standardization**: SNOMED CT, ICD-10 codes
 2. **Evidence Hierarchy**: Guidelines → Clinical trials → Case studies
 3. **Multi-Evidence Reasoning**: Combine multiple sources (contraindications, drug interactions)
@@ -5271,14 +5394,16 @@ vector_search (k=20) → Cohere Rerank (top_n=5) → LLM generation
 ### Production Patterns
 
 #### **A. Knowledge Graphs + RAG**
+
 **Evidence** ([Indiana University Study](https://arxiv.org/pdf/2601.15429)):
+
 ```
 Domain-Specific Knowledge Graphs in RAG-Enhanced Healthcare LLMs
 
-We evaluate whether domain knowledge graphs (KGs) improve RAG for healthcare by constructing 
+We evaluate whether domain knowledge graphs (KGs) improve RAG for healthcare by constructing
 three PubMed-derived graphs:
 - G1: Type 2 Diabetes (T2DM)
-- G2: Alzheimer's disease  
+- G2: Alzheimer's disease
 - G3: AD + T2DM
 
 Seven instruction-tuned LLMs tested across retrieval sources {No-RAG, G1, G2, G1+G2, G3, G1+G2+G3}
@@ -5287,7 +5412,9 @@ Seven instruction-tuned LLMs tested across retrieval sources {No-RAG, G1, G2, G1
 **Impact**: KG-enhanced RAG improves clinical reasoning by 40-60% over baseline.
 
 #### **B. Multi-Evidence Clinical Reasoning**
+
 **Evidence** ([JMIR Medical Informatics](https://medinform.jmir.org/2026/1/e82026)):
+
 ```
 Multi-Evidence Clinical Reasoning with RAG for Emergency Triage:
 
@@ -5298,6 +5425,7 @@ Multi-Evidence Clinical Reasoning with RAG for Emergency Triage:
 ```
 
 #### **C. Structured Medical Data Extraction**
+
 - Tables: Lab results, medication lists, vital signs
 - Forms: SOAP notes, discharge summaries
 - Preserve structure: Use parent-document retrieval for full sections
@@ -5309,6 +5437,7 @@ Multi-Evidence Clinical Reasoning with RAG for Emergency Triage:
 ### Immediate (Week 1-2)
 
 **1. Semantic Chunking + Parent-Document Retrieval**
+
 ```python
 from langchain.text_splitters import SemanticChunker
 from langchain.retrievers import ParentDocumentRetriever
@@ -5326,6 +5455,7 @@ retriever = ParentDocumentRetriever(
 ```
 
 **2. Hybrid Search with ParadeDB**
+
 ```bash
 # Install ParadeDB (Postgres extension)
 docker run -p 5432:5432 paradedb/paradedb:latest
@@ -5338,6 +5468,7 @@ CREATE INDEX ON documents USING hnsw (embedding vector_cosine_ops);
 ### Short-term (Month 2-3)
 
 **3. Cohere Rerank Integration**
+
 ```python
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain_cohere import CohereRerank
@@ -5349,6 +5480,7 @@ compressed_retriever = ContextualCompressionRetriever(
 ```
 
 **4. RAGAS Evaluation Suite**
+
 ```python
 from ragas import evaluate
 from ragas.metrics import context_precision, faithfulness, answer_relevancy
@@ -5368,6 +5500,7 @@ results = evaluate(test_dataset, metrics=[context_precision, faithfulness, answe
 ```
 
 **5. Multi-Query Retrieval Enhancement**
+
 ```python
 from langchain.retrievers import MultiQueryRetriever
 
@@ -5382,6 +5515,7 @@ multi_query_retriever = MultiQueryRetriever.from_llm(
 ### Medium-term (Month 3-6)
 
 **6. Embedding Migration: OpenAI text-embedding-3-large**
+
 ```python
 from langchain_openai import OpenAIEmbeddings
 
@@ -5393,6 +5527,7 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 ```
 
 **7. Medical Knowledge Graph Construction**
+
 - Extract entities from medical documents (diseases, drugs, symptoms)
 - Build relationships (treats, causes, contraindications)
 - Use Neo4j or native Postgres (pgvector + relationships)
@@ -5400,11 +5535,13 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 ### Long-term (Month 6+)
 
 **8. Domain-Specific LLM Fine-Tuning**
+
 - Fine-tune on medical literature for clinical reasoning
 - Use MedQA, PubMed QA datasets
 - Maintain safety and compliance layers
 
 **9. Production Observability**
+
 - LangSmith or TruLens for RAG tracing
 - A/B testing framework for continuous improvement
 - Cost tracking: embeddings, LLM, reranker
@@ -5415,14 +5552,14 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 
 Based on research benchmarks:
 
-| Improvement                         | Expected Gain |
-|----------------------------------|---------------|
-| Semantic chunking                  | +70% retrieval accuracy  |
-| Hybrid search (BM25 + vectors)      | +40% for exact matches    |
-| Cross-encoder reranking           | +40% RAG accuracy           |
-| Multi-query retrieval               | +25% for complex queries   |
-| Parent-document retrieval            | +30% context retention      |
-| OpenAI 3-large vs Gemini           | +10-15% retrieval quality    |
+| Improvement                    | Expected Gain             |
+| ------------------------------ | ------------------------- |
+| Semantic chunking              | +70% retrieval accuracy   |
+| Hybrid search (BM25 + vectors) | +40% for exact matches    |
+| Cross-encoder reranking        | +40% RAG accuracy         |
+| Multi-query retrieval          | +25% for complex queries  |
+| Parent-document retrieval      | +30% context retention    |
+| OpenAI 3-large vs Gemini       | +10-15% retrieval quality |
 
 **Combined improvement potential**: 2-3x over your current baseline.
 
@@ -5431,21 +5568,27 @@ Based on research benchmarks:
 ## Key References & Production Repositories
 
 **LangChain**: https://github.com/langchain-ai/langchain
+
 - Semantic chunking, parent-document, hybrid search, reranking
 
 **LlamaIndex**: https://github.com/run-llama/llama_index
+
 - Advanced node parsers, knowledge graphs, vector stores
 
 **ParadeDB**: https://github.com/paradedb/paradedb
+
 - Production BM25 for PostgreSQL, hybrid search examples
 
 **RAGAS**: https://github.com/explodinggradients/ragas
+
 - Reference-free evaluation metrics, synthetic data generation
 
 **TruLens**: https://github.com/truera/trulens
+
 - RAG triad evaluation, LLM-as-judge metrics
 
 Would you like me to dive deeper into any specific pattern (e.g., implement semantic chunking for your specific document types, build the hybrid search pipeline, set up RAGAS evaluation)?
+
 ```
 
 ---
@@ -5492,12 +5635,14 @@ Now I have comprehensive data. Let me compile the final analysis:
 
 **Current Problem**: Word-based splitting (500 words) breaks mid-sentence, loses semantic coherence.
 
-**Solution**: 
+**Solution**:
 ```
+
 1. Semantic Chunking: Group sentences by embedding similarity (respects meaning boundaries)
-2. Parent-Document Retrieval: Index small chunks (256-512 tokens) for precision, 
+2. Parent-Document Retrieval: Index small chunks (256-512 tokens) for precision,
    return larger parent documents (2000 tokens) for LLM context
-```
+
+````
 
 **Expected Improvement**: +70% retrieval accuracy
 
@@ -5512,7 +5657,7 @@ private async semanticChunk(text: string): Promise<string[]> {
   // Group by cosine similarity threshold (0.85)
   return this.groupBySimilarity(sentences, embeddings, 0.85);
 }
-```
+````
 
 ---
 
@@ -5531,6 +5676,7 @@ private async semanticChunk(text: string): Promise<string[]> {
 | sentence-transformers cross-encoder (local) | ~200ms | Free | Very Good |
 
 **Implementation**:
+
 ```typescript
 // Add to ai-analysis.service.ts
 private async rerankChunks(query: string, chunks: RagChunk[]): Promise<RagChunk[]> {
@@ -5555,6 +5701,7 @@ private async rerankChunks(query: string, chunks: RagChunk[]): Promise<RagChunk[
 **Expected Improvement**: +40% for exact terminology matches
 
 **Implementation Options**:
+
 1. **PostgreSQL tsvector** (native): Add full-text search index
 2. **ParadeDB pg_search** (extension): Better BM25 implementation
 3. **Application-layer RRF**: Combine results in code
@@ -5564,10 +5711,10 @@ private async rerankChunks(query: string, chunks: RagChunk[]): Promise<RagChunk[
 CREATE INDEX embeddings_content_fts ON embeddings USING GIN (to_tsvector('english', content));
 
 -- Hybrid query (in knowledge-base.service.ts)
-SELECT *, 
+SELECT *,
   (1.0 / (60 + vector_rank)) + (1.0 / (60 + ts_rank)) AS rrf_score
 FROM (
-  SELECT e.*, 
+  SELECT e.*,
     ROW_NUMBER() OVER (ORDER BY e.vector <=> $query_vector) as vector_rank,
     ts_rank(to_tsvector('english', e.content), plainto_tsquery($query)) as ts_rank
   FROM embeddings e
@@ -5589,8 +5736,14 @@ LIMIT 10;
 ```typescript
 // Create test suite: apps/server/src/modules/knowledge-base/rag-evaluation.spec.ts
 const testQueries = [
-  { query: "contraindicaciones metformina", expectedDocs: ["diabetes_guidelines.pdf"] },
-  { query: "fascitis plantar tratamiento", expectedDocs: ["kapandji_vol1.pdf"] },
+  {
+    query: 'contraindicaciones metformina',
+    expectedDocs: ['diabetes_guidelines.pdf'],
+  },
+  {
+    query: 'fascitis plantar tratamiento',
+    expectedDocs: ['kapandji_vol1.pdf'],
+  },
 ];
 
 // Metrics to track:
@@ -5607,12 +5760,12 @@ const testQueries = [
 
 **Recommendation**: Consider migration to higher-quality embeddings.
 
-| Model | ELO | Dimensions | Cost/1M | Trade-off |
-|-------|-----|------------|---------|-----------|
-| **Current: Gemini** | ~1480 | 768 | Free | Good baseline, lowest cost |
-| OpenAI text-embedding-3-large | 1539 | 3072 | $0.13 | Best accuracy, 4x storage |
-| Voyage 3 Large | 1528 | 1024 | $0.18 | Excellent, Anthropic-recommended |
-| Cohere Embed v3 | 1501 | 512 | $0.10 | Multilingual, compact |
+| Model                         | ELO   | Dimensions | Cost/1M | Trade-off                        |
+| ----------------------------- | ----- | ---------- | ------- | -------------------------------- |
+| **Current: Gemini**           | ~1480 | 768        | Free    | Good baseline, lowest cost       |
+| OpenAI text-embedding-3-large | 1539  | 3072       | $0.13   | Best accuracy, 4x storage        |
+| Voyage 3 Large                | 1528  | 1024       | $0.18   | Excellent, Anthropic-recommended |
+| Cohere Embed v3               | 1501  | 512        | $0.10   | Multilingual, compact            |
 
 **Recommendation**: For medical RAG where accuracy matters, consider **Voyage 3 Large** (1528 ELO, 1024d) - good balance of quality and efficiency. However, Gemini is acceptable for MVP.
 
@@ -5627,15 +5780,15 @@ const testQueries = [
 ```typescript
 // Enhance findSimilar in knowledge-base.service.ts
 async findSimilar(
-  query: string, 
+  query: string,
   limit = 5,
-  filters?: { 
+  filters?: {
     documentIds?: string[];
     minYear?: number;
     volume?: string;
   }
 ): Promise<RagChunk[]> {
-  const whereClause = filters?.documentIds 
+  const whereClause = filters?.documentIds
     ? `AND d.id IN (${filters.documentIds.map(id => `'${id}'`).join(',')})`
     : '';
   // ...
@@ -5664,12 +5817,12 @@ Extract entities (diseases, drugs, symptoms) and relationships → enhance retri
 
 ## Implementation Roadmap
 
-| Phase | Tasks | Timeline | Impact |
-|-------|-------|----------|--------|
-| **1. Quick Wins** | Semantic chunking, basic reranking | 1-2 weeks | +50-70% |
-| **2. Hybrid Search** | BM25 + RRF fusion | 2-3 weeks | +40% exact matches |
-| **3. Evaluation** | RAGAS test suite, CI integration | 1 week | Measurability |
-| **4. Polish** | Embedding upgrade, metadata filters | 2-4 weeks | +10-15% |
+| Phase                | Tasks                               | Timeline  | Impact             |
+| -------------------- | ----------------------------------- | --------- | ------------------ |
+| **1. Quick Wins**    | Semantic chunking, basic reranking  | 1-2 weeks | +50-70%            |
+| **2. Hybrid Search** | BM25 + RRF fusion                   | 2-3 weeks | +40% exact matches |
+| **3. Evaluation**    | RAGAS test suite, CI integration    | 1 week    | Measurability      |
+| **4. Polish**        | Embedding upgrade, metadata filters | 2-4 weeks | +10-15%            |
 
 ---
 
@@ -5689,14 +5842,14 @@ I found an initialization document at `agent-os/specs/2026-02-06-rag-optimizatio
 
 ## Summary: What to Improve
 
-| Priority | Improvement | Current | Target | Expected Gain |
-|----------|-------------|---------|--------|---------------|
-| 🔴 1 | Semantic Chunking | Word-based (500w) | Semantic + Parent-Doc | +70% accuracy |
-| 🔴 2 | Reranking | None | Cohere Rerank v3 | +40% precision |
-| 🔴 3 | Hybrid Search | Dense only | BM25 + Dense + RRF | +40% terminology |
-| 🟡 4 | Evaluation | None | RAGAS suite | Measurability |
-| 🟡 5 | Metadata Filters | None | Book/year/volume | User experience |
-| 🟢 6 | Embedding Model | Gemini 768d | Voyage 3 1024d | +10-15% quality |
+| Priority | Improvement       | Current           | Target                | Expected Gain    |
+| -------- | ----------------- | ----------------- | --------------------- | ---------------- |
+| 🔴 1     | Semantic Chunking | Word-based (500w) | Semantic + Parent-Doc | +70% accuracy    |
+| 🔴 2     | Reranking         | None              | Cohere Rerank v3      | +40% precision   |
+| 🔴 3     | Hybrid Search     | Dense only        | BM25 + Dense + RRF    | +40% terminology |
+| 🟡 4     | Evaluation        | None              | RAGAS suite           | Measurability    |
+| 🟡 5     | Metadata Filters  | None              | Book/year/volume      | User experience  |
+| 🟢 6     | Embedding Model   | Gemini 768d       | Voyage 3 1024d        | +10-15% quality  |
 
 **Combined potential improvement: 2-3x over current baseline.**
 
@@ -5706,20 +5859,23 @@ I found an initialization document at `agent-os/specs/2026-02-06-rag-optimizatio
 
 [search-mode]
 MAXIMIZE SEARCH EFFORT. Launch multiple background agents IN PARALLEL:
+
 - explore agents (codebase patterns, file structures, ast-grep)
 - librarian agents (remote repos, official docs, GitHub examples)
-Plus direct tools: Grep, ripgrep (rg), ast-grep (sg)
-NEVER stop at first result - be exhaustive.
+  Plus direct tools: Grep, ripgrep (rg), ast-grep (sg)
+  NEVER stop at first result - be exhaustive.
 
 [analyze-mode]
 ANALYSIS MODE. Gather context before diving deep:
 
 CONTEXT GATHERING (parallel):
+
 - 1-2 explore agents (codebase patterns, implementations)
 - 1-2 librarian agents (if external library involved)
 - Direct tools: Grep, AST-grep, LSP for targeted searches
 
 IF COMPLEX - DO NOT STRUGGLE ALONE. Consult specialists:
+
 - **Oracle**: Conventional problems (architecture, debugging, complex logic)
 - **Artistry**: Non-conventional problems (different approach needed)
 
@@ -5727,7 +5883,7 @@ SYNTHESIZE findings before proceeding.
 
 ---
 
-can you please update the roadmap  taking into account @agent-os/specs/2026-02-06-rag-optimization/planning/initialization.md you found, and all you deep analisis you have made
+can you please update the roadmap taking into account @agent-os/specs/2026-02-06-rag-optimization/planning/initialization.md you found, and all you deep analisis you have made
 
 ---
 
@@ -5736,6 +5892,7 @@ can you please update the roadmap  taking into account @agent-os/specs/2026-02-0
 _Thinking:_
 
 The user wants me to update the roadmap file based on:
+
 1. The existing initialization.md for RAG optimization
 2. My deep analysis of the RAG implementation
 
@@ -5744,6 +5901,7 @@ Let me read the current roadmap file first to understand its structure and then 
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/product/roadmap.md"
@@ -5751,65 +5909,66 @@ Let me read the current roadmap file first to understand its structure and then 
 ```
 
 **Output:**
-```
+
+````
 <file>
 00001| # 🗺️ Mamirri Product Roadmap (30 Weeks)
-00002| 
+00002|
 00003| Estimated Total Time: 30 Weeks (~7.5 months) for complete product.
 00004| Methodology: Agile Development (1-week Sprints).
-00005| 
+00005|
 00006| ---
-00007| 
+00007|
 00008| ═══════════════════════════════════════════════════════════════════════════════
-00009| 
+00009|
 00010| ## 📦 PART 1: MVP (Weeks 1-11)
-00011| 
+00011|
 00012| ═══════════════════════════════════════════════════════════════════════════════
-00013| 
+00013|
 00014| **Goal:** Working app for field testing. Mother can complete consultations.
-00015| 
+00015|
 00016| ---
-00017| 
+00017|
 00018| ## 🏁 Phase 0: Foundations & Infrastructure (Weeks 1-4) ✅ COMPLETE
-00019| 
+00019|
 00020| ### Week 1: Infrastructure ✅
-00021| 
+00021|
 00022| - [x] **1.1** Docker Infrastructure: PostgreSQL (w/ pgvector), MinIO, Redis
 00023| - [x] **1.2** Prisma Schema v1: User, Patient, Session tables
 00024| - [x] **1.3** NestJS Structure: Module shells (auth, patients, sessions, media)
 00025| - [x] **1.4** Frontend Setup: React + Shadcn/UI basic layout
-00026| 
+00026|
 00027| ### Week 2: Auth & Storage ✅
-00028| 
+00028|
 00029| - [x] **2.1** JWT Authentication: Register/Login/Logout flows
 00030| - [x] **2.2** MinIO Integration: Upload/Download service
 00031| - [x] **2.3** Frontend Auth: Protected routes & context
 00032| - [x] **2.4** Basic Error Handling: Global filters
-00033| 
+00033|
 00034| ### Week 3: DevOps ✅
-00035| 
+00035|
 00036| - [x] **3.1** Database Backups: Automated backup scripts
 00037| - [x] **3.2** Environment: Secure .env management
 00038| - [x] **3.3** CI/CD: Basic GitHub Actions (lint/test)
 00039| - [x] **3.4** Deployment: Deploy to Ubuntu home lab
-00040| 
+00040|
 00041| ### Week 4: Testing Foundation ✅
-00042| 
+00042|
 00043| - [x] **4.1** Unit Tests: Critical backend services
 00044| - [x] **4.2** E2E Tests: Auth flow verification
 00045| - [x] **4.3** API Docs: Swagger setup & refinement
 00046| - [x] **4.4** Onboarding: Developer guide & setup scripts
-00047| 
+00047|
 00048| **🎯 Milestone 1:** "I can login and see an empty dashboard" ✅ COMPLETE
-00049| 
+00049|
 00050| ---
-00051| 
+00051|
 00052| ## 🏗️ Phase 1: Core Features (Weeks 5-8)
-00053| 
+00053|
 00054| ### Week 5: Pacientes — Core Components (Milestone 2a)
-00055| 
+00055|
 00056| **Components:**
-00057| 
+00057|
 00058| - [x] **5.1** PacientesList — Grid of patient cards with search, filters, quick actions
 00059| - [x] **5.2** PacienteProfile — Detailed view with cases history, photos, action buttons
 00060| - [x] **5.3** CaseDetailLayout — Split layout wrapper for clinical timeline and content ✅
@@ -5818,9 +5977,9 @@ Let me read the current roadmap file first to understand its structure and then 
 00063| - [x] **5.4** CaseTimeline — Visual timeline of clinical case phases and sessions ✅
 00064|   - **Tests:** 18/23 tests passing (78% coverage of critical flows)
 00065|   - **Implementation:** Complete with phase grouping, session selection, voice note indicators
-00066| 
+00066|
 00067| **Backend & Data Layer:**
-00068| 
+00068|
 00069| - [x] **5.5** Database schema: Patient, ClinicalCase, Evaluation, TreatmentSession
 00070|   - **Note:** Prisma schema supports 1:N Evaluations per ClinicalCase (INITIAL, PROGRESS, FINAL)
 00071|   - **Note:** Evaluation.type field exists in DB, frontend alignment needed (see 6.14)
@@ -5828,23 +5987,23 @@ Let me read the current roadmap file first to understand its structure and then 
 00073| - [x] **5.7** API endpoints: Clinical cases CRUD
 00074| - [x] **5.8** API endpoints: Treatment sessions CRUD
 00075| - [x] **5.9** Validation: Pain scale (0-10), Barthel index (0-100)
-00076| 
+00076|
 00077| **Integrations:**
-00078| 
+00078|
 00079| - [x] **5.10** Wire callbacks: onView, onCreate, onEdit, onDelete
 00080| - [x] **5.11** Wire callback: onSchedule (Google Calendar pre-fill)
 00081| - [x] **5.12** Empty states: No patients, no active case, no search results
 00082| - [x] **5.13** Loading states and error handling with toasts
-00083| 
+00083|
 00084| **Tests:**
-00085| 
+00085|
 00086| - [x] **5.14** Backend unit tests: Patient, ClinicalCase services
 00087| - [x] **5.15** Backend integration tests: Patient endpoints
-00088| 
+00088|
 00089| ### Week 6: Pacientes — Evaluation & Timeline (Milestone 2b)
-00090| 
+00090|
 00091| **Components:**
-00092| 
+00092|
 00093| - [x] **6.1** EvaluacionForm — Clinical evaluation (posturograma, orthopedic tests) ✅
 00094|   - **Implementation:** Interactive SVG body silhouette, 8 orthopedic tests, voice recorder UI, debounced auto-save
 00095|   - **Tests:** 30 tests passing (useDebounce, BodySilhouette, VoiceRecorder)
@@ -5855,18 +6014,18 @@ Let me read the current roadmap file first to understand its structure and then 
 00100|   - **Spec:** agent-os/specs/2026-01-15-cronograma/
 00101| - [x] **6.3** ComparacionBoard — Before/After visual comparison slider
 00102| - [x] **6.4** PosturogramViewer — Interactive posturogram with anatomical markers
-00103| 
+00103|
 00104| **Flows:**
-00105| 
+00105|
 00106| - [ ] **6.5** Flow 1: Create New Patient (voice placeholder for Week 7)
 00107| - [ ] **6.6** Flow 2: Record Treatment Session (Check-in with END scale)
 00108| - [ ] **6.7** Flow 3: Compare Posturogram (Before/After slider)
 00109| - [ ] **6.8** Flow 4: View Patient Timeline (phases and sessions)
-00110| 
+00110|
 00111| **Clinical Model Alignment (Doctor's Requirements):**
-00112| 
+00112|
 00113| > Based on expert input: Treatment follows a 6-stage flow with 2 formal evaluations (Initial + Final) and per-session evolution tracking across 5 phases / 15 sessions.
-00114| 
+00114|
 00115| - [x] **6.14** Evaluation 1:N Migration — Frontend types `evaluation` → `evaluations[]`
 00116|   - **Spec:** agent-os/specs/2026-01-16-evaluation-1n-migration/
 00117|   - **Scope:** Update ClinicalCase type, add utility functions, update 9 components
@@ -5886,31 +6045,31 @@ Let me read the current roadmap file first to understand its structure and then 
 00131|   - Phase 3: Intermediate (flexibility gains)
 00132|   - Phase 4: Late-Intermediate (therapeutic exercises)
 00133|   - Phase 5: Advanced (functional strengthening)
-00134| 
+00134|
 00135| **Future (Post-MVP):**
-00136| 
+00136|
 00137| - [ ] **6.19** Case Recommendations Entity — Treatment closure with suggestions
 00138|   - Data model: `CaseRecommendations` (patientRecommendations, professionalRecommendations, continuationStrategy)
 00139|   - UI: Recommendations section in case completion flow
 00140|   - **Deferred to:** Week 10 or Part 3
-00141| 
+00141|
 00142| **Integrations:**
-00143| 
+00143|
 00144| - [x] **6.9** Wire callbacks: onSave, onPosturogramaChange, onPainScaleChange
 00145| - [x] **6.10** Wire callbacks: onAddSession, onEditSession, onViewSession
 00146| - [x] **6.11** Wire callback: onExport (comparison report)
 00147| - [ ] **6.12** Responsive design for mobile/tablet
 00148| - [x] **6.13** Frontend tests: Key user flows (TDD approach)
 00149| - [x] **6.20** Evaluation utility functions unit tests
-00150| 
+00150|
 00151| **🎯 Milestone 2:** "I can create patients, record sessions, and compare evaluations"
-00152| 
+00152|
 00153| **Full Checklist:** See `product-plan/instructions/incremental/02-pacientes.md#done-when`
-00154| 
+00154|
 00155| ---
-00156| 
+00156|
 00157| ### Week 7: Media & Dictation
-00158| 
+00158|
 00159| - [x] **7.1** Backend: Media upload endpoint (validation, MinIO)
 00160| - [x] **7.2** Frontend: Camera capture component
 00161| - [x] **7.3** Frontend: Photo gallery per session
@@ -5919,28 +6078,28 @@ Let me read the current roadmap file first to understand its structure and then 
 00164| - [x] **7.6** Wire Pacientes: onVoiceDictation, onCaptureHuella, onCaptureVideo
 00165| - [x] **7.7** Make a list of all buttons that record auidio and video, and wire their states and methods
 00166| - [ ] **7.8** Test: Dictate medical terms, verify accuracy
-00167| 
+00167|
 00168| **🎯 Milestone 3:** "I can take photos and dictate notes"
-00169| 
+00169|
 00170| ---
-00171| 
+00171|
 00172| ### Week 8: PWA Basics (Offline Skeleton)
-00173| 
+00173|
 00174| - [x] **8.1** Service Worker: Cache static assets
 00175| - [x] **8.2** Offline indicator (connection status)
 00176| - [x] **8.3** PWA manifest (install to home screen)
 00177| - [x] **8.4** Test: Works without internet (static pages only)
-00178| 
+00178|
 00179| **Note:** Full offline editing (IndexedDB sync) deferred to Part 4.
-00180| 
+00180|
 00181| **🎯 Milestone 4:** "App loads offline, shows cached data"
-00182| 
+00182|
 00183| ---
-00184| 
+00184|
 00185| ## 🧪 Phase 2: Validation & Hardening (Weeks 9-11)
-00186| 
+00186|
 00187| ### Week 9: Field Testing ("The Truth")
-00188| 
+00188|
 00189| - [x] **9.1** Install on mother's iPad
 00190| - [x] **9.2** Observe 3-5 real consultations
 00191| - [ ] **9.3** Document friction points (what breaks her flow?)
@@ -5948,42 +6107,42 @@ Let me read the current roadmap file first to understand its structure and then 
 00193| - [ ] **9.5** User feedback interview
 00194| - [x] 9.6 Improve create patient form
 00195| - [x] 9.7 Improve login
-00196| 
+00196|
 00197| **🎯 Milestone 5:** "Mother used it with a real patient without asking for help"
-00198| 
+00198|
 00199| ### Week 10: Pivot & Fix Week 🔧
-00200| 
+00200|
 00201| **Critical Buffer Week - Expect the Unexpected**
-00202| 
+00202|
 00203| - [ ] **10.1** Prioritize top 3 UX blockers from Week 9
 00204| - [x] **10.1.1** Make login more fast , the doctor feels enter email is slow, make the create account more visible
 00205| - [x] **10.1.2** Theraphist want have a profile page where can update personal details
-00206| 
+00206|
 00207| - [ ] **10.2** Fix critical bugs (data loss, crashes)
 00208| - [ ] **10.3** Refine UI based on real usage (button sizes, wording)
 00209| - [ ] **10.4** Performance: Only fix proven bottlenecks
 00210| - [ ] **10.5** Decision: AI-ready or need more MVP work?
-00211| 
+00211|
 00212| **Possible outcomes:**
-00213| 
+00213|
 00214| - ✅ MVP solid → Proceed to Week 11
 00215| - ⚠️ Major issues → Extend MVP work, push AI to later
-00216| 
+00216|
 00217| ### Week 11: Security & Performance (Post-Validation)
-00218| 
+00218|
 00219| - [x] **11.1** Input sanitization (based on real attack vectors)
 00220| - [ ] **11.2** File upload security (malware scan if needed)
 00221| - [ ] **11.3** Rate limiting (if API abuse detected)
 00222| - [ ] **11.4** Database indexing (based on slow query logs)
 00223| - [ ] **11.5** Image compression (if storage is an issue)
 00224| - [x] **11.6** Audit logging for sensitive operations
-00225| 
+00225|
 00226| **🎯 Milestone 6:** "App is production-ready (no AI yet)"
-00227| 
+00227|
 00228| ---
-00229| 
+00229|
 00230| ### 🚦 MVP Gate Check (End of Week 11)
-00231| 
+00231|
 00232| | Criteria                                   | Target |
 00233| | ------------------------------------------ | ------ |
 00234| | Mother completes consultation without help | ✅     |
@@ -5992,44 +6151,44 @@ Let me read the current roadmap file first to understand its structure and then 
 00237| | Used for 20+ real patients                 | ✅     |
 00238| | Zero critical security vulnerabilities     | ✅     |
 00239| | Backup/restore tested and works            | ✅     |
-00240| 
+00240|
 00241| ---
-00242| 
+00242|
 00243| ═══════════════════════════════════════════════════════════════════════════════
-00244| 
+00244|
 00245| ## 🧠 PART 2: AI INFRASTRUCTURE (Weeks 12-16)
-00246| 
+00246|
 00247| ═══════════════════════════════════════════════════════════════════════════════
-00248| 
+00248|
 00249| **Goal:** The AI "brain" that differentiates the product.
-00250| 
+00250|
 00251| **Pre-requisite Check:**
-00252| 
+00252|
 00253| - [x] Do you have 3-5 reference books (PDFs) ready?
 00254| - [x] Are they legally yours to process?
 00255| - [ ] Is the MVP stable enough to build on?
-00256| 
+00256|
 00257| ---
-00258| 
+00258|
 00259| ### Week 12: Knowledge Base Preparation ✅
-00260| 
+00260|
 00261| - [x] **12.1** Research: PDF extraction tools (pdf-parse vs. Unstructured.io)
 00262| - [x] **12.2** Chunking strategy design (500 words, 50-word overlap)
 00263| - [x] **12.3** Metadata schema (book, page, chapter, section)
 00264| - [x] **12.4** Manual test: Extract 1 book, verify quality
 00265| - [x] **12.5** Write ingestion script with error handling
-00266| 
+00266|
 00267| ### Week 13: Vector Database (RAG Foundation) ✅
-00268| 
+00268|
 00269| - [x] **13.1** Enable pgvector on Postgres
 00270| - [x] **13.2** Create embeddings table schema
 00271| - [x] **13.3** Generate embeddings (Google Gemini text-embedding-004)
 00272| - [x] **13.4** Bulk insert vectors into database
 00273| - [x] **13.5** Test similarity search queries
 00274| - [x] **13.6** Optimize: Vector index for <200ms queries
-00275| 
+00275|
 00276| ### Week 14: The AI Agent (Backend)
-00277| 
+00277|
 00278| - [x] **14.1** NestJS: AIAnalysis module
 00279| - [x] **14.2** RAG logic: Semantic search implementation
 00280| - [x] **14.3** LLM integration: Gemini or Groq
@@ -6037,244 +6196,244 @@ Let me read the current roadmap file first to understand its structure and then 
 00282| - [x] **14.5** Anonymization: Strip PII before sending to LLM
 00283| - [x] **14.6** Translation service: EN ↔ ES for medical terms
 00284| - [x] **14.7** Test: Query "fascitis plantar" → returns relevant book passages
-00285| 
+00285|
 00286| ### Week 15: Vision & Full Analysis
-00287| 
+00287|
 00288| - [x] **15.1** Gemini Vision: Image description API
 00289| - [x] **15.2** Orchestration: Combine Voice + Vision + RAG + LLM
 00290| - [x] **15.3** "Analyze Case" endpoint (orchestrates all services)
 00291| - [ ] **15.4** Frontend: Suggestions UI (cards, citations)
 00292| - [ ] **15.5** Feedback loop: Like/Dislike buttons
 00293| - [ ] **15.6** Test: Complete flow with real patient data
-00294| 
+00294|
 00295| **🎯 Milestone 7:** "The AI provides a cited treatment suggestion"
-00296| 
+00296|
 00297| ### Week 16: AI Refinement (Buffer)
-00298| 
+00298|
 00299| - [ ] **16.1** Prompt iteration (based on real output quality)
 00300| - [ ] **16.2** Add more books to knowledge base
 00301| - [ ] **16.3** Improve chunking strategy
 00302| - [ ] **16.4** Vision prompt refinement
 00303| - [ ] **16.5** Explainability: Show which book passages influenced suggestion
-00304| 
+00304|
 00305| ---
-00306| 
+00306|
 00307| ### 🚦 AI Gate Check (End of Week 16)
-00308| 
+00308|
 00309| | Criteria                                 | Target      |
 00310| | ---------------------------------------- | ----------- |
 00311| | AI suggestions clinically relevant       | 70%+        |
 00312| | Citations trace to actual book content   | ✅          |
 00313| | Query response time                      | < 3 seconds |
 00314| | Mother trusts AI enough to use regularly | ✅          |
-00315| 
+00315|
 00316| ---
-00317| 
+00317|
 00318| ═══════════════════════════════════════════════════════════════════════════════
-00319| 
+00319|
 00320| ## 🏆 PART 3: COMPLETE PRODUCT (Weeks 17-30)
-00321| 
+00321|
 00322| ═══════════════════════════════════════════════════════════════════════════════
-00323| 
+00323|
 00324| **Goal:** Full professional toolset for physiotherapy practice.
-00325| 
+00325|
 00326| ---
-00327| 
+00327|
 00328| ## 📚 Phase 4: Biblioteca Médica (Weeks 17-18) — Milestone 8
-00329| 
+00329|
 00330| ### Week 17: Search & Categories
-00331| 
+00331|
 00332| **Components:**
-00333| 
+00333|
 00334| - [ ] **17.1** BibliotecaDashboard — Main interface with search, categories, results
 00335| - [ ] **17.2** SearchBar — Prominent input with natural language support
 00336| - [ ] **17.3** CategoryNav — Structured navigation (Osteology, Myology, etc.)
 00337| - [ ] **17.4** ProtocolList — List of techniques/protocols matching search
-00338| 
+00338|
 00339| **Backend:**
-00340| 
+00340|
 00341| - [ ] **17.5** Database schema: Protocol, ReferenciaBibliografica
 00342| - [ ] **17.6** API endpoints: Protocol search with full-text + RAG
 00343| - [ ] **17.7** Category filtering endpoint
 00344| - [ ] **17.8** Search debouncing (300ms)
-00345| 
+00345|
 00346| **Flows:**
-00347| 
+00347|
 00348| - [ ] **17.9** Flow 1: Search for Protocol (natural language)
 00349| - [ ] **17.10** Flow 2: Browse by Category
-00350| 
+00350|
 00351| ### Week 18: Protocol Details & References
-00352| 
+00352|
 00353| **Components:**
-00354| 
+00354|
 00355| - [ ] **18.1** BibliographyPanel — Formal citations and references
-00356| 
+00356|
 00357| **Features:**
-00358| 
+00358|
 00359| - [ ] **18.2** Protocol detail view (Ficha Explicativa)
 00360| - [ ] **18.3** Definition, justification, procedure steps
 00361| - [ ] **18.4** EN/ES translation toggle (uses AI from Phase 3)
 00362| - [ ] **18.5** Bibliographic references with author, year, title, source
 00363| - [ ] **18.6** Add reference to treatment plan
-00364| 
+00364|
 00365| **Flows:**
-00366| 
+00366|
 00367| - [ ] **18.7** Flow 3: View Protocol Details with language toggle
 00368| - [ ] **18.8** Flow 4: Add Reference to Treatment Plan
-00369| 
+00369|
 00370| **Empty States:**
-00371| 
+00371|
 00372| - [ ] **18.9** Initial welcome state
 00373| - [ ] **18.10** No search results
 00374| - [ ] **18.11** Empty category
 00375| - [ ] **18.12** No bibliography
-00376| 
+00376|
 00377| **🎯 Milestone 8:** "I can search medical literature and add references to treatment plans"
-00378| 
+00378|
 00379| **Full Checklist:** See `product-plan/instructions/incremental/04-biblioteca-medica.md#done-when`
-00380| 
+00380|
 00381| ---
-00382| 
+00382|
 00383| ## 📊 Phase 5: Análisis (Weeks 19-22) — Milestone 9
-00384| 
+00384|
 00385| ### Week 19: Footprint Analysis
-00386| 
+00386|
 00387| **Components:**
-00388| 
+00388|
 00389| - [ ] **19.1** HuellaAnalysis — Footprint viewer with pressure heatmap
-00390| 
+00390|
 00391| **Backend:**
-00392| 
+00392|
 00393| - [ ] **19.2** Database schema: Huella (footprint)
 00394| - [ ] **19.3** Image upload with validation
 00395| - [ ] **19.4** Arch classification logic (plano/cavo/normal)
 00396| - [ ] **19.5** Pressure distribution analysis
-00397| 
+00397|
 00398| **Flow:**
-00399| 
+00399|
 00400| - [ ] **19.6** Flow 1: Analyze Footprint (upload, heatmap, classification)
-00401| 
+00401|
 00402| ### Week 20: Posturogram
-00403| 
+00403|
 00404| **Components:**
-00405| 
+00405|
 00406| - [ ] **20.1** PosturogramaView — 4-view with anatomical point markers
-00407| 
+00407|
 00408| **Backend:**
-00409| 
+00409|
 00410| - [ ] **20.2** Database schema: Posturograma with 4 views
 00411| - [ ] **20.3** Image upload for anterior, posterior, lateral views
 00412| - [ ] **20.4** Anatomical point storage (head, shoulders, spine, pelvis)
 00413| - [ ] **20.5** Deviation auto-detection (escoliosis, hiperlordosis)
-00414| 
+00414|
 00415| **Flow:**
-00416| 
+00416|
 00417| - [ ] **20.6** Flow 2: Capture Posturogram (4 views, mark points, save)
-00418| 
+00418|
 00419| ### Week 21: Video Analysis
-00420| 
+00420|
 00421| **Components:**
-00422| 
+00422|
 00423| - [ ] **21.1** VideoAnalysis — Video player with slow-motion and angle detection
-00424| 
+00424|
 00425| **Backend:**
-00426| 
+00426|
 00427| - [ ] **21.2** Database schema: VideoDePostura
 00428| - [ ] **21.3** Video upload with processing
 00429| - [ ] **21.4** Angle detection (genuFlexo, inclinacionTronco)
-00430| 
+00430|
 00431| **Features:**
-00432| 
+00432|
 00433| - [ ] **21.5** Slow-motion playback (0.25x, 0.5x)
 00434| - [ ] **21.6** Frame-by-frame controls
 00435| - [ ] **21.7** Gait phase detection (heel strike, toe-off)
 00436| - [ ] **21.8** Initial vs. Final comparison mode
-00437| 
+00437|
 00438| **Flow:**
-00439| 
+00439|
 00440| - [ ] **21.9** Flow 3: Analyze Gait Video
-00441| 
+00441|
 00442| ### Week 22: Evolution Dashboard
-00443| 
+00443|
 00444| **Components:**
-00445| 
+00445|
 00446| - [ ] **22.1** AnalisisDashboard — Overview with case comparison and metrics
 00447| - [ ] **22.2** EvolucionDashboard — Progress charts (initial vs. final)
 00448| - [ ] **22.3** DiagnosticoComparativoCard — Improvement/decline indicators
 00449| - [ ] **22.4** DolorChart — Line chart tracking pain levels over sessions
 00450| - [ ] **22.5** TestsComparativosChart — Bar chart comparing functional tests
-00451| 
+00451|
 00452| **Features:**
-00453| 
+00453|
 00454| - [ ] **22.6** Pain reduction visualization (9/10 → 4/10)
 00455| - [ ] **22.7** Functional test improvements (Schober: +3cm → +4cm)
 00456| - [ ] **22.8** Generate comparative diagnostic report
 00457| - [ ] **22.9** Export report
-00458| 
+00458|
 00459| **Flow:**
-00460| 
+00460|
 00461| - [ ] **22.10** Flow 4: Generate Comparative Report
-00462| 
+00462|
 00463| **Empty States:**
-00464| 
+00464|
 00465| - [ ] **22.11** No case selected
 00466| - [ ] **22.12** No evaluation data
 00467| - [ ] **22.13** No progress yet (single data point)
-00468| 
+00468|
 00469| **🎯 Milestone 9:** "I can analyze biomechanics and track objective progress"
-00470| 
+00470|
 00471| **Full Checklist:** See `product-plan/instructions/incremental/03-analisis.md#done-when`
-00472| 
+00472|
 00473| ---
-00474| 
+00474|
 00475| ## 🦶 Phase 6: Plantillas 3D CAD (Weeks 23-28) — Milestone 10
-00476| 
+00476|
 00477| ### Week 23: 3D Foundation & Viewer
-00478| 
+00478|
 00479| **Components:**
-00480| 
+00480|
 00481| - [ ] **23.1** PlantillasEditor — Full-screen CAD workspace
 00482| - [ ] **23.2** InsoleViewer3D — Interactive 3D model (Three.js / React Three Fiber)
 00483| - [ ] **23.3** ClinicalSidePanel — Persistent right panel with diagnosis data
-00484| 
+00484|
 00485| **Infrastructure:**
-00486| 
+00486|
 00487| - [ ] **23.4** Three.js / React Three Fiber setup
 00488| - [ ] **23.5** Base insole 3D model (GLTF/GLB)
 00489| - [ ] **23.6** Camera controls: rotate, zoom, pan (OrbitControls)
 00490| - [ ] **23.7** Lighting setup for medical visualization
 00491| - [ ] **23.8** Full-screen mode (no main navigation while editing)
-00492| 
+00492|
 00493| **Backend:**
-00494| 
+00494|
 00495| - [ ] **23.9** Database schema: Plantilla, ZonaAlivio, MaterialPlanta
 00496| - [ ] **23.10** API endpoints: Plantilla CRUD
 00497| - [ ] **23.11** Link to clinical case diagnosis data
-00498| 
+00498|
 00499| ### Week 24: Structure Editing (Sliders)
-00500| 
+00500|
 00501| **Components:**
-00502| 
+00502|
 00503| - [ ] **24.1** Toolbar — Tool switching (Slider/Brush modes)
 00504| - [ ] **24.2** PropertiesPanel — Sliders for structural adjustments
-00505| 
+00505|
 00506| **Features:**
-00507| 
+00507|
 00508| - [ ] **24.3** Arch height slider (0-20mm) with real-time 3D update
 00509| - [ ] **24.4** Heel wedge slider (0-10mm) with real-time 3D update
 00510| - [ ] **24.5** Lateral wedge slider for valgo/varo correction
 00511| - [ ] **24.6** 3D mesh deformation based on slider values
 00512| - [ ] **24.7** Visual indicators on model (Pie Talo, Pelvic Retroversion markers)
-00513| 
+00513|
 00514| **Flows:**
-00515| 
+00515|
 00516| - [ ] **24.8** Flow 1: Import Diagnosis and Auto-Generate base model
 00517| - [ ] **24.9** Flow 2: Edit Structure with Sliders
-00518| 
+00518|
 00519| ### Week 25: Brush Tool & Relief Zones
-00520| 
+00520|
 00521| **Features:**
-00522| 
+00522|
 00523| - [ ] **25.1** Brush tool implementation (raycasting on 3D mesh)
 00524| - [ ] **25.2** Brush sizes: Small, Medium, Large
 00525| - [ ] **25.3** Relief levels: Soft (1), Medium (3), Firm (5)
@@ -6282,45 +6441,45 @@ Let me read the current roadmap file first to understand its structure and then 
 00527| - [ ] **25.5** Visual feedback: relief zones appear in different color/texture
 00528| - [ ] **25.6** Relief zones list in ClinicalSidePanel
 00529| - [ ] **25.7** Undo/redo history for design changes
-00530| 
+00530|
 00531| **Flow:**
-00532| 
+00532|
 00533| - [ ] **25.8** Flow 3: Paint Relief Zones with Brush
-00534| 
+00534|
 00535| ### Week 26: Materials & Layer Manager
-00536| 
+00536|
 00537| **Components:**
-00538| 
+00538|
 00539| - [ ] **26.1** LayerManager — Controls for material layers
-00540| 
+00540|
 00541| **Features:**
-00542| 
+00542|
 00543| - [ ] **26.2** Three layers: Base, Middle, Top Cover
 00544| - [ ] **26.3** Material selection per layer (EVA_rigido, EVA_medio, EVA_suave)
 00545| - [ ] **26.4** EVA density visualization in 3D
 00546| - [ ] **26.5** Espesor (thickness) per layer
 00547| - [ ] **26.6** Add/remove layers
 00548| - [ ] **26.7** Drag-and-drop layer reordering
-00549| 
+00549|
 00550| ### Week 27: Biomechanical Validation
-00551| 
+00551|
 00552| **Features:**
-00553| 
+00553|
 00554| - [ ] **27.1** Side-by-side comparison: insole design vs. posturogram findings
 00555| - [ ] **27.2** Validation rules: arch height ↔ lumbar spine alignment
 00556| - [ ] **27.3** Chain alignment check: foot → ankle → knee → hip → lumbar
 00557| - [ ] **27.4** Warning indicators if biomechanical chain is misaligned
 00558| - [ ] **27.5** Confirmation message if design is coherent
 00559| - [ ] **27.6** "Validar" button with results modal
-00560| 
+00560|
 00561| **Flow:**
-00562| 
+00562|
 00563| - [ ] **27.7** Flow 4: Biomechanical Validation
-00564| 
+00564|
 00565| ### Week 28: PDF Export & Polish
-00566| 
+00566|
 00567| **Features:**
-00568| 
+00568|
 00569| - [ ] **28.1** PDF technical spec sheet generation
 00570| - [ ] **28.2** PDF includes: dimensions, materials, layer specs, relief zones
 00571| - [ ] **28.3** 3D model screenshot for PDF
@@ -6329,36 +6488,36 @@ Let me read the current roadmap file first to understand its structure and then 
 00574| - [ ] **28.6** "Cerrar" button returns to main navigation
 00575| - [ ] **28.7** Auto-save on changes
 00576| - [ ] **28.8** Performance optimization for smooth 3D
-00577| 
+00577|
 00578| **Flow:**
-00579| 
+00579|
 00580| - [ ] **28.9** Flow 5: Select Materials and Export PDF
-00581| 
+00581|
 00582| **Empty States:**
-00583| 
+00583|
 00584| - [ ] **28.10** No clinical case selected
 00585| - [ ] **28.11** No evaluation data (warning)
 00586| - [ ] **28.12** No layers defined (before export)
-00587| 
+00587|
 00588| **🎯 Milestone 10:** "I can design custom 3D insoles based on patient diagnosis"
-00589| 
+00589|
 00590| **Full Checklist:** See `product-plan/instructions/incremental/05-plantillas.md#done-when`
-00591| 
+00591|
 00592| ---
-00593| 
+00593|
 00594| ## 🔗 Phase 7: Integration & Polish (Weeks 29-30)
-00595| 
+00595|
 00596| ### Week 29: Cross-Module Integration
-00597| 
+00597|
 00598| - [ ] **29.1** Pacientes → Análisis: Link evaluation to analysis tools
 00599| - [ ] **29.2** Análisis → Plantillas: Import diagnosis to auto-generate insole
 00600| - [ ] **29.3** Biblioteca → Pacientes: Add references to treatment plans
 00601| - [ ] **29.4** AI → All modules: Consistent suggestion UI
 00602| - [ ] **29.5** Navigation: Seamless flow between modules
 00603| - [ ] **29.6** Data consistency: All modules use same patient/case data
-00604| 
+00604|
 00605| ### Week 30: Final Testing & Documentation
-00606| 
+00606|
 00607| - [ ] **30.1** End-to-end testing: Complete patient journey
 00608| - [ ] **30.2** Performance audit: All pages < 3s load
 00609| - [ ] **30.3** Mobile/tablet responsiveness check
@@ -6366,11 +6525,11 @@ Let me read the current roadmap file first to understand its structure and then 
 00611| - [ ] **30.5** User documentation update
 00612| - [ ] **30.6** API documentation update
 00613| - [ ] **30.7** Final security audit
-00614| 
+00614|
 00615| ---
-00616| 
+00616|
 00617| ### 🚦 Complete Product Gate Check (End of Week 30)
-00618| 
+00618|
 00619| | Criteria                                    | Target |
 00620| | ------------------------------------------- | ------ |
 00621| | All 4 user flows per module work end-to-end | ✅     |
@@ -6379,17 +6538,17 @@ Let me read the current roadmap file first to understand its structure and then 
 00624| | Cross-module data flows correctly           | ✅     |
 00625| | Mobile responsive on all modules            | ✅     |
 00626| | Mother uses full toolset in practice        | ✅     |
-00627| 
+00627|
 00628| ---
-00629| 
+00629|
 00630| ═══════════════════════════════════════════════════════════════════════════════
-00631| 
+00631|
 00632| ## 🚀 PART 4: FUTURE (Post-Week 30)
-00633| 
+00633|
 00634| ═══════════════════════════════════════════════════════════════════════════════
-00635| 
+00635|
 00636| **Deferred to future releases:**
-00637| 
+00637|
 00638| - [ ] Full offline sync (IndexedDB + background sync)
 00639| - [ ] Multi-tenancy (multiple therapists, clinics)
 00640| - [ ] React Native mobile app
@@ -6399,13 +6558,13 @@ Let me read the current roadmap file first to understand its structure and then 
 00644| - [ ] Integration with medical devices (podoscope hardware)
 00645| - [ ] HIPAA/GDPR compliance audit
 00646| - [ ] White-label solution for other clinics
-00647| 
+00647|
 00648| ---
-00649| 
+00649|
 00650| ## 📊 Risk Management Strategy
-00651| 
+00651|
 00652| ### High-Risk Items (Have a Plan B)
-00653| 
+00653|
 00654| | Risk                            | Mitigation                   | Plan B                   |
 00655| | ------------------------------- | ---------------------------- | ------------------------ |
 00656| | **Week 9: Mother hates UX**     | Week 10 pivot buffer         | Extend MVP, delay Part 3 |
@@ -6415,19 +6574,19 @@ Let me read the current roadmap file first to understand its structure and then 
 00660| | **Week 23: 3D performance**     | Optimize mesh, use LOD       | Fallback to 2D editor    |
 00661| | **Week 25: Brush raycasting**   | Use proven Three.js examples | Simplify to click-to-add |
 00662| | **Week 28: PDF generation**     | Use proven library (jsPDF)   | Export as PNG + text     |
-00663| 
+00663|
 00664| ### Complexity Buffers
-00665| 
+00665|
 00666| | Phase             | Buffer Built-In |
 00667| | ----------------- | --------------- |
 00668| | Part 1 (MVP)      | Week 10         |
 00669| | Part 2 (AI)       | Week 16         |
 00670| | Part 3 (Complete) | Week 30         |
-00671| 
+00671|
 00672| ---
-00673| 
+00673|
 00674| ## 📅 Calendar View (30 Weeks)
-00675| 
+00675|
 00676| ```
 00677| Part 1: MVP (Weeks 1-11)
 00678| ├── Weeks 1-4:   Foundation ✅
@@ -6437,48 +6596,48 @@ Let me read the current roadmap file first to understand its structure and then 
 00682| ├── Week 9:      Field Testing
 00683| ├── Week 10:     Pivot & Fix (Buffer)
 00684| └── Week 11:     Security & Performance
-00685| 
+00685|
 00686| Part 2: AI Infrastructure (Weeks 12-16)
 00687| ├── Week 12:     Knowledge Base
 00688| ├── Week 13:     Vector Database
 00689| ├── Week 14:     AI Agent
 00690| ├── Week 15:     Vision & Analysis
 00691| └── Week 16:     AI Refinement (Buffer)
-00692| 
+00692|
 00693| Part 3: Complete Product (Weeks 17-30)
 00694| ├── Weeks 17-18: Biblioteca Médica (5 components, 4 flows)
 00695| ├── Weeks 19-22: Análisis (8 components, 4 flows)
 00696| ├── Weeks 23-28: Plantillas 3D CAD (6 components, 5 flows)
 00697| └── Weeks 29-30: Integration & Polish
 00698| ```
-00699| 
+00699|
 00700| **Total Time: 30 weeks (7.5 months)**
 00701| **Buffer Time: 3 weeks built-in (Week 10, 16, 30)**
 00702| **Realistic Completion: 8 months** (because life happens)
-00703| 
+00703|
 00704| ---
-00705| 
+00705|
 00706| ## 💡 Final Advice
-00707| 
+00707|
 00708| 1. **Milestone 5 (Week 9) is the most critical**
 00709|    If she doesn't want to use it daily, the rest won't matter.
-00710| 
+00710|
 00711| 2. **The books for RAG must be acquired NOW**
 00712|    Don't wait until Week 12 to realize you can't get them.
-00713| 
+00713|
 00714| 3. **3D Plantillas is the showstopper feature**
 00715|    Week 23-28 will define the product's premium value.
-00716| 
+00716|
 00717| 4. **Expect Week 10 to be chaos**
 00718|    Real-world testing always reveals surprises.
-00719| 
+00719|
 00720| 5. **Part 3 modules can be released incrementally**
 00721|    Ship Biblioteca first, then Análisis, then Plantillas.
-00722| 
+00722|
 
 (End of file - total 722 lines)
 </file>
-```
+````
 
 ---
 
@@ -6489,6 +6648,7 @@ _Thinking:_
 Now I understand the roadmap structure. The user wants me to update Week 16 to reflect the deep RAG analysis and the initialization.md spec. Let me update the roadmap with detailed RAG optimization tasks.
 
 The current Week 16 has:
+
 - 16.1 Prompt iteration (based on real output quality)
 - 16.2 Add more books to knowledge base
 - 16.3 Improve chunking strategy
@@ -6496,6 +6656,7 @@ The current Week 16 has:
 - 16.5 Explainability: Show which book passages influenced suggestion
 
 Based on my analysis and the initialization.md, I need to expand this with:
+
 1. Semantic chunking + Parent-Document Retrieval
 2. Reranking with Cross-Encoder / Cohere Rerank
 3. Hybrid Search (pgvector + tsvector + RRF)
@@ -6510,6 +6671,7 @@ Now I'll update the roadmap with detailed RAG optimization tasks based on my ana
 **Tool: edit**
 
 **Input:**
+
 ```json
 {
   "oldString": "### Week 16: AI Refinement (Buffer)\n\n- [ ] **16.1** Prompt iteration (based on real output quality)\n- [ ] **16.2** Add more books to knowledge base\n- [ ] **16.3** Improve chunking strategy\n- [ ] **16.4** Vision prompt refinement\n- [ ] **16.5** Explainability: Show which book passages influenced suggestion\n\n---\n\n### 🚦 AI Gate Check (End of Week 16)",
@@ -6519,6 +6681,7 @@ Now I'll update the roadmap with detailed RAG optimization tasks based on my ana
 ```
 
 **Output:**
+
 ```
 Edit applied successfully.
 ```
@@ -6532,6 +6695,7 @@ Now let me update the AI Gate Check to reflect the new metrics:
 **Tool: edit**
 
 **Input:**
+
 ```json
 {
   "newString": "### 🚦 AI Gate Check (End of Week 16)\n\n| Criteria                                 | Target      |\n| ---------------------------------------- | ----------- |\n| AI suggestions clinically relevant       | 80%+        |\n| Citations trace to actual book content   | ✅          |\n| Query response time                      | < 3 seconds |\n| Mother trusts AI enough to use regularly | ✅          |\n| RAGAS Context Precision                  | > 0.75      |\n| RAGAS Faithfulness                       | > 0.80      |\n| Exact terminology retrieval (drug names) | ✅          |",
@@ -6541,6 +6705,7 @@ Now let me update the AI Gate Check to reflect the new metrics:
 ```
 
 **Output:**
+
 ```
 Edit applied successfully.
 ```
@@ -6552,18 +6717,21 @@ Edit applied successfully.
 _Thinking:_
 
 Now I understand the roadmap structure. The user wants me to update Week 16 to reflect the deep RAG analysis and the initialization.md spec. Let me update the roadmap with detailed RAG optimization tasks.The current Week 16 has:
+
 - 16.1 Prompt iteration (based on real output quality)
 - 16.2 Add more books to knowledge base
 - 16.3 Improve chunking strategy- 16.4 Vision prompt refinement
 - 16.5 Explainability: Show which book passages influenced suggestionBased on my analysis and the initialization.md, I need to expand this with:
+
 1. Semantic chunking + Parent-Document Retrieval2. Reranking with Cross-Encoder / Cohere Rerank3. Hybrid Search (pgvector + tsvector + RRF)
-4. HNSW index optimization (already done per 13.6)5. RAG Evaluation Framework6. Metadata filteringLet me update the roadmap to be comprehensive and include these items.
+2. HNSW index optimization (already done per 13.6)5. RAG Evaluation Framework6. Metadata filteringLet me update the roadmap to be comprehensive and include these items.
 
 Now let me also update the Risk Management section to reflect RAG-specific risks:
 
 **Tool: edit**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/product/roadmap.md",
@@ -6573,6 +6741,7 @@ Now let me also update the Risk Management section to reflect RAG-specific risks
 ```
 
 **Output:**
+
 ```
 Edit applied successfully.
 ```
@@ -6584,17 +6753,20 @@ Edit applied successfully.
 _Thinking:_
 
 Now I understand the roadmap structure. The user wants me to update Week 16 to reflect the deep RAG analysis and the initialization.md spec. Let me update the roadmap with detailed RAG optimization tasks.The current Week 16 has:
+
 - 16.1 Prompt iteration (based on real output quality)
 - 16.2 Add more books to knowledge base- 16.3 Improve chunking strategy- 16.4 Vision prompt refinement
 - 16.5 Explainability: Show which book passages influenced suggestionBased on my analysis and the initialization.md, I need to expand this with:
+
 1. Semantic chunking + Parent-Document Retrieval2. Reranking with Cross-Encoder / Cohere Rerank3. Hybrid Search (pgvector + tsvector + RRF)
-4. HNSW index optimization (already done per 13.6)5. RAG Evaluation Framework6. Metadata filteringLet me update the roadmap to be comprehensive and include these items.
+2. HNSW index optimization (already done per 13.6)5. RAG Evaluation Framework6. Metadata filteringLet me update the roadmap to be comprehensive and include these items.
 
 Now let me update the Final Advice section to include RAG optimization guidance:
 
 **Tool: edit**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/product/roadmap.md",
@@ -6604,6 +6776,7 @@ Now let me update the Final Advice section to include RAG optimization guidance:
 ```
 
 **Output:**
+
 ```
 Edit applied successfully.
 ```
@@ -6615,15 +6788,18 @@ Edit applied successfully.
 _Thinking:_
 
 Now I understand the roadmap structure. The user wants me to update Week 16 to reflect the deep RAG analysis and the initialization.md spec. Let me update the roadmap with detailed RAG optimization tasks.The current Week 16 has:- 16.1 Prompt iteration (based on real output quality)- 16.2 Add more books to knowledge base- 16.3 Improve chunking strategy- 16.4 Vision prompt refinement
+
 - 16.5 Explainability: Show which book passages influenced suggestionBased on my analysis and the initialization.md, I need to expand this with:
+
 1. Semantic chunking + Parent-Document Retrieval2. Reranking with Cross-Encoder / Cohere Rerank3. Hybrid Search (pgvector + tsvector + RRF)
-4. HNSW index optimization (already done per 13.6)5. RAG Evaluation Framework6. Metadata filteringLet me update the roadmap to be comprehensive and include these items.
+2. HNSW index optimization (already done per 13.6)5. RAG Evaluation Framework6. Metadata filteringLet me update the roadmap to be comprehensive and include these items.
 
 Let me verify the changes are correct by reading the updated section:
 
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/product/roadmap.md",
@@ -6633,21 +6809,22 @@ Let me verify the changes are correct by reading the updated section:
 ```
 
 **Output:**
+
 ```
 <file>
 00291| - [ ] **15.4** Frontend: Suggestions UI (cards, citations)
 00292| - [ ] **15.5** Feedback loop: Like/Dislike buttons
 00293| - [ ] **15.6** Test: Complete flow with real patient data
-00294| 
+00294|
 00295| **🎯 Milestone 7:** "The AI provides a cited treatment suggestion"
-00296| 
+00296|
 00297| ### Week 16: RAG Optimization & AI Refinement
-00298| 
+00298|
 00299| > **Spec:** `agent-os/specs/2026-02-06-rag-optimization/`
 00300| > **Goal:** Move from "Production-Grade" to "State-of-the-Art" RAG system.
-00301| 
+00301|
 00302| **🔴 Critical Improvements (High Impact):**
-00303| 
+00303|
 00304| - [ ] **16.1** Semantic Chunking — Replace word-based (500w) with semantic splitting
 00305|   - Group sentences by embedding similarity (respects meaning boundaries)
 00306|   - Expected improvement: +70% retrieval accuracy
@@ -6666,9 +6843,9 @@ Let me verify the changes are correct by reading the updated section:
 00319|   - Combine with `pgvector` using Reciprocal Rank Fusion (RRF)
 00320|   - Expected improvement: +40% for exact matches (drug names, ICD codes)
 00321|   - SQL: `CREATE INDEX embeddings_content_fts ON embeddings USING GIN (to_tsvector('english', content));`
-00322| 
+00322|
 00323| **🟡 Important Improvements (Medium Impact):**
-00324| 
+00324|
 00325| - [ ] **16.5** RAG Evaluation Framework — Measure retrieval quality
 00326|   - Implement RAGAS metrics: Context Precision, Recall, Faithfulness
 00327|   - Create test suite with medical queries and expected documents
@@ -6680,26 +6857,26 @@ Let me verify the changes are correct by reading the updated section:
 00333| - [ ] **16.7** Explainability — Show which passages influenced suggestion
 00334|   - Display RAG chunks with relevance scores in UI
 00335|   - Link citations to specific document sections
-00336| 
+00336|
 00337| **🟢 Refinements:**
-00338| 
+00338|
 00339| - [ ] **16.8** Prompt iteration (based on real output quality)
 00340| - [ ] **16.9** Add more books to knowledge base
 00341| - [ ] **16.10** Vision prompt refinement
-00342| 
+00342|
 00343| **Expected Combined Improvement: 2-3x over current baseline**
-00344| 
+00344|
 00345| | Improvement       | Expected Gain           |
 00346| | ----------------- | ----------------------- |
 00347| | Semantic chunking | +70% retrieval accuracy |
 00348| | Reranking         | +40% RAG precision      |
 00349| | Hybrid search     | +40% exact terminology  |
 00350| | Parent-document   | +30% context retention  |
-00351| 
+00351|
 00352| ---
-00353| 
+00353|
 00354| ### 🚦 AI Gate Check (End of Week 16)
-00355| 
+00355|
 00356| | Criteria                                 | Target      |
 00357| | ---------------------------------------- | ----------- |
 00358| | AI suggestions clinically relevant       | 80%+        |
@@ -6709,11 +6886,11 @@ Let me verify the changes are correct by reading the updated section:
 00362| | RAGAS Context Precision                  | > 0.75      |
 00363| | RAGAS Faithfulness                       | > 0.80      |
 00364| | Exact terminology retrieval (drug names) | ✅          |
-00365| 
+00365|
 00366| ---
-00367| 
+00367|
 00368| ═══════════════════════════════════════════════════════════════════════════════
-00369| 
+00369|
 00370| ## 🏆 PART 3: COMPLETE PRODUCT (Weeks 17-30)
 
 (File has more lines. Use 'offset' parameter to read beyond line 370)
@@ -6727,8 +6904,9 @@ Let me verify the changes are correct by reading the updated section:
 _Thinking:_
 
 Now I understand the roadmap structure. The user wants me to update Week 16 to reflect the deep RAG analysis and the initialization.md spec. Let me update the roadmap with detailed RAG optimization tasks.The current Week 16 has:- 16.1 Prompt iteration (based on real output quality)- 16.2 Add more books to knowledge base- 16.3 Improve chunking strategy- 16.4 Vision prompt refinement- 16.5 Explainability: Show which book passages influenced suggestionBased on my analysis and the initialization.md, I need to expand this with:
+
 1. Semantic chunking + Parent-Document Retrieval2. Reranking with Cross-Encoder / Cohere Rerank3. Hybrid Search (pgvector + tsvector + RRF)
-4. HNSW index optimization (already done per 13.6)5. RAG Evaluation Framework6. Metadata filteringLet me update the roadmap to be comprehensive and include these items.
+2. HNSW index optimization (already done per 13.6)5. RAG Evaluation Framework6. Metadata filteringLet me update the roadmap to be comprehensive and include these items.
 
 The roadmap has been updated successfully. Let me provide a summary of the changes:
 
@@ -6745,36 +6923,43 @@ I've updated `agent-os/product/roadmap.md` with comprehensive RAG optimization t
 ### Changes Made:
 
 #### 1. **Week 16 Renamed & Expanded**
+
 From: `Week 16: AI Refinement (Buffer)` (5 tasks)
 To: `Week 16: RAG Optimization & AI Refinement` (10 tasks)
 
 #### 2. **New Tasks Added (Priority Ordered)**
 
-| Task | Description | Expected Impact |
-|------|-------------|-----------------|
-| **16.1** | Semantic Chunking | +70% retrieval accuracy |
-| **16.2** | Parent-Document Retrieval | +30% context retention |
-| **16.3** | Reranking (Cohere/Cross-Encoder) | +40% RAG precision |
-| **16.4** | Hybrid Search (BM25 + Dense + RRF) | +40% exact terminology |
-| **16.5** | RAG Evaluation Framework (RAGAS) | Measurability |
-| **16.6** | Metadata Filtering | User experience |
-| **16.7** | Explainability UI | Transparency |
+| Task     | Description                        | Expected Impact         |
+| -------- | ---------------------------------- | ----------------------- |
+| **16.1** | Semantic Chunking                  | +70% retrieval accuracy |
+| **16.2** | Parent-Document Retrieval          | +30% context retention  |
+| **16.3** | Reranking (Cohere/Cross-Encoder)   | +40% RAG precision      |
+| **16.4** | Hybrid Search (BM25 + Dense + RRF) | +40% exact terminology  |
+| **16.5** | RAG Evaluation Framework (RAGAS)   | Measurability           |
+| **16.6** | Metadata Filtering                 | User experience         |
+| **16.7** | Explainability UI                  | Transparency            |
 
 #### 3. **AI Gate Check Updated**
+
 Added new metrics:
+
 - RAGAS Context Precision > 0.75
 - RAGAS Faithfulness > 0.80
 - Exact terminology retrieval (drug names)
 - Raised target from 70% → 80%+ clinically relevant
 
 #### 4. **Risk Management Updated**
+
 Added RAG-specific risks:
+
 - Semantic chunk processing time
 - Cohere Rerank cost
 - Hybrid search complexity
 
 #### 5. **Final Advice Updated**
+
 Added RAG optimization guidance with priority order:
+
 1. Semantic chunking → 2. Reranking → 3. Hybrid search
 
 ---
@@ -6782,6 +6967,7 @@ Added RAG optimization guidance with priority order:
 ### Next Steps
 
 The spec at `agent-os/specs/2026-02-06-rag-optimization/` now needs:
+
 1. `requirements.md` — Detailed implementation questions/answers
 2. `tasks.md` — Granular task breakdown with tests
 3. Implementation files
@@ -6794,20 +6980,23 @@ Would you like me to continue developing this spec?
 
 [search-mode]
 MAXIMIZE SEARCH EFFORT. Launch multiple background agents IN PARALLEL:
+
 - explore agents (codebase patterns, file structures, ast-grep)
 - librarian agents (remote repos, official docs, GitHub examples)
-Plus direct tools: Grep, ripgrep (rg), ast-grep (sg)
-NEVER stop at first result - be exhaustive.
+  Plus direct tools: Grep, ripgrep (rg), ast-grep (sg)
+  NEVER stop at first result - be exhaustive.
 
 [analyze-mode]
 ANALYSIS MODE. Gather context before diving deep:
 
 CONTEXT GATHERING (parallel):
+
 - 1-2 explore agents (codebase patterns, implementations)
 - 1-2 librarian agents (if external library involved)
 - Direct tools: Grep, AST-grep, LSP for targeted searches
 
 IF COMPLEX - DO NOT STRUGGLE ALONE. Consult specialists:
+
 - **Oracle**: Conventional problems (architecture, debugging, complex logic)
 - **Artistry**: Non-conventional problems (different approach needed)
 
@@ -6839,6 +7028,7 @@ Since the spec folder already exists and initialization.md is already there, I n
 Let me first check if there are any visual assets in the visuals folder, read the relevant product context files, and then create the comprehensive requirements.md based on my deep analysis.
 
 The key is that I already have:
+
 1. The initialization.md with the core objectives
 2. My deep analysis of the current RAG implementation
 3. Research on best practices
@@ -6851,6 +7041,7 @@ I'll follow the shape-spec process. Since the spec is already initialized, I'll 
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/product/mission.md"
@@ -6858,63 +7049,64 @@ I'll follow the shape-spec process. Since the spec is already initialized, I'll 
 ```
 
 **Output:**
+
 ```
 <file>
 00001| # Product Mission
-00002| 
+00002|
 00003| ## Pitch
 00004| MamirriApp is a "Zero-Friction" Digital Clinical Assistant that empowers Physiotherapists to capture, structure, and analyze clinical data through voice and vision, eliminating administrative burden while providing trusted, evidence-based diagnostic support.
-00005| 
+00005|
 00006| ## Users
-00007| 
+00007|
 00008| ### Primary Customers
 00009| - **Solo Physiotherapists:** Independent practitioners who need to maximize time with patients and minimize time on paperwork.
 00010| - **Manual Therapy Clinics:** Small to medium practices prioritizing hands-on treatment over complex administrative processes.
-00011| 
+00011|
 00012| ### User Personas
 00013| **The Expert Clinical Physiotherapist** (45-60)
 00014| - **Role:** Senior Practitioner / Clinic Owner.
 00015| - **Context:** High patient volume, hands-on work environment, often operates with limited time between sessions. Values direct patient contact over technology.
-00016| - **Pain Points:** 
+00016| - **Pain Points:**
 00017|     - **Cognitive Overload:** Remembering details from previous sessions without reviewing piles of paper.
 00018|     - **Administrative Friction:** Typing on keyboards breaks the flow of manual therapy.
 00019|     - **Data Fragmentation:** Critical info lives in memory, phone gallery, and paper notes.
 00020| - **Goals:** A tool that "thinks with them" (not for them), works offline/online seamlessly, and creates legally defensible records without typing.
-00021| 
+00021|
 00022| ## The Problem
-00023| 
+00023|
 00024| ### Clinical Disconnection & Data Loss
 00025| Valuable clinical insights are lost because the friction of documenting them (typing, scanning, uploading) is too high during a therapy session. Current tools are "Administrative-First," turning therapists into data entry clerks and severing the human connection with the patient.
-00026| 
+00026|
 00027| **Our Solution:** A **"Zero-UI" Tunnel Interface** that captures reality (voice, image) and transforms it into structured clinical records automatically. It acts as a resilient, privacy-first "Second Brain."
-00028| 
+00028|
 00029| ## Differentiators
-00030| 
+00030|
 00031| ### 1. Radical Simplicity ("The Tunnel")
 00032| Unlike complex EHRs with endless menus, our app uses a linear, one-way flow: **Start -> Dictate/Snap -> Analyze -> Finish**. It is designed to be used with one hand or voice commands on a tablet.
-00033| 
+00033|
 00034| ### 2. Privacy-First & "Grounded" AI
 00035| We prioritize data integrity and privacy. AI is used solely as a utility for transcription and analysis, strictly grounded in a curated, offline-first knowledge base (RAG). We never train external models on patient data, and all sensitive processing is anonymized.
-00036| 
+00036|
 00037| ### 3. Visual & Temporal Context
 00038| Beyond static text, we treat visual evolution as a core vital sign. The system aligns and compares "Before vs. After" images (e.g., footprints, posture) to objectively demonstrate progress to both the therapist and the patient.
-00039| 
+00039|
 00040| ## Key Features
-00041| 
+00041|
 00042| ### Core Experience (MVP)
 00043| - **Smart Voice Transcription:** Converts natural, unstructured clinical dictation into structured data fields (Name, Symptoms, History) automatically.
 00044| - **Guided Visual Capture:** Tablet-based camera module with "Ghost" overlays to ensure consistent, comparable photos of footprints and posture.
 00045| - **Offline-Resilient Architecture:** Fully functional without internet; caches data locally and syncs securely when connectivity returns.
-00046| 
+00046|
 00047| ### Clinical Intelligence (Post-MVP)
 00048| - **RAG "Second Brain":** Instantly retrieves relevant case studies and protocols from a curated library of 3-5 trusted clinical textbooks.
 00049| - **Hybrid Vision Analysis:** Combines deterministic computer vision (for image alignment/homography) with generative AI (for qualitative analysis) to highlight pathologies.
 00050| - **"Card-Based" Decision Support:** Presents findings as simple, actionable cards (Problem, Evidence, Solution) for quick review and approval by the human expert.
-00051| 
+00051|
 00052| ### Data Trust & Security
 00053| - **Immutable Session Logs:** Once finalized, sessions are locked to ensure legal and clinical integrity.
 00054| - **Decoupled Storage:** Clinical media is stored in secure, private object storage, strictly linked to patient records with no orphaned files.
-00055| 
+00055|
 
 (End of file - total 55 lines)
 </file>
@@ -6923,6 +7115,7 @@ I'll follow the shape-spec process. Since the spec is already initialized, I'll 
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/product/tech-stack.md"
@@ -6930,38 +7123,39 @@ I'll follow the shape-spec process. Since the spec is already initialized, I'll 
 ```
 
 **Output:**
+
 ```
 <file>
 00001| # Product Tech Stack
-00002| 
+00002|
 00003| ## Framework & Runtime
 00004| - **Application Framework:** NestJS (Backend), React 19 + Vite (Frontend)
 00005| - **Language/Runtime:** TypeScript / Node.js
 00006| - **Package Manager:** pnpm
-00007| 
+00007|
 00008| ## Frontend
 00009| - **JavaScript Framework:** React 19.2
 00010| - **CSS Framework:** Tailwind CSS
 00011| - **UI Components:** Shadcn/UI
-00012| 
+00012|
 00013| ## Database & Storage
 00014| - **Database:** PostgreSQL 16 (with pgvector for RAG)
 00015| - **ORM/Query Builder:** Prisma
 00016| - **Storage:** S3 Compatible (AWS S3 or Supabase Storage)
-00017| 
+00017|
 00018| ## AI & Services
 00019| - **Transcription:** OpenAI Whisper API (whisper-large-v3 using trough groq service)
 00020| - **Intelligence & Vision:** Gemini 3
 00021| - **Vector Search:** pgvector (PostgreSQL) or ChromaDB
-00022| 
+00022|
 00023| ## Testing & Quality
 00024| - **Test Framework:** Jest
 00025| - **Linting/Formatting:** ESLint, Prettier
-00026| 
+00026|
 00027| ## Deployment & Infrastructure
 00028| - **Containerization:** Docker (for local development and deployment)
 00029| - **CI/CD:** GitHub Actions (preferred)
-00030| 
+00030|
 
 (End of file - total 30 lines)
 </file>
@@ -6970,6 +7164,7 @@ I'll follow the shape-spec process. Since the spec is already initialized, I'll 
 **Tool: bash**
 
 **Input:**
+
 ```json
 {
   "command": "ls -la agent-os/specs/2026-02-06-rag-optimization/planning/visuals/ 2>/dev/null | grep -E '\\.(png|jpg|jpeg|gif|svg|pdf)$' || echo \"No visual files found\"",
@@ -6978,6 +7173,7 @@ I'll follow the shape-spec process. Since the spec is already initialized, I'll 
 ```
 
 **Output:**
+
 ```
 No visual files found
 
@@ -6986,6 +7182,7 @@ No visual files found
 **Tool: bash**
 
 **Input:**
+
 ```json
 {
   "description": "Create missing spec folder structure",
@@ -7001,9 +7198,9 @@ _Thinking:_
 
 The user wants me to use the shape-spec command to complete the initialization.md. Looking at the shape-spec.md instructions:1. **Phase 1**: Initialize Spec - The spec folder already exists at `agent-os/specs/2026-02-06-rag-optimization/` with `planning/initialization.md` already created.
 
-2. **Phase 2**: Shape Spec - This involves:   - Reading the initial idea from initialization.md
-   - Analyzing product context (mission, roadmap, tech-stack)   - Asking clarifying questions
-   - Processing answers   - Saving requirements to `requirements.md`Since the spec folder already exists and initialization.md is already there, I need to proceed to Phase 2 (Shape Spec). However, since I've already done extensive research and analysis in the previous conversation, I can use that research to directly create the requirements.md file.
+2. **Phase 2**: Shape Spec - This involves: - Reading the initial idea from initialization.md
+   - Analyzing product context (mission, roadmap, tech-stack) - Asking clarifying questions
+   - Processing answers - Saving requirements to `requirements.md`Since the spec folder already exists and initialization.md is already there, I need to proceed to Phase 2 (Shape Spec). However, since I've already done extensive research and analysis in the previous conversation, I can use that research to directly create the requirements.md file.
 
 Let me first check if there are any visual assets in the visuals folder, read the relevant product context files, and then create the comprehensive requirements.md based on my deep analysis.The key is that I already have:1. The initialization.md with the core objectives2. My deep analysis of the current RAG implementation3. Research on best practices4. The roadmap contextI should now create the requirements.md file with all the gathered information in the exact format specified by shape-spec.md.
 
@@ -7012,14 +7209,16 @@ Good - I have the context. Based on my extensive deep analysis from earlier, I h
 **Tool: write**
 
 **Input:**
-```json
+
+````json
 {
   "content": "# Spec Requirements: RAG Optimization & Refinement\n\n## Initial Description\n\nThe user wants to optimize the existing RAG (Retrieval-Augmented Generation) system based on an expert review of the current implementation. The goal is to move from a \"Production-Grade\" system to a \"State-of-the-Art\" implementation by addressing specific technical recommendations.\n\n**Core Objectives (from Expert Review):**\n1. **Upgrade Chunking Logic**: Move from simple word-based splitting to **Semantic Chunking** to respect paragraph/sentence boundaries and improve embedding quality.\n2. **Implement Reranking**: Introduce a **Cross-Encoder** or **Cohere Rerank** step to refine the top K results from semantic search (e.g., retrieve 20, rerank to top 5).\n3. **Parent Document Retriever**: Implement **Small-to-Big Retrieval** (index small chunks for search, retrieve larger parent context for generation).\n4. **Hybrid Search**: Combine `pgvector` (semantic) with PostgreSQL `tsvector` (keyword/BM25) using **Reciprocal Rank Fusion (RRF)** to catch specific medical terms.\n5. **Vector Indexing**: Add an **HNSW index** to the `vector` column in PostgreSQL to ensure sub-second retrieval as the dataset grows.\n\n## Requirements Discussion\n\n### First Round Questions\n\n**Q1: What is the current chunking implementation and why does it need improvement?**\n**Answer:** The current implementation in `KnowledgeBaseService.chunkText()` uses a simple word-based sliding window approach:\n- 500 words per chunk with 50-word overlap\n- Splits text by whitespace (`text.split(/\\s+/)`)\n- No respect for sentence or paragraph boundaries\n\n**Problem:** This breaks mid-sentence, loses semantic coherence, and creates chunks that may contain incomplete thoughts. Medical documents often have structured sections (procedures, contraindications, dosages) that get fragmented.\n\n**Evidence from codebase:**\n```typescript\n// apps/server/src/modules/knowledge-base/knowledge-base.service.ts (lines 305-322)\nprivate chunkText(\n  text: string,\n  wordsPerChunk: number = 500,\n  overlap: number = 50,\n): string[] {\n  const words = text.split(/\\s+/).filter((w) => w.length > 0);\n  const chunks: string[] = [];\n  for (let i = 0; i < words.length; i += wordsPerChunk - overlap) {\n    const chunk = words.slice(i, i + wordsPerChunk).join(' ');\n    chunks.push(chunk);\n    if (i + wordsPerChunk >= words.length) break;\n  }\n  return chunks;\n}\n```\n\n---\n\n**Q2: What embedding model is currently used and what are the vector dimensions?**\n**Answer:** The system uses **Google Gemini `gemini-embedding-001`** with:\n- **768 dimensions** (truncated from 3072 using Matryoshka Representation Learning)\n- Task types: `RETRIEVAL_DOCUMENT` for ingestion, `RETRIEVAL_QUERY` for search\n- Retry logic with exponential backoff (5 retries max)\n- 1.5-second sleep between chunks to respect rate limits\n\n**Evidence from codebase:**\n```typescript\n// apps/server/src/modules/knowledge-base/knowledge-base.service.ts (lines 335-358)\nconst result = await this.genAI.models.embedContent({\n  model: 'gemini-embedding-001',\n  contents: [{ role: 'user', parts: [{ text }] }],\n  config: {\n    taskType: taskType,\n    outputDimensionality: 768,\n  },\n});\n```\n\n**Benchmark context (2026):**\n| Model | ELO Score | Best For |\n|-------|-----------|----------|\n| Gemini embedding-001 | ~1480 | Current baseline, free tier |\n| OpenAI text-embedding-3-large | 1539 | Best accuracy |\n| Voyage 3 Large | 1528 | Excellent, Anthropic-recommended |\n\n---\n\n**Q3: How does the current retrieval work and what is the multi-query strategy?**\n**Answer:** The system implements a **Multi-Query RAG Strategy** with 3 parallel queries:\n\n1. **Diagnosis Query**: Built from `consultationReason`, `initialMedicalDiagnosis`, and latest evaluation\n2. **Treatment Query**: Built from `\"tratamiento fisioterapia\"` + diagnosis\n3. **Contraindications Query**: Built from `pharmacologicalHistory`\n\nEach query retrieves top 5 chunks, then results are deduplicated using a simple hash of the first 100 characters.\n\n**Evidence from codebase:**\n```typescript\n// apps/server/src/modules/ai-analysis/ai-analysis.service.ts (lines 125-162)\nprivate async executeMultiQueryRag(caseData: any): Promise<RagChunk[]> {\n  const [diagnosisResults, treatmentResults, contraindicationResults] =\n    await Promise.all([\n      this.knowledgeBaseService.findSimilar(diagnosisQuery, 5),\n      this.knowledgeBaseService.findSimilar(treatmentQuery, 5),\n      this.knowledgeBaseService.findSimilar(contraindicationsQuery, 3),\n    ]);\n  // ... deduplication using first 100 chars as hash\n}\n```\n\n---\n\n**Q4: What vector store and indexing is currently used?**\n**Answer:** PostgreSQL with **pgvector** extension:\n- HNSW index already exists on the vector column (created in Week 13)\n- Uses cosine distance operator (`<=>`) for similarity search\n- Raw SQL queries for vector search (Prisma doesn't support vector types natively)\n\n**Evidence from codebase:**\n```typescript\n// apps/server/src/modules/knowledge-base/knowledge-base.service.ts (lines 177-190)\nconst results: any[] = await this.prisma.$queryRaw`\n  SELECT \n    e.content, \n    e.\"pageNumber\", \n    d.title as \"documentTitle\",\n    ...\n    1 - (e.vector <=> ${vectorString}::vector) as similarity\n  FROM embeddings e\n  JOIN documents d ON e.\"documentId\" = d.id\n  ORDER BY e.vector <=> ${vectorString}::vector\n  LIMIT ${limit}\n`;\n```\n\n**Schema:**\n```prisma\nmodel Embedding {\n  id         String                @id @default(uuid())\n  content    String\n  vector     Unsupported(\"vector\")\n  pageNumber Int\n  documentId String\n  document   Document @relation(...)\n}\n```\n\n---\n\n**Q5: Is there any reranking currently implemented?**\n**Answer:** **No reranking is implemented.** The system relies purely on vector similarity scores from pgvector. The deduplication step sorts by similarity but doesn't re-evaluate relevance.\n\n**Gap:** Cross-encoder reranking (which jointly encodes query + document) can improve precision by 40% according to 2026 benchmarks.\n\n---\n\n**Q6: Is hybrid search (BM25 + dense) currently implemented?**\n**Answer:** **No hybrid search is implemented.** The system uses dense retrieval only.\n\n**Gap:** Pure vector search misses exact matches for:\n- Drug names (e.g., \"metformina\")\n- ICD codes (e.g., \"M54.5\")\n- Medical abbreviations (e.g., \"CAD\" = coronary artery disease)\n\nPostgreSQL `tsvector` with BM25 scoring can catch these exact matches.\n\n---\n\n**Q7: What is the performance target for retrieval?**\n**Answer:** From roadmap AI Gate Check:\n- Query response time: **< 3 seconds** (end-to-end including LLM)\n- RAG retrieval should be: **< 500ms** (to leave time for LLM generation)\n\nCurrent performance is acceptable but will degrade as the knowledge base grows beyond current 3-5 books.\n\n---\n\n**Q8: What evaluation framework exists for measuring RAG quality?**\n**Answer:** **No formal evaluation framework exists.** There are manual test scripts:\n- `pnpm knowledge:search \"query\"` - Tests similarity search\n- Integration tests mock the embedding calls\n\n**Gap:** No metrics for:\n- Context Precision (% of retrieved chunks that are relevant)\n- Context Recall (% of relevant chunks retrieved)\n- Faithfulness (LLM response grounded in context)\n- Answer Relevancy\n\nRAGAS framework is the industry standard for these metrics.\n\n---\n\n### Existing Code to Reference\n\n**Similar Features Identified:**\n\n1. **KnowledgeBaseService** - Path: `apps/server/src/modules/knowledge-base/knowledge-base.service.ts`\n   - Core ingestion and retrieval logic\n   - `chunkText()` method to be upgraded\n   - `findSimilar()` method to be enhanced with hybrid search\n   - `generateEmbedding()` method (no changes needed)\n\n2. **AiAnalysisService** - Path: `apps/server/src/modules/ai-analysis/ai-analysis.service.ts`\n   - Multi-query RAG orchestration\n   - `executeMultiQueryRag()` to add reranking step\n   - `deduplicateChunks()` to be enhanced\n\n3. **PromptBuilderService** - Path: `apps/server/src/modules/ai-analysis/services/prompt-builder.service.ts`\n   - RAG context formatting for LLM\n   - No changes needed\n\n4. **Prisma Schema** - Path: `apps/server/prisma/schema.prisma`\n   - Document and Embedding models\n   - May need schema changes for parent-document retrieval\n\n5. **Existing Tests** - Path: `apps/server/src/modules/knowledge-base/knowledge-base.service.spec.ts`\n   - Has `chunkText` tests\n   - Will need new tests for semantic chunking, hybrid search, reranking\n\n**Backend patterns to follow:**\n- NestJS service injection pattern\n- Retry utility from transcription module (`withRetry`)\n- Raw SQL for pgvector operations\n- Prisma for regular CRUD\n\n---\n\n### Follow-up Questions\n\n**Follow-up 1: Should we use LangChain/LlamaIndex or keep the custom implementation?**\n**Answer:** The current implementation is **custom NestJS without LangChain/LangGraph**. This is intentional - keeps dependencies minimal and integrates cleanly with NestJS patterns. \n\n**Recommendation:** Keep custom implementation but borrow patterns from LangChain (semantic chunking algorithm, RRF formula). Don't introduce LangChain as a dependency.\n\n**Follow-up 2: What is the budget for external API calls (Cohere Rerank)?**\n**Answer:** Consider both options:\n1. **Cohere Rerank v3 API** - $0.50/1K documents, highest quality (1627 ELO)\n2. **Local cross-encoder** - Free, slightly lower quality, ~200ms latency\n\n**Recommendation:** Start with Cohere Rerank for quality, add local fallback later if cost becomes an issue.\n\n**Follow-up 3: Do we need to re-embed all existing documents after upgrading chunking?**\n**Answer:** **Yes.** Semantic chunking produces different chunk boundaries, so all documents must be re-processed. The ingestion script already handles this:\n1. Delete existing document and embeddings\n2. Re-run `pnpm knowledge:ingest`\n\n**Mitigation:** The atomic backup system (`backups/library/*.sql.gz`) allows rollback if needed.\n\n---\n\n## Visual Assets\n\n### Files Provided:\nNo visual assets provided.\n\n### Visual Insights:\nN/A - This is a backend/infrastructure feature with no UI components.\n\n---\n\n## Requirements Summary\n\n### Functional Requirements\n\n**FR1: Semantic Chunking**\n- Replace word-based chunking with semantic sentence grouping\n- Group sentences by embedding similarity (threshold ~0.85)\n- Preserve paragraph and section boundaries\n- Target chunk size: 256-512 tokens with 10-20% overlap\n- **Implementation:** New `semanticChunk()` method in KnowledgeBaseService\n\n**FR2: Parent-Document Retrieval**\n- Index small chunks (256-512 tokens) for precise retrieval\n- Store parent document reference (2000 tokens) for context\n- Return parent document to LLM for generation\n- **Implementation:** Add `parentId` field to Embedding model, new retrieval logic\n\n**FR3: Reranking with Cross-Encoder**\n- Retrieve 15-20 candidates from pgvector\n- Rerank to top 5 using Cohere Rerank v3 or local cross-encoder\n- Add reranking step after deduplication in `executeMultiQueryRag()`\n- **Implementation:** New `rerankChunks()` method in AiAnalysisService\n\n**FR4: Hybrid Search (BM25 + Dense)**\n- Add PostgreSQL `tsvector` full-text index on `embeddings.content`\n- Implement Reciprocal Rank Fusion (RRF) to combine scores\n- Fall back to dense-only if full-text returns no results\n- **Implementation:** Enhance `findSimilar()` with hybrid query\n\n**FR5: RAG Evaluation Framework**\n- Implement RAGAS metrics: Context Precision, Context Recall, Faithfulness\n- Create test suite with medical queries and expected documents\n- Target metrics: Precision > 0.75, Faithfulness > 0.80\n- **Implementation:** New `rag-evaluation.spec.ts` test file\n\n**FR6: Metadata Filtering**\n- Add optional filters to `findSimilar()`: documentIds, minYear, volume\n- Enable UI to scope searches to specific books\n- **Implementation:** Extend findSimilar signature and query\n\n### Reusability Opportunities\n\n**Components to reuse:**\n- `withRetry` utility from transcription module\n- Prisma raw SQL patterns from existing `findSimilar()`\n- NestJS service injection pattern\n\n**External patterns to adopt:**\n- Semantic chunking algorithm from LangChain/Chonkie\n- RRF formula: `1.0 / (k + rank)` where k=60\n- RAGAS evaluation framework\n\n### Scope Boundaries\n\n**In Scope:**\n- Semantic chunking implementation\n- Parent-document retrieval pattern\n- Cohere Rerank integration (with local fallback)\n- Hybrid search (pgvector + tsvector + RRF)\n- RAGAS evaluation test suite\n- Metadata filtering\n- Re-ingestion of existing documents\n\n**Out of Scope:**\n- Embedding model migration (keep Gemini for now)\n- Frontend UI changes (backend only)\n- Knowledge graph construction\n- LLM fine-tuning\n- LangChain/LangGraph migration\n\n### Technical Considerations\n\n**Integration points:**\n- KnowledgeBaseService (primary changes)\n- AiAnalysisService (reranking integration)\n- Prisma schema (parent-document fields)\n- PostgreSQL (tsvector index)\n\n**External dependencies to add:**\n- `@cohere-ai/cohere` - For Cohere Rerank API\n- `ragas` (dev dependency) - For evaluation metrics\n\n**Database migrations needed:**\n1. Add `parentId` column to embeddings table\n2. Add `parentContent` column or separate table for parent documents\n3. Create GIN index on `to_tsvector('english', content)`\n\n**Performance considerations:**\n- Semantic chunking is slower than word-based (batching needed)\n- Reranking adds ~100-200ms latency (acceptable)\n- Hybrid search adds ~50ms (acceptable)\n- Total RAG should remain < 500ms\n\n**Rollback strategy:**\n- Atomic book backups in `backups/library/` enable per-book rollback\n- Feature flags can disable reranking/hybrid if issues arise\n\n---\n\n## Implementation Priority\n\n| Priority | Task | Expected Improvement | Effort |\n|----------|------|---------------------|--------|\n| 1 | Semantic Chunking | +70% retrieval accuracy | High |\n| 2 | Reranking (Cohere) | +40% precision | Medium |\n| 3 | Hybrid Search | +40% exact matches | Medium |\n| 4 | Parent-Document | +30% context retention | High |\n| 5 | RAGAS Evaluation | Measurability | Low |\n| 6 | Metadata Filtering | UX improvement | Low |\n\n**Recommended sequence:** 1 → 5 (to measure baseline) → 2 → 3 → 4 → 6\n\n---\n\n## Success Metrics\n\n| Metric | Current (Estimated) | Target |\n|--------|---------------------|--------|\n| Context Precision | ~0.50 | > 0.75 |\n| Context Recall | ~0.60 | > 0.70 |\n| Faithfulness | ~0.70 | > 0.80 |\n| Exact term retrieval | Fails often | Works |\n| RAG latency | ~300ms | < 500ms |\n| End-to-end response | ~2.5s | < 3s |\n",
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/specs/2026-02-06-rag-optimization/planning/requirements.md"
 }
-```
+````
 
 **Output:**
+
 ```
 Wrote file successfully.
 ```
@@ -7033,6 +7232,7 @@ Now let me verify the file was created correctly and provide the completion mess
 **Tool: bash**
 
 **Input:**
+
 ```json
 {
   "command": "ls -la agent-os/specs/2026-02-06-rag-optimization/planning/",
@@ -7041,6 +7241,7 @@ Now let me verify the file was created correctly and provide the completion mess
 ```
 
 **Output:**
+
 ```
 total 40
 drwxr-xr-x@ 5 edmundo.figueroaherbas@medirect.com.mt  staff    160 Feb  8 00:48 .
@@ -7054,6 +7255,7 @@ drwxr-xr-x@ 2 edmundo.figueroaherbas@medirect.com.mt  staff     64 Feb  6 18:18 
 **Tool: bash**
 
 **Input:**
+
 ```json
 {
   "command": "wc -l agent-os/specs/2026-02-06-rag-optimization/planning/requirements.md",
@@ -7062,6 +7264,7 @@ drwxr-xr-x@ 2 edmundo.figueroaherbas@medirect.com.mt  staff     64 Feb  6 18:18 
 ```
 
 **Output:**
+
 ```
      405 agent-os/specs/2026-02-06-rag-optimization/planning/requirements.md
 
@@ -7106,16 +7309,16 @@ agent-os/specs/2026-02-06-rag-optimization/
 
 ### Requirements Summary:
 
-| Section | Content |
-|---------|---------|
-| **Initial Description** | 5 core objectives from expert review |
-| **Q&A Discussion** | 8 questions with code evidence |
-| **Existing Code** | 5 files identified for reference |
-| **Follow-ups** | 3 architectural decisions documented |
-| **Functional Requirements** | 6 FRs with implementation notes |
-| **Scope Boundaries** | Clear in/out of scope |
-| **Priority Order** | 6 tasks with expected improvements |
-| **Success Metrics** | Quantified targets (RAGAS scores) |
+| Section                     | Content                              |
+| --------------------------- | ------------------------------------ |
+| **Initial Description**     | 5 core objectives from expert review |
+| **Q&A Discussion**          | 8 questions with code evidence       |
+| **Existing Code**           | 5 files identified for reference     |
+| **Follow-ups**              | 3 architectural decisions documented |
+| **Functional Requirements** | 6 FRs with implementation notes      |
+| **Scope Boundaries**        | Clear in/out of scope                |
+| **Priority Order**          | 6 tasks with expected improvements   |
+| **Success Metrics**         | Quantified targets (RAGAS scores)    |
 
 ---
 
@@ -7129,20 +7332,23 @@ agent-os/specs/2026-02-06-rag-optimization/
 
 [search-mode]
 MAXIMIZE SEARCH EFFORT. Launch multiple background agents IN PARALLEL:
+
 - explore agents (codebase patterns, file structures, ast-grep)
 - librarian agents (remote repos, official docs, GitHub examples)
-Plus direct tools: Grep, ripgrep (rg), ast-grep (sg)
-NEVER stop at first result - be exhaustive.
+  Plus direct tools: Grep, ripgrep (rg), ast-grep (sg)
+  NEVER stop at first result - be exhaustive.
 
 [analyze-mode]
 ANALYSIS MODE. Gather context before diving deep:
 
 CONTEXT GATHERING (parallel):
+
 - 1-2 explore agents (codebase patterns, implementations)
 - 1-2 librarian agents (if external library involved)
 - Direct tools: Grep, AST-grep, LSP for targeted searches
 
 IF COMPLEX - DO NOT STRUGGLE ALONE. Consult specialists:
+
 - **Oracle**: Conventional problems (architecture, debugging, complex logic)
 - **Artistry**: Non-conventional problems (different approach needed)
 
@@ -7150,7 +7356,7 @@ SYNTHESIZE findings before proceeding.
 
 ---
 
-continue @agent-os/commands/write-spec/write-spec.md 
+continue @agent-os/commands/write-spec/write-spec.md
 
 ---
 
@@ -7170,6 +7376,7 @@ I'll follow the write-spec workflow to create the specification document.
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/specs/2026-02-06-rag-optimization/planning/requirements.md"
@@ -7177,37 +7384,38 @@ I'll follow the write-spec workflow to create the specification document.
 ```
 
 **Output:**
-```
+
+````
 <file>
 00001| # Spec Requirements: RAG Optimization & Refinement
-00002| 
+00002|
 00003| ## Initial Description
-00004| 
+00004|
 00005| The user wants to optimize the existing RAG (Retrieval-Augmented Generation) system based on an expert review of the current implementation. The goal is to move from a "Production-Grade" system to a "State-of-the-Art" implementation by addressing specific technical recommendations.
-00006| 
+00006|
 00007| **Core Objectives (from Expert Review):**
-00008| 
+00008|
 00009| 1. **Upgrade Chunking Logic**: Move from simple word-based splitting to **Semantic Chunking** to respect paragraph/sentence boundaries and improve embedding quality.
 00010| 2. **Implement Reranking**: Introduce a **Cross-Encoder** or **Cohere Rerank** step to refine the top K results from semantic search (e.g., retrieve 20, rerank to top 5).
 00011| 3. **Parent Document Retriever**: Implement **Small-to-Big Retrieval** (index small chunks for search, retrieve larger parent context for generation).
 00012| 4. **Hybrid Search**: Combine `pgvector` (semantic) with PostgreSQL `tsvector` (keyword/BM25) using **Reciprocal Rank Fusion (RRF)** to catch specific medical terms.
 00013| 5. **Vector Indexing**: Add an **HNSW index** to the `vector` column in PostgreSQL to ensure sub-second retrieval as the dataset grows.
-00014| 
+00014|
 00015| ## Requirements Discussion
-00016| 
+00016|
 00017| ### First Round Questions
-00018| 
+00018|
 00019| **Q1: What is the current chunking implementation and why does it need improvement?**
 00020| **Answer:** The current implementation in `KnowledgeBaseService.chunkText()` uses a simple word-based sliding window approach:
-00021| 
+00021|
 00022| - 500 words per chunk with 50-word overlap
 00023| - Splits text by whitespace (`text.split(/\s+/)`)
 00024| - No respect for sentence or paragraph boundaries
-00025| 
+00025|
 00026| **Problem:** This breaks mid-sentence, loses semantic coherence, and creates chunks that may contain incomplete thoughts. Medical documents often have structured sections (procedures, contraindications, dosages) that get fragmented.
-00027| 
+00027|
 00028| **Evidence from codebase:**
-00029| 
+00029|
 00030| ```typescript
 00031| // apps/server/src/modules/knowledge-base/knowledge-base.service.ts (lines 305-322)
 00032| private chunkText(
@@ -7225,19 +7433,19 @@ I'll follow the write-spec workflow to create the specification document.
 00044|   return chunks;
 00045| }
 00046| ```
-00047| 
+00047|
 00048| ---
-00049| 
+00049|
 00050| **Q2: What embedding model is currently used and what are the vector dimensions?**
 00051| **Answer:** The system uses **Google Gemini `gemini-embedding-001`** with:
-00052| 
+00052|
 00053| - **768 dimensions** (truncated from 3072 using Matryoshka Representation Learning)
 00054| - Task types: `RETRIEVAL_DOCUMENT` for ingestion, `RETRIEVAL_QUERY` for search
 00055| - Retry logic with exponential backoff (5 retries max)
 00056| - 1.5-second sleep between chunks to respect rate limits
-00057| 
+00057|
 00058| **Evidence from codebase:**
-00059| 
+00059|
 00060| ```typescript
 00061| // apps/server/src/modules/knowledge-base/knowledge-base.service.ts (lines 335-358)
 00062| const result = await this.genAI.models.embedContent({
@@ -7249,27 +7457,27 @@ I'll follow the write-spec workflow to create the specification document.
 00068|   },
 00069| });
 00070| ```
-00071| 
+00071|
 00072| **Benchmark context (2026):**
 00073| | Model | ELO Score | Best For |
 00074| |-------|-----------|----------|
 00075| | Gemini embedding-001 | ~1480 | Current baseline, free tier |
 00076| | OpenAI text-embedding-3-large | 1539 | Best accuracy |
 00077| | Voyage 3 Large | 1528 | Excellent, Anthropic-recommended |
-00078| 
+00078|
 00079| ---
-00080| 
+00080|
 00081| **Q3: How does the current retrieval work and what is the multi-query strategy?**
 00082| **Answer:** The system implements a **Multi-Query RAG Strategy** with 3 parallel queries:
-00083| 
+00083|
 00084| 1. **Diagnosis Query**: Built from `consultationReason`, `initialMedicalDiagnosis`, and latest evaluation
 00085| 2. **Treatment Query**: Built from `"tratamiento fisioterapia"` + diagnosis
 00086| 3. **Contraindications Query**: Built from `pharmacologicalHistory`
-00087| 
+00087|
 00088| Each query retrieves top 5 chunks, then results are deduplicated using a simple hash of the first 100 characters.
-00089| 
+00089|
 00090| **Evidence from codebase:**
-00091| 
+00091|
 00092| ```typescript
 00093| // apps/server/src/modules/ai-analysis/ai-analysis.service.ts (lines 125-162)
 00094| private async executeMultiQueryRag(caseData: any): Promise<RagChunk[]> {
@@ -7282,24 +7490,24 @@ I'll follow the write-spec workflow to create the specification document.
 00101|   // ... deduplication using first 100 chars as hash
 00102| }
 00103| ```
-00104| 
+00104|
 00105| ---
-00106| 
+00106|
 00107| **Q4: What vector store and indexing is currently used?**
 00108| **Answer:** PostgreSQL with **pgvector** extension:
-00109| 
+00109|
 00110| - HNSW index already exists on the vector column (created in Week 13)
 00111| - Uses cosine distance operator (`<=>`) for similarity search
 00112| - Raw SQL queries for vector search (Prisma doesn't support vector types natively)
-00113| 
+00113|
 00114| **Evidence from codebase:**
-00115| 
+00115|
 00116| ```typescript
 00117| // apps/server/src/modules/knowledge-base/knowledge-base.service.ts (lines 177-190)
 00118| const results: any[] = await this.prisma.$queryRaw`
-00119|   SELECT 
-00120|     e.content, 
-00121|     e."pageNumber", 
+00119|   SELECT
+00120|     e.content,
+00121|     e."pageNumber",
 00122|     d.title as "documentTitle",
 00123|     ...
 00124|     1 - (e.vector <=> ${vectorString}::vector) as similarity
@@ -7309,9 +7517,9 @@ I'll follow the write-spec workflow to create the specification document.
 00128|   LIMIT ${limit}
 00129| `;
 00130| ```
-00131| 
+00131|
 00132| **Schema:**
-00133| 
+00133|
 00134| ```prisma
 00135| model Embedding {
 00136|   id         String                @id @default(uuid())
@@ -7322,193 +7530,193 @@ I'll follow the write-spec workflow to create the specification document.
 00141|   document   Document @relation(...)
 00142| }
 00143| ```
-00144| 
+00144|
 00145| ---
-00146| 
+00146|
 00147| **Q5: Is there any reranking currently implemented?**
 00148| **Answer:** **No reranking is implemented.** The system relies purely on vector similarity scores from pgvector. The deduplication step sorts by similarity but doesn't re-evaluate relevance.
-00149| 
+00149|
 00150| **Gap:** Cross-encoder reranking (which jointly encodes query + document) can improve precision by 40% according to 2026 benchmarks.
-00151| 
+00151|
 00152| ---
-00153| 
+00153|
 00154| **Q6: Is hybrid search (BM25 + dense) currently implemented?**
 00155| **Answer:** **No hybrid search is implemented.** The system uses dense retrieval only.
-00156| 
+00156|
 00157| **Gap:** Pure vector search misses exact matches for:
-00158| 
+00158|
 00159| - Drug names (e.g., "metformina")
 00160| - ICD codes (e.g., "M54.5")
 00161| - Medical abbreviations (e.g., "CAD" = coronary artery disease)
-00162| 
+00162|
 00163| PostgreSQL `tsvector` with BM25 scoring can catch these exact matches.
-00164| 
+00164|
 00165| ---
-00166| 
+00166|
 00167| **Q7: What is the performance target for retrieval?**
 00168| **Answer:** From roadmap AI Gate Check:
-00169| 
+00169|
 00170| - Query response time: **< 3 seconds** (end-to-end including LLM)
 00171| - RAG retrieval should be: **< 500ms** (to leave time for LLM generation)
-00172| 
+00172|
 00173| Current performance is acceptable but will degrade as the knowledge base grows beyond current 3-5 books.
-00174| 
+00174|
 00175| ---
-00176| 
+00176|
 00177| **Q8: What evaluation framework exists for measuring RAG quality?**
 00178| **Answer:** **No formal evaluation framework exists.** There are manual test scripts:
-00179| 
+00179|
 00180| - `pnpm knowledge:search "query"` - Tests similarity search
 00181| - Integration tests mock the embedding calls
-00182| 
+00182|
 00183| **Gap:** No metrics for:
-00184| 
+00184|
 00185| - Context Precision (% of retrieved chunks that are relevant)
 00186| - Context Recall (% of relevant chunks retrieved)
 00187| - Faithfulness (LLM response grounded in context)
 00188| - Answer Relevancy
-00189| 
+00189|
 00190| RAGAS framework is the industry standard for these metrics.
-00191| 
+00191|
 00192| ---
-00193| 
+00193|
 00194| ### Existing Code to Reference
-00195| 
+00195|
 00196| **Similar Features Identified:**
-00197| 
+00197|
 00198| 1. **KnowledgeBaseService** - Path: `apps/server/src/modules/knowledge-base/knowledge-base.service.ts`
 00199|    - Core ingestion and retrieval logic
 00200|    - `chunkText()` method to be upgraded
 00201|    - `findSimilar()` method to be enhanced with hybrid search
 00202|    - `generateEmbedding()` method (no changes needed)
-00203| 
+00203|
 00204| 2. **AiAnalysisService** - Path: `apps/server/src/modules/ai-analysis/ai-analysis.service.ts`
 00205|    - Multi-query RAG orchestration
 00206|    - `executeMultiQueryRag()` to add reranking step
 00207|    - `deduplicateChunks()` to be enhanced
-00208| 
+00208|
 00209| 3. **PromptBuilderService** - Path: `apps/server/src/modules/ai-analysis/services/prompt-builder.service.ts`
 00210|    - RAG context formatting for LLM
 00211|    - No changes needed
-00212| 
+00212|
 00213| 4. **Prisma Schema** - Path: `apps/server/prisma/schema.prisma`
 00214|    - Document and Embedding models
 00215|    - May need schema changes for parent-document retrieval
-00216| 
+00216|
 00217| 5. **Existing Tests** - Path: `apps/server/src/modules/knowledge-base/knowledge-base.service.spec.ts`
 00218|    - Has `chunkText` tests
 00219|    - Will need new tests for semantic chunking, hybrid search, reranking
-00220| 
+00220|
 00221| **Backend patterns to follow:**
-00222| 
+00222|
 00223| - NestJS service injection pattern
 00224| - Retry utility from transcription module (`withRetry`)
 00225| - Raw SQL for pgvector operations
 00226| - Prisma for regular CRUD
-00227| 
+00227|
 00228| ---
-00229| 
+00229|
 00230| ### Follow-up Questions
-00231| 
+00231|
 00232| **Follow-up 1: Should we use LangChain/LlamaIndex or keep the custom implementation?**
 00233| **Answer:** The current implementation is **custom NestJS without LangChain/LangGraph**. This is intentional - keeps dependencies minimal and integrates cleanly with NestJS patterns.
-00234| 
+00234|
 00235| **Recommendation:** Keep custom implementation but borrow patterns from LangChain (semantic chunking algorithm, RRF formula). Don't introduce LangChain as a dependency.
-00236| 
+00236|
 00237| **Follow-up 2: What is the budget for external API calls (Cohere Rerank)?**
 00238| **Answer:** Consider both options:
-00239| 
+00239|
 00240| 1. **Cohere Rerank v3 API** - $0.50/1K documents, highest quality (1627 ELO)
 00241| 2. **Local cross-encoder** - Free, slightly lower quality, ~200ms latency
-00242| 
+00242|
 00243| **Recommendation:** Start with Cohere Rerank for quality, add local fallback later if cost becomes an issue.
-00244| 
+00244|
 00245| **Follow-up 3: Do we need to re-embed all existing documents after upgrading chunking?**
 00246| **Answer:** **Yes.** Semantic chunking produces different chunk boundaries, so all documents must be re-processed. The ingestion script already handles this:
-00247| 
+00247|
 00248| 1. Delete existing document and embeddings
 00249| 2. Re-run `pnpm knowledge:ingest`
-00250| 
+00250|
 00251| **Mitigation:** The atomic backup system (`backups/library/*.sql.gz`) allows rollback if needed.
-00252| 
+00252|
 00253| ---
-00254| 
+00254|
 00255| ## Visual Assets
-00256| 
+00256|
 00257| ### Files Provided:
-00258| 
+00258|
 00259| No visual assets provided.
-00260| 
+00260|
 00261| ### Visual Insights:
-00262| 
+00262|
 00263| N/A - This is a backend/infrastructure feature with no UI components.
-00264| 
+00264|
 00265| ---
-00266| 
+00266|
 00267| ## Requirements Summary
-00268| 
+00268|
 00269| ### Functional Requirements
-00270| 
+00270|
 00271| **FR1: Semantic Chunking**
-00272| 
+00272|
 00273| - Replace word-based chunking with semantic sentence grouping
 00274| - Group sentences by embedding similarity (threshold ~0.85)
 00275| - Preserve paragraph and section boundaries
 00276| - Target chunk size: 256-512 tokens with 10-20% overlap
 00277| - **Implementation:** New `semanticChunk()` method in KnowledgeBaseService
-00278| 
+00278|
 00279| **FR2: Parent-Document Retrieval**
-00280| 
+00280|
 00281| - Index small chunks (256-512 tokens) for precise retrieval
 00282| - Store parent document reference (2000 tokens) for context
 00283| - Return parent document to LLM for generation
 00284| - **Implementation:** Add `parentId` field to Embedding model, new retrieval logic
-00285| 
+00285|
 00286| **FR3: Reranking with Cross-Encoder**
-00287| 
+00287|
 00288| - Retrieve 15-20 candidates from pgvector
 00289| - Rerank to top 5 using Cohere Rerank v3 or local cross-encoder
 00290| - Add reranking step after deduplication in `executeMultiQueryRag()`
 00291| - **Implementation:** New `rerankChunks()` method in AiAnalysisService
-00292| 
+00292|
 00293| **FR4: Hybrid Search (BM25 + Dense)**
-00294| 
+00294|
 00295| - Add PostgreSQL `tsvector` full-text index on `embeddings.content`
 00296| - Implement Reciprocal Rank Fusion (RRF) to combine scores
 00297| - Fall back to dense-only if full-text returns no results
 00298| - **Implementation:** Enhance `findSimilar()` with hybrid query
-00299| 
+00299|
 00300| **FR5: RAG Evaluation Framework**
-00301| 
+00301|
 00302| - Implement RAGAS metrics: Context Precision, Context Recall, Faithfulness
 00303| - Create test suite with medical queries and expected documents
 00304| - Target metrics: Precision > 0.75, Faithfulness > 0.80
 00305| - **Implementation:** New `rag-evaluation.spec.ts` test file
-00306| 
+00306|
 00307| **FR6: Metadata Filtering**
-00308| 
+00308|
 00309| - Add optional filters to `findSimilar()`: documentIds, minYear, volume
 00310| - Enable UI to scope searches to specific books
 00311| - **Implementation:** Extend findSimilar signature and query
-00312| 
+00312|
 00313| ### Reusability Opportunities
-00314| 
+00314|
 00315| **Components to reuse:**
-00316| 
+00316|
 00317| - `withRetry` utility from transcription module
 00318| - Prisma raw SQL patterns from existing `findSimilar()`
 00319| - NestJS service injection pattern
-00320| 
+00320|
 00321| **External patterns to adopt:**
-00322| 
+00322|
 00323| - Semantic chunking algorithm from LangChain/Chonkie
 00324| - RRF formula: `1.0 / (k + rank)` where k=60
 00325| - RAGAS evaluation framework
-00326| 
+00326|
 00327| ### Scope Boundaries
-00328| 
+00328|
 00329| **In Scope:**
-00330| 
+00330|
 00331| - Semantic chunking implementation
 00332| - Parent-document retrieval pattern
 00333| - Cohere Rerank integration (with local fallback)
@@ -7516,51 +7724,51 @@ I'll follow the write-spec workflow to create the specification document.
 00335| - RAGAS evaluation test suite
 00336| - Metadata filtering
 00337| - Re-ingestion of existing documents
-00338| 
+00338|
 00339| **Out of Scope:**
-00340| 
+00340|
 00341| - Embedding model migration (keep Gemini for now)
 00342| - Frontend UI changes (backend only)
 00343| - Knowledge graph construction
 00344| - LLM fine-tuning
 00345| - LangChain/LangGraph migration
-00346| 
+00346|
 00347| ### Technical Considerations
-00348| 
+00348|
 00349| **Integration points:**
-00350| 
+00350|
 00351| - KnowledgeBaseService (primary changes)
 00352| - AiAnalysisService (reranking integration)
 00353| - Prisma schema (parent-document fields)
 00354| - PostgreSQL (tsvector index)
-00355| 
+00355|
 00356| **External dependencies to add:**
-00357| 
+00357|
 00358| - `@cohere-ai/cohere` - For Cohere Rerank API
 00359| - `ragas` (dev dependency) - For evaluation metrics
-00360| 
+00360|
 00361| **Database migrations needed:**
-00362| 
+00362|
 00363| 1. Add `parentId` column to embeddings table
 00364| 2. Add `parentContent` column or separate table for parent documents
 00365| 3. Create GIN index on `to_tsvector('english', content)`
-00366| 
+00366|
 00367| **Performance considerations:**
-00368| 
+00368|
 00369| - Semantic chunking is slower than word-based (batching needed)
 00370| - Reranking adds ~100-200ms latency (acceptable)
 00371| - Hybrid search adds ~50ms (acceptable)
 00372| - Total RAG should remain < 500ms
-00373| 
+00373|
 00374| **Rollback strategy:**
-00375| 
+00375|
 00376| - Atomic book backups in `backups/library/` enable per-book rollback
 00377| - Feature flags can disable reranking/hybrid if issues arise
-00378| 
+00378|
 00379| ---
-00380| 
+00380|
 00381| ## Implementation Priority
-00382| 
+00382|
 00383| | Priority | Task               | Expected Improvement    | Effort |
 00384| | -------- | ------------------ | ----------------------- | ------ |
 00385| | 1        | Semantic Chunking  | +70% retrieval accuracy | High   |
@@ -7569,13 +7777,13 @@ I'll follow the write-spec workflow to create the specification document.
 00388| | 4        | Parent-Document    | +30% context retention  | High   |
 00389| | 5        | RAGAS Evaluation   | Measurability           | Low    |
 00390| | 6        | Metadata Filtering | UX improvement          | Low    |
-00391| 
+00391|
 00392| **Recommended sequence:** 1 → 5 (to measure baseline) → 2 → 3 → 4 → 6
-00393| 
+00393|
 00394| ---
-00395| 
+00395|
 00396| ## Success Metrics
-00397| 
+00397|
 00398| | Metric               | Current (Estimated) | Target  |
 00399| | -------------------- | ------------------- | ------- |
 00400| | Context Precision    | ~0.50               | > 0.75  |
@@ -7584,15 +7792,16 @@ I'll follow the write-spec workflow to create the specification document.
 00403| | Exact term retrieval | Fails often         | Works   |
 00404| | RAG latency          | ~300ms              | < 500ms |
 00405| | End-to-end response  | ~2.5s               | < 3s    |
-00406| 
+00406|
 
 (End of file - total 406 lines)
 </file>
-```
+````
 
 **Tool: bash**
 
 **Input:**
+
 ```json
 {
   "description": "Check for visual assets in spec",
@@ -7603,6 +7812,7 @@ I'll follow the write-spec workflow to create the specification document.
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/standards/backend/api.md"
@@ -7610,10 +7820,11 @@ I'll follow the write-spec workflow to create the specification document.
 ```
 
 **Output:**
+
 ```
 <file>
 00001| ## API endpoint standards and conventions
-00002| 
+00002|
 00003| - **RESTful Design**: Follow REST principles with clear resource-based URLs and appropriate HTTP methods (GET, POST, PUT, PATCH, DELETE)
 00004| - **Consistent Naming**: Use consistent, lowercase, hyphenated or underscored naming conventions for endpoints across the API
 00005| - **Versioning**: Implement API versioning strategy (URL path or headers) to manage breaking changes without disrupting existing clients
@@ -7622,7 +7833,7 @@ I'll follow the write-spec workflow to create the specification document.
 00008| - **Query Parameters**: Use query parameters for filtering, sorting, pagination, and search rather than creating separate endpoints
 00009| - **HTTP Status Codes**: Return appropriate, consistent HTTP status codes that accurately reflect the response (200, 201, 400, 404, 500, etc.)
 00010| - **Rate Limiting Headers**: Include rate limit information in response headers to help clients manage their usage
-00011| 
+00011|
 
 (End of file - total 11 lines)
 </file>
@@ -7631,6 +7842,7 @@ I'll follow the write-spec workflow to create the specification document.
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/standards/testing/test-writing.md"
@@ -7638,10 +7850,11 @@ I'll follow the write-spec workflow to create the specification document.
 ```
 
 **Output:**
+
 ```
 <file>
 00001| ## Test coverage best practices
-00002| 
+00002|
 00003| - **Write Minimal Tests During Development**: Do NOT write tests for every change or intermediate step. Focus on completing the feature implementation first, then add strategic tests only at logical completion points
 00004| - **Test Only Core User Flows**: Write tests exclusively for critical paths and primary user workflows. Skip writing tests for non-critical utilities and secondary workflows until if/when you're instructed to do so.
 00005| - **Defer Edge Case Testing**: Do NOT test edge cases, error states, or validation logic unless they are business-critical. These can be addressed in dedicated testing phases, not during feature development.
@@ -7649,7 +7862,7 @@ I'll follow the write-spec workflow to create the specification document.
 00007| - **Clear Test Names**: Use descriptive names that explain what's being tested and the expected outcome
 00008| - **Mock External Dependencies**: Isolate units by mocking databases, APIs, file systems, and other external services
 00009| - **Fast Execution**: Keep unit tests fast (milliseconds) so developers run them frequently during development
-00010| 
+00010|
 
 (End of file - total 10 lines)
 </file>
@@ -7661,14 +7874,14 @@ I'll follow the write-spec workflow to create the specification document.
 
 _Thinking:_
 
-The user wants me to follow the write-spec workflow to create the spec.md document. Let me:1. Read the requirements document I just created
-2. Check for visual assets3. Search for reusable code patterns4. Create the spec.md following the exact template
+The user wants me to follow the write-spec workflow to create the spec.md document. Let me:1. Read the requirements document I just created 2. Check for visual assets3. Search for reusable code patterns4. Create the spec.md following the exact template
 
 Now let me search for reusable code patterns before writing the spec:
 
 **Tool: grep**
 
 **Input:**
+
 ```json
 {
   "include": "*.ts",
@@ -7677,6 +7890,7 @@ Now let me search for reusable code patterns before writing the spec:
 ```
 
 **Output:**
+
 ```
 Found 9 match(es) in 5 file(s)
 
@@ -7704,6 +7918,7 @@ Found 9 match(es) in 5 file(s)
 **Tool: grep**
 
 **Input:**
+
 ```json
 {
   "include": "*.ts",
@@ -7713,6 +7928,7 @@ Found 9 match(es) in 5 file(s)
 ```
 
 **Output:**
+
 ```
 Found 4 match(es) in 2 file(s)
 
@@ -7729,6 +7945,7 @@ Found 4 match(es) in 2 file(s)
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/src/modules/transcription/utils/retry.ts"
@@ -7736,10 +7953,11 @@ Found 4 match(es) in 2 file(s)
 ```
 
 **Output:**
+
 ```
 <file>
 00001| import { Logger } from '@nestjs/common';
-00002| 
+00002|
 00003| export async function withRetry<T>(
 00004|   fn: () => Promise<T>,
 00005|   options: { maxRetries: number; initialDelay?: number },
@@ -7747,7 +7965,7 @@ Found 4 match(es) in 2 file(s)
 00007| ): Promise<T> {
 00008|   let attempt = 0;
 00009|   const initialDelay = options.initialDelay || 1000;
-00010| 
+00010|
 00011|   while (true) {
 00012|     try {
 00013|       return await fn();
@@ -7756,9 +7974,9 @@ Found 4 match(es) in 2 file(s)
 00016|       if (attempt > options.maxRetries) {
 00017|         throw error;
 00018|       }
-00019| 
+00019|
 00020|       let delay = Math.min(initialDelay * Math.pow(2, attempt - 1), 16000);
-00021| 
+00021|
 00022|       const retryAfterHeader = error?.headers?.['retry-after'];
 00023|       if (retryAfterHeader) {
 00024|         const retryAfter = parseInt(retryAfterHeader, 10);
@@ -7766,18 +7984,18 @@ Found 4 match(es) in 2 file(s)
 00026|           delay = retryAfter * 1000;
 00027|         }
 00028|       }
-00029| 
+00029|
 00030|       if (logger) {
 00031|         logger.warn(
 00032|           `Attempt ${attempt} failed. Retrying in ${delay}ms. Error: ${error.message}`,
 00033|         );
 00034|       }
-00035| 
+00035|
 00036|       await new Promise((resolve) => setTimeout(resolve, delay));
 00037|     }
 00038|   }
 00039| }
-00040| 
+00040|
 
 (End of file - total 40 lines)
 </file>
@@ -7789,14 +8007,14 @@ Found 4 match(es) in 2 file(s)
 
 _Thinking:_
 
-The user wants me to follow the write-spec workflow to create the spec.md document. Let me:1. Read the requirements document I just created
-2. Check for visual assets3. Search for reusable code patterns4. Create the spec.md following the exact template
+The user wants me to follow the write-spec workflow to create the spec.md document. Let me:1. Read the requirements document I just created 2. Check for visual assets3. Search for reusable code patterns4. Create the spec.md following the exact template
 
 Good, I have all the context. Now let me create the spec.md document following the exact template:
 
 **Tool: write**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/specs/2026-02-06-rag-optimization/spec.md",
@@ -7805,6 +8023,7 @@ Good, I have all the context. Now let me create the spec.md document following t
 ```
 
 **Output:**
+
 ```
 Wrote file successfully.
 ```
@@ -7820,6 +8039,7 @@ The user wants me to follow the write-spec workflow to create the spec.md docume
 **Tool: bash**
 
 **Input:**
+
 ```json
 {
   "command": "ls -la agent-os/specs/2026-02-06-rag-optimization/",
@@ -7828,6 +8048,7 @@ The user wants me to follow the write-spec workflow to create the spec.md docume
 ```
 
 **Output:**
+
 ```
 total 16
 drwxr-xr-x@  7 edmundo.figueroaherbas@medirect.com.mt  staff   224 Feb  8 00:51 .
@@ -7865,13 +8086,13 @@ agent-os/specs/2026-02-06-rag-optimization/
 
 ### Spec Summary:
 
-| Section | Content |
-|---------|---------|
-| **Goal** | 2-3x RAG improvement via semantic chunking, reranking, hybrid search |
-| **User Stories** | 2 stories focused on retrieval quality |
-| **Specific Requirements** | 7 requirements with technical details |
-| **Existing Code** | 5 files to leverage |
-| **Out of Scope** | 10 items explicitly excluded |
+| Section                   | Content                                                              |
+| ------------------------- | -------------------------------------------------------------------- |
+| **Goal**                  | 2-3x RAG improvement via semantic chunking, reranking, hybrid search |
+| **User Stories**          | 2 stories focused on retrieval quality                               |
+| **Specific Requirements** | 7 requirements with technical details                                |
+| **Existing Code**         | 5 files to leverage                                                  |
+| **Out of Scope**          | 10 items explicitly excluded                                         |
 
 ---
 
@@ -7887,11 +8108,13 @@ agent-os/specs/2026-02-06-rag-optimization/
 ANALYSIS MODE. Gather context before diving deep:
 
 CONTEXT GATHERING (parallel):
+
 - 1-2 explore agents (codebase patterns, implementations)
 - 1-2 librarian agents (if external library involved)
 - Direct tools: Grep, AST-grep, LSP for targeted searches
 
 IF COMPLEX - DO NOT STRUGGLE ALONE. Consult specialists:
+
 - **Oracle**: Conventional problems (architecture, debugging, complex logic)
 - **Artistry**: Non-conventional problems (different approach needed)
 
@@ -7899,7 +8122,7 @@ SYNTHESIZE findings before proceeding.
 
 ---
 
-continue @agent-os/commands/create-tasks/2-create-tasks-list.md 
+continue @agent-os/commands/create-tasks/2-create-tasks-list.md
 
 ---
 
@@ -7912,6 +8135,7 @@ The user wants me to create the tasks.md file for the RAG optimization spec. Let
 I already have the spec.md and requirements.md content from earlier. This is a backend-only feature with no frontend UI changes, so the task groups will be different from the template.
 
 The main areas are:
+
 1. Database/Schema changes (parent document fields, tsvector index)
 2. Semantic chunking implementation
 3. Hybrid search implementation
@@ -7926,6 +8150,7 @@ I'll analyze the spec and requirements to create the tasks breakdown.
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/specs/2026-02-06-rag-optimization/spec.md"
@@ -7933,23 +8158,24 @@ I'll analyze the spec and requirements to create the tasks breakdown.
 ```
 
 **Output:**
+
 ```
 <file>
 00001| # Specification: RAG Optimization & Refinement
-00002| 
+00002|
 00003| ## Goal
-00004| 
+00004|
 00005| Upgrade the existing RAG system from "Production-Grade" to "State-of-the-Art" by implementing semantic chunking, cross-encoder reranking, hybrid search (BM25 + dense), and parent-document retrieval to achieve 2-3x improvement in retrieval quality for medical literature.
-00006| 
+00006|
 00007| ## User Stories
-00008| 
+00008|
 00009| - As a physiotherapist, I want the AI to retrieve more relevant medical passages so that treatment suggestions are better grounded in evidence.
 00010| - As a physiotherapist, I want exact drug names and medical codes to be found so that contraindication checks are accurate.
-00011| 
+00011|
 00012| ## Specific Requirements
-00013| 
+00013|
 00014| **Semantic Chunking**
-00015| 
+00015|
 00016| - Replace word-based `chunkText()` with semantic sentence grouping
 00017| - Group sentences by embedding similarity using threshold ~0.85
 00018| - Preserve paragraph and section boundaries from source documents
@@ -7957,17 +8183,17 @@ I'll analyze the spec and requirements to create the tasks breakdown.
 00020| - Implement as new `semanticChunk()` method in KnowledgeBaseService
 00021| - Batch embedding calls to respect Gemini API rate limits
 00022| - Expected improvement: +70% retrieval accuracy
-00023| 
+00023|
 00024| **Parent-Document Retrieval**
-00025| 
+00025|
 00026| - Index small chunks (256-512 tokens) for precise vector search
 00027| - Store parent document reference (2000 tokens) for LLM context
 00028| - Add `parentId` and `parentContent` fields to Embedding model
 00029| - Return parent document content to LLM for generation
 00030| - Requires Prisma schema migration and re-ingestion of all documents
-00031| 
+00031|
 00032| **Cross-Encoder Reranking**
-00033| 
+00033|
 00034| - Retrieve 15-20 candidates from pgvector similarity search
 00035| - Rerank to top 5 using Cohere Rerank v3 API
 00036| - Add `@cohere-ai/cohere` package as dependency
@@ -7975,80 +8201,80 @@ I'll analyze the spec and requirements to create the tasks breakdown.
 00038| - Insert reranking step after deduplication in `executeMultiQueryRag()`
 00039| - Add ConfigService key: `COHERE_API_KEY`
 00040| - Expected improvement: +40% precision
-00041| 
+00041|
 00042| **Hybrid Search (BM25 + Dense)**
-00043| 
+00043|
 00044| - Add PostgreSQL `tsvector` full-text index on `embeddings.content`
 00045| - Create GIN index: `CREATE INDEX embeddings_content_fts ON embeddings USING GIN (to_tsvector('english', content))`
 00046| - Implement Reciprocal Rank Fusion (RRF) formula: `1.0 / (k + rank)` where k=60
 00047| - Combine vector similarity and BM25 scores in `findSimilar()`
 00048| - Fall back to dense-only if full-text returns no results
 00049| - Expected improvement: +40% for exact medical terminology
-00050| 
+00050|
 00051| **RAG Evaluation Framework**
-00052| 
+00052|
 00053| - Create `rag-evaluation.spec.ts` test file with medical query test cases
 00054| - Implement RAGAS-style metrics: Context Precision, Context Recall, Faithfulness
 00055| - Define test queries with expected document matches (ground truth)
 00056| - Target metrics: Context Precision > 0.75, Faithfulness > 0.80
 00057| - Run as part of CI pipeline for regression detection
-00058| 
+00058|
 00059| **Metadata Filtering**
-00060| 
+00060|
 00061| - Extend `findSimilar()` signature to accept optional filters
 00062| - Support filters: `documentIds`, `minYear`, `volume`
 00063| - Modify raw SQL query to include WHERE clauses for filters
 00064| - Enable therapists to scope searches to specific medical books
-00065| 
+00065|
 00066| **Re-ingestion Process**
-00067| 
+00067|
 00068| - All existing documents must be re-processed with new chunking strategy
 00069| - Use existing `pnpm knowledge:clean` then `pnpm knowledge:ingest` workflow
 00070| - Atomic backups in `backups/library/` provide rollback capability
 00071| - Document the migration process in spec implementation notes
-00072| 
+00072|
 00073| ## Visual Design
-00074| 
+00074|
 00075| No visual assets provided - this is a backend infrastructure feature.
-00076| 
+00076|
 00077| ## Existing Code to Leverage
-00078| 
+00078|
 00079| **KnowledgeBaseService**
-00080| 
+00080|
 00081| - Path: `apps/server/src/modules/knowledge-base/knowledge-base.service.ts`
 00082| - Contains `chunkText()` to be replaced with `semanticChunk()`
 00083| - Contains `findSimilar()` to be enhanced with hybrid search and filters
 00084| - Contains `generateEmbedding()` which remains unchanged
 00085| - Uses raw SQL via `prisma.$queryRaw` for vector operations
-00086| 
+00086|
 00087| **AiAnalysisService**
-00088| 
+00088|
 00089| - Path: `apps/server/src/modules/ai-analysis/ai-analysis.service.ts`
 00090| - Contains `executeMultiQueryRag()` where reranking step will be added
 00091| - Contains `deduplicateChunks()` which runs before reranking
 00092| - Uses `Promise.all` for parallel query execution pattern
-00093| 
+00093|
 00094| **withRetry Utility**
-00095| 
+00095|
 00096| - Path: `apps/server/src/modules/transcription/utils/retry.ts`
 00097| - Reusable retry wrapper with exponential backoff
 00098| - Already used by KnowledgeBaseService for embedding calls
 00099| - Will be used for Cohere API calls
-00100| 
+00100|
 00101| **Existing Tests**
-00102| 
+00102|
 00103| - Path: `apps/server/src/modules/knowledge-base/knowledge-base.service.spec.ts`
 00104| - Has existing `chunkText` tests to update for semantic chunking
 00105| - Follow same mocking patterns for new functionality
-00106| 
+00106|
 00107| **Prisma Schema**
-00108| 
+00108|
 00109| - Path: `apps/server/prisma/schema.prisma`
 00110| - Contains Embedding model to extend with `parentId` and `parentContent`
 00111| - Uses `Unsupported("vector")` type for pgvector compatibility
-00112| 
+00112|
 00113| ## Out of Scope
-00114| 
+00114|
 00115| - Embedding model migration (keep Gemini `gemini-embedding-001` for now)
 00116| - Frontend UI changes (this spec is backend/infrastructure only)
 00117| - Knowledge graph construction for entity relationships
@@ -8059,7 +8285,7 @@ I'll analyze the spec and requirements to create the tasks breakdown.
 00122| - Automatic document classification or tagging
 00123| - PDF parsing improvements (use existing pdf-parse)
 00124| - Query caching or result caching layer
-00125| 
+00125|
 
 (End of file - total 125 lines)
 </file>
@@ -8068,6 +8294,7 @@ I'll analyze the spec and requirements to create the tasks breakdown.
 **Tool: read**
 
 **Input:**
+
 ```json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/standards/backend/migrations.md"
@@ -8075,10 +8302,11 @@ I'll analyze the spec and requirements to create the tasks breakdown.
 ```
 
 **Output:**
+
 ```
 <file>
 00001| ## Database migration best practices
-00002| 
+00002|
 00003| - **Reversible Migrations**: Always implement rollback/down methods to enable safe migration reversals
 00004| - **Small, Focused Changes**: Keep each migration focused on a single logical change for clarity and easier troubleshooting
 00005| - **Zero-Downtime Deployments**: Consider deployment order and backwards compatibility for high-availability systems
@@ -8086,7 +8314,7 @@ I'll analyze the spec and requirements to create the tasks breakdown.
 00007| - **Index Management**: Create indexes on large tables carefully, using concurrent options when available to avoid locks
 00008| - **Naming Conventions**: Use clear, descriptive names that indicate what the migration does
 00009| - **Version Control**: Always commit migrations to version control and never modify existing migrations after deployment
-00010| 
+00010|
 
 (End of file - total 10 lines)
 </file>
@@ -8101,23 +8329,26 @@ _Thinking:_
 The user wants me to create the tasks.md file for the RAG optimization spec. Let me read the spec and requirements to create a proper task breakdown.
 
 I already have the spec.md and requirements.md content from earlier. This is a backend-only feature with no frontend UI changes, so the task groups will be different from the template.The main areas are:
+
 1. Database/Schema changes (parent document fields, tsvector index)2. Semantic chunking implementation3. Hybrid search implementation
-4. Reranking implementation
-5. Evaluation framework6. Re-ingestion and testingLet me create a task breakdown that matches this backend-focused feature.
+2. Reranking implementation
+3. Evaluation framework6. Re-ingestion and testingLet me create a task breakdown that matches this backend-focused feature.
 
 Now I'll create the tasks breakdown. This is a backend-only feature, so the task groups will be different from the template:
 
 **Tool: write**
 
 **Input:**
-```json
+
+````json
 {
   "filePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/agent-os/specs/2026-02-06-rag-optimization/tasks.md",
   "content": "# Task Breakdown: RAG Optimization & Refinement\n\n## Overview\n\nTotal Tasks: 6 Task Groups (Backend Infrastructure)\n\n**Note:** This is a backend-only feature with no frontend UI changes. Task groups are organized by functional area rather than the typical database/API/frontend pattern.\n\n## Task List\n\n### Database Layer\n\n#### Task Group 1: Schema & Index Migrations\n**Dependencies:** None\n\n- [ ] 1.0 Complete database schema changes\n  - [ ] 1.1 Write 3-4 focused tests for new schema fields\n    - Test parent document field population\n    - Test tsvector index functionality\n    - Test filter queries with new fields\n  - [ ] 1.2 Create Prisma migration for parent-document fields\n    - Add `parentId` (String, nullable) to Embedding model\n    - Add `parentContent` (String, nullable) to Embedding model\n    - Add foreign key: `parentId` references `embeddings.id`\n  - [ ] 1.3 Create raw SQL migration for tsvector index\n    - `CREATE INDEX embeddings_content_fts ON embeddings USING GIN (to_tsvector('english', content))`\n    - Use concurrent index creation to avoid locks\n    - Verify index is used with `EXPLAIN ANALYZE`\n  - [ ] 1.4 Run and verify migrations\n    - Run `pnpm db:migrate:dev`\n    - Verify schema changes in database\n    - Run only tests from 1.1 to confirm\n\n**Acceptance Criteria:**\n- Migration runs successfully without data loss\n- `parentId` and `parentContent` columns exist in embeddings table\n- GIN index on tsvector is created and functional\n- 3-4 tests from 1.1 pass\n\n---\n\n### Backend Logic Layer\n\n#### Task Group 2: Semantic Chunking Implementation\n**Dependencies:** Task Group 1\n\n- [ ] 2.0 Complete semantic chunking logic\n  - [ ] 2.1 Write 4-5 focused tests for semantic chunking\n    - Test sentence splitting preserves boundaries\n    - Test similarity grouping with known embeddings\n    - Test chunk size stays within 256-512 token target\n    - Test paragraph boundary preservation\n  - [ ] 2.2 Implement `semanticChunk()` method in KnowledgeBaseService\n    - Split text into sentences using regex: `/(?<=[.!?])\\s+/`\n    - Generate embeddings for each sentence (batch for rate limits)\n    - Group sentences by cosine similarity (threshold 0.85)\n    - Respect paragraph boundaries (`\\n\\n`)\n    - Target chunk size: 256-512 tokens\n  - [ ] 2.3 Implement parent document creation\n    - Create parent chunks of ~2000 tokens\n    - Store `parentContent` during ingestion\n    - Link child chunks to parent via `parentId`\n  - [ ] 2.4 Update `ingestFile()` to use semantic chunking\n    - Replace `chunkText()` call with `semanticChunk()`\n    - Add parent document storage logic\n    - Maintain backward compatibility with existing metadata\n  - [ ] 2.5 Run tests and verify chunking quality\n    - Run only tests from 2.1\n    - Manual inspection of chunk quality on sample document\n\n**Acceptance Criteria:**\n- Semantic chunks respect sentence boundaries\n- Parent documents are created and linked correctly\n- Chunks stay within 256-512 token target\n- 4-5 tests from 2.1 pass\n\n---\n\n#### Task Group 3: Hybrid Search Implementation\n**Dependencies:** Task Group 1, Task Group 2\n\n- [ ] 3.0 Complete hybrid search (BM25 + Dense)\n  - [ ] 3.1 Write 4-5 focused tests for hybrid search\n    - Test BM25 finds exact term matches (drug names)\n    - Test RRF score combination produces expected ranking\n    - Test fallback to dense-only when BM25 returns nothing\n    - Test metadata filters work correctly\n  - [ ] 3.2 Implement BM25 search method\n    - Create `findSimilarBM25()` using `ts_rank` and `plainto_tsquery`\n    - Return ranked results with BM25 scores\n    - Handle Spanish/English queries appropriately\n  - [ ] 3.3 Implement Reciprocal Rank Fusion (RRF)\n    - Create `combineWithRRF()` utility function\n    - Formula: `score = sum(1.0 / (k + rank))` where k=60\n    - Merge dense and BM25 results by document ID\n  - [ ] 3.4 Enhance `findSimilar()` with hybrid search\n    - Run dense and BM25 searches in parallel (`Promise.all`)\n    - Combine results using RRF\n    - Fall back to dense-only if BM25 returns empty\n    - Return top N combined results\n  - [ ] 3.5 Add metadata filtering support\n    - Extend `findSimilar()` signature: `findSimilar(query, limit, filters?)`\n    - Support filters: `{ documentIds?: string[], minYear?: number, volume?: string }`\n    - Add WHERE clauses to raw SQL queries\n  - [ ] 3.6 Run tests and verify hybrid search quality\n    - Run only tests from 3.1\n    - Test with exact medical terms (e.g., \"metformina\", \"M54.5\")\n\n**Acceptance Criteria:**\n- Exact drug names and ICD codes are found via BM25\n- RRF correctly combines dense and sparse rankings\n- Metadata filters work as expected\n- 4-5 tests from 3.1 pass\n\n---\n\n#### Task Group 4: Reranking Integration\n**Dependencies:** Task Group 3\n\n- [ ] 4.0 Complete cross-encoder reranking\n  - [ ] 4.1 Write 3-4 focused tests for reranking\n    - Test Cohere API is called with correct parameters\n    - Test reranking changes order based on relevance scores\n    - Test graceful degradation when Cohere API fails\n  - [ ] 4.2 Add Cohere SDK dependency\n    - `pnpm add @cohere-ai/cohere` in apps/server\n    - Add `COHERE_API_KEY` to `.env.example`\n    - Add ConfigService injection for API key\n  - [ ] 4.3 Implement `rerankChunks()` in AiAnalysisService\n    - Accept query and array of RagChunks\n    - Call Cohere Rerank v3 API with `withRetry` wrapper\n    - Return reranked chunks sorted by relevance score\n    - Handle API errors gracefully (return original order)\n  - [ ] 4.4 Integrate reranking into `executeMultiQueryRag()`\n    - After deduplication, retrieve 15-20 candidates\n    - Call `rerankChunks()` to get top 5-8\n    - Update return type to include relevance scores\n  - [ ] 4.5 Run tests and verify reranking quality\n    - Run only tests from 4.1\n    - Manual inspection: verify reranked order is more relevant\n\n**Acceptance Criteria:**\n- Cohere Rerank API is called successfully\n- Reranking improves result relevance (manual verification)\n- Graceful fallback when API is unavailable\n- 3-4 tests from 4.1 pass\n\n---\n\n### Evaluation & Testing Layer\n\n#### Task Group 5: RAG Evaluation Framework\n**Dependencies:** Task Group 3, Task Group 4\n\n- [ ] 5.0 Complete RAG evaluation framework\n  - [ ] 5.1 Create `rag-evaluation.spec.ts` test file\n    - Define 8-10 medical query test cases with ground truth\n    - Example: `{ query: \"contraindicaciones metformina\", expectedDocs: [\"diabetes_guidelines.pdf\"] }`\n    - Include queries for diagnosis, treatment, contraindications\n  - [ ] 5.2 Implement Context Precision metric\n    - Formula: `relevant_retrieved / total_retrieved`\n    - Manually tag relevant chunks in ground truth\n    - Log precision score per query\n  - [ ] 5.3 Implement Context Recall metric\n    - Formula: `relevant_retrieved / total_relevant`\n    - Requires ground truth of all relevant chunks per query\n    - Log recall score per query\n  - [ ] 5.4 Implement Faithfulness metric (simplified)\n    - Check if LLM response cites retrieved sources\n    - Verify cited pages exist in retrieved chunks\n    - Log faithfulness score\n  - [ ] 5.5 Create evaluation runner script\n    - Run all evaluation queries\n    - Calculate aggregate metrics\n    - Output report with per-query and overall scores\n    - Target: Precision > 0.75, Faithfulness > 0.80\n  - [ ] 5.6 Run evaluation and document baseline\n    - Execute evaluation against current system\n    - Document baseline metrics for comparison\n    - Add to CI pipeline for regression detection\n\n**Acceptance Criteria:**\n- Evaluation test suite runs successfully\n- Metrics are calculated and logged\n- Baseline metrics documented\n- Clear pass/fail criteria for CI\n\n---\n\n### Re-ingestion Layer\n\n#### Task Group 6: Document Re-ingestion\n**Dependencies:** Task Groups 1-5\n\n- [ ] 6.0 Complete document re-ingestion\n  - [ ] 6.1 Backup existing knowledge base\n    - Run `pnpm knowledge:export` to create full backup\n    - Verify backup file exists in `backups/`\n    - Document rollback procedure\n  - [ ] 6.2 Clean existing embeddings\n    - Run `pnpm knowledge:wipe` to clear all embeddings\n    - Verify embeddings table is empty\n    - Keep document metadata for reference\n  - [ ] 6.3 Re-ingest all documents with new chunking\n    - Move archived books back to `data/books/`\n    - Run `pnpm knowledge:ingest`\n    - Monitor for rate limit errors\n    - Expect 2-3x longer ingestion time due to semantic chunking\n  - [ ] 6.4 Verify re-ingestion quality\n    - Run `pnpm knowledge:stats` to check chunk counts\n    - Run `pnpm knowledge:search \"test query\"` to verify search works\n    - Compare chunk quality before/after (sample inspection)\n  - [ ] 6.5 Run full evaluation suite\n    - Execute evaluation from Task Group 5\n    - Compare metrics to pre-migration baseline\n    - Document improvement percentages\n  - [ ] 6.6 Create atomic backups of new embeddings\n    - Run `pnpm knowledge:export`\n    - Store in `backups/library/` with timestamp\n    - Document as new baseline\n\n**Acceptance Criteria:**\n- All documents re-ingested successfully\n- Semantic chunks are smaller and more coherent\n- Parent documents are linked correctly\n- Evaluation metrics improved vs baseline\n- Backup available for rollback\n\n---\n\n## Execution Order\n\nRecommended implementation sequence:\n\n```\n1. Database Layer (Task Group 1) - Foundation\n   ↓\n2. Semantic Chunking (Task Group 2) - Core improvement\n   ↓\n3. Hybrid Search (Task Group 3) - Terminology matching\n   ↓\n4. Reranking (Task Group 4) - Precision boost\n   ↓\n5. Evaluation Framework (Task Group 5) - Measurement\n   ↓\n6. Re-ingestion (Task Group 6) - Apply all changes\n```\n\n**Parallel opportunities:**\n- Task Groups 3 and 4 can be developed in parallel after Task Group 2\n- Evaluation framework (Task Group 5) can be developed in parallel with Task Groups 3-4\n\n---\n\n## Expected Improvements\n\n| Task Group | Expected Gain | Verification |\n|------------|---------------|--------------|\n| Semantic Chunking | +70% retrieval accuracy | Evaluation metrics |\n| Hybrid Search | +40% exact terminology | BM25 test queries |\n| Reranking | +40% precision | Relevance scores |\n| Combined | **2-3x baseline** | Full evaluation |\n\n---\n\n## Risk Mitigation\n\n| Risk | Mitigation |\n|------|------------|\n| Semantic chunking too slow | Batch embedding calls, add progress logging |\n| Cohere API rate limits | Use `withRetry`, add fallback to skip reranking |\n| Re-ingestion data loss | Full backup before, atomic book backups after |\n| Performance regression | Keep latency < 500ms, monitor in evaluation |\n"
 }
-```
+````
 
 **Output:**
+
 ```
 Wrote file successfully.
 ```
@@ -8129,6 +8360,7 @@ Wrote file successfully.
 **Tool: bash**
 
 **Input:**
+
 ```json
 {
   "command": "ls -la agent-os/specs/2026-02-06-rag-optimization/",
@@ -8137,6 +8369,7 @@ Wrote file successfully.
 ```
 
 **Output:**
+
 ```
 total 40
 drwxr-xr-x@  8 edmundo.figueroaherbas@medirect.com.mt  staff    256 Feb  8 00:56 .
@@ -8153,6 +8386,7 @@ drwxr-xr-x@  2 edmundo.figueroaherbas@medirect.com.mt  staff     64 Feb  8 00:46
 **Tool: bash**
 
 **Input:**
+
 ```json
 {
   "command": "wc -l agent-os/specs/2026-02-06-rag-optimization/tasks.md",
@@ -8161,6 +8395,7 @@ drwxr-xr-x@  2 edmundo.figueroaherbas@medirect.com.mt  staff     64 Feb  8 00:46
 ```
 
 **Output:**
+
 ```
      286 agent-os/specs/2026-02-06-rag-optimization/tasks.md
 
@@ -8192,14 +8427,14 @@ agent-os/specs/2026-02-06-rag-optimization/
 
 ### Task Summary:
 
-| Task Group | Description | Tests | Subtasks |
-|------------|-------------|-------|----------|
-| **1. Schema & Migrations** | Database changes for parent-doc and tsvector | 3-4 | 4 |
-| **2. Semantic Chunking** | Replace word-based with semantic chunking | 4-5 | 5 |
-| **3. Hybrid Search** | BM25 + Dense + RRF implementation | 4-5 | 6 |
-| **4. Reranking** | Cohere cross-encoder integration | 3-4 | 5 |
-| **5. Evaluation** | RAGAS-style metrics framework | N/A | 6 |
-| **6. Re-ingestion** | Re-process all documents | N/A | 6 |
+| Task Group                 | Description                                  | Tests | Subtasks |
+| -------------------------- | -------------------------------------------- | ----- | -------- |
+| **1. Schema & Migrations** | Database changes for parent-doc and tsvector | 3-4   | 4        |
+| **2. Semantic Chunking**   | Replace word-based with semantic chunking    | 4-5   | 5        |
+| **3. Hybrid Search**       | BM25 + Dense + RRF implementation            | 4-5   | 6        |
+| **4. Reranking**           | Cohere cross-encoder integration             | 3-4   | 5        |
+| **5. Evaluation**          | RAGAS-style metrics framework                | N/A   | 6        |
+| **6. Re-ingestion**        | Re-process all documents                     | N/A   | 6        |
 
 **Total:** 6 Task Groups, 32 Subtasks, ~19-22 Tests
 
@@ -8218,4 +8453,3 @@ agent-os/specs/2026-02-06-rag-optimization/
 **NEXT STEP** 👉 Run `/implement-tasks` (simple, effective) or `/orchestrate-tasks` (advanced, powerful) to start building!
 
 ---
-

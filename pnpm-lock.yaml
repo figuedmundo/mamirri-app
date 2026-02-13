@@ -322,6 +322,9 @@ importers:
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
+      form-data:
+        specifier: ^4.0.5
+        version: 4.0.5
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
@@ -355,6 +358,9 @@ importers:
       swagger-ui-express:
         specifier: ^5.0.1
         version: 5.0.1(express@5.2.1)
+      voyageai:
+        specifier: ^0.1.0
+        version: 0.1.0
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.2.0
@@ -380,6 +386,9 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.6
+      '@types/form-data':
+        specifier: ^2.5.2
+        version: 2.5.2
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -3534,6 +3543,10 @@ packages:
   '@types/express@5.0.6':
     resolution: {integrity: sha512-sKYVuV7Sv9fbPIt/442koC7+IIwK5olP1KWeD88e/idgoJqDm3JV/YUiPwkoKK92ylff2MGxSz1CSjsXelx0YA==}
 
+  '@types/form-data@2.5.2':
+    resolution: {integrity: sha512-tfmcyHn1Pp9YHAO5r40+UuZUPAZbUEgqTel3EuEKpmF9hPkXgR4l41853raliXnb4gwyPNoQOfvgGGlHN5WSog==}
+    deprecated: This is a stub types definition. form-data provides its own type definitions, so you do not need this installed.
+
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
 
@@ -5962,6 +5975,9 @@ packages:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
 
+  js-base64@3.7.2:
+    resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
+
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -6792,6 +6808,10 @@ packages:
 
   pure-rand@7.0.1:
     resolution: {integrity: sha512-oTUZM/NAZS8p7ANR3SHh30kXB+zK2r2BPcEn/awJIbOvq82WoMN4p62AWWp3Hhw50G0xMsw1mhIBLqHw64EcNQ==}
+
+  qs@6.11.2:
+    resolution: {integrity: sha512-tDNIz22aBzCDxLtVH++VnTfzxlfeK5CbqohpSqpJgj1Wg/cQbStNAz3NuqCs5vV+pjBsK4x4pN9HlVh7rcYRiA==}
+    engines: {node: '>=0.6'}
 
   qs@6.14.1:
     resolution: {integrity: sha512-4EK3+xJl8Ts67nLYNwqw/dsFVnCf+qR7RgXSK9jEEm9unao3njwMDdmsdvoKBKHzxd7tCYz5e5M+SnMjdtXGQQ==}
@@ -7707,6 +7727,9 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
+  url-join@4.0.1:
+    resolution: {integrity: sha512-jk1+QP6ZJqyOiuEI9AEWQfju/nB2Pw466kbA0LEZljHwKeMgd9WrAEgEGxjPDD2+TNbbb37rTyhEfrCXfuKXnA==}
+
   url-parse@1.5.10:
     resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
 
@@ -7848,6 +7871,9 @@ packages:
         optional: true
       jsdom:
         optional: true
+
+  voyageai@0.1.0:
+    resolution: {integrity: sha512-QnalSSHRigZqzKJpXLsgp3tKaKkSv2kGO4rcXQ6mr6PKHa0vRirs0jZ72olvFJrGJkbu1hHijcyr6/eI4L5aRw==}
 
   w3c-xmlserializer@4.0.0:
     resolution: {integrity: sha512-d+BFHzbiCx6zGfz0HyQ6Rg69w9k19nviJspaj4yNscGjrHu94sVP+aRm75yEbCh+r2/yR+7q6hux9LVtbuTGBw==}
@@ -12285,6 +12311,10 @@ snapshots:
       '@types/express-serve-static-core': 5.1.0
       '@types/serve-static': 2.2.0
 
+  '@types/form-data@2.5.2':
+    dependencies:
+      form-data: 4.0.5
+
   '@types/graceful-fs@4.1.9':
     dependencies:
       '@types/node': 22.15.3
@@ -15640,6 +15670,8 @@ snapshots:
 
   joycon@3.1.1: {}
 
+  js-base64@3.7.2: {}
+
   js-tokens@4.0.0: {}
 
   js-yaml@3.14.2:
@@ -16470,6 +16502,10 @@ snapshots:
   pure-rand@6.1.0: {}
 
   pure-rand@7.0.1: {}
+
+  qs@6.11.2:
+    dependencies:
+      side-channel: 1.1.0
 
   qs@6.14.1:
     dependencies:
@@ -17608,6 +17644,8 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
+  url-join@4.0.1: {}
+
   url-parse@1.5.10:
     dependencies:
       querystringify: 2.2.0
@@ -17728,6 +17766,18 @@ snapshots:
       - terser
       - tsx
       - yaml
+
+  voyageai@0.1.0:
+    dependencies:
+      form-data: 4.0.5
+      formdata-node: 6.0.3
+      js-base64: 3.7.2
+      node-fetch: 2.7.0
+      qs: 6.11.2
+      readable-stream: 4.7.0
+      url-join: 4.0.1
+    transitivePeerDependencies:
+      - encoding
 
   w3c-xmlserializer@4.0.0:
     dependencies:

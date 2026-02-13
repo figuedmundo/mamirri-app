@@ -33,7 +33,7 @@ async function bootstrap() {
     console.error('  --volume "Tomo 1"');
     console.error('  --edition "5th Edition"');
     console.error('  --year "2023"');
-    console.error('  --path "data/archive/new_filename.pdf"');
+    console.error('  --path "data/library/originals/new_filename.pdf"');
     process.exit(1);
   }
 

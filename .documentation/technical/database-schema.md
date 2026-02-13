@@ -143,7 +143,7 @@ Stores vectorized text chunks for semantic search.
 | `id`         | `String` | Unique identifier (UUID)          |
 | `content`    | `String` | Raw text chunk (approx 500 words) |
 | `pageNumber` | `Int`    | Reference page in source document |
-| `vector`     | `Vector` | 768-dim embedding (pgvector)      |
+| `vector`     | `Vector` | 1024-dim embedding (pgvector)     |
 | `documentId` | `String` | Foreign key to `Document`         |
 
 ---

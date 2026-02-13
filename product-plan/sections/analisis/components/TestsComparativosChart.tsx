@@ -1,16 +1,18 @@
-import type { TestComparativo } from '../types'
+import type { TestComparativo } from '../types';
 
 interface TestsComparativosChartProps {
-  testsComparativos: TestComparativo[]
+  testsComparativos: TestComparativo[];
 }
 
-export function TestsComparativosChart({ testsComparativos }: TestsComparativosChartProps) {
+export function TestsComparativosChart({
+  testsComparativos,
+}: TestsComparativosChartProps) {
   if (!testsComparativos || testsComparativos.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-slate-400 dark:text-slate-500">
         <p className="text-sm">No hay tests funcionales registrados</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -55,7 +57,9 @@ export function TestsComparativosChart({ testsComparativos }: TestsComparativosC
             <div className="space-y-2">
               <div>
                 <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="text-slate-600 dark:text-slate-400">Inicial</span>
+                  <span className="text-slate-600 dark:text-slate-400">
+                    Inicial
+                  </span>
                   <span className="font-semibold text-slate-700 dark:text-slate-300">
                     {test.valorInicial}
                   </span>
@@ -63,14 +67,18 @@ export function TestsComparativosChart({ testsComparativos }: TestsComparativosC
                 <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-slate-400 dark:bg-slate-500 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min((test.valorInicial / Math.max(test.valorInicial, test.valorFinal)) * 100, 100)}%` }}
+                    style={{
+                      width: `${Math.min((test.valorInicial / Math.max(test.valorInicial, test.valorFinal)) * 100, 100)}%`,
+                    }}
                   />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="text-slate-600 dark:text-slate-400">Final</span>
+                  <span className="text-slate-600 dark:text-slate-400">
+                    Final
+                  </span>
                   <span className="font-semibold text-slate-700 dark:text-slate-300">
                     {test.valorFinal}
                   </span>
@@ -78,7 +86,9 @@ export function TestsComparativosChart({ testsComparativos }: TestsComparativosC
                 <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-teal-500 dark:bg-teal-600 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min((test.valorFinal / Math.max(test.valorInicial, test.valorFinal)) * 100, 100)}%` }}
+                    style={{
+                      width: `${Math.min((test.valorFinal / Math.max(test.valorInicial, test.valorFinal)) * 100, 100)}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -86,9 +96,14 @@ export function TestsComparativosChart({ testsComparativos }: TestsComparativosC
 
             <div className="pt-2 border-t border-slate-100 dark:border-slate-700">
               <div className="flex items-center justify-center gap-2 text-xs">
-                <span className="text-slate-500 dark:text-slate-400">Diferencia:</span>
-                <span className={`font-semibold ${test.valorFinal > test.valorInicial ? 'text-teal-600 dark:text-teal-400' : test.valorFinal < test.valorInicial ? 'text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400'}`}>
-                  {test.valorFinal > test.valorInicial ? '+' : ''}{test.valorFinal - test.valorInicial}
+                <span className="text-slate-500 dark:text-slate-400">
+                  Diferencia:
+                </span>
+                <span
+                  className={`font-semibold ${test.valorFinal > test.valorInicial ? 'text-teal-600 dark:text-teal-400' : test.valorFinal < test.valorInicial ? 'text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400'}`}
+                >
+                  {test.valorFinal > test.valorInicial ? '+' : ''}
+                  {test.valorFinal - test.valorInicial}
                 </span>
               </div>
             </div>
@@ -96,5 +111,5 @@ export function TestsComparativosChart({ testsComparativos }: TestsComparativosC
         </div>
       ))}
     </div>
-  )
+  );
 }

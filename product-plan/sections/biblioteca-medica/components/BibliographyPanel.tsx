@@ -1,12 +1,15 @@
-import type { ReferenciaBibliografica } from '../types'
-import { BookOpen, Languages } from 'lucide-react'
+import type { ReferenciaBibliografica } from '../types';
+import { BookOpen, Languages } from 'lucide-react';
 
 interface BibliographyPanelProps {
-  referencias: ReferenciaBibliografica[]
-  onToggleLanguage: (id: string) => void
+  referencias: ReferenciaBibliografica[];
+  onToggleLanguage: (id: string) => void;
 }
 
-export function BibliographyPanel({ referencias, onToggleLanguage }: BibliographyPanelProps) {
+export function BibliographyPanel({
+  referencias,
+  onToggleLanguage,
+}: BibliographyPanelProps) {
   return (
     <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-800">
       <div className="flex items-center gap-2 mb-6 text-slate-900 dark:text-white font-medium">
@@ -16,12 +19,18 @@ export function BibliographyPanel({ referencias, onToggleLanguage }: Bibliograph
 
       <div className="space-y-4">
         {referencias.map((ref) => (
-          <div key={ref.id} className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-100 dark:border-slate-700 shadow-sm">
+          <div
+            key={ref.id}
+            className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-100 dark:border-slate-700 shadow-sm"
+          >
             <div className="flex justify-between items-start gap-4 mb-3">
               <div>
-                <h3 className="font-semibold text-slate-900 dark:text-white text-sm mb-1">{ref.titulo}</h3>
+                <h3 className="font-semibold text-slate-900 dark:text-white text-sm mb-1">
+                  {ref.titulo}
+                </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {ref.autor} • <span className="italic">{ref.fuente}</span> ({ref.anio})
+                  {ref.autor} • <span className="italic">{ref.fuente}</span> (
+                  {ref.anio})
                 </p>
               </div>
               {ref.idiomaOriginal !== 'es' && (
@@ -55,5 +64,5 @@ export function BibliographyPanel({ referencias, onToggleLanguage }: Bibliograph
         ))}
       </div>
     </div>
-  )
+  );
 }

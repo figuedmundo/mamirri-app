@@ -15,7 +15,7 @@ Build the "brain" of the AI system by creating a backend infrastructure to inges
 **PDF Ingestion Script**
 
 - Create a CLI script `scripts/ingest-books.ts` runnable via `npm run knowledge:ingest`.
-- Scan `data/books/*.pdf` (git-ignored folder).
+- Scan `data/library/originals/*.pdf` (git-ignored folder).
 - Use `pdf-parse` to extract text while attempting to preserve page breaks (or approximate them) to track page numbers.
 - Skip files that have already been ingested (check by `filePath` in DB to avoid duplicates).
 - Log progress: print each file processed, success/failure counts, and any parsing errors.

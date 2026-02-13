@@ -45,16 +45,16 @@ See `screenshot.png` for the target UI design.
 
 ## Callback Props
 
-| Callback | Description |
-|----------|-------------|
-| `onSelectCase` | Called when user selects a clinical case to analyze |
-| `onUploadVideo` | Called when user uploads new posture/gait video |
-| `onUploadHuella` | Called when user uploads footprint image |
-| `onSavePosturograma` | Called when user saves posturogram with marked anatomical points |
-| `onExportReport` | Called when user wants to export analysis report |
-| `onPlay` | Called when user plays video |
-| `onPause` | Called when user pauses video |
-| `onSeek` | Called when user seeks to specific timestamp |
-| `onToggleSlowMotion` | Called when user toggles slow-motion mode |
-| `onSelectView` | Called when user selects posturogram view (anterior/posterior/lateral) |
-| `onToggleComparison` | Called when user toggles before/after comparison mode |
+| Callback             | Description                                                            |
+| -------------------- | ---------------------------------------------------------------------- |
+| `onSelectCase`       | Called when user selects a clinical case to analyze                    |
+| `onUploadVideo`      | Called when user uploads new posture/gait video                        |
+| `onUploadHuella`     | Called when user uploads footprint image                               |
+| `onSavePosturograma` | Called when user saves posturogram with marked anatomical points       |
+| `onExportReport`     | Called when user wants to export analysis report                       |
+| `onPlay`             | Called when user plays video                                           |
+| `onPause`            | Called when user pauses video                                          |
+| `onSeek`             | Called when user seeks to specific timestamp                           |
+| `onToggleSlowMotion` | Called when user toggles slow-motion mode                              |
+| `onSelectView`       | Called when user selects posturogram view (anterior/posterior/lateral) |
+| `onToggleComparison` | Called when user toggles before/after comparison mode                  |

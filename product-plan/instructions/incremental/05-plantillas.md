@@ -16,6 +16,7 @@ Implement the Plantillas feature — Sugerencias de diseño de plantillas ortop�
 Plantillas is a full-screen CAD-like workspace for designing custom orthopedic insoles with 3D modeling, AI automation, and biomechanical validation. It combines structural editing (sliders) with precise relief painting (brush) and integrates with patient diagnosis data.
 
 **Key Functionality:**
+
 - Import patient diagnosis data and auto-generate base insole model with suggested corrections
 - Edit insole structure via precision sliders (arch height, heel wedge, lateral wedge)
 - Paint relief zones on 3D model using brush tool (soft spots for pain points)
@@ -30,11 +31,13 @@ Plantillas is a full-screen CAD-like workspace for designing custom orthopedic i
 Before implementing this section, **write tests first** based on the test specifications provided.
 
 See `product-plan/sections/plantillas/tests.md` for detailed test-writing instructions including:
+
 - Key user flows to test (success and failure paths)
 - Specific UI elements, button labels, and interactions to verify
 - Expected behaviors and assertions
 
 **TDD Workflow:**
+
 1. Read `tests.md` and write failing tests for the key user flows
 2. Implement the feature to make tests pass
 3. Refactor while keeping tests green
@@ -59,41 +62,42 @@ The components expect these data shapes:
 ```typescript
 // Insole design
 interface Plantilla {
-  id: string
-  casoClinicoId: string
-  tipo: 'plantilla-ortopédica' | 'tobillera' | 'otro'
-  material: 'corcho' | 'neopreno' | 'eva' | 'otro'
+  id: string;
+  casoClinicoId: string;
+  tipo: 'plantilla-ortopédica' | 'tobillera' | 'otro';
+  material: 'corcho' | 'neopreno' | 'eva' | 'otro';
   caracteristicas?: {
-    realceInterno?: number
-    soporteArco?: string
-    talonera?: string
-    alturaTotal?: number
-    tipoFijacion?: string
-    nivelInmovilizacion?: string
-    altura?: number
-  }
+    realceInterno?: number;
+    soporteArco?: string;
+    talonera?: string;
+    alturaTotal?: number;
+    tipoFijacion?: string;
+    nivelInmovilizacion?: string;
+    altura?: number;
+  };
   diseño: {
-    alturaArco: number
-    inclinacionTalon: number
-    zonasAlivio: ZonaAlivio[]
-  }
-  materiales: MaterialPlanta[]
+    alturaArco: number;
+    inclinacionTalon: number;
+    zonasAlivio: ZonaAlivio[];
+  };
+  materiales: MaterialPlanta[];
 }
 
 interface ZonaAlivio {
-  ubicacion: { x: number; y: number }
-  radio: number
-  nivel: number // 1-5 (soft to firm)
+  ubicacion: { x: number; y: number };
+  radio: number;
+  nivel: number; // 1-5 (soft to firm)
 }
 
 interface MaterialPlanta {
-  capa: 'base' | 'media' | 'cubierta'
-  tipo: 'EVA_rigido' | 'EVA_medio' | 'EVA_suave'
-  espesor?: number
+  capa: 'base' | 'media' | 'cubierta';
+  tipo: 'EVA_rigido' | 'EVA_medio' | 'EVA_suave';
+  espesor?: number;
 }
 ```
 
 You'll need to:
+
 - Create API endpoints or data fetching logic for insole designs
 - Implement 3D model rendering and controls (rotate, zoom, pan)
 - Connect real patient diagnosis data to the editor

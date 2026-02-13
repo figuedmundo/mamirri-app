@@ -45,13 +45,13 @@ export interface DiagramaAnatomico {
 export interface BibliotecaMedicaProps {
   /** List of clinical categories for navigation */
   categorias: CategoriaClinica[];
-  
+
   /** List of available protocols and techniques */
   protocolos: Protocolo[];
-  
+
   /** List of bibliographic references */
   referencias: ReferenciaBibliografica[];
-  
+
   /** List of anatomical diagrams */
   diagramas: DiagramaAnatomico[];
 

@@ -1,145 +1,26 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
-import { GoogleGenAI } from '@google/genai';
+import { VoyageEmbeddingService } from './services/voyage-embedding.service';
 import * as fs from 'fs';
 import * as path from 'path';
-import { withRetry } from '../transcription/utils/retry';
-import { promisify } from 'util';
-
-const sleep = promisify(setTimeout);
-
 import { execSync, spawn } from 'child_process';
 import { PDFParse } from 'pdf-parse';
 import { randomUUID } from 'crypto';
 
 import { Prisma } from '@prisma/client';
-import { CohereClient } from 'cohere-ai';
 
-/**
- * Token bucket for rate limiting with a rolling window.
- * Tracks tokens consumed over the last 60 seconds.
- */
-class TokenRateLimiter {
-  private readonly windowMs = 60_000; // 60 seconds
-  private readonly maxTokens: number;
-  private readonly maxRequests: number;
-  private readonly safetyMargin = 0.85; // Use 85% of limit for safety
+import matter from 'gray-matter';
 
-  private tokenLog: { timestamp: number; tokens: number }[] = [];
-  private requestLog: number[] = []; // Timestamps of requests
-
-  constructor(maxTokensPerMinute: number, maxRequestsPerMinute: number = 100) {
-    this.maxTokens = maxTokensPerMinute * this.safetyMargin;
-    this.maxRequests = maxRequestsPerMinute * this.safetyMargin; // ~85 RPM
-  }
-
-  /**
-   * Estimate tokens for a text using word count * 1.6 factor (conservative for medical text)
-   */
-  estimateTokens(text: string): number {
-    const words = text.split(/\s+/).filter((w) => w.length > 0).length;
-    return Math.ceil(words * 1.6);
-  }
-
-  /**
-   * Get tokens consumed in the current rolling window
-   */
-  private getTokensInWindow(): number {
-    const now = Date.now();
-    const windowStart = now - this.windowMs;
-    this.tokenLog = this.tokenLog.filter((e) => e.timestamp > windowStart);
-    return this.tokenLog.reduce((sum, e) => sum + e.tokens, 0);
-  }
-
-  /**
-   * Get requests made in the current rolling window
-   */
-  private getRequestsInWindow(): number {
-    const now = Date.now();
-    const windowStart = now - this.windowMs;
-    this.requestLog = this.requestLog.filter((ts) => ts > windowStart);
-    return this.requestLog.length;
-  }
-
-  /**
-   * Record tokens and requests consumed
-   */
-  recordUsage(tokens: number, requestCount: number = 1): void {
-    const now = Date.now();
-    this.tokenLog.push({ timestamp: now, tokens });
-    for (let i = 0; i < requestCount; i++) {
-      this.requestLog.push(now);
-    }
-  }
-
-  // Deprecated alias for backward compatibility if needed, but we should use recordUsage
-  recordTokens(tokens: number): void {
-    this.recordUsage(tokens, 1);
-  }
-
-  /**
-   * Calculate delay needed before consuming more resources.
-   * If a delay is needed, it effectively "reserves" the spot by return.
-   * NOTE: For strict limiting, you should call recordUsage() immediately after calculating delay
-   * or implement a separate reservation method.
-   *
-   * In this implementation, we will trust the caller to call recordUsage()
-   * OR we can add a 'reserve' boolean to auto-record?
-   * Let's stick to explicit recordUsage for now but ensure it's called BEFORE API call.
-   */
-  getRequiredDelay(tokensNeeded: number, requestsNeeded: number = 1): number {
-    const now = Date.now();
-
-    // Check Request Limit
-    const currentRequests = this.getRequestsInWindow();
-    const availableRequests = this.maxRequests - currentRequests;
-
-    let requestDelay = 0;
-    if (requestsNeeded > availableRequests) {
-      const requestsToFree = requestsNeeded - availableRequests;
-      // Find timestamp of the Nth oldest request that needs to expire
-      if (this.requestLog.length >= requestsToFree) {
-        const oldestRelevantRequest = this.requestLog[requestsToFree - 1];
-        requestDelay = Math.max(
-          0,
-          oldestRelevantRequest + this.windowMs - now + 100,
-        );
-      } else {
-        // Should not happen if logic is correct, but safe fallback
-        requestDelay = 1000;
-      }
-    }
-
-    // Check Token Limit
-    const currentTokens = this.getTokensInWindow();
-    const availableTokens = this.maxTokens - currentTokens;
-
-    let tokenDelay = 0;
-    if (tokensNeeded > availableTokens) {
-      const tokensToFree = tokensNeeded - availableTokens;
-      let tokensFreed = 0;
-      let waitUntil = now;
-
-      for (const entry of this.tokenLog) {
-        tokensFreed += entry.tokens;
-        waitUntil = entry.timestamp + this.windowMs;
-        if (tokensFreed >= tokensToFree) break;
-      }
-      tokenDelay = Math.max(0, waitUntil - now + 100);
-    }
-
-    // Return the longer of the two delays
-    const maxDelay = Math.max(requestDelay, tokenDelay);
-
-    if (maxDelay === 0 && (requestsNeeded > 0 || tokensNeeded > 0)) {
-      // Minimal spacing to prevent burst issues
-      return 200;
-    }
-
-    return maxDelay;
-  }
+export enum ChunkType {
+  NARRATIVE = 'NARRATIVE',
+  INDEX = 'INDEX',
+  TOC = 'TOC',
+  REFERENCES = 'REFERENCES',
 }
+
+import { CohereClient } from 'cohere-ai';
+import { GoogleGenAI } from '@google/genai';
 
 export interface BM25Result {
   id: string;
@@ -148,7 +29,7 @@ export interface BM25Result {
   documentTitle: string;
   documentAuthor: string;
   documentFilePath: string;
-  documentMetadata: Record<string, unknown>;
+  documentMetadata: any;
   bm25Score: number;
 }
 
@@ -164,48 +45,48 @@ export class KnowledgeBaseService {
   private readonly genAI: GoogleGenAI;
   private readonly cohere: CohereClient;
   private readonly chunksPerParent = 5;
-  private readonly rateLimiter = new TokenRateLimiter(30_000);
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
+    private readonly voyageEmbeddingService: VoyageEmbeddingService,
   ) {
     const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
-    if (!apiKey) {
-      this.logger.warn(
-        'GOOGLE_API_KEY is not set. Using MOCK embeddings for verification.',
-      );
-    }
     this.genAI = new GoogleGenAI({ apiKey: apiKey || 'mock-key' });
 
-    const cohereKey = this.configService.get<string>('COHERE_API_KEY');
-    if (!cohereKey) {
-      this.logger.warn('COHERE_API_KEY is not set. Reranking will be skipped.');
-    }
-    this.cohere = new CohereClient({ token: cohereKey || 'mock-key' });
+    const cohereApiKey = this.configService.get<string>('COHERE_API_KEY');
+    this.cohere = new CohereClient({ token: cohereApiKey || 'mock-key' });
   }
 
   /**
-   * Extract text from PDF using the specified engine.
+   * Extract text from Document (PDF, EPUB) using the specified engine.
    *
-   * This method orchestrates external Python scripts to handle PDF processing.
+   * This method orchestrates external Python scripts to handle document processing.
    * It supports two engines:
-   * - 'pymupdf': Fast, rule-based extraction (legacy/default).
-   * - 'docling': High-fidelity computer vision based extraction (best for complex layouts).
+   * - 'pymupdf': Fast, rule-based extraction (legacy/default). Supports PDF and EPUB.
+   * - 'docling': High-fidelity computer vision based extraction (best for complex PDF layouts).
    *
-   * @param filePath - Absolute path to the PDF file.
+   * @param filePath - Absolute path to the document file.
    * @param engine - The extraction engine to use ('pymupdf' | 'docling').
    * @param options - Optional configuration for partial extraction.
    * @param options.startPage - Start page (1-indexed, inclusive).
    * @param options.endPage - End page (1-indexed, inclusive).
    * @returns A promise resolving to the extracted Markdown string.
    */
-  async extractPdf(
+  async extractDocument(
     filePath: string,
     engine: 'pymupdf' | 'docling' = 'pymupdf',
     options: { startPage?: number; endPage?: number } = {},
   ): Promise<string> {
-    const isDocling = engine === 'docling';
+    const isEpub = filePath.toLowerCase().endsWith('.epub');
+    // Force pymupdf for EPUBs as Docling (via our worker) is PDF-specific
+    const isDocling = engine === 'docling' && !isEpub;
+
+    if (isEpub && engine === 'docling') {
+      this.logger.warn(
+        'Docling engine does not support EPUB in the current worker setup. Falling back to PyMuPDF.',
+      );
+    }
 
     let pythonCommand = 'python3';
     let scriptPath = '';
@@ -232,14 +113,14 @@ export class KnowledgeBaseService {
         pythonCommand = 'python3';
       }
     } else {
-      // Legacy PyMuPDF script
-      scriptPath = path.resolve(__dirname, '../../../scripts/extract-pdf.py');
-      // Arguments for PyMuPDF script: file --json
+      // PyMuPDF script (handles PDF and EPUB)
+      scriptPath = path.resolve(__dirname, '../../../scripts/extract-doc.py');
+      // Arguments: file --json
       args = [filePath, '--json'];
 
       if (options.startPage !== undefined && options.endPage !== undefined) {
         // PyMuPDF script is 0-indexed in code but often scripts are 1-indexed for users.
-        // Looking at extract-pdf.py, it says "0-indexed, inclusive" in docstring.
+        // Looking at extract-doc.py, it says "0-indexed, inclusive" in docstring.
         // We will keep it consistent with what convert-books passes (1-indexed based on user input usually).
         // Let's adjust to 0-indexed for the script.
         args.push(
@@ -271,9 +152,9 @@ export class KnowledgeBaseService {
       process.on('close', (code) => {
         if (code !== 0) {
           this.logger.error(
-            `PDF extraction failed with code ${code}. Error: ${stderrData}`,
+            `Document extraction failed with code ${code}. Error: ${stderrData}`,
           );
-          return reject(new Error(`PDF extraction failed: ${stderrData}`));
+          return reject(new Error(`Document extraction failed: ${stderrData}`));
         }
 
         try {
@@ -286,7 +167,9 @@ export class KnowledgeBaseService {
               `No valid JSON found in extraction output. Raw stdout: ${stdoutData}`,
             );
             return reject(
-              new Error(`Failed to parse PDF extraction output: No JSON found`),
+              new Error(
+                `Failed to parse document extraction output: No JSON found`,
+              ),
             );
           }
 
@@ -302,7 +185,112 @@ export class KnowledgeBaseService {
           this.logger.error(
             `Failed to parse extraction output: ${e.message}. Raw stdout: ${stdoutData}`,
           );
-          reject(new Error(`Failed to parse PDF extraction output`));
+          reject(new Error(`Failed to parse document extraction output`));
+        }
+      });
+    });
+  }
+
+  /**
+   * Extract text from EPUB using ebooklib + pandoc for high-quality conversion.
+   *
+   * This method uses the dedicated EPUB worker which:
+   * - Respects EPUB spine reading order (not arbitrary item order)
+   * - Extracts full Dublin Core metadata
+   * - Uses pandoc for best-in-class HTML→Markdown conversion
+   * - Handles tables, lists, and formatting better than PyMuPDF
+   *
+   * @param filePath - Absolute path to the EPUB file.
+   * @param options - Optional configuration for partial extraction.
+   * @param options.startPage - Start chapter (1-indexed, inclusive).
+   * @param options.endPage - End chapter (1-indexed, inclusive).
+   * @returns A promise resolving to the extracted Markdown string.
+   */
+  async extractEpub(
+    filePath: string,
+    options: { startPage?: number; endPage?: number } = {},
+  ): Promise<string> {
+    const workerDir = path.resolve(__dirname, '../../../../workers/epub');
+    const pythonCommand = path.join(workerDir, '.venv/bin/python');
+    const scriptPath = path.join(workerDir, 'main.py');
+
+    // Fallback to system python if venv doesn't exist
+    const pythonCmd = fs.existsSync(pythonCommand) ? pythonCommand : 'python3';
+
+    const args: string[] = [filePath];
+
+    if (options.startPage !== undefined && options.endPage !== undefined) {
+      args.push(
+        '--pages',
+        options.startPage.toString(),
+        options.endPage.toString(),
+      );
+    }
+
+    this.logger.log(
+      `Using EPUB worker (ebooklib + pandoc) for: ${path.basename(filePath)}`,
+    );
+
+    return new Promise((resolve, reject) => {
+      const process = spawn(pythonCmd, [scriptPath, ...args]);
+
+      let stdoutData = '';
+      let stderrData = '';
+
+      process.stdout.on('data', (data) => {
+        stdoutData += data.toString();
+      });
+
+      process.stderr.on('data', (data) => {
+        const str = data.toString();
+        stderrData += str;
+        if (str.includes('Processing chapter') || str.includes('pandoc')) {
+          this.logger.log(str.trim());
+        }
+      });
+
+      process.on('close', (code) => {
+        if (code !== 0) {
+          this.logger.error(
+            `EPUB extraction failed with code ${code}. Error: ${stderrData}`,
+          );
+          return reject(new Error(`EPUB extraction failed: ${stderrData}`));
+        }
+
+        try {
+          const jsonStart = stdoutData.indexOf('{');
+          const jsonEnd = stdoutData.lastIndexOf('}');
+
+          if (jsonStart === -1 || jsonEnd === -1 || jsonEnd < jsonStart) {
+            this.logger.error(
+              `No valid JSON found in EPUB extraction output. Raw stdout: ${stdoutData}`,
+            );
+            return reject(
+              new Error(
+                `Failed to parse EPUB extraction output: No JSON found`,
+              ),
+            );
+          }
+
+          const jsonStr = stdoutData.substring(jsonStart, jsonEnd + 1);
+          const result = JSON.parse(jsonStr);
+
+          if (result.error) {
+            reject(new Error(result.error));
+          } else {
+            this.logger.log(
+              `EPUB extraction complete: ${result.pages_processed}/${result.total_pages} chapters processed`,
+            );
+            if (result.metadata?.title) {
+              this.logger.log(`  Title: ${result.metadata.title}`);
+            }
+            resolve(result.markdown);
+          }
+        } catch (e) {
+          this.logger.error(
+            `Failed to parse EPUB extraction output: ${e.message}. Raw stdout: ${stdoutData}`,
+          );
+          reject(new Error(`Failed to parse EPUB extraction output`));
         }
       });
     });
@@ -311,8 +299,22 @@ export class KnowledgeBaseService {
   /**
    * Legacy method wrapper for backward compatibility
    */
+  async extractDocumentWithPyMuPDF(filePath: string): Promise<string> {
+    return this.extractDocument(filePath, 'pymupdf');
+  }
+
+  // Backwards compatibility alias
+  async extractPdf(
+    filePath: string,
+    engine: 'pymupdf' | 'docling' = 'pymupdf',
+    options: { startPage?: number; endPage?: number } = {},
+  ): Promise<string> {
+    return this.extractDocument(filePath, engine, options);
+  }
+
+  // Backwards compatibility alias
   async extractPdfWithPyMuPDF(filePath: string): Promise<string> {
-    return this.extractPdf(filePath, 'pymupdf');
+    return this.extractDocumentWithPyMuPDF(filePath);
   }
 
   private runPythonScript(scriptPath: string, args: string[]): Promise<string> {
@@ -440,31 +442,49 @@ export class KnowledgeBaseService {
         `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${meta.title}`,
       );
 
+      const counts = { NARRATIVE: 0, INDEX: 0, TOC: 0, REFERENCES: 0 };
+      for (const chunk of chunks) {
+        const type = this.detectChunkType(chunk.content);
+        counts[type]++;
+      }
+      this.logger.log(
+        `Classification: ${counts.NARRATIVE} Narrative, ${counts.INDEX} Index, ${counts.TOC} TOC, ${counts.REFERENCES} Refs`,
+      );
+
       const parentIds: string[] = [];
 
       if (parentChunks.length > 0) {
         this.logger.log(
-          `Processing ${parentChunks.length} parent chunks (Sequentially 1-by-1)...`,
+          `Generating embeddings for ${parentChunks.length} parent chunks in batches...`,
+        );
+
+        const parentTexts = parentChunks.map((p) => p.content);
+        const parentEmbeddings =
+          await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
+            parentTexts,
+          );
+
+        this.logger.log(
+          `Inserting ${parentChunks.length} parent chunks into database...`,
         );
 
         for (let i = 0; i < parentChunks.length; i++) {
           const content = parentChunks[i];
-          const vector = await this.generateEmbedding(
-            content.content,
-            'RETRIEVAL_DOCUMENT',
-          );
+          const vector = parentEmbeddings[i];
           const vectorString = `[${vector.join(',')}]`;
           const parentId = randomUUID();
           parentIds.push(parentId);
 
+          const chunkType = this.detectChunkType(content.content);
+
           await (this.prisma as any).$executeRaw`
-            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
-            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${content.content})
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent", "chunkType")
+            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${content.content}, ${chunkType}::"ChunkType")
           `;
 
-          if ((i + 1) % 5 === 0) {
+          if ((i + 1) % 10 === 0 || i === parentChunks.length - 1) {
             this.logger.log(
-              `Processed ${i + 1}/${parentChunks.length} parent chunks`,
+              `Inserted ${i + 1}/${parentChunks.length} parent chunks`,
             );
           }
         }
@@ -472,15 +492,22 @@ export class KnowledgeBaseService {
       }
 
       this.logger.log(
-        `Processing ${chunks.length} child chunks (Sequentially 1-by-1)...`,
+        `Generating embeddings for ${chunks.length} child chunks in batches...`,
+      );
+
+      const chunkTexts = chunks.map((c) => c.content);
+      const chunkEmbeddings =
+        await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
+          chunkTexts,
+        );
+
+      this.logger.log(
+        `Inserting ${chunks.length} child chunks into database...`,
       );
 
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
-        const vector = await this.generateEmbedding(
-          content.content,
-          'RETRIEVAL_DOCUMENT',
-        );
+        const vector = chunkEmbeddings[i];
         const vectorString = `[${vector.join(',')}]`;
 
         let parentId: string | null = null;
@@ -494,14 +521,16 @@ export class KnowledgeBaseService {
           }
         }
 
-        await (this.prisma as any).$executeRaw`
-          INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
-        `;
+        const chunkType = this.detectChunkType(content.content);
 
-        if ((i + 1) % 10 === 0) {
+        await (this.prisma as any).$executeRaw`
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent", "chunkType")
+            VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent}, ${chunkType}::"ChunkType")
+          `;
+
+        if ((i + 1) % 50 === 0 || i === chunks.length - 1) {
           this.logger.log(
-            `Processed ${i + 1}/${chunks.length} chunks for ${meta.title}`,
+            `Inserted ${i + 1}/${chunks.length} chunks for ${meta.title}`,
           );
         }
       }
@@ -525,33 +554,109 @@ export class KnowledgeBaseService {
       volume?: string;
       edition?: string;
       year?: string;
+      archetype?: any;
     },
     filePath: string,
     useSemanticChunking: boolean = false,
-  ): Promise<void> {
-    const existingDoc = await (this.prisma as any).document.findUnique({
-      where: { filePath },
+    useBatchApi: boolean = false,
+    dryRun: boolean = false,
+  ): Promise<{ id: string; staged?: boolean; stagingFilePath?: string }> {
+    // 1. Parse Frontmatter and Manual Tags
+    const { data: frontmatter, content: rawBody } = matter(markdown);
+
+    // Merge provided metadata with frontmatter (frontmatter wins)
+    const mergedMetadata = {
+      ...metadata,
+      ...frontmatter,
+    };
+
+    const finalArchetype = (mergedMetadata as any).archetype || 'GENERAL';
+
+    let body = rawBody.replace(
+      /<!-- chunk: exclude -->[\s\S]*?<!-- chunk: end -->/g,
+      () => '',
+    );
+
+    const manualChunks: {
+      content: string;
+      pageNumber: number;
+      sectionType?: string;
+    }[] = [];
+
+    // Process section tags first (we keep content but want to label chunks)
+    const sectionMatches: { type: string; content: string }[] = [];
+    body = body.replace(
+      /<!-- section: ([a-z-]+) -->([\s\S]*?)<!-- section: end -->/g,
+      (match, type, content) => {
+        sectionMatches.push({ type, content: content.trim() });
+        return content;
+      },
+    );
+
+    body = body.replace(
+      /<!-- chunk: merge -->([\s\S]*?)<!-- chunk: end -->/g,
+      (match, p1, offset) => {
+        const pageMatch = body
+          .slice(0, offset)
+          .match(/<!-- PAGE_NUMBER: (\d+) -->/g);
+        let pageNum = 1;
+        if (pageMatch && pageMatch.length > 0) {
+          const lastMatch = pageMatch[pageMatch.length - 1];
+          const numMatch = lastMatch.match(/\d+/);
+          if (numMatch) pageNum = parseInt(numMatch[0]);
+        }
+
+        manualChunks.push({
+          content: p1.trim(),
+          pageNumber: pageNum,
+        });
+        return '';
+      },
+    );
+
+    const existingDoc = await (this.prisma as any).document.findFirst({
+      where: { title: mergedMetadata.title },
     });
 
     if (existingDoc) {
-      this.logger.log(`File already ingested: ${filePath}`);
-      return;
+      if (dryRun) {
+        this.logger.warn(
+          `[DRY RUN] Document "${metadata.title}" exists in DB. Proceeding with simulation...`,
+        );
+      } else {
+        this.logger.warn(
+          `Document "${metadata.title}" already exists. Skipping.`,
+        );
+        return { id: existingDoc.id };
+      }
     }
 
-    this.logger.log(`Ingesting markdown: ${metadata.title}`);
+    let documentId = existingDoc?.id || randomUUID();
 
-    const document = await (this.prisma as any).document.create({
-      data: {
-        title: metadata.title,
-        author: metadata.author,
-        filePath,
-        metadata: {
-          volume: metadata.volume,
-          edition: metadata.edition,
-          year: metadata.year,
-        },
-      },
-    });
+    if (!dryRun && !useBatchApi) {
+      if (!existingDoc) {
+        const document = await (this.prisma as any).document.create({
+          data: {
+            title: mergedMetadata.title,
+            author: mergedMetadata.author,
+            filePath: filePath,
+            archetype: finalArchetype,
+            metadata: mergedMetadata,
+          },
+        });
+        documentId = document.id;
+      }
+    } else if (dryRun) {
+      this.logger.log(
+        `[DRY RUN] Simulating document creation (ID: ${documentId})`,
+      );
+    } else if (useBatchApi) {
+      this.logger.log(
+        `[BATCH MODE] Document will be created after batch succeeds (ID: ${documentId})`,
+      );
+    }
+
+    this.logger.log(`Ingesting markdown: ${mergedMetadata.title}`);
 
     try {
       let chunks: { content: string; pageNumber: number }[] = [];
@@ -559,15 +664,15 @@ export class KnowledgeBaseService {
 
       if (useSemanticChunking) {
         try {
-          const pages = this.splitByPages(markdown);
-          const result = await this.semanticChunk(pages);
+          const pages = this.splitByPages(body);
+          const result = await this.semanticChunk(pages, { dryRun });
           chunks = result.chunks;
           parentChunks = result.parentChunks;
         } catch (error) {
           this.logger.warn(
             `Semantic chunking failed: ${error.message}. Falling back to naive chunking.`,
           );
-          const pages = this.splitByPages(markdown);
+          const pages = this.splitByPages(body);
           chunks = this.chunkText(pages);
           for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
             const batch = chunks.slice(i, i + this.chunksPerParent);
@@ -578,7 +683,7 @@ export class KnowledgeBaseService {
           }
         }
       } else {
-        const pages = this.splitByPages(markdown);
+        const pages = this.splitByPages(body);
         chunks = this.chunkText(pages);
         for (let i = 0; i < chunks.length; i += this.chunksPerParent) {
           const batch = chunks.slice(i, i + this.chunksPerParent);
@@ -589,35 +694,350 @@ export class KnowledgeBaseService {
         }
       }
 
+      if (manualChunks.length > 0) {
+        this.logger.log(`Adding ${manualChunks.length} manual chunks`);
+        chunks = [...chunks, ...manualChunks];
+        manualChunks.forEach((mc) => {
+          parentChunks.push({
+            content: mc.content,
+            pageNumber: mc.pageNumber,
+          });
+        });
+      }
+
       this.logger.log(
-        `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${metadata.title}`,
+        `Generated ${chunks.length} chunks (and ${parentChunks.length} parents) for ${mergedMetadata.title}`,
       );
+
+      const counts = { NARRATIVE: 0, INDEX: 0, TOC: 0, REFERENCES: 0 };
+      for (const chunk of chunks) {
+        const type = this.detectChunkType(chunk.content);
+        counts[type]++;
+      }
+      this.logger.log(
+        `Classification: ${counts.NARRATIVE} Narrative, ${counts.INDEX} Index, ${counts.TOC} TOC, ${counts.REFERENCES} Refs`,
+      );
+
+      // DEBUG: Log sample chunks to verify quality
+      if (chunks.length > 0) {
+        this.logger.log('--- SAMPLE CHUNKS (Top 5) ---');
+        chunks.slice(0, 5).forEach((c, i) => {
+          this.logger.log(
+            `Chunk ${i + 1} (Page ${c.pageNumber}, ~${c.content.split(/\s+/).length} words):\n"${c.content.substring(0, 150).replace(/\n/g, ' ')}..."`,
+          );
+        });
+      }
+
+      if (parentChunks.length > 0) {
+        this.logger.log('--- SAMPLE PARENTS (Top 5) ---');
+        parentChunks.slice(0, 5).forEach((p, i) => {
+          this.logger.log(
+            `Parent ${i + 1} (Page ${p.pageNumber}, ~${p.content.split(/\s+/).length} words):\n"${p.content.substring(0, 150).replace(/\n/g, ' ')}..."`,
+          );
+        });
+      }
+      this.logger.log('-----------------------------');
+
+      if (useBatchApi) {
+        this.logger.log(
+          `Preparing ${chunks.length + parentChunks.length} total chunks for Voyage Batch API...`,
+        );
+
+        const batchInputs: { id: string; text: string }[] = [];
+        const parentChunkData: {
+          id: string;
+          content: string;
+          pageNumber: number;
+          chunkType: ChunkType;
+          sectionType?: string;
+        }[] = [];
+        const childChunkData: {
+          content: string;
+          pageNumber: number;
+          parentIndex: number;
+          chunkType: ChunkType;
+          sectionType?: string;
+        }[] = [];
+
+        // Prepare parent chunks with IDs
+        for (const chunk of parentChunks) {
+          const id = randomUUID();
+          const chunkType = this.detectChunkType(chunk.content);
+          const sectionType = this.getSectionType(
+            chunk.content,
+            sectionMatches,
+          );
+          parentChunkData.push({
+            id,
+            content: chunk.content,
+            pageNumber: chunk.pageNumber,
+            chunkType,
+            sectionType: sectionType || undefined,
+          });
+          batchInputs.push({ id, text: chunk.content });
+        }
+
+        // Prepare child chunks with parent references
+        for (let i = 0; i < chunks.length; i++) {
+          const chunk = chunks[i];
+          const id = randomUUID();
+
+          let parentIndex: number | null = null;
+          if (parentChunks.length > 0) {
+            parentIndex = Math.floor(i / this.chunksPerParent);
+            if (parentIndex >= parentChunkData.length) {
+              parentIndex = null;
+            }
+          }
+
+          const chunkType = this.detectChunkType(chunk.content);
+          const sectionType = this.getSectionType(
+            chunk.content,
+            sectionMatches,
+          );
+
+          childChunkData.push({
+            content: chunk.content,
+            pageNumber: chunk.pageNumber,
+            parentIndex: parentIndex !== null ? parentIndex : -1,
+            chunkType,
+            sectionType: sectionType || undefined,
+          });
+          batchInputs.push({ id, text: chunk.content });
+        }
+
+        if (dryRun) {
+          this.logger.log(
+            `[DRY RUN] Simulating batch job submission for ${batchInputs.length} inputs...`,
+          );
+
+          // LOGGING LOGIC START
+          const logData = {
+            document: metadata.title,
+            timestamp: new Date().toISOString(),
+            mode: 'batch',
+            config: { useSemanticChunking, useBatchApi },
+            stats: {
+              totalChunks: chunks.length,
+              parentChunks: parentChunks.length,
+              totalBatchInputs: batchInputs.length,
+            },
+            chunks: chunks.map((c) => ({
+              ...c,
+              length: c.content.length,
+              preview: c.content.substring(0, 50),
+            })),
+            parentChunks: parentChunks.map((p) => ({
+              ...p,
+              length: p.content.length,
+              preview: p.content.substring(0, 50),
+            })),
+            voyagePayload: batchInputs,
+          };
+
+          const logDir = path.resolve(process.cwd(), 'data/logs/ingestion');
+          if (!fs.existsSync(logDir)) {
+            fs.mkdirSync(logDir, { recursive: true });
+          }
+
+          const sanitizedTitle = metadata.title
+            .replace(/[^a-z0-9]/gi, '_')
+            .toLowerCase();
+          const logFile = path.join(
+            logDir,
+            `${sanitizedTitle}_batch_dry_run_${Date.now()}.json`,
+          );
+
+          fs.writeFileSync(logFile, JSON.stringify(logData, null, 2));
+          this.logger.log(
+            `[DRY RUN] Detailed ingestion log written to: ${logFile}`,
+          );
+          // LOGGING LOGIC END
+
+          // Also generate the JSONL file that would be uploaded
+          const jsonlDir = path.resolve(process.cwd(), 'data/batches/payloads');
+          if (!fs.existsSync(jsonlDir)) {
+            fs.mkdirSync(jsonlDir, { recursive: true });
+          }
+          const jsonlFile = path.join(
+            jsonlDir,
+            `${sanitizedTitle}_batch_payload_${Date.now()}.jsonl`,
+          );
+          const jsonlContent = batchInputs
+            .map((item) => JSON.stringify(item))
+            .join('\n');
+          fs.writeFileSync(jsonlFile, jsonlContent, 'utf-8');
+          this.logger.log(
+            `[DRY RUN] Batch payload (JSONL) written to: ${jsonlFile}`,
+          );
+
+          this.logger.log(`[DRY RUN] Would submit batch job to Voyage API`);
+          this.logger.log(`[DRY RUN] Would track job in batches/jobs.json`);
+          return { id: documentId, staged: true };
+        }
+
+        // Create staging file with all data needed for later commit
+        const stagingDir = path.resolve(process.cwd(), 'data/batches/staging');
+        if (!fs.existsSync(stagingDir)) {
+          fs.mkdirSync(stagingDir, { recursive: true });
+        }
+
+        const sanitizedTitle = metadata.title
+          .replace(/[^a-z0-9]/gi, '_')
+          .toLowerCase();
+        const stagingFileName = `${sanitizedTitle}_${Date.now()}.json`;
+        const stagingFilePath = path.join(stagingDir, stagingFileName);
+
+        const stagingData = {
+          metadata,
+          sourceFilePath: filePath,
+          parentChunks: parentChunkData,
+          childChunks: childChunkData,
+          batchInputs,
+          chunksPerParent: this.chunksPerParent,
+          timestamp: new Date().toISOString(),
+        };
+
+        fs.writeFileSync(stagingFilePath, JSON.stringify(stagingData, null, 2));
+        this.logger.log(`Staging data written to: ${stagingFilePath}`);
+
+        const batchId = await this.voyageEmbeddingService.createBatchJob(
+          batchInputs,
+          {
+            inputType: 'document',
+          },
+        );
+
+        this.logger.log(
+          `Batch job submitted successfully. Batch ID: ${batchId}`,
+        );
+
+        const batchJobData = {
+          batchId,
+          bookTitle: metadata.title,
+          status: 'pending',
+          chunkCount: batchInputs.length,
+          timestamp: new Date().toISOString(),
+          stagingFilePath,
+        };
+
+        const batchJobsFile = path.resolve(
+          process.cwd(),
+          'data/batches/jobs.json',
+        );
+        let batchJobs: any[] = [];
+
+        const batchJobsFileDir = path.dirname(batchJobsFile);
+        if (!fs.existsSync(batchJobsFileDir)) {
+          fs.mkdirSync(batchJobsFileDir, { recursive: true });
+        }
+
+        if (fs.existsSync(batchJobsFile)) {
+          try {
+            batchJobs = JSON.parse(fs.readFileSync(batchJobsFile, 'utf-8'));
+          } catch {
+            this.logger.warn(
+              'Failed to parse existing batches/jobs.json, creating new one',
+            );
+          }
+        }
+
+        batchJobs.push(batchJobData);
+        fs.writeFileSync(batchJobsFile, JSON.stringify(batchJobs, null, 2));
+
+        this.logger.log(`Batch job tracked in ${batchJobsFile}`);
+        this.logger.log(
+          `⚠️  Book will be committed to DB only after batch succeeds`,
+        );
+        return { id: documentId, staged: true, stagingFilePath };
+      }
+
+      if (dryRun) {
+        const logData = {
+          document: metadata.title,
+          timestamp: new Date().toISOString(),
+          mode: 'real-time',
+          config: { useSemanticChunking, useBatchApi },
+          stats: {
+            totalChunks: chunks.length,
+            parentChunks: parentChunks.length,
+          },
+          chunks: chunks.map((c) => ({
+            ...c,
+            length: c.content.length,
+            preview: c.content.substring(0, 50),
+          })),
+          parentChunks: parentChunks.map((p) => ({
+            ...p,
+            length: p.content.length,
+            preview: p.content.substring(0, 50),
+          })),
+          voyagePayload: {
+            parentTexts: parentChunks.map((p) => p.content),
+            chunkTexts: chunks.map((c) => c.content),
+          },
+        };
+
+        const logDir = path.resolve(process.cwd(), 'data/logs/ingestion');
+        if (!fs.existsSync(logDir)) {
+          fs.mkdirSync(logDir, { recursive: true });
+        }
+
+        const sanitizedTitle = metadata.title
+          .replace(/[^a-z0-9]/gi, '_')
+          .toLowerCase();
+        const logFile = path.join(
+          logDir,
+          `${sanitizedTitle}_realtime_dry_run_${Date.now()}.json`,
+        );
+
+        fs.writeFileSync(logFile, JSON.stringify(logData, null, 2));
+        this.logger.log(
+          `[DRY RUN] Detailed ingestion log written to: ${logFile}`,
+        );
+      }
 
       const parentIds: string[] = [];
 
       if (parentChunks.length > 0) {
         this.logger.log(
-          `Processing ${parentChunks.length} parent chunks (Sequentially 1-by-1)...`,
+          `Generating embeddings for ${parentChunks.length} parent chunks in batches...`,
+        );
+
+        const parentTexts = parentChunks.map((p) => p.content);
+        const parentEmbeddings =
+          await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
+            parentTexts,
+            dryRun,
+          );
+
+        this.logger.log(
+          `Inserting ${parentChunks.length} parent chunks into database...`,
         );
 
         for (let i = 0; i < parentChunks.length; i++) {
           const content = parentChunks[i];
-          const vector = await this.generateEmbedding(
-            content.content,
-            'RETRIEVAL_DOCUMENT',
-          );
+          const vector = parentEmbeddings[i];
           const vectorString = `[${vector.join(',')}]`;
           const parentId = randomUUID();
           parentIds.push(parentId);
 
-          await (this.prisma as any).$executeRaw`
-            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent")
-            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${content.content})
-          `;
+          const chunkType = this.detectChunkType(content.content);
+          const sectionType = this.getSectionType(
+            content.content,
+            sectionMatches,
+          );
 
-          if ((i + 1) % 5 === 0) {
+          if (!dryRun) {
+            await (this.prisma as any).$executeRaw`
+            INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentContent", "chunkType", "sectionType")
+            VALUES (${parentId}::uuid, ${content.content}, ${content.pageNumber}, ${documentId}::uuid, ${vectorString}::vector, ${content.content}, ${chunkType}::"ChunkType", ${sectionType})
+          `;
+          }
+
+          if ((i + 1) % 10 === 0 || i === parentChunks.length - 1) {
             this.logger.log(
-              `Processed ${i + 1}/${parentChunks.length} parent chunks`,
+              `Inserted ${i + 1}/${parentChunks.length} parent chunks`,
             );
           }
         }
@@ -625,15 +1045,23 @@ export class KnowledgeBaseService {
       }
 
       this.logger.log(
-        `Processing ${chunks.length} child chunks (Sequentially 1-by-1)...`,
+        `Generating embeddings for ${chunks.length} child chunks in batches...`,
+      );
+
+      const chunkTexts = chunks.map((c) => c.content);
+      const chunkEmbeddings =
+        await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
+          chunkTexts,
+          dryRun,
+        );
+
+      this.logger.log(
+        `Inserting ${chunks.length} child chunks into database...`,
       );
 
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
-        const vector = await this.generateEmbedding(
-          content.content,
-          'RETRIEVAL_DOCUMENT',
-        );
+        const vector = chunkEmbeddings[i];
         const vectorString = `[${vector.join(',')}]`;
 
         let parentId: string | null = null;
@@ -647,25 +1075,37 @@ export class KnowledgeBaseService {
           }
         }
 
-        await (this.prisma as any).$executeRaw`
-          INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent")
-          VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${document.id}, ${vectorString}::vector, ${parentId}::uuid, ${parentContent})
-        `;
+        const chunkType = this.detectChunkType(content.content);
+        const sectionType = this.getSectionType(
+          content.content,
+          sectionMatches,
+        );
 
-        if ((i + 1) % 10 === 0) {
+        if (!dryRun) {
+          await (this.prisma as any).$executeRaw`
+              INSERT INTO embeddings (id, content, "pageNumber", "documentId", vector, "parentId", "parentContent", "chunkType", "sectionType")
+              VALUES (gen_random_uuid(), ${content.content}, ${content.pageNumber}, ${documentId}::uuid, ${vectorString}::vector, ${parentId}::uuid, ${parentContent}, ${chunkType}::"ChunkType", ${sectionType})
+            `;
+        }
+
+        if ((i + 1) % 50 === 0 || i === chunks.length - 1) {
           this.logger.log(
-            `Processed ${i + 1}/${chunks.length} chunks for ${metadata.title}`,
+            `Inserted ${i + 1}/${chunks.length} chunks for ${metadata.title}`,
           );
         }
       }
       this.logger.log(`Successfully ingested ${metadata.title}`);
+      return { id: documentId };
     } catch (error) {
       this.logger.error(
         `Failed to ingest chunks for ${metadata.title}. Cleaning up partial data...`,
       );
-      await (this.prisma as any).document.delete({
-        where: { id: document.id },
-      });
+      if (!dryRun && existingDoc === null) {
+        // Only delete if we created it
+        await (this.prisma as any).document.delete({
+          where: { id: documentId },
+        });
+      }
       throw error;
     }
   }
@@ -759,8 +1199,23 @@ export class KnowledgeBaseService {
       results = this.combineWithRRF(denseResults, bm25Results);
     }
 
+    // Deduplicate by parentId to avoid redundant nearby chunks
+    const seenParents = new Set<string>();
+    results = results.filter((r) => {
+      const pId = r.parentId || r.id;
+      if (seenParents.has(pId)) return false;
+      seenParents.add(pId);
+      return true;
+    });
+
+    // If no reranking, still add fullContext for consistency
+    const finalizedResults = results.slice(0, limit).map((r) => ({
+      ...r,
+      fullContext: r.parentContent || r.content,
+    }));
+
     // Apply Cross-Encoder Reranking
-    const reranked = await this.rerank(query, results, limit);
+    const reranked = await this.rerank(query, finalizedResults, limit);
     return reranked;
   }
 
@@ -785,11 +1240,14 @@ export class KnowledgeBaseService {
       // Map rerank results back to original documents
       return response.results.map((r) => {
         const originalDoc = documents[r.index];
+        const parentContent = originalDoc.parentContent || originalDoc.content;
         return {
           ...originalDoc,
           rerankScore: r.relevanceScore,
-          // Optimization: Return parent content as main content for LLM context
-          content: originalDoc.parentContent || originalDoc.content,
+          // Store parent content separately so the UI can show the specific match
+          // but the AI can still use the full context.
+          content: parentContent,
+          fullContext: parentContent,
         };
       });
     } catch (error) {
@@ -803,14 +1261,15 @@ export class KnowledgeBaseService {
     limit: number = 5,
     filters?: SearchFilters,
   ): Promise<any[]> {
-    const vector = await this.generateEmbedding(query, 'RETRIEVAL_QUERY');
+    const vector =
+      await this.voyageEmbeddingService.generateQueryEmbedding(query);
     const vectorString = `[${vector.join(',')}]`;
 
     // Base query parts
     let whereClause = Prisma.sql``;
 
     if (filters?.documentIds?.length) {
-      whereClause = Prisma.sql`${whereClause} AND e."documentId" = ANY(${filters.documentIds}::text[])`;
+      whereClause = Prisma.sql`${whereClause} AND e."documentId" = ANY(${filters.documentIds}::uuid[])`;
     }
 
     if (filters?.minYear) {
@@ -825,17 +1284,28 @@ export class KnowledgeBaseService {
       SELECT 
         e.id,
         e.content,
+        e."parentId",
         e."parentContent",
         e."pageNumber", 
+        e."sectionType",
         d.title as "documentTitle",
         d.author as "documentAuthor",
         d."filePath" as "documentFilePath",
         d.metadata as "documentMetadata",
-        1 - (e.vector <=> ${vectorString}::vector) as similarity
+        d.archetype as "documentArchetype",
+        (1 - (e.vector <=> ${vectorString}::vector)) * (
+          CASE 
+            WHEN d.archetype = 'PRACTICAL'::"Archetype" THEN 1.2
+            WHEN d.archetype = 'CASE_STUDY'::"Archetype" THEN 1.1
+            ELSE 1.0
+          END
+        ) as similarity
       FROM embeddings e
       JOIN documents d ON e."documentId" = d.id
-      WHERE 1=1 ${whereClause}
-      ORDER BY e.vector <=> ${vectorString}::vector
+      WHERE e."parentId" IS NOT NULL 
+      AND e."chunkType" = 'NARRATIVE'::"ChunkType"
+      ${whereClause}
+      ORDER BY similarity DESC
       LIMIT ${limit}
     `;
 
@@ -855,7 +1325,7 @@ export class KnowledgeBaseService {
     let whereClause = Prisma.sql``;
 
     if (filters?.documentIds?.length) {
-      whereClause = Prisma.sql`${whereClause} AND e."documentId" = ANY(${filters.documentIds}::text[])`;
+      whereClause = Prisma.sql`${whereClause} AND e."documentId" = ANY(${filters.documentIds}::uuid[])`;
     }
 
     if (filters?.minYear) {
@@ -866,21 +1336,33 @@ export class KnowledgeBaseService {
       whereClause = Prisma.sql`${whereClause} AND d.metadata->>'volume' = ${filters.volume}`;
     }
 
-    // Using plainto_tsquery for natural language query handling
+    // Using simple config for BM25 to avoid language-specific stemming issues in medical terms
+    // and better support cross-lingual exact matches where possible.
     const results: any[] = await (this.prisma as any).$queryRaw`
       SELECT 
         e.id,
         e.content,
+        e."parentId",
         e."parentContent",
         e."pageNumber",
+        e."sectionType",
         d.title as "documentTitle",
         d.author as "documentAuthor",
         d."filePath" as "documentFilePath",
         d.metadata as "documentMetadata",
-        ts_rank(to_tsvector('english', e.content), plainto_tsquery('english', ${query})) as "bm25Score"
+        d.archetype as "documentArchetype",
+        ts_rank(to_tsvector('simple', e.content), plainto_tsquery('simple', ${query})) * (
+          CASE 
+            WHEN d.archetype = 'PRACTICAL'::"Archetype" THEN 1.2
+            WHEN d.archetype = 'CASE_STUDY'::"Archetype" THEN 1.1
+            ELSE 1.0
+          END
+        ) as "bm25Score"
       FROM embeddings e
       JOIN documents d ON e."documentId" = d.id
-      WHERE to_tsvector('english', e.content) @@ plainto_tsquery('english', ${query})
+      WHERE e."parentId" IS NOT NULL 
+      AND e."chunkType" = 'NARRATIVE'::"ChunkType"
+      AND to_tsvector('simple', e.content) @@ plainto_tsquery('simple', ${query})
       ${whereClause}
       ORDER BY "bm25Score" DESC
       LIMIT ${limit}
@@ -1055,6 +1537,198 @@ export class KnowledgeBaseService {
     }
   }
 
+  private getSectionType(
+    content: string,
+    sections: { type: string; content: string }[],
+  ): string | null {
+    for (const section of sections) {
+      if (section.content.includes(content)) {
+        return section.type;
+      }
+    }
+    return null;
+  }
+
+  private detectChunkType(content: string): ChunkType {
+    if (!content) return ChunkType.NARRATIVE;
+    const lines = content.split('\n').map((l) => l.trim());
+    const firstLines = lines.slice(0, 5).join(' ').toLowerCase();
+
+    // 1. Header/Title based detection
+    if (
+      firstLines.includes('contents') ||
+      firstLines.includes('contenido') ||
+      firstLines.includes('table of contents') ||
+      /##\s+(índice|indice)(\s+de)?/i.test(firstLines)
+    ) {
+      return ChunkType.TOC;
+    }
+
+    if (
+      firstLines.includes('index') ||
+      firstLines.includes('índice alfabético') ||
+      firstLines.includes('indice alfabetico') ||
+      firstLines.includes('index of subjects')
+    ) {
+      return ChunkType.INDEX;
+    }
+
+    if (
+      firstLines.includes('references') ||
+      firstLines.includes('bibliography') ||
+      firstLines.includes('bibliografía') ||
+      firstLines.includes('bibliografia') ||
+      firstLines.includes('literatura citada')
+    ) {
+      return ChunkType.REFERENCES;
+    }
+
+    // 2. Metrics calculation
+    const textOnly = content.replace(/[#*|]/g, '');
+    const words = textOnly.toLowerCase().match(/\b\w+\b/g) || [];
+
+    const anatomyKeywords = [
+      'action:',
+      'origin:',
+      'insertion:',
+      'nerve:',
+      'innervation:',
+      'reflex:',
+      'testing:',
+    ];
+    let anatomyScore = 0;
+    for (const kw of anatomyKeywords) {
+      if (content.toLowerCase().includes(kw)) anatomyScore++;
+    }
+    if (anatomyScore >= 2) return ChunkType.NARRATIVE;
+
+    if (words.length < 15 && !content.includes('|')) return ChunkType.NARRATIVE;
+
+    const enStopwords = new Set([
+      'the',
+      'and',
+      'for',
+      'with',
+      'was',
+      'were',
+      'from',
+      'that',
+      'this',
+      'these',
+      'those',
+      'but',
+      'not',
+      'are',
+      'is',
+      'of',
+      'in',
+      'on',
+      'at',
+      'by',
+      'an',
+      'as',
+      'be',
+      'to',
+    ]);
+    const esStopwords = new Set([
+      'el',
+      'la',
+      'los',
+      'las',
+      'un',
+      'una',
+      'y',
+      'en',
+      'de',
+      'con',
+      'para',
+      'por',
+      'que',
+      'este',
+      'esta',
+      'estos',
+      'estas',
+      'pero',
+      'no',
+      'son',
+      'es',
+      'al',
+      'del',
+      'su',
+      'o',
+    ]);
+
+    let stopwordCount = 0;
+    for (const w of words) {
+      if (enStopwords.has(w) || esStopwords.has(w)) stopwordCount++;
+    }
+    const stopwordDensity = words.length > 0 ? stopwordCount / words.length : 0;
+
+    const digitCount = content.replace(/\D/g, '').length;
+    const digitDensity = digitCount / content.length;
+
+    const pipeCount = (content.match(/\|/g) || []).length;
+    const pipeDensity = pipeCount / content.length;
+
+    const seeAlsoCount = (
+      content.match(/see also|véase también|vid\.|cfr\./gi) || []
+    ).length;
+
+    const indexPattern = /\b[a-z]{3,},\s*\d+[a-z]?\b/gi;
+    const indexMatches = (content.match(indexPattern) || []).length;
+    const indexDensity = words.length > 0 ? indexMatches / words.length : 0;
+
+    const isHighPipeDensity = pipeDensity > 0.02;
+    const isNumberList = digitDensity > 0.08 && stopwordDensity < 0.2;
+    const isNonNarrativeList = stopwordDensity < 0.15 && words.length > 20;
+    const isSeeAlsoIndex = seeAlsoCount >= 1 && stopwordDensity < 0.25;
+    const isIndexPattern = indexDensity > 0.1;
+
+    if (
+      isHighPipeDensity ||
+      isNumberList ||
+      isNonNarrativeList ||
+      isSeeAlsoIndex ||
+      isIndexPattern
+    ) {
+      return ChunkType.INDEX;
+    }
+
+    // References
+    const referenceKeywords = [
+      'pp.',
+      'vol.',
+      'ed.',
+      'journal',
+      'university',
+      'press',
+      'inc.',
+      'wilkins',
+      'saunders',
+      'elsevier',
+      'springer',
+      'medicina',
+      'clinical',
+      'et al',
+      'doi:',
+    ];
+    let refMatchCount = 0;
+    for (const kw of referenceKeywords) {
+      if (content.toLowerCase().includes(kw)) refMatchCount++;
+    }
+
+    // Increased stopword density limit from 0.12 to 0.25 (titles have stopwords).
+    const isReferenceStyle =
+      stopwordDensity < 0.25 &&
+      (refMatchCount >= 2 || /19\d{2}|20\d{2}/.test(content));
+
+    if (isReferenceStyle) {
+      return ChunkType.REFERENCES;
+    }
+
+    return ChunkType.NARRATIVE;
+  }
+
   private cosineSimilarity(a: number[], b: number[]): number {
     let dotProduct = 0;
     let normA = 0;
@@ -1073,6 +1747,7 @@ export class KnowledgeBaseService {
       similarityThreshold?: number;
       targetChunkSize?: number;
       maxChunkSize?: number;
+      dryRun?: boolean;
     } = {},
   ): Promise<{
     chunks: { content: string; pageNumber: number }[];
@@ -1082,6 +1757,7 @@ export class KnowledgeBaseService {
       similarityThreshold = 0.85,
       targetChunkSize = 400,
       maxChunkSize = 512,
+      dryRun = false,
     } = options;
 
     // Normalize input to Page[]
@@ -1122,10 +1798,11 @@ export class KnowledgeBaseService {
     }
 
     const sentenceTexts = refinedSentences.map((s) => s.text);
-    const embeddings = await this.generateEmbeddingsBatch(
-      sentenceTexts,
-      'RETRIEVAL_DOCUMENT',
-    );
+    const embeddings =
+      await this.voyageEmbeddingService.generateDocumentEmbeddingsBatch(
+        sentenceTexts,
+        dryRun,
+      );
 
     // 3. Group sentences into chunks
     const chunks: { content: string; pageNumber: number }[] = [];
@@ -1208,7 +1885,6 @@ export class KnowledgeBaseService {
     const pages: { pageNumber: number; content: string }[] = [];
     const pageRegex = /<!-- PAGE_NUMBER: (\d+) -->/g;
     let match;
-    let lastIndex = 0;
 
     // Handle content before the first page marker (if any)
     // Usually metadata or frontmatter, treat as page 0 or 1
@@ -1281,177 +1957,5 @@ export class KnowledgeBaseService {
     }
 
     return chunks;
-  }
-
-  private async generateEmbedding(
-    text: string,
-    taskType: 'RETRIEVAL_DOCUMENT' | 'RETRIEVAL_QUERY' = 'RETRIEVAL_QUERY',
-  ): Promise<number[]> {
-    const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
-    if (!apiKey) {
-      const vector = new Array(768).fill(0);
-      vector[0] = text.length / 1000;
-      return vector;
-    }
-
-    const estimatedTokens = this.rateLimiter.estimateTokens(text);
-    const delay = this.rateLimiter.getRequiredDelay(estimatedTokens, 1);
-
-    // Reserve usage BEFORE waiting/calling API to prevent race conditions
-    this.rateLimiter.recordUsage(estimatedTokens, 1);
-
-    if (delay > 1000) {
-      this.logger.debug(
-        `Rate limit: waiting ${Math.round(delay / 1000)}s before embedding (${estimatedTokens} tokens)`,
-      );
-    }
-
-    await sleep(delay);
-
-    const result = await withRetry(
-      async () => {
-        const res = await this.genAI.models.embedContent({
-          model: 'gemini-embedding-001',
-          contents: [{ role: 'user', parts: [{ text }] }],
-          config: {
-            taskType: taskType,
-            outputDimensionality: 768,
-          },
-        });
-
-        if (
-          !res.embeddings ||
-          res.embeddings.length === 0 ||
-          !res.embeddings[0].values
-        ) {
-          throw new Error('No embedding returned');
-        }
-        return res.embeddings[0].values;
-      },
-      { maxRetries: 5 },
-      this.logger,
-    );
-
-    return result;
-  }
-
-  /**
-   * Generate embeddings for multiple texts in batches.
-   * Uses small batches (10 texts) with 1.5s delay to stay under 100 RPM free tier limit.
-   *
-   * @param texts - Array of texts to embed
-   * @param taskType - Type of embedding task
-   * @returns Array of embedding vectors in the same order as input texts
-   */
-  async generateEmbeddingsBatch(
-    texts: string[],
-    taskType: 'RETRIEVAL_DOCUMENT' | 'RETRIEVAL_QUERY' = 'RETRIEVAL_QUERY',
-  ): Promise<number[][]> {
-    const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
-
-    // Return mock embeddings if no API key
-    if (!apiKey) {
-      return texts.map((text) => {
-        const vector = new Array(768).fill(0);
-        vector[0] = text.length / 1000;
-        return vector;
-      });
-    }
-
-    if (texts.length === 0) {
-      return [];
-    }
-
-    // Small batches to stay under limits
-    // Gemini Free Tier: 100 RPM.
-    // Batch size 10 means we consume 10 requests per call.
-    // Safe RPM target: 80 RPM -> 0.75s per request.
-    // Delay for 10 reqs = 7.5s.
-    // Reduced max batch size to 5 for safety with large parent chunks
-    const MAX_BATCH_SIZE = 5;
-    // Target max tokens per batch to leave room for error
-    const TARGET_BATCH_TOKENS = 5000;
-
-    const allEmbeddings: number[][] = [];
-
-    let currentIndex = 0;
-
-    while (currentIndex < texts.length) {
-      // Dynamic Batch Sizing: Fill batch until MAX_SIZE or Token Limit
-      const batch: string[] = [];
-      let batchTokens = 0;
-
-      while (batch.length < MAX_BATCH_SIZE && currentIndex < texts.length) {
-        const text = texts[currentIndex];
-        const tokens = this.rateLimiter.estimateTokens(text);
-
-        // If adding this text exceeds target tokens (and batch is not empty), stop here
-        if (batch.length > 0 && batchTokens + tokens > TARGET_BATCH_TOKENS) {
-          break;
-        }
-
-        batch.push(text);
-        batchTokens += tokens;
-        currentIndex++;
-      }
-
-      // Calculate delay based on BOTH tokens and request count (batch size)
-      const delay = this.rateLimiter.getRequiredDelay(
-        batchTokens,
-        batch.length,
-      );
-
-      // Reserve usage BEFORE waiting/calling API
-      this.rateLimiter.recordUsage(batchTokens, batch.length);
-
-      if (delay > 1000) {
-        this.logger.debug(
-          `Batch rate limit: waiting ${Math.round(delay / 1000)}s for ${batchTokens} tokens (${batch.length} docs). Word counts: [${batch.map((t) => t.split(/\s+/).length).join(', ')}]`,
-        );
-      } else {
-        this.logger.debug(
-          `Sending batch: ${batchTokens} tokens (${batch.length} docs). Word counts: [${batch.map((t) => t.split(/\s+/).length).join(', ')}]`,
-        );
-      }
-
-      await sleep(delay);
-
-      const batchEmbeddings = await withRetry(
-        async () => {
-          const result = await this.genAI.models.embedContent({
-            model: 'gemini-embedding-001',
-            contents: batch,
-            config: {
-              taskType: taskType,
-              outputDimensionality: 768,
-            },
-          });
-
-          if (!result.embeddings || result.embeddings.length !== batch.length) {
-            throw new Error(
-              `Expected ${batch.length} embeddings, got ${result.embeddings?.length || 0}`,
-            );
-          }
-
-          return result.embeddings.map((e) => {
-            if (!e.values) {
-              throw new Error('Embedding missing values');
-            }
-            return e.values;
-          });
-        },
-        { maxRetries: 5 },
-        this.logger,
-      );
-
-      allEmbeddings.push(...batchEmbeddings);
-
-      // Log progress
-      if (currentIndex % 50 === 0 || currentIndex >= texts.length) {
-        this.logger.log(`Embedding progress: ${currentIndex}/${texts.length}`);
-      }
-    }
-
-    return allEmbeddings;
   }
 }

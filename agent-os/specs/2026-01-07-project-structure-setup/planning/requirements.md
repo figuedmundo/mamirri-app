@@ -1,6 +1,7 @@
 # Spec Requirements: Project Structure Setup
 
 ## Initial Description
+
 Setup the project structure for the initial "Hello World" phase. This involves creating a Monorepo with `/client` and `/server` directories, initializing a PostgreSQL database with Prisma, setting up a NestJS backend with Swagger, and creating a React/Vite frontend with Shadcn/UI and TailwindCSS. The goal is to have the environment ready and the "plumbing" connected.
 
 ## Requirements Discussion
@@ -29,52 +30,61 @@ Setup the project structure for the initial "Hello World" phase. This involves c
 **Answer:** yes, lets make it local
 
 ### Existing Code to Reference
+
 No similar existing features identified for reference.
 
 ### Follow-up Questions
+
 None needed.
 
 ## Visual Assets
 
 ### Files Provided:
+
 No visual assets provided.
 
 ## Requirements Summary
 
 ### Functional Requirements
+
 - **Monorepo Setup:** Initialize a Turborepo to manage `apps/client` (Frontend) and `apps/server` (Backend).
 - **Backend Setup:**
-    - Initialize NestJS project in `apps/server`.
-    - Configure Swagger for API documentation.
-    - Set up ESLint and Prettier.
+  - Initialize NestJS project in `apps/server`.
+  - Configure Swagger for API documentation.
+  - Set up ESLint and Prettier.
 - **Frontend Setup:**
-    - Initialize React + Vite + TypeScript project in `apps/client`.
-    - Install and configure TailwindCSS.
-    - Install and configure Shadcn/UI.
-    - Create a dummy "Login" screen (visual only).
+  - Initialize React + Vite + TypeScript project in `apps/client`.
+  - Install and configure TailwindCSS.
+  - Install and configure Shadcn/UI.
+  - Create a dummy "Login" screen (visual only).
 - **Database Setup:**
-    - Create `docker-compose.yml` for PostgreSQL.
-    - Initialize Prisma ORM in `apps/server` (or a shared package if preferred, but usually server-bound for this scale).
-    - Define initial schema (User, Patient, Session) in `schema.prisma`.
+  - Create `docker-compose.yml` for PostgreSQL.
+  - Initialize Prisma ORM in `apps/server` (or a shared package if preferred, but usually server-bound for this scale).
+  - Define initial schema (User, Patient, Session) in `schema.prisma`.
 - **Linting & Formatting:** Configure root-level ESLint and Prettier for consistency across the monorepo.
 
 ### Reusability Opportunities
+
 - None identified at this stage (greenfield project).
 
 ### Scope Boundaries
+
 **In Scope:**
+
 - Local development environment setup.
 - Basic "Hello World" connectivity (Database is up, Backend runs, Frontend runs).
 - Dummy Login UI.
 
 **Out of Scope:**
+
 - Authentication logic (JWT, etc.).
 - CI/CD pipelines.
 - Cloud deployment (AWS/Vercel/Render).
 - Feature implementation (Patient CRUD, etc.).
 
 ### Technical Considerations
+
 - **Naming Conventions Suggestion:**
-    - **Database Tables:** singular PascalCase or snake_case? *Recommendation: standard Prisma convention is PascalCase for models (maps to database tables).*
-    - **API Endpoints:** RESTful standard (e.g., `/api/v1/resource`).
+  - **Database Tables:** singular PascalCase or snake_case? _Recommendation: standard Prisma convention is PascalCase for models (maps to database tables)._
+  - **API Endpoints:** RESTful standard (e.g., `/api/v1/resource`).
 - **Tools:** Turborepo, pnpm (recommended for Turborepo) or npm, NestJS, React, Vite, TailwindCSS, Shadcn/UI, Prisma, PostgreSQL, Docker.

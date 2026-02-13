@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-PDF to Markdown extraction using PyMuPDF4LLM.
-Designed for large medical documents with chunked processing.
+Document to Markdown extraction using PyMuPDF4LLM.
+Designed for large medical documents (PDF, EPUB) with chunked processing.
 
 Usage:
-  python extract-pdf.py <pdf_path> [--pages START END] [--output FILE]
+  python extract-doc.py <doc_path> [--pages START END] [--output FILE]
 
 Examples:
-  python extract-pdf.py document.pdf                    # Full document to stdout
-  python extract-pdf.py document.pdf --pages 0 10      # Pages 0-10 (0-indexed)
-  python extract-pdf.py document.pdf --output out.md   # Save to file
+  python extract-doc.py document.pdf                    # Full document to stdout
+  python extract-doc.py document.epub                   # Full document to stdout
+  python extract-doc.py document.pdf --pages 0 10       # Pages 0-10 (0-indexed)
+  python extract-doc.py document.pdf --output out.md    # Save to file
 """
 
 import sys
@@ -24,21 +25,21 @@ logging.getLogger("pymupdf").setLevel(logging.ERROR)
 logging.getLogger("pymupdf4llm").setLevel(logging.ERROR)
 
 
-def extract_pdf(
-    pdf_path: str, start_page: int | None = None, end_page: int | None = None
+def extract_doc(
+    doc_path: str, start_page: int | None = None, end_page: int | None = None
 ) -> dict:
     """
-    Extract PDF content as markdown with metadata.
+    Extract document content as markdown with metadata.
 
     Args:
-        pdf_path: Path to PDF file
+        doc_path: Path to document file (PDF, EPUB, etc.)
         start_page: Starting page (0-indexed, inclusive)
         end_page: Ending page (0-indexed, inclusive)
 
     Returns:
         dict with 'markdown', 'total_pages', 'pages_processed'
     """
-    doc = pymupdf.open(pdf_path)
+    doc = pymupdf.open(doc_path)
     total_pages = len(doc)
 
     if start_page is None:
@@ -84,8 +85,8 @@ def extract_pdf(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Extract PDF to Markdown")
-    parser.add_argument("pdf_path", help="Path to PDF file")
+    parser = argparse.ArgumentParser(description="Extract Document to Markdown")
+    parser.add_argument("doc_path", help="Path to document file (PDF, EPUB)")
     parser.add_argument(
         "--pages",
         nargs=2,
@@ -103,7 +104,7 @@ def main():
     start_page: int | None = args.pages[0] if args.pages else None
     end_page: int | None = args.pages[1] if args.pages else None
 
-    result = extract_pdf(args.pdf_path, start_page, end_page)
+    result = extract_doc(args.doc_path, start_page, end_page)
 
     if args.json:
         output = json.dumps(result, ensure_ascii=False)
