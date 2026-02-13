@@ -22,6 +22,8 @@ import { ToastAction } from '@/components/ui/toast';
 import { patientsApi } from '../../api/patients';
 import { mediaApi } from '../../api/media';
 import { AnalyzeButton } from './AnalyzeButton';
+import { AnalysisResultsPanel } from './analysis/AnalysisResultsPanel';
+import type { AnalysisResult } from '@/types/analysis';
 import {
   Mic,
   ArrowLeft,
@@ -51,6 +53,10 @@ export function CaseDetailLayout({
 }: CaseDetailLayoutProps) {
   const [localCase, setLocalCase] = useState<ClinicalCase>(clinicalCase);
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
+    null,
+  );
+  const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
   const { toast } = useToast();
 
   const activeEval = getActiveEvaluation(localCase);
@@ -445,13 +451,16 @@ export function CaseDetailLayout({
           <AnalyzeButton
             caseId={localCase.id}
             evaluationCount={localCase.evaluations?.length ?? 0}
+            hasResults={!!analysisResult}
             onAnalysisComplete={(result) => {
-              console.log('Analysis result:', result);
+              setAnalysisResult(result);
+              setIsAnalysisOpen(true);
               toast({
                 title: 'Análisis completado',
                 description: 'Resultados listos para revisar.',
               });
             }}
+            onViewResults={() => setIsAnalysisOpen(true)}
           />
           <button
             onClick={() => void startRecording()}
@@ -519,6 +528,12 @@ export function CaseDetailLayout({
         duration={duration}
         onStop={stopRecording}
         onCancel={cancelRecording}
+      />
+
+      <AnalysisResultsPanel
+        analysisResult={analysisResult}
+        isOpen={isAnalysisOpen}
+        onClose={() => setIsAnalysisOpen(false)}
       />
     </div>
   );

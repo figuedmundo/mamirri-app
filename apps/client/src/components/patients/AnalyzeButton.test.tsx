@@ -81,4 +81,59 @@ describe('AnalyzeButton', () => {
       { timeout: 1500 },
     );
   });
+
+  it('shows "Ver resultados" when hasResults is true', () => {
+    // @ts-expect-error - mockReturnValue is a vitest mock method
+    useCaseAnalysis.mockReturnValue({
+      analyzeCase: mockAnalyzeCase,
+      isAnalyzing: false,
+    });
+    render(
+      <AnalyzeButton
+        caseId="1"
+        evaluationCount={1}
+        hasResults={true}
+        onAnalysisComplete={vi.fn()}
+      />,
+    );
+    expect(screen.getByText('Ver resultados')).toBeInTheDocument();
+  });
+
+  it('calls onViewResults when "Ver resultados" is clicked', () => {
+    const onViewResults = vi.fn();
+    // @ts-expect-error - mockReturnValue is a vitest mock method
+    useCaseAnalysis.mockReturnValue({
+      analyzeCase: mockAnalyzeCase,
+      isAnalyzing: false,
+    });
+    render(
+      <AnalyzeButton
+        caseId="1"
+        evaluationCount={1}
+        hasResults={true}
+        onAnalysisComplete={vi.fn()}
+        onViewResults={onViewResults}
+      />,
+    );
+    fireEvent.click(screen.getByText('Ver resultados'));
+    expect(onViewResults).toHaveBeenCalled();
+    expect(mockAnalyzeCase).not.toHaveBeenCalled();
+  });
+
+  it('shows "Reintentar" when error occurs', () => {
+    // @ts-expect-error - mockReturnValue is a vitest mock method
+    useCaseAnalysis.mockReturnValue({
+      analyzeCase: mockAnalyzeCase,
+      isAnalyzing: false,
+      error: new Error('Fail'),
+    });
+    render(
+      <AnalyzeButton
+        caseId="1"
+        evaluationCount={1}
+        onAnalysisComplete={vi.fn()}
+      />,
+    );
+    expect(screen.getByText('Reintentar')).toBeInTheDocument();
+  });
 });

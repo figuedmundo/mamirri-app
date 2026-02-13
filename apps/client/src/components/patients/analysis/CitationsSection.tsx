@@ -33,10 +33,15 @@ function CitationItem({ citation }: { citation: Citation }) {
     <div className="border border-slate-200 dark:border-slate-800 rounded-md">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-3 text-left hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+        className="w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors min-h-[44px]"
       >
         <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
           {citation.documentTitle}
+          {citation.author && (
+            <span className="text-xs text-muted-foreground font-normal ml-1">
+              — {citation.author}
+            </span>
+          )}
           {citation.pageNumber && (
             <span className="text-xs text-muted-foreground ml-2 font-normal">
               p. {citation.pageNumber}
