@@ -2,19 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../hooks/use-auth';
-import { usersApi } from '../api/users';
+import {
+  useUserQuery,
+  useUpdateUserMutation,
+  useUploadPhotoMutation,
+  useDeletePhotoMutation,
+} from '../hooks/use-users';
 import { Loader2, Camera, Trash2, User as UserIcon } from 'lucide-react';
 import { ChangePasswordModal } from '../components/profile/ChangePasswordModal';
 import PinSetupModal from '../components/auth/PinSetupModal';
-import { isAxiosError } from 'axios';
 
 export default function Perfil() {
   const { user, updateUser } = useAuth();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isPhotoLoading, setIsPhotoLoading] = useState(false);
+  const { data: remoteUser } = useUserQuery();
+  const updateUserMutation = useUpdateUserMutation();
+  const uploadPhotoMutation = useUploadPhotoMutation();
+  const deletePhotoMutation = useDeletePhotoMutation();
+
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
 
@@ -29,18 +34,19 @@ export default function Perfil() {
   });
 
   useEffect(() => {
-    if (user) {
+    const currentUser = remoteUser || user;
+    if (currentUser) {
       setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        phone: user.phone || '',
-        clinicName: user.clinicName || '',
-        licenseNumber: user.licenseNumber || '',
-        specialty: user.specialty || '',
-        yearsExperience: user.yearsExperience?.toString() || '',
+        name: currentUser.name || '',
+        email: currentUser.email || '',
+        phone: currentUser.phone || '',
+        clinicName: currentUser.clinicName || '',
+        licenseNumber: currentUser.licenseNumber || '',
+        specialty: currentUser.specialty || '',
+        yearsExperience: currentUser.yearsExperience?.toString() || '',
       });
     }
-  }, [user]);
+  }, [remoteUser, user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -49,78 +55,33 @@ export default function Perfil() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    try {
-      const updatedData = await usersApi.updateProfile({
-        ...formData,
-        yearsExperience: formData.yearsExperience
-          ? parseInt(formData.yearsExperience)
-          : undefined,
-      });
-      updateUser(updatedData);
-      toast({
-        title: 'Éxito',
-        description: 'Perfil actualizado correctamente',
-      });
-    } catch (error: unknown) {
-      const message =
-        isAxiosError(error) && error.response?.data?.message
-          ? error.response.data.message
-          : 'Error al actualizar el perfil';
-      toast({
-        title: 'Error',
-        description: message,
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    const updatedData = await updateUserMutation.mutateAsync({
+      ...formData,
+      yearsExperience: formData.yearsExperience
+        ? parseInt(formData.yearsExperience)
+        : undefined,
+    });
+    updateUser(updatedData);
   };
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setIsPhotoLoading(true);
-    try {
-      const updatedUser = await usersApi.uploadPhoto(file);
-      updateUser(updatedUser);
-      toast({
-        title: 'Éxito',
-        description: 'Foto de perfil actualizada',
-      });
-    } catch {
-      toast({
-        title: 'Error',
-        description: 'Error al subir la foto',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsPhotoLoading(false);
-    }
+    const updatedUser = await uploadPhotoMutation.mutateAsync(file);
+    updateUser(updatedUser);
   };
 
   const handlePhotoDelete = async () => {
-    setIsPhotoLoading(true);
-    try {
-      const updatedUser = await usersApi.deletePhoto();
-      updateUser(updatedUser);
-      toast({
-        title: 'Éxito',
-        description: 'Foto de perfil eliminada',
-      });
-    } catch {
-      toast({
-        title: 'Error',
-        description: 'Error al eliminar la foto',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsPhotoLoading(false);
-    }
+    const updatedUser = await deletePhotoMutation.mutateAsync();
+    updateUser(updatedUser);
   };
 
   if (!user) return null;
+
+  const isLoading = updateUserMutation.isPending;
+  const isPhotoLoading =
+    uploadPhotoMutation.isPending || deletePhotoMutation.isPending;
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
@@ -137,10 +98,10 @@ export default function Perfil() {
           <div className="flex flex-col md:flex-row gap-8 items-start">
             <div className="flex flex-col items-center gap-4">
               <div className="relative w-32 h-32 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-700 flex items-center justify-center border-2 border-slate-200 dark:border-slate-600">
-                {user.profilePhotoUrl ? (
+                {remoteUser?.profilePhotoUrl || user.profilePhotoUrl ? (
                   <img
-                    src={user.profilePhotoUrl}
-                    alt={user.name}
+                    src={remoteUser?.profilePhotoUrl || user.profilePhotoUrl}
+                    alt={remoteUser?.name || user.name}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -166,7 +127,7 @@ export default function Perfil() {
                   <Camera className="w-4 h-4 mr-2" />
                   Cambiar
                 </Button>
-                {user.profilePhotoUrl && (
+                {(remoteUser?.profilePhotoUrl || user.profilePhotoUrl) && (
                   <Button
                     type="button"
                     variant="outline"
@@ -301,8 +262,10 @@ export default function Perfil() {
             <div className="flex justify-between p-2 rounded-md bg-slate-50 dark:bg-slate-900/50">
               <span className="text-slate-500">Fecha de registro</span>
               <span className="font-medium">
-                {user.createdAt
-                  ? new Date(user.createdAt).toLocaleDateString('es-ES')
+                {remoteUser?.createdAt || user.createdAt
+                  ? new Date(
+                      (remoteUser?.createdAt || user.createdAt)!,
+                    ).toLocaleDateString('es-ES')
                   : '-'}
               </span>
             </div>

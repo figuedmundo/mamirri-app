@@ -1,13 +1,16 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PatientProfile } from '../components/patients/PatientProfile';
 import {
   PatientForm,
   type PatientFormData,
 } from '../components/patients/PatientForm';
-import { patientsApi } from '../api/patients';
-import { mediaApi } from '../api/media';
-import type { Patient, VideoMetadata } from '../types/patient';
+import { usePatientQuery, useUpdatePatient } from '../hooks/use-patients';
+import {
+  useUploadEvaluationVoiceNote,
+  useUploadPostureVideo,
+} from '../hooks/use-media';
+import type { VideoMetadata } from '../types/patient';
 import { useToast } from '../hooks/use-toast';
 import {
   Dialog,
@@ -26,37 +29,24 @@ export default function PatientDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [patient, setPatient] = useState<Patient | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: patient, isLoading, isError } = usePatientQuery(id!);
+  const updatePatient = useUpdatePatient();
+  const uploadVoiceNote = useUploadEvaluationVoiceNote();
+  const uploadVideo = useUploadPostureVideo();
+
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isVideoDialogOpen, setIsVideoDialogOpen] = useState(false);
 
-  const loadPatient = useCallback(
-    async (patientId: string) => {
-      try {
-        setLoading(true);
-        const data = await patientsApi.findOne(patientId);
-        setPatient(data);
-      } catch (error) {
-        console.error(error);
-        toast({
-          title: 'Error',
-          description: 'No se pudo cargar el paciente',
-          variant: 'destructive',
-        });
-        navigate('/pacientes');
-      } finally {
-        setLoading(false);
-      }
-    },
-    [navigate, toast],
-  );
-
   useEffect(() => {
-    if (id) {
-      void loadPatient(id);
+    if (isError) {
+      toast({
+        title: 'Error',
+        description: 'No se pudo cargar el paciente',
+        variant: 'destructive',
+      });
+      navigate('/pacientes');
     }
-  }, [id, loadPatient]);
+  }, [isError, navigate, toast]);
 
   const activeCase = patient?.clinicalCases?.find((c) => c.status === 'active');
   const activeEval = activeCase ? getActiveEvaluation(activeCase) : undefined;
@@ -70,7 +60,11 @@ export default function PatientDetail() {
         description: 'Guardando en la evaluación activa.',
       });
 
-      await mediaApi.uploadEvaluationVoiceNote(activeEval.id, blob, duration);
+      await uploadVoiceNote.mutateAsync({
+        evaluationId: activeEval.id,
+        file: blob,
+        durationSeconds: duration,
+      });
 
       toast({
         title: 'Éxito',
@@ -89,7 +83,6 @@ export default function PatientDetail() {
           </ToastAction>
         ),
       });
-      if (id) void loadPatient(id);
     } catch (error) {
       console.error('Voice upload error:', error);
       toast({
@@ -147,24 +140,8 @@ export default function PatientDetail() {
 
   const handleEditSubmit = async (formData: PatientFormData) => {
     if (!id) return;
-
-    try {
-      await patientsApi.update(id, formData);
-      toast({
-        title: 'Éxito',
-        description: 'Paciente actualizado correctamente',
-      });
-      setIsEditOpen(false);
-      loadPatient(id);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo actualizar el paciente',
-        variant: 'destructive',
-      });
-      throw error;
-    }
+    await updatePatient.mutateAsync({ id, data: formData });
+    setIsEditOpen(false);
   };
 
   const handleVoiceDictation = () => {
@@ -207,19 +184,18 @@ export default function PatientDetail() {
         description: 'Guardando en la evaluación activa.',
       });
 
-      await mediaApi.uploadPostureVideo(
-        activeEval.id,
-        blob,
-        (metadata.type || 'static') as 'gait' | 'static' | 'dynamic',
-        metadata.durationSeconds,
-      );
+      await uploadVideo.mutateAsync({
+        evaluationId: activeEval.id,
+        file: blob,
+        type: (metadata.type || 'static') as 'gait' | 'static' | 'dynamic',
+        duration: metadata.durationSeconds,
+      });
 
       toast({
         title: 'Éxito',
         description: 'Video guardado correctamente.',
       });
       setIsVideoDialogOpen(false);
-      if (id) void loadPatient(id);
     } catch (error) {
       console.error('Video upload error:', error);
       toast({
@@ -242,7 +218,7 @@ export default function PatientDetail() {
     navigate(`/pacientes/${id}/casos/${caseId}`);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-8 flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-3">
@@ -282,7 +258,7 @@ export default function PatientDetail() {
         onCaptureVideo={handleCaptureVideo}
         onSchedule={handleSchedule}
         onViewCase={handleViewCase}
-        onRefresh={() => id && void loadPatient(id)}
+        onRefresh={() => {}}
       />
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
