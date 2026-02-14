@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LibrarySearchBar } from './LibrarySearchBar';
 
@@ -15,8 +15,7 @@ describe('LibrarySearchBar', () => {
     ).toBeInTheDocument();
   });
 
-  it('debounces search — typing triggers onSearch after 400ms delay', () => {
-    vi.useFakeTimers();
+  it('typing does not trigger search — search only on button click', () => {
     const onSearch = vi.fn();
     render(<LibrarySearchBar onSearch={onSearch} />);
     const input = screen.getByPlaceholderText(/Describe el caso clínico/);
@@ -24,10 +23,17 @@ describe('LibrarySearchBar', () => {
     fireEvent.change(input, { target: { value: 'dolor' } });
 
     expect(onSearch).not.toHaveBeenCalled();
+  });
 
-    act(() => {
-      vi.advanceTimersByTime(400);
-    });
+  it('clicking search button triggers onSearch', async () => {
+    const user = userEvent.setup();
+    const onSearch = vi.fn();
+    render(<LibrarySearchBar onSearch={onSearch} />);
+    const input = screen.getByPlaceholderText(/Describe el caso clínico/);
+    const searchButton = screen.getByRole('button', { name: 'Buscar' });
+
+    await user.type(input, 'dolor');
+    await user.click(searchButton);
 
     expect(onSearch).toHaveBeenCalledWith('dolor');
   });
@@ -42,35 +48,5 @@ describe('LibrarySearchBar', () => {
     fireEvent.keyDown(input, { key: 'Enter' });
 
     expect(onSearch).toHaveBeenCalledWith('dolor');
-  });
-
-  it('clear button appears when text is entered and works', async () => {
-    const user = userEvent.setup();
-    const onSearch = vi.fn();
-    render(<LibrarySearchBar onSearch={onSearch} />);
-    const input = screen.getByPlaceholderText(/Describe el caso clínico/);
-
-    await user.type(input, 'test');
-
-    const clearButton = screen.getByRole('button');
-    expect(clearButton).toBeInTheDocument();
-
-    await user.click(clearButton);
-
-    expect(input).toHaveValue('');
-    expect(onSearch).toHaveBeenCalledWith('');
-  });
-
-  it('shows ⌘K hint when empty and hides when text entered', async () => {
-    const user = userEvent.setup();
-    render(<LibrarySearchBar onSearch={vi.fn()} />);
-
-    expect(screen.getByText('⌘')).toBeInTheDocument();
-    expect(screen.getByText('K')).toBeInTheDocument();
-
-    const input = screen.getByPlaceholderText(/Describe el caso clínico/);
-    await user.type(input, 'a');
-
-    expect(screen.queryByText('K')).not.toBeInTheDocument();
   });
 });
