@@ -99,13 +99,14 @@ model Evaluation {
 }
 
 model TreatmentPlan {
-  id             String       @id @default(cuid())
-  clinicalCaseId String       @unique
-  createdAt      DateTime     @default(now())
+  id             String                  @id @default(cuid())
+  clinicalCaseId String                  @unique
+  createdAt      DateTime                @default(now())
   insoleSnapshot Json?
   objectives     Json
   phases         Json
-  clinicalCase   ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+  clinicalCase   ClinicalCase            @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
+  protocols      TreatmentPlanProtocol[]
 
   @@map("treatment_plans")
 }
@@ -214,6 +215,7 @@ model Document {
   createdAt  DateTime    @default(now())
   metadata   Json?
   embeddings Embedding[]
+  protocols  Protocol[]
 
   @@map("documents")
 }
@@ -271,4 +273,87 @@ model AiFeedback {
 
   @@unique([aiAnalysisId, suggestionIndex])
   @@map("ai_feedbacks")
+}
+
+// =============================================================================
+// Biblioteca Médica (Medical Library)
+// =============================================================================
+
+model ClinicalCategory {
+  id          String     @id @default(cuid())
+  name        String
+  description String
+  icon        String
+  createdAt   DateTime   @default(now())
+  protocols   Protocol[]
+
+  @@map("clinical_categories")
+}
+
+model Protocol {
+  id            String               @id @default(cuid())
+  title         String
+  categoryId    String
+  definition    String
+  rationale     String
+  procedure     String[]
+  tags          String[]
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  documentId    String?              @db.Uuid
+  category      ClinicalCategory     @relation(fields: [categoryId], references: [id])
+  document      Document?            @relation(fields: [documentId], references: [id])
+  references    ProtocolReference[]
+  treatmentPlanProtocols TreatmentPlanProtocol[]
+
+  @@index([categoryId])
+  @@map("protocols")
+}
+
+model BibliographicReference {
+  id               String              @id @default(cuid())
+  author           String
+  year             Int
+  title            String
+  source           String
+  originalLanguage String              @default("es")
+  summaryEs        String
+  originalText     String?
+  url              String?
+  createdAt        DateTime            @default(now())
+  protocols        ProtocolReference[]
+
+  @@map("bibliographic_references")
+}
+
+model ProtocolReference {
+  protocolId  String
+  referenceId String
+  protocol    Protocol               @relation(fields: [protocolId], references: [id], onDelete: Cascade)
+  reference   BibliographicReference @relation(fields: [referenceId], references: [id], onDelete: Cascade)
+
+  @@id([protocolId, referenceId])
+  @@map("protocol_references")
+}
+
+model AnatomicalDiagram {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  description String
+  createdAt   DateTime @default(now())
+
+  @@map("anatomical_diagrams")
+}
+
+model TreatmentPlanProtocol {
+  treatmentPlanId String
+  protocolId      String
+  addedAt         DateTime      @default(now())
+  notes           String?
+  treatmentPlan   TreatmentPlan @relation(fields: [treatmentPlanId], references: [id], onDelete: Cascade)
+  protocol        Protocol      @relation(fields: [protocolId], references: [id])
+
+  @@id([treatmentPlanId, protocolId])
+  @@map("treatment_plan_protocols")
 }
