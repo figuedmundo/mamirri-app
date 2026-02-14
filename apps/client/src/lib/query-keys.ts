@@ -29,4 +29,16 @@ export const queryKeys = {
     details: () => [...queryKeys.aiAnalysis.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.aiAnalysis.details(), id] as const,
   },
+  library: {
+    all: ['library'] as const,
+    categories: () => [...queryKeys.library.all, 'categories'] as const,
+    protocols: () => [...queryKeys.library.all, 'protocols'] as const,
+    protocolList: (categoryId?: string) =>
+      [...queryKeys.library.protocols(), { categoryId }] as const,
+    protocolDetail: (id: string) =>
+      [...queryKeys.library.protocols(), id] as const,
+    references: () => [...queryKeys.library.all, 'references'] as const,
+    search: (query: string) =>
+      [...queryKeys.library.all, 'search', query] as const,
+  },
 } as const;
