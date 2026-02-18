@@ -273,7 +273,7 @@ Create a new clinical case for an existing patient.
 
 ## Medical Library (Biblioteca)
 
-All biblioteca endpoints require authentication. Read/search is available to authenticated therapists. Protocol CRUD is admin-only.
+All biblioteca endpoints require authentication. Read/search and protocol curation are available to authenticated therapists.
 
 ### GET /api/v1/library/categories
 
@@ -290,7 +290,7 @@ List protocols or perform filtered retrieval.
   |-------|------|---------|-------------|
   | `categoryId` | string | - | Filter by category |
   | `q` | string | - | Search query (title/definition/tags) |
-  | `includeDeleted` | boolean | false | Include archived protocols (admin only) |
+  | `includeDeleted` | boolean | false | Include archived protocols |
 
 - **Response:** `200 OK`
   - If `q` is present: `{ protocols: Protocol[], ragResults: RagResult[] }`
@@ -326,7 +326,7 @@ Attach a protocol to a treatment plan owned by the authenticated therapist.
   - `404 Not Found`: Plan/protocol not found or protocol archived
   - `409 Conflict`: Protocol already attached to this plan
 
-### POST /api/v1/library/protocols (Admin only)
+### POST /api/v1/library/protocols
 
 Create protocol.
 
@@ -344,31 +344,30 @@ Create protocol.
   ```
 - **Response:** `201 Created`
 - **Errors:**
-  - `403 Forbidden`: Non-admin user
   - `404 Not Found`: Category/reference does not exist
   - `409 Conflict`: Duplicate active title in same category
 
-### PATCH /api/v1/library/protocols/:id (Admin only)
+### PATCH /api/v1/library/protocols/:id
 
 Update protocol fields and references.
 
 - **Body:** Partial subset of create payload fields
 - **Response:** `200 OK`
-- **Errors:** `403`, `404`, `409`
+- **Errors:** `404`, `409`
 
-### DELETE /api/v1/library/protocols/:id (Admin only)
+### DELETE /api/v1/library/protocols/:id
 
 Archive protocol (soft delete).
 
 - **Response:** `204 No Content`
-- **Errors:** `403`, `404`
+- **Errors:** `404`
 
-### POST /api/v1/library/protocols/:id/restore (Admin only)
+### POST /api/v1/library/protocols/:id/restore
 
 Restore archived protocol.
 
 - **Response:** `200 OK`
-- **Errors:** `403`, `404`, `409`
+- **Errors:** `404`, `409`
 - **Response:** `201 Created` - Clinical case object
 
 ### GET /api/v1/clinical-cases/:id

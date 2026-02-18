@@ -297,18 +297,18 @@ Only therapists can **add protocols to treatment plans**. This is because:
 - Therapist ownership must be verified
 - Prevents unauthorized access to patient data
 
-Only users with **ADMIN** role can manage protocol catalog content (create, edit, archive, restore). This protects clinical consistency while keeping therapist workflows focused on patient care.
+Therapists can also manage protocol catalog content (create, edit, archive, restore) to keep the library aligned with their clinic’s practice.
 
-### Admin Curation Flow
+### Protocol Curation Flow
 
-Admins can curate protocols from `/admin/protocols`:
+Therapists can curate protocols from `/protocolos`:
 
 - Create new protocols (title, category, definition, rationale, steps, tags, references)
 - Edit existing protocol content
 - Archive protocols (soft delete)
 - Restore archived protocols when needed
 
-Therapists do not see archived protocols in standard Biblioteca searches.
+Archived protocols are hidden from standard Biblioteca searches by default.
 
 ### Data Privacy
 

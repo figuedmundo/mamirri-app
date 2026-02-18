@@ -56,15 +56,13 @@ Run Prisma migrations to set up the database schema:
 pnpm --filter server exec npx prisma migrate dev
 ```
 
-### 2.3.1 Admin Access (Local Dev)
+### 2.3.1 Protocol Management (Local Dev)
 
-The app has an `ADMIN` role that unlocks admin-only UIs (e.g. Protocol CRUD).
+Protocol CRUD is available to any authenticated therapist.
 
-For now, local admin access is granted by promoting an existing account to `ADMIN` (there is no in-app admin bootstrap flow yet).
+Protocol UI route:
 
-Admin UI route:
-
-- `http://localhost:5173/admin/protocols`
+- `http://localhost:5173/protocolos`
 
 ### 2.4 Docling PDF Extraction (Zero Setup)
 
