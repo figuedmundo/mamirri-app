@@ -294,6 +294,7 @@ model Protocol {
   id            String               @id @default(cuid())
   title         String
   categoryId    String
+  deletedAt     DateTime?
   definition    String
   rationale     String
   procedure     String[]
@@ -307,6 +308,7 @@ model Protocol {
   treatmentPlanProtocols TreatmentPlanProtocol[]
 
   @@index([categoryId])
+  @@index([deletedAt])
   @@map("protocols")
 }
 
