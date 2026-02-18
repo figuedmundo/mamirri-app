@@ -47,12 +47,6 @@ async function main() {
       password: 'password123',
       role: 'USER',
     },
-    {
-      email: 'admin@mamirri.local',
-      name: 'Mamirri Admin',
-      password: 'admin123',
-      role: 'ADMIN',
-    },
   ];
 
   console.log('Seeding database...');
