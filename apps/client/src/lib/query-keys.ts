@@ -33,8 +33,11 @@ export const queryKeys = {
     all: ['library'] as const,
     categories: () => [...queryKeys.library.all, 'categories'] as const,
     protocols: () => [...queryKeys.library.all, 'protocols'] as const,
-    protocolList: (categoryId?: string) =>
-      [...queryKeys.library.protocols(), { categoryId }] as const,
+    protocolList: (categoryId?: string, includeDeleted?: boolean) =>
+      [
+        ...queryKeys.library.protocols(),
+        { categoryId, includeDeleted },
+      ] as const,
     protocolDetail: (id: string) =>
       [...queryKeys.library.protocols(), id] as const,
     references: () => [...queryKeys.library.all, 'references'] as const,
