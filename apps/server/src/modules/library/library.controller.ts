@@ -23,8 +23,6 @@ import { AddProtocolToPlanDto } from './dto/add-protocol-to-plan.dto';
 import { CreateProtocolDto } from './dto/create-protocol.dto';
 import { UpdateProtocolDto } from './dto/update-protocol.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentTherapist } from '../patients/decorators/current-therapist.decorator';
 
 @ApiTags('library')
@@ -44,13 +42,8 @@ export class LibraryController {
   @Get('protocols')
   @ApiOperation({ summary: 'List or search protocols' })
   @ApiResponse({ status: HttpStatus.OK, description: 'List of protocols.' })
-  async findProtocols(
-    @Query() dto: SearchLibraryDto,
-    @CurrentTherapist() user: { userId: string; role?: string },
-  ) {
-    const isAdmin = user.role?.toUpperCase() === 'ADMIN';
-    const includeDeleted = isAdmin && dto.includeDeleted === true;
-
+  async findProtocols(@Query() dto: SearchLibraryDto) {
+    const includeDeleted = dto.includeDeleted === true;
     if (dto.q) {
       return this.libraryService.search(dto.q, dto.categoryId, includeDeleted);
     }
@@ -64,18 +57,12 @@ export class LibraryController {
     status: HttpStatus.NOT_FOUND,
     description: 'Protocol not found.',
   })
-  async findOneProtocol(
-    @Param('id') id: string,
-    @CurrentTherapist() user: { role?: string },
-  ) {
-    const isAdmin = user.role?.toUpperCase() === 'ADMIN';
-    return this.libraryService.findOneProtocol(id, isAdmin);
+  async findOneProtocol(@Param('id') id: string) {
+    return this.libraryService.findOneProtocol(id);
   }
 
   @Post('protocols')
-  @UseGuards(RolesGuard)
-  @Roles('ADMIN')
-  @ApiOperation({ summary: 'Create protocol (admin only)' })
+  @ApiOperation({ summary: 'Create protocol' })
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Protocol created successfully.',
@@ -85,9 +72,7 @@ export class LibraryController {
   }
 
   @Patch('protocols/:id')
-  @UseGuards(RolesGuard)
-  @Roles('ADMIN')
-  @ApiOperation({ summary: 'Update protocol (admin only)' })
+  @ApiOperation({ summary: 'Update protocol' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Protocol updated.' })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -101,10 +86,8 @@ export class LibraryController {
   }
 
   @Delete('protocols/:id')
-  @UseGuards(RolesGuard)
-  @Roles('ADMIN')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Archive protocol (admin only)' })
+  @ApiOperation({ summary: 'Archive protocol' })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
     description: 'Protocol archived.',
@@ -114,9 +97,7 @@ export class LibraryController {
   }
 
   @Post('protocols/:id/restore')
-  @UseGuards(RolesGuard)
-  @Roles('ADMIN')
-  @ApiOperation({ summary: 'Restore archived protocol (admin only)' })
+  @ApiOperation({ summary: 'Restore archived protocol' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Protocol restored successfully.',

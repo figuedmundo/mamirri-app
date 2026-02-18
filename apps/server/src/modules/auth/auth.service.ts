@@ -67,7 +67,7 @@ export class AuthService {
         email,
         passwordHash,
         name,
-        role: 'USER',
+        role: 'THERAPIST',
       },
     });
 
