@@ -98,8 +98,8 @@ Total Tasks: 4
       - Archive shows confirmation and removes from default list
       - Toggle "Ver archivados" shows archived and enables restore
   - [x] 3.2 Add admin route and gating
-    - Add `/admin/protocols` route in `apps/client/src/App.tsx`
-    - Implement an admin-only gate component (new or extend existing) using `user.role`
+    - Add `/protocolos` route in `apps/client/src/App.tsx`
+    - Protect it behind authentication
     - Reuse auth baseline from `apps/client/src/components/auth/ProtectedRoute.tsx`
   - [x] 3.3 Create AdminProtocols page
     - List protocols with search + category filter
@@ -126,7 +126,7 @@ Total Tasks: 4
 **Acceptance Criteria:**
 
 - Admin can create/edit/archive/restore protocols from in-app UI
-- Non-admin cannot access `/admin/protocols`
+- Only authenticated users can access `/protocolos`
 - Archived protocols are clearly labeled and hidden by default
 - Create/edit forms validate and show field-level errors
 - React-query cache invalidation keeps list/detail consistent
