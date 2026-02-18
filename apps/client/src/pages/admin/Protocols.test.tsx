@@ -52,9 +52,7 @@ describe('AdminProtocols page', () => {
   it('renders admin page title and table row', () => {
     render(<AdminProtocols />);
 
-    expect(
-      screen.getByText('Administración de Protocolos'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Protocolos')).toBeInTheDocument();
     expect(screen.getByText('Esfinge')).toBeInTheDocument();
   });
 

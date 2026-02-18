@@ -124,9 +124,9 @@ function AppContent() {
       />
 
       <Route
-        path="/admin/protocols"
+        path="/protocolos"
         element={
-          <ProtectedRoute requiredRoles={['ADMIN']}>
+          <ProtectedRoute>
             <MainLayout>
               <Suspense fallback={<PageLoader />}>
                 <AdminProtocols />
