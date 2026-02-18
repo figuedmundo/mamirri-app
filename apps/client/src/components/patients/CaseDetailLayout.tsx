@@ -34,6 +34,7 @@ import {
   ClipboardList,
   Split,
   Target,
+  BookOpen,
 } from 'lucide-react';
 
 type ViewMode =
@@ -47,12 +48,14 @@ interface CaseDetailLayoutProps {
   patient: Patient;
   clinicalCase: ClinicalCase;
   onBack: () => void;
+  onOpenLibrary?: (planId: string) => void;
 }
 
 export function CaseDetailLayout({
   patient,
   clinicalCase,
   onBack,
+  onOpenLibrary,
 }: CaseDetailLayoutProps) {
   const [localCase, setLocalCase] = useState<ClinicalCase>(clinicalCase);
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
@@ -68,6 +71,7 @@ export function CaseDetailLayout({
 
   const activeEval = getActiveEvaluation(localCase);
   const activeEvalType = activeEval?.type;
+  const treatmentPlanId = localCase.treatmentPlan?.id;
 
   const handleRecordingComplete = async (blob: Blob, duration: number) => {
     if (!activeEval) {
@@ -431,6 +435,31 @@ export function CaseDetailLayout({
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              if (!treatmentPlanId) {
+                toast({
+                  title: 'Sin plan de tratamiento',
+                  description:
+                    'Este caso no tiene un plan asociado para añadir protocolos.',
+                  variant: 'destructive',
+                });
+                return;
+              }
+
+              if (onOpenLibrary) {
+                onOpenLibrary(treatmentPlanId);
+                return;
+              }
+
+              window.location.assign(`/biblioteca?planId=${treatmentPlanId}`);
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-full font-medium shadow-lg transition-all bg-teal-600 hover:bg-teal-700 text-white hover:scale-105"
+          >
+            <BookOpen size={16} />
+            <span className="hidden sm:inline">Abrir Biblioteca</span>
+          </button>
           <AnalyzeButton
             caseId={localCase.id}
             evaluationCount={localCase.evaluations?.length ?? 0}
