@@ -56,6 +56,24 @@ Run Prisma migrations to set up the database schema:
 pnpm --filter server exec npx prisma migrate dev
 ```
 
+### 2.3.1 Create an Admin User (Local Dev)
+
+The database seed script creates a default admin user for local development.
+
+Run:
+
+```bash
+pnpm --filter server seed
+```
+
+Default admin credentials (local dev only):
+
+- Email: `admin@mamirri.local`
+- Password: `admin123`
+- Role: `ADMIN`
+
+The admin UI for protocols is available at: `http://localhost:5173/admin/protocols`
+
 ### 2.4 Docling PDF Extraction (Zero Setup)
 
 Mamirri uses **Docling** for high-quality PDF extraction with automatic Docker management.
