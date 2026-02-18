@@ -94,49 +94,4 @@ describe('ProtectedRoute', () => {
     expect(screen.queryByText('Login Page')).not.toBeInTheDocument();
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
-
-  it('redirects to home when role is not allowed', () => {
-    (useAuth as Mock).mockReturnValue({
-      isAuthenticated: true,
-      isLoading: false,
-      user: { role: 'THERAPIST' },
-    });
-
-    render(
-      <MemoryRouter initialEntries={['/admin']}>
-        <Routes>
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute requiredRoles={['ADMIN']}>
-                <div>Admin Content</div>
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/" element={<div>Home Page</div>} />
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    expect(screen.getByText('Home Page')).toBeInTheDocument();
-    expect(screen.queryByText('Admin Content')).not.toBeInTheDocument();
-  });
-
-  it('renders children when user role is allowed', () => {
-    (useAuth as Mock).mockReturnValue({
-      isAuthenticated: true,
-      isLoading: false,
-      user: { role: 'ADMIN' },
-    });
-
-    render(
-      <MemoryRouter>
-        <ProtectedRoute requiredRoles={['ADMIN']}>
-          <div>Admin Content</div>
-        </ProtectedRoute>
-      </MemoryRouter>,
-    );
-
-    expect(screen.getByText('Admin Content')).toBeInTheDocument();
-  });
 });

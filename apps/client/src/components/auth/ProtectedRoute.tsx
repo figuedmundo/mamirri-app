@@ -5,9 +5,8 @@ import { Loader2 } from 'lucide-react';
 
 export const ProtectedRoute: React.FC<{
   children: React.ReactNode;
-  requiredRoles?: string[];
-}> = ({ children, requiredRoles }) => {
-  const { isAuthenticated, isLoading, user } = useAuth();
+}> = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -25,17 +24,6 @@ export const ProtectedRoute: React.FC<{
   if (!isAuthenticated && !isLoading) {
     const hasPin = localStorage.getItem('last_user_email');
     return <Navigate to={hasPin ? '/pin-login' : '/login'} replace />;
-  }
-
-  if (requiredRoles && requiredRoles.length > 0) {
-    const userRole = user?.role?.toUpperCase();
-    const allowed = requiredRoles.some(
-      (role) => role.toUpperCase() === userRole,
-    );
-
-    if (!allowed) {
-      return <Navigate to="/" replace />;
-    }
   }
 
   return <>{children}</>;
