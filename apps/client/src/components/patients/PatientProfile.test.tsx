@@ -165,6 +165,19 @@ const mockPatient: Patient = {
           educational: 'Higiene postural',
         },
         phases: mockPhases,
+        protocols: [
+          {
+            treatmentPlanId: 'tp1',
+            protocolId: 'prot-1',
+            addedAt: '2025-01-10',
+            notes: 'Uso en fase inicial',
+            protocol: {
+              id: 'prot-1',
+              title: 'Posición de Esfinge',
+              tags: ['McKenzie'],
+            },
+          },
+        ],
       },
       treatmentSessions: [
         {
@@ -279,6 +292,13 @@ describe('PatientProfile', () => {
     expect(screen.getAllByText('3 sem').length).toBeGreaterThan(0);
     expect(screen.getByText('Movilizaciones')).toBeInTheDocument();
     expect(screen.getByText('Crioterapia')).toBeInTheDocument();
+  });
+
+  it('renders attached treatment plan protocols when present', () => {
+    render(<PatientProfile patient={mockPatient} />);
+
+    expect(screen.getByText('Protocolos Adjuntos')).toBeInTheDocument();
+    expect(screen.getByText('Posición de Esfinge')).toBeInTheDocument();
   });
 
   it('renders sessions footer with count', () => {

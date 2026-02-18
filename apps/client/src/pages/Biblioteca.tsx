@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { LibraryDashboard } from '@/components/library/LibraryDashboard';
 import {
   useCategoriesQuery,
@@ -8,10 +9,12 @@ import {
 } from '@/hooks/use-library';
 
 export default function Biblioteca() {
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<
     string | undefined
   >();
+  const planId = searchParams.get('planId') ?? undefined;
 
   const { data: categories = [], isLoading: categoriesLoading } =
     useCategoriesQuery();
@@ -44,6 +47,7 @@ export default function Biblioteca() {
       onSearch={handleSearch}
       onSelectCategory={handleSelectCategory}
       selectedCategoryId={selectedCategoryId}
+      planId={planId}
     />
   );
 }

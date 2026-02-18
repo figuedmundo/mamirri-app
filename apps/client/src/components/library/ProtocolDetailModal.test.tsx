@@ -4,6 +4,15 @@ import userEvent from '@testing-library/user-event';
 import { ProtocolDetailModal } from './ProtocolDetailModal';
 import type { Protocol, BibliographicReference } from '@/types/library';
 
+const mockMutate = vi.fn();
+
+vi.mock('@/hooks/use-library', () => ({
+  useAddProtocolToPlan: () => ({
+    mutate: mockMutate,
+    isPending: false,
+  }),
+}));
+
 // Mock shadcn Dialog
 vi.mock('@/components/ui/dialog', () => ({
   Dialog: ({ children, open }: { children: React.ReactNode; open: boolean }) =>
@@ -153,5 +162,22 @@ describe('ProtocolDetailModal', () => {
       />,
     );
     expect(screen.queryByText('Evidencia Científica')).not.toBeInTheDocument();
+  });
+
+  it('shows guidance when no planId is provided', () => {
+    render(
+      <ProtocolDetailModal
+        protocol={mockProtocol}
+        open={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Añadir al plan' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Abre la Biblioteca desde un caso clinico/),
+    ).toBeInTheDocument();
   });
 });

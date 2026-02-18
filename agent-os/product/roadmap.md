@@ -403,17 +403,18 @@ Methodology: Agile Development (1-week Sprints).
 
 **Components:**
 
-- [ ] **17.1** BibliotecaDashboard — Main interface with search, categories, results
-- [ ] **17.2** SearchBar — Prominent input with natural language support
-- [ ] **17.3** CategoryNav — Structured navigation (Osteology, Myology, etc.)
-- [ ] **17.4** ProtocolList — List of techniques/protocols matching search
+- [x] **17.1** BibliotecaDashboard — Main interface with search, categories, results ✅ ALREADY IMPLEMENTED
+- [x] **17.2** SearchBar — Prominent input with natural language support ✅ ALREADY IMPLEMENTED
+- [x] **17.3** CategoryNav — Structured navigation (Osteology, Myology, etc.) ✅ ALREADY IMPLEMENTED
+- [x] **17.4** ProtocolList — List of techniques/protocols matching search ✅ ALREADY IMPLEMENTED
 
 **Backend:**
 
-- [ ] **17.5** Database schema: Protocol, ReferenciaBibliografica
-- [ ] **17.6** API endpoints: Protocol search with full-text + RAG
-- [ ] **17.7** Category filtering endpoint
-- [ ] **17.8** Search debouncing (300ms)
+- [x] **17.5** Database schema: Protocol, ReferenciaBibliografica ✅ ALREADY IMPLEMENTED
+- [x] **17.6** API endpoints: Protocol search with full-text + RAG ✅ ALREADY IMPLEMENTED
+- [x] **17.7** Category filtering endpoint ✅ ALREADY IMPLEMENTED
+- [x] **17.8** Search debouncing (300ms) ✅ ALREADY IMPLEMENTED
+- [ ] 17.9 Protocol CRUD
 
 **Flows:**
 

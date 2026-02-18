@@ -100,7 +100,15 @@ describe('LibraryDashboard', () => {
   it('shows search result count when provided', () => {
     const searchResult: SearchResult = {
       protocols: [mockProtocol, mockProtocol], // 2 protocols
-      ragResults: [],
+      ragResults: [
+        {
+          id: 'rag-1',
+          content: 'Resumen de evidencia relevante',
+          pageNumber: 42,
+          documentTitle: 'Guia Clinica',
+          documentAuthor: 'Equipo Medico',
+        },
+      ],
     };
 
     render(
@@ -117,6 +125,10 @@ describe('LibraryDashboard', () => {
 
     expect(
       screen.getByText(/Se han encontrado 2 protocolos relevantes/),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Respuestas Asistidas')).toBeInTheDocument();
+    expect(
+      screen.getByText('Resumen de evidencia relevante'),
     ).toBeInTheDocument();
   });
 
