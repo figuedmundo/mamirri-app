@@ -56,23 +56,15 @@ Run Prisma migrations to set up the database schema:
 pnpm --filter server exec npx prisma migrate dev
 ```
 
-### 2.3.1 Create an Admin User (Local Dev)
+### 2.3.1 Admin Access (Local Dev)
 
-The database seed script creates a default admin user for local development.
+The app has an `ADMIN` role that unlocks admin-only UIs (e.g. Protocol CRUD).
 
-Run:
+For now, local admin access is granted by promoting an existing account to `ADMIN` (there is no in-app admin bootstrap flow yet).
 
-```bash
-pnpm --filter server seed
-```
+Admin UI route:
 
-Default admin credentials (local dev only):
-
-- Email: `admin@mamirri.local`
-- Password: `admin123`
-- Role: `ADMIN`
-
-The admin UI for protocols is available at: `http://localhost:5173/admin/protocols`
+- `http://localhost:5173/admin/protocols`
 
 ### 2.4 Docling PDF Extraction (Zero Setup)
 

@@ -59,34 +59,6 @@ Deployment is automated via GitHub Actions (`.github/workflows/deploy.yml`).
     docker compose -f docker-compose.prod.yml logs -f server
    ```
 
-## Creating an Admin User in Production
-
-Production deploys do not automatically seed users by default.
-
-- The production server container runs `prisma migrate deploy` on startup.
-- Seeding is guarded by `SEED_DATABASE=true` and also requires `ts-node`, which is typically not present in the production image.
-
-Recommended production approach: promote an existing user to `ADMIN`.
-
-### Option A (Recommended): Promote an existing account via Postgres
-
-1. Create a normal account by registering in the UI.
-2. On the server, update the user's role in Postgres:
-
-```bash
-# Replace email with the account you want to promote
-docker exec -it physio_db psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" \
-  -c "UPDATE \"users\" SET \"role\"='ADMIN' WHERE \"email\"='you@example.com';"
-
-# Verify
-docker exec -it physio_db psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" \
-  -c "SELECT email, role FROM \"users\" WHERE email='you@example.com';"
-```
-
-3. Log out and log back in (the JWT role claim is refreshed on login).
-
-The admin protocols UI will appear in the main navigation as `Protocolos (Admin)` and is available at `/admin/protocols`.
-
 ---
 
 **Last Updated:** 2026-02-18
