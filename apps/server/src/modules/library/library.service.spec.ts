@@ -2,7 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LibraryService } from './library.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { KnowledgeBaseService } from '../knowledge-base/knowledge-base.service';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 
 describe('LibraryService', () => {
   let service: LibraryService;
@@ -10,13 +14,21 @@ describe('LibraryService', () => {
   const mockPrismaService = {
     clinicalCategory: {
       findMany: jest.fn(),
+      findUnique: jest.fn(),
     },
     protocol: {
       findMany: jest.fn(),
       findUnique: jest.fn(),
+      findFirst: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
     },
     bibliographicReference: {
       findMany: jest.fn(),
+      findUnique: jest.fn(),
+    },
+    protocolReference: {
+      deleteMany: jest.fn(),
     },
     treatmentPlan: {
       findFirst: jest.fn(),
@@ -83,7 +95,7 @@ describe('LibraryService', () => {
 
       expect(result).toEqual(protocols);
       expect(mockPrismaService.protocol.findMany).toHaveBeenCalledWith({
-        where: undefined,
+        where: { deletedAt: null },
         include: {
           category: true,
           references: { include: { reference: true } },
@@ -92,13 +104,28 @@ describe('LibraryService', () => {
       });
     });
 
-    it('should filter by categoryId when provided', async () => {
+    it('should filter by categoryId and deletedAt when provided', async () => {
       mockPrismaService.protocol.findMany.mockResolvedValue([]);
 
       await service.findAllProtocols('cat-005');
 
       expect(mockPrismaService.protocol.findMany).toHaveBeenCalledWith({
-        where: { categoryId: 'cat-005' },
+        where: { categoryId: 'cat-005', deletedAt: null },
+        include: {
+          category: true,
+          references: { include: { reference: true } },
+        },
+        orderBy: { title: 'asc' },
+      });
+    });
+
+    it('should include archived protocols when includeDeleted is true', async () => {
+      mockPrismaService.protocol.findMany.mockResolvedValue([]);
+
+      await service.findAllProtocols(undefined, true);
+
+      expect(mockPrismaService.protocol.findMany).toHaveBeenCalledWith({
+        where: {},
         include: {
           category: true,
           references: { include: { reference: true } },
@@ -116,18 +143,111 @@ describe('LibraryService', () => {
         category: { id: 'cat-005', name: 'Protocolos' },
         references: [],
       };
-      mockPrismaService.protocol.findUnique.mockResolvedValue(protocol);
+      mockPrismaService.protocol.findFirst.mockResolvedValue(protocol);
 
       const result = await service.findOneProtocol('prot-001');
 
       expect(result).toEqual(protocol);
+      expect(mockPrismaService.protocol.findFirst).toHaveBeenCalledWith({
+        where: { id: 'prot-001', deletedAt: null },
+        include: {
+          category: true,
+          references: { include: { reference: true } },
+        },
+      });
     });
 
     it('should throw NotFoundException when protocol not found', async () => {
-      mockPrismaService.protocol.findUnique.mockResolvedValue(null);
+      mockPrismaService.protocol.findFirst.mockResolvedValue(null);
 
       await expect(service.findOneProtocol('nonexistent')).rejects.toThrow(
         NotFoundException,
+      );
+    });
+  });
+
+  describe('createProtocol', () => {
+    it('should create protocol with normalized tags and references', async () => {
+      const dto = {
+        title: '  Esfinge  ',
+        categoryId: 'cat-1',
+        definition: ' Definicion ',
+        rationale: ' Razon ',
+        procedure: [' Paso 1 ', 'Paso 2'],
+        tags: ['Lumbar', 'lumbar', '  Dolor  '],
+        referenceIds: ['ref-1'],
+      };
+
+      mockPrismaService.clinicalCategory.findUnique = jest
+        .fn()
+        .mockResolvedValue({ id: 'cat-1' });
+      mockPrismaService.protocol.findFirst.mockResolvedValue(null);
+      mockPrismaService.bibliographicReference.findMany.mockResolvedValue([
+        { id: 'ref-1' },
+      ]);
+      mockPrismaService.protocol.create.mockResolvedValue({ id: 'prot-1' });
+
+      await service.createProtocol(dto);
+
+      expect(mockPrismaService.protocol.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            title: 'Esfinge',
+            tags: ['lumbar', 'dolor'],
+          }),
+        }),
+      );
+    });
+  });
+
+  describe('archiveProtocol', () => {
+    it('should mark protocol as archived', async () => {
+      mockPrismaService.protocol.findFirst.mockResolvedValue({
+        id: 'prot-1',
+        deletedAt: null,
+      });
+      mockPrismaService.protocol.update.mockResolvedValue({ id: 'prot-1' });
+
+      await service.archiveProtocol('prot-1');
+
+      expect(mockPrismaService.protocol.update).toHaveBeenCalledWith({
+        where: { id: 'prot-1' },
+        data: { deletedAt: expect.any(Date) },
+      });
+    });
+  });
+
+  describe('restoreProtocol', () => {
+    it('should restore protocol by clearing deletedAt', async () => {
+      mockPrismaService.protocol.findFirst.mockResolvedValue({
+        id: 'prot-1',
+        title: 'Esfinge',
+        categoryId: 'cat-1',
+        deletedAt: new Date('2026-01-01T00:00:00.000Z'),
+      });
+      mockPrismaService.protocol.findUnique.mockResolvedValue({
+        id: 'prot-1',
+        title: 'Esfinge',
+        categoryId: 'cat-1',
+        deletedAt: new Date('2026-01-01T00:00:00.000Z'),
+      });
+      mockPrismaService.protocol.findFirst
+        .mockResolvedValueOnce({
+          id: 'prot-1',
+          title: 'Esfinge',
+          categoryId: 'cat-1',
+          deletedAt: new Date('2026-01-01T00:00:00.000Z'),
+        })
+        .mockResolvedValueOnce(null);
+      mockPrismaService.protocol.update.mockResolvedValue({ id: 'prot-1' });
+
+      await service.restoreProtocol('prot-1');
+
+      expect(mockPrismaService.protocol.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'prot-1' },
+          data: { deletedAt: null },
+        }),
       );
     });
   });
@@ -161,6 +281,7 @@ describe('LibraryService', () => {
       expect(result).toEqual({ protocols, ragResults });
       expect(mockPrismaService.protocol.findMany).toHaveBeenCalledWith({
         where: {
+          deletedAt: null,
           OR: [
             { title: { contains: 'hipercifosis', mode: 'insensitive' } },
             { definition: { contains: 'hipercifosis', mode: 'insensitive' } },
@@ -206,7 +327,7 @@ describe('LibraryService', () => {
       };
 
       mockPrismaService.treatmentPlan.findFirst.mockResolvedValue(plan);
-      mockPrismaService.protocol.findUnique.mockResolvedValue(protocol);
+      mockPrismaService.protocol.findFirst.mockResolvedValue(protocol);
       mockPrismaService.treatmentPlanProtocol.findUnique.mockResolvedValue(
         null,
       );
@@ -234,7 +355,18 @@ describe('LibraryService', () => {
       mockPrismaService.treatmentPlan.findFirst.mockResolvedValue({
         id: mockPlanId,
       });
-      mockPrismaService.protocol.findUnique.mockResolvedValue(null);
+      mockPrismaService.protocol.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.addProtocolToPlan(mockPlanId, mockProtocolId, mockTherapistId),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw NotFoundException when protocol is archived', async () => {
+      mockPrismaService.treatmentPlan.findFirst.mockResolvedValue({
+        id: mockPlanId,
+      });
+      mockPrismaService.protocol.findFirst.mockResolvedValue(null);
 
       await expect(
         service.addProtocolToPlan(mockPlanId, mockProtocolId, mockTherapistId),
@@ -245,7 +377,7 @@ describe('LibraryService', () => {
       mockPrismaService.treatmentPlan.findFirst.mockResolvedValue({
         id: mockPlanId,
       });
-      mockPrismaService.protocol.findUnique.mockResolvedValue({
+      mockPrismaService.protocol.findFirst.mockResolvedValue({
         id: mockProtocolId,
       });
       mockPrismaService.treatmentPlanProtocol.findUnique.mockResolvedValue({
