@@ -37,6 +37,15 @@ export function MainLayout({ children }: MainLayoutProps) {
       href: '/ajustes',
       isActive: location.pathname === '/ajustes',
     },
+    ...(authUser?.role?.toUpperCase() === 'ADMIN'
+      ? [
+          {
+            label: 'Protocolos (Admin)',
+            href: '/admin/protocols',
+            isActive: location.pathname === '/admin/protocols',
+          },
+        ]
+      : []),
   ];
 
   const user = {
