@@ -47,6 +47,12 @@ async function main() {
       password: 'password123',
       role: 'USER',
     },
+    {
+      email: 'admin@mamirri.local',
+      name: 'Mamirri Admin',
+      password: 'admin123',
+      role: 'ADMIN',
+    },
   ];
 
   console.log('Seeding database...');
@@ -62,7 +68,7 @@ async function main() {
         email: userData.email,
         name: userData.name,
         passwordHash,
-        role: userData.role as any,
+        role: userData.role,
       },
     });
     console.log(`User created/found: ${user.email}`);
