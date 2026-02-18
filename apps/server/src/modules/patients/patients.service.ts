@@ -230,7 +230,15 @@ export class PatientsService {
                 postureVideos: true,
               },
             },
-            treatmentPlan: true,
+            treatmentPlan: {
+              include: {
+                protocols: {
+                  include: {
+                    protocol: true,
+                  },
+                },
+              },
+            },
             treatmentSessions: {
               include: {
                 photos: true,
