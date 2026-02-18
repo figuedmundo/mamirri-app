@@ -56,6 +56,14 @@ Run Prisma migrations to set up the database schema:
 pnpm --filter server exec npx prisma migrate dev
 ```
 
+### 2.3.1 Protocol Management (Local Dev)
+
+Protocol CRUD is available to any authenticated therapist.
+
+Protocol UI route:
+
+- `http://localhost:5173/protocolos`
+
 ### 2.4 Docling PDF Extraction (Zero Setup)
 
 Mamirri uses **Docling** for high-quality PDF extraction with automatic Docker management.

@@ -1,6 +1,6 @@
 # API Reference
 
-**Last Updated:** 2026-02-05
+**Last Updated:** 2026-02-18
 
 All endpoints require authentication via Bearer token (JWT) unless otherwise noted.
 
@@ -268,6 +268,106 @@ Create a new clinical case for an existing patient.
     "consultationReason": "Post-cirugía LCA"
   }
   ```
+
+---
+
+## Medical Library (Biblioteca)
+
+All biblioteca endpoints require authentication. Read/search and protocol curation are available to authenticated therapists.
+
+### GET /api/v1/library/categories
+
+List available clinical categories.
+
+- **Response:** `200 OK` - Array of category objects
+
+### GET /api/v1/library/protocols
+
+List protocols or perform filtered retrieval.
+
+- **Query Params:**
+  | Param | Type | Default | Description |
+  |-------|------|---------|-------------|
+  | `categoryId` | string | - | Filter by category |
+  | `q` | string | - | Search query (title/definition/tags) |
+  | `includeDeleted` | boolean | false | Include archived protocols |
+
+- **Response:** `200 OK`
+  - If `q` is present: `{ protocols: Protocol[], ragResults: RagResult[] }`
+  - Otherwise: `Protocol[]`
+
+### GET /api/v1/library/protocols/:id
+
+Get protocol details with category and references.
+
+- **Response:** `200 OK` - Protocol object
+- **Errors:**
+  - `404 Not Found`: Protocol doesn't exist or is archived for therapist view
+
+### GET /api/v1/library/references
+
+List bibliographic references.
+
+- **Response:** `200 OK` - Array of references
+
+### POST /api/v1/library/treatment-plans/:planId/protocols
+
+Attach a protocol to a treatment plan owned by the authenticated therapist.
+
+- **Body:**
+  ```json
+  {
+    "protocolId": "cm_protocol_id",
+    "notes": "Optional note"
+  }
+  ```
+- **Response:** `201 Created`
+- **Errors:**
+  - `404 Not Found`: Plan/protocol not found or protocol archived
+  - `409 Conflict`: Protocol already attached to this plan
+
+### POST /api/v1/library/protocols
+
+Create protocol.
+
+- **Body:**
+  ```json
+  {
+    "title": "Posición de Esfinge",
+    "categoryId": "cm_category",
+    "definition": "Descripción clínica",
+    "rationale": "Justificación terapéutica",
+    "procedure": ["Paso 1", "Paso 2"],
+    "tags": ["lumbar", "extension"],
+    "referenceIds": ["cm_ref_1"]
+  }
+  ```
+- **Response:** `201 Created`
+- **Errors:**
+  - `404 Not Found`: Category/reference does not exist
+  - `409 Conflict`: Duplicate active title in same category
+
+### PATCH /api/v1/library/protocols/:id
+
+Update protocol fields and references.
+
+- **Body:** Partial subset of create payload fields
+- **Response:** `200 OK`
+- **Errors:** `404`, `409`
+
+### DELETE /api/v1/library/protocols/:id
+
+Archive protocol (soft delete).
+
+- **Response:** `204 No Content`
+- **Errors:** `404`
+
+### POST /api/v1/library/protocols/:id/restore
+
+Restore archived protocol.
+
+- **Response:** `200 OK`
+- **Errors:** `404`, `409`
 - **Response:** `201 Created` - Clinical case object
 
 ### GET /api/v1/clinical-cases/:id

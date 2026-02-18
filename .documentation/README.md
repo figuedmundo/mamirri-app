@@ -6,13 +6,14 @@ Welcome to the central documentation hub for **Mamirri App** (formerly PhysioCop
 
 ## 🚀 Quick Start
 
-| Section                                                       | Description                                                     |
-| ------------------------------------------------------------- | --------------------------------------------------------------- |
-| [**Developer Setup**](onboarding/developer-setup.md)          | **Start here!** Environment setup and local installation guide. |
-| [**Product Vision**](documentation/product/product-vision.md) | The "why" and "what" of Mamirri App.                            |
-| [**Architecture Overview**](technical/architecture.md)        | High-level system design and technology choices.                |
-| [**CI/CD Pipeline**](technical/ci-cd.md)                      | GitHub Actions configuration and secrets management.            |
-| [**Deployment Guide**](onboarding/deployment-guide.md)        | Instructions for deploying to home lab environment.             |
+| Section                                                                         | Description                                                     |
+| ------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [**Developer Setup**](onboarding/developer-setup.md)                            | **Start here!** Environment setup and local installation guide. |
+| [**Product Vision**](.documentation/product/product-vision.md)                  | The "why" and "what" of Mamirri App.                            |
+| [**Biblioteca Overview**](.documentation/product/biblioteca-medica-overview.md) | Functional overview of library search and protocol workflows.   |
+| [**Architecture Overview**](technical/architecture.md)                          | High-level system design and technology choices.                |
+| [**CI/CD Pipeline**](technical/ci-cd.md)                                        | GitHub Actions configuration and secrets management.            |
+| [**Deployment Guide**](onboarding/deployment-guide.md)                          | Instructions for deploying to home lab environment.             |
 
 ---
 

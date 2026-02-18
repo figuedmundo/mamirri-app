@@ -56,9 +56,9 @@ Deployment is automated via GitHub Actions (`.github/workflows/deploy.yml`).
 
 2. Check logs for errors:
    ```bash
-   docker compose -f docker-compose.prod.yml logs -f server
+    docker compose -f docker-compose.prod.yml logs -f server
    ```
 
 ---
 
-**Last Updated:** 2026-01-15
+**Last Updated:** 2026-02-18

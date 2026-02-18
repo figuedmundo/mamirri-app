@@ -35,9 +35,30 @@ export interface Protocol {
   tags: string[];
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string | null;
   documentId?: string | null;
   category: ClinicalCategory;
   references: ProtocolReference[];
+}
+
+export interface ProtocolCreateInput {
+  title: string;
+  categoryId: string;
+  definition: string;
+  rationale: string;
+  procedure: string[];
+  tags?: string[];
+  referenceIds?: string[];
+}
+
+export interface ProtocolUpdateInput {
+  title?: string;
+  categoryId?: string;
+  definition?: string;
+  rationale?: string;
+  procedure?: string[];
+  tags?: string[];
+  referenceIds?: string[];
 }
 
 export interface SearchResult {

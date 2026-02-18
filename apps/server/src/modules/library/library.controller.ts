@@ -1,11 +1,14 @@
 import {
+  Delete,
   Controller,
   Get,
+  Patch,
   Post,
   Param,
   Body,
   Query,
   UseGuards,
+  HttpCode,
   HttpStatus,
 } from '@nestjs/common';
 import {
@@ -17,6 +20,8 @@ import {
 import { LibraryService } from './library.service';
 import { SearchLibraryDto } from './dto/search-library.dto';
 import { AddProtocolToPlanDto } from './dto/add-protocol-to-plan.dto';
+import { CreateProtocolDto } from './dto/create-protocol.dto';
+import { UpdateProtocolDto } from './dto/update-protocol.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTherapist } from '../patients/decorators/current-therapist.decorator';
 
@@ -38,10 +43,11 @@ export class LibraryController {
   @ApiOperation({ summary: 'List or search protocols' })
   @ApiResponse({ status: HttpStatus.OK, description: 'List of protocols.' })
   async findProtocols(@Query() dto: SearchLibraryDto) {
+    const includeDeleted = dto.includeDeleted === true;
     if (dto.q) {
-      return this.libraryService.search(dto.q);
+      return this.libraryService.search(dto.q, dto.categoryId, includeDeleted);
     }
-    return this.libraryService.findAllProtocols(dto.categoryId);
+    return this.libraryService.findAllProtocols(dto.categoryId, includeDeleted);
   }
 
   @Get('protocols/:id')
@@ -53,6 +59,51 @@ export class LibraryController {
   })
   async findOneProtocol(@Param('id') id: string) {
     return this.libraryService.findOneProtocol(id);
+  }
+
+  @Post('protocols')
+  @ApiOperation({ summary: 'Create protocol' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Protocol created successfully.',
+  })
+  async createProtocol(@Body() dto: CreateProtocolDto) {
+    return this.libraryService.createProtocol(dto);
+  }
+
+  @Patch('protocols/:id')
+  @ApiOperation({ summary: 'Update protocol' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Protocol updated.' })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Protocol not found.',
+  })
+  async updateProtocol(
+    @Param('id') id: string,
+    @Body() dto: UpdateProtocolDto,
+  ) {
+    return this.libraryService.updateProtocol(id, dto);
+  }
+
+  @Delete('protocols/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Archive protocol' })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Protocol archived.',
+  })
+  async archiveProtocol(@Param('id') id: string): Promise<void> {
+    await this.libraryService.archiveProtocol(id);
+  }
+
+  @Post('protocols/:id/restore')
+  @ApiOperation({ summary: 'Restore archived protocol' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Protocol restored successfully.',
+  })
+  async restoreProtocol(@Param('id') id: string) {
+    return this.libraryService.restoreProtocol(id);
   }
 
   @Get('references')

@@ -28,6 +28,11 @@ export function MainLayout({ children }: MainLayoutProps) {
       isActive: location.pathname === '/biblioteca',
     },
     {
+      label: 'Protocolos',
+      href: '/protocolos',
+      isActive: location.pathname === '/protocolos',
+    },
+    {
       label: 'Plantillas',
       href: '/plantillas',
       isActive: location.pathname === '/plantillas',
