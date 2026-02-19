@@ -416,7 +416,7 @@ Complexity: HIGH - This is a foundational architecture change affecting the enti
 
 **Dependencies:** Task Groups 8, 10
 
-- [⚠️] 11.0 Comprehensive tenant isolation tests
+- [ ] 11.0 Comprehensive tenant isolation tests
   - [x] 11.1 Write integration tests for cross-tenant access
     - Test: User A (Clinic 1) cannot access User B (Clinic 2) patient
     - Test: User A (Clinic 1) cannot access User B (Clinic 2) case
@@ -424,19 +424,19 @@ Complexity: HIGH - This is a foundational architecture change affecting the enti
     - Test: THERAPIST can access all clinic patients (read)
     - Test: THERAPIST can modify only own patients
     - Test: ADMIN can access any clinic data
-  - [⚠️] 11.2 Write E2E tests for complete flows
+  - [ ] 11.2 Write E2E tests for complete flows
     - Test: Complete invitation flow (invite → accept → login)
     - Test: Clinic setup flow (create → invite → manage)
     - Test: Data isolation verification across clinics
-  - [⚠️] 11.3 Write security penetration tests
+  - [ ] 11.3 Write security penetration tests
     - Test: Tampering with clinicId in JWT
     - Test: Accessing endpoint with wrong clinic in URL
     - Test: SQL injection attempts on clinic filters
     - Test: Brute force on invitation tokens
-  - [⚠️] 11.4 Run all tenant isolation tests
+  - [ ] 11.4 Run all tenant isolation tests
     - Total tests: approximately 15-20
     - All must pass before deployment
-  - [⚠️] 11.5 Document security test results
+  - [ ] 11.5 Document security test results
     - Summary of test coverage
     - Any vulnerabilities found and fixed
 
@@ -452,17 +452,17 @@ Complexity: HIGH - This is a foundational architecture change affecting the enti
 
 **Dependencies:** All previous groups
 
-- [⚠️] 12.0 Final integration testing and cleanup
+- [ ] 12.0 Final integration testing and cleanup
   - [x] 12.1 Verify all existing endpoints still work
     - Run existing test suites
     - Fix any regressions
   - [x] 12.2 Verify RLS policies are active
     - Check database: `\d+ tablename` for policies
     - Test bypass attempts fail
-  - [⚠️] 12.3 Performance test with RLS enabled
+  - [ ] 12.3 Performance test with RLS enabled
     - Query response times acceptable
     - Index usage verified
-  - [⚠️] 12.4 Documentation update
+  - [ ] 12.4 Documentation update
     - API documentation updated (Swagger)
     - Architecture decision record (ADR) for multi-tenancy
     - Deployment notes for RLS setup
