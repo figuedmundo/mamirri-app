@@ -92,7 +92,7 @@ export function PatientList({
     const baseClasses =
       'px-4 py-2 rounded-full font-medium transition-all duration-200 whitespace-nowrap text-sm';
     const activeClasses =
-      'bg-teal-600 text-white shadow-md ring-2 ring-teal-600 ring-offset-2 dark:ring-offset-slate-900';
+      'bg-teal-600 text-white shadow-md border border-teal-600';
     const inactiveClasses =
       'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700';
 
@@ -143,7 +143,7 @@ export function PatientList({
           )}
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-2 overflow-x-auto py-1 scrollbar-hide">
           <button
             onClick={() => handleFilterChange('all')}
             className={getFilterClasses('all', activeFilter === 'all')}
