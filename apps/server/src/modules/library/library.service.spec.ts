@@ -2,11 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LibraryService } from './library.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { KnowledgeBaseService } from '../knowledge-base/knowledge-base.service';
-import {
-  BadRequestException,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 
 describe('LibraryService', () => {
   let service: LibraryService;
