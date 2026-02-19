@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import PinLogin from './pages/PinLogin';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
+import InvitationAcceptance from './pages/InvitationAcceptance';
 import AuthLayout from './components/auth/AuthLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -22,6 +23,7 @@ const BibliotecaBook = lazy(() => import('./pages/BibliotecaBook'));
 const Plantillas = lazy(() => import('./pages/Plantillas'));
 import Ajustes from './pages/Ajustes';
 import Perfil from './pages/Perfil';
+import ClinicDashboard from './pages/ClinicDashboard';
 import CaseDetail from './pages/CaseDetail';
 import { LoggerErrorBoundary } from './lib/logger/error-boundary';
 import { useInteractionLogger } from './lib/logger/hooks/useInteractionLogger';
@@ -53,6 +55,7 @@ function AppContent() {
         <Route path="/pin-login" element={<PinLogin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/invite/accept" element={<InvitationAcceptance />} />
       </Route>
 
       <Route
@@ -138,6 +141,17 @@ function AppContent() {
               <Suspense fallback={<PageLoader />}>
                 <Plantillas />
               </Suspense>
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/clinic/dashboard"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <ClinicDashboard />
             </MainLayout>
           </ProtectedRoute>
         }

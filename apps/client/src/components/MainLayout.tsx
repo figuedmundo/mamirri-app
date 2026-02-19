@@ -32,11 +32,22 @@ export function MainLayout({ children }: MainLayoutProps) {
       href: '/plantillas',
       isActive: location.pathname === '/plantillas',
     },
+    ...(authUser?.role === 'CLINIC_OWNER' || authUser?.role === 'ADMIN'
+      ? [
+          {
+            label: 'Clínica',
+            href: '/clinic/dashboard',
+            isActive: location.pathname.startsWith('/clinic/dashboard'),
+          },
+        ]
+      : []),
   ];
 
   const user = {
     name: authUser?.name || 'Dra. Noemi Herbas',
     avatarUrl: undefined,
+    clinicName: authUser?.clinicName ?? null,
+    role: authUser?.role ?? null,
   };
 
   const handleNavigate = (href: string) => {

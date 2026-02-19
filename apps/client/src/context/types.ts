@@ -3,6 +3,7 @@ export interface User {
   email: string;
   name: string;
   role: string;
+  clinicId?: string | null;
   phone?: string;
   profilePhotoUrl?: string;
   clinicName?: string;
@@ -10,6 +11,14 @@ export interface User {
   specialty?: string;
   yearsExperience?: number;
   createdAt?: string;
+}
+
+export interface ClinicContext {
+  clinicId: string | null;
+  clinicName: string | null;
+  role: string | null;
+  isAdmin: boolean;
+  isClinicOwner: boolean;
 }
 
 export interface AuthContextType {
