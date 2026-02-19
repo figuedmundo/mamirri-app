@@ -32,11 +32,6 @@ export function MainLayout({ children }: MainLayoutProps) {
       href: '/plantillas',
       isActive: location.pathname === '/plantillas',
     },
-    {
-      label: 'Ajustes',
-      href: '/ajustes',
-      isActive: location.pathname === '/ajustes',
-    },
   ];
 
   const user = {
