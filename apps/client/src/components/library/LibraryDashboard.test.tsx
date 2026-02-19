@@ -1,170 +1,110 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 import { LibraryDashboard } from './LibraryDashboard';
-import type {
-  Protocol,
-  ClinicalCategory,
-  BibliographicReference,
-  SearchResult,
-} from '@/types/library';
-
-// Mock ProtocolDetailModal
-vi.mock('./ProtocolDetailModal', () => ({
-  ProtocolDetailModal: ({ open }: { open: boolean }) =>
-    open ? <div data-testid="protocol-detail-modal">Modal Open</div> : null,
-}));
-
-const mockCategory: ClinicalCategory = {
-  id: 'cat-1',
-  name: 'Osteología',
-  description: 'Bone-related protocols',
-  icon: 'bone',
-  createdAt: '2026-01-01T00:00:00.000Z',
-};
-
-const mockReference: BibliographicReference = {
-  id: 'ref-1',
-  author: 'McKenzie, R.',
-  year: 1981,
-  title: 'The Lumbar Spine',
-  source: 'Journal of Manual Medicine',
-  originalLanguage: 'English',
-  summaryEs: 'Resumen en español',
-  originalText: 'Original English text',
-  url: 'https://example.com/mckenzie',
-  createdAt: '2026-01-01T00:00:00.000Z',
-};
-
-const mockProtocol: Protocol = {
-  id: 'prot-1',
-  title: 'Posición de Esfinge',
-  categoryId: 'cat-1',
-  definition: 'Decúbito prono con apoyo antebrazos',
-  rationale: 'Reducir carga sobre columna cervical',
-  procedure: ['Colocar paciente en decúbito prono'],
-  tags: ['McKenzie'],
-  createdAt: '2026-01-01T00:00:00.000Z',
-  updatedAt: '2026-01-01T00:00:00.000Z',
-  category: mockCategory,
-  references: [
-    { protocolId: 'prot-1', referenceId: 'ref-1', reference: mockReference },
-  ],
-};
+import type { SearchResult } from '@/types/library';
 
 describe('LibraryDashboard', () => {
-  it('renders page title', () => {
+  it('renders title and search input', () => {
     render(
-      <LibraryDashboard
-        categories={[]}
-        protocols={[]}
-        references={[]}
-        searchResult={null}
-        isLoading={false}
-        onSearch={vi.fn()}
-        onSelectCategory={vi.fn()}
-      />,
-    );
-    expect(screen.getByText(/Asistente Clínico/)).toBeInTheDocument();
-    expect(screen.getByText(/Inteligente/)).toBeInTheDocument();
-  });
-
-  it('renders main components', () => {
-    render(
-      <LibraryDashboard
-        categories={[mockCategory]}
-        protocols={[mockProtocol]}
-        references={[mockReference]}
-        searchResult={null}
-        isLoading={false}
-        onSearch={vi.fn()}
-        onSelectCategory={vi.fn()}
-      />,
+      <MemoryRouter>
+        <LibraryDashboard
+          searchResult={null}
+          isLoading={false}
+          searchQuery=""
+          onSearch={vi.fn()}
+        />
+      </MemoryRouter>,
     );
 
-    // SearchBar
+    expect(screen.getByText(/Asistente Clínico/i)).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText(/Describe el caso clínico/),
+      screen.getByPlaceholderText(/Describe el caso clínico/i),
     ).toBeInTheDocument();
-
-    // CategoryNav
-    expect(screen.getByText('Osteología')).toBeInTheDocument();
-
-    // ProtocolList
-    expect(screen.getByText('Posición de Esfinge')).toBeInTheDocument();
-
-    // BibliographyPanel
-    expect(screen.getByText('Bibliografía Relevante')).toBeInTheDocument();
   });
 
-  it('shows search result count when provided', () => {
-    const searchResult: SearchResult = {
-      protocols: [mockProtocol, mockProtocol], // 2 protocols
+  it('renders grouped rag results by book', () => {
+    const result: SearchResult = {
+      protocols: [],
       ragResults: [
         {
-          id: 'rag-1',
-          content: 'Resumen de evidencia relevante',
-          pageNumber: 42,
-          documentTitle: 'Guia Clinica',
-          documentAuthor: 'Equipo Medico',
+          id: 'r1',
+          documentId: 'doc-1',
+          content: 'Pasaje sobre dolor lumbar.',
+          pageNumber: 22,
+          sectionType: 'NARRATIVE',
+          documentTitle: 'Fisiologia Articular Tomo 1',
+          documentAuthor: 'Kapandji',
+          documentFilePath: 'data/library/markdowns/book-1.md',
+        },
+        {
+          id: 'r2',
+          documentId: 'doc-1',
+          content: 'Pasaje sobre movilidad de hombro.',
+          pageNumber: 49,
+          documentTitle: 'Fisiologia Articular Tomo 1',
+          documentAuthor: 'Kapandji',
         },
       ],
     };
 
     render(
-      <LibraryDashboard
-        categories={[]}
-        protocols={[]}
-        references={[]}
-        searchResult={searchResult}
-        isLoading={false}
-        onSearch={vi.fn()}
-        onSelectCategory={vi.fn()}
-      />,
+      <MemoryRouter>
+        <LibraryDashboard
+          searchResult={result}
+          isLoading={false}
+          searchQuery="dolor"
+          onSearch={vi.fn()}
+        />
+      </MemoryRouter>,
     );
 
     expect(
-      screen.getByText(/Se han encontrado 2 protocolos relevantes/),
+      screen.getByText(/Encontramos 2 pasajes relevantes en 1 libros/i),
     ).toBeInTheDocument();
-    expect(screen.getByText('Respuestas Asistidas')).toBeInTheDocument();
+    expect(screen.getByText('Fisiologia Articular Tomo 1')).toBeInTheDocument();
+    expect(screen.getByText(/Pagina 22 - NARRATIVE/i)).toBeInTheDocument();
     expect(
-      screen.getByText('Resumen de evidencia relevante'),
+      screen.getAllByRole('link', { name: /Abrir libro/i })[0],
+    ).toHaveAttribute('href', '/biblioteca/libros/doc-1?page=22&q=dolor');
+  });
+
+  it('expands and collapses context when available', async () => {
+    const longText = 'texto '.repeat(100);
+    const result: SearchResult = {
+      protocols: [],
+      ragResults: [
+        {
+          id: 'r1',
+          documentId: 'doc-1',
+          content: longText,
+          snippet: longText,
+          context: `${longText}\n\nContexto adicional`,
+          pageNumber: 7,
+          documentTitle: 'Atlas de Anatomia',
+          documentAuthor: 'Sinelnikov',
+        },
+      ],
+    };
+
+    render(
+      <MemoryRouter>
+        <LibraryDashboard
+          searchResult={result}
+          isLoading={false}
+          searchQuery="texto"
+          onSearch={vi.fn()}
+        />
+      </MemoryRouter>,
+    );
+
+    const toggle = screen.getByRole('button', { name: /Ver contexto/i });
+    await userEvent.click(toggle);
+
+    expect(
+      screen.getByRole('button', { name: /Ocultar contexto/i }),
     ).toBeInTheDocument();
-  });
-
-  it('shows loading indicator', () => {
-    render(
-      <LibraryDashboard
-        categories={[]}
-        protocols={[]}
-        references={[]}
-        searchResult={null}
-        isLoading={true}
-        onSearch={vi.fn()}
-        onSelectCategory={vi.fn()}
-      />,
-    );
-
-    expect(screen.getByText('Actualizando evidencia...')).toBeInTheDocument();
-  });
-
-  it('clicking a protocol card opens ProtocolDetailModal', async () => {
-    render(
-      <LibraryDashboard
-        categories={[mockCategory]}
-        protocols={[mockProtocol]}
-        references={[mockReference]}
-        searchResult={null}
-        isLoading={false}
-        onSearch={vi.fn()}
-        onSelectCategory={vi.fn()}
-      />,
-    );
-
-    // Click on protocol
-    await userEvent.click(screen.getByText('Posición de Esfinge'));
-
-    // Check if modal mock is rendered
-    expect(screen.getByTestId('protocol-detail-modal')).toBeInTheDocument();
+    expect(screen.getByText(/Contexto ampliado/i)).toBeInTheDocument();
   });
 });

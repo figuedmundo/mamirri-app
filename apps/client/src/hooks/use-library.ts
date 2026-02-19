@@ -50,6 +50,16 @@ export function useLibrarySearch(query: string) {
     queryFn: () => libraryApi.search(query),
     enabled: query.length >= 3,
     ...getQueryOptions('library'),
+    staleTime: 6 * 60 * 60 * 1000,
+  });
+}
+
+export function useBookMarkdownQuery(documentId?: string) {
+  return useQuery({
+    queryKey: ['library', 'book-markdown', documentId],
+    queryFn: () => libraryApi.getBookMarkdown(documentId!),
+    enabled: !!documentId,
+    ...getQueryOptions('library'),
     staleTime: 0,
   });
 }

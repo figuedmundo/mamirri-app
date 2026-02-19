@@ -105,6 +105,81 @@ Authenticate and receive tokens.
 
 ---
 
+## Library
+
+### GET /api/v1/library/protocols
+
+List protocols or run library search.
+
+**Current product note (2026-02-18):** the Biblioteca UI uses this endpoint in **books-only mode** and only renders `ragResults`. The `protocols` field remains for a future optional overlay.
+
+- **Query Params:**
+  | Param | Type | Default | Description |
+  |-------|------|---------|-------------|
+  | `q` | string | - | Natural language query (min 3 chars in UI) |
+  | `categoryId` | string | - | Optional protocol category filter (not used in books-only UI) |
+  | `includeDeleted` | boolean | false | Include archived protocols (admin/debug only) |
+
+- **Response:** `200 OK`
+  ```json
+  {
+    "protocols": [],
+    "ragResults": [
+      {
+        "id": "uuid",
+        "documentId": "uuid",
+        "content": "...context-rich passage...",
+        "snippet": "...matched chunk...",
+        "context": "...parent context...",
+        "parentContent": "...",
+        "pageNumber": 22,
+        "sectionType": "NARRATIVE",
+        "documentTitle": "Fisiología Articular",
+        "documentAuthor": "Kapandji",
+        "documentFilePath": "data/library/markdowns/Fisiologia_Articular_Tomo_1.md",
+        "similarity": 0.83,
+        "rerankScore": 0.71
+      }
+    ]
+  }
+  ```
+
+Notes:
+
+- `ragResults[].snippet` is the focused match chunk.
+- `ragResults[].context` is the broader parent context for reading continuity.
+- Use `documentTitle` + `pageNumber` as the human-facing citation.
+
+### GET /api/v1/library/books/:documentId/markdown
+
+Loads the full Markdown source for a book so the client can open a full-book viewer and jump to the cited page.
+
+- **Response:** `200 OK`
+  ```json
+  {
+    "documentId": "uuid",
+    "title": "Fisiologia Articular",
+    "author": "Kapandji",
+    "filePath": "data/library/markdowns/Fisiologia_Articular_Tomo_1.md",
+    "content": "# Full markdown content..."
+  }
+  ```
+
+Security and behavior:
+
+- Requires authentication (same library guard as search).
+- Reads only from the `data/library/markdowns/` tree on the server.
+
+### GET /api/v1/library/categories
+
+List clinical categories (optional curated overlay; not used in books-only UI).
+
+### GET /api/v1/library/references
+
+List bibliographic references for curated protocols (optional overlay; not used in books-only UI).
+
+---
+
 ## Patients
 
 All patient endpoints are scoped to the authenticated therapist. Patients belonging to other therapists return `404 Not Found`.
