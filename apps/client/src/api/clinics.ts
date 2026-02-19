@@ -6,6 +6,9 @@ export interface ClinicSummary {
   address?: string | null;
   phone?: string | null;
   email?: string | null;
+  logoUrl?: string | null;
+  subdomain?: string | null;
+  businessHours?: Record<string, unknown> | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -36,7 +39,39 @@ export interface AcceptInvitePayload {
   confirmPassword: string;
 }
 
+export interface CreateClinicPayload {
+  name: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  logoUrl?: string;
+  businessHours?: Record<string, unknown>;
+  subdomain?: string;
+  initialInvitations?: Array<{
+    email: string;
+    role?: 'THERAPIST' | 'CLINIC_OWNER';
+  }>;
+}
+
 export const clinicsApi = {
+  uploadClinicLogo: async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('path', 'clinics/logos');
+
+    const response = await axios.post<{ path: string }>(
+      '/storage/upload',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+
+    return response.data.path;
+  },
+
   listAll: async () => {
     const response = await axios.get<ClinicSummary[]>('/clinics/admin/all');
     return response.data;
@@ -44,6 +79,21 @@ export const clinicsApi = {
 
   getById: async (clinicId: string) => {
     const response = await axios.get<ClinicSummary>(`/clinics/${clinicId}`);
+    return response.data;
+  },
+
+  create: async (payload: CreateClinicPayload) => {
+    const response = await axios.post<ClinicSummary>('/clinics', payload);
+    return response.data;
+  },
+
+  checkNameAvailability: async (name: string) => {
+    const response = await axios.get<{ available: boolean }>(
+      '/clinics/check-name',
+      {
+        params: { name },
+      },
+    );
     return response.data;
   },
 
@@ -89,6 +139,14 @@ export const clinicsApi = {
 
   removeTherapist: async (clinicId: string, userId: string) => {
     await axios.delete(`/clinics/${clinicId}/therapists/${userId}`);
+  },
+
+  migrateSoloPatients: async (clinicId: string) => {
+    const response = await axios.post<{
+      clinicId: string;
+      migratedCount: number;
+    }>(`/clinics/${clinicId}/migrate-solo-patients`);
+    return response.data;
   },
 
   getInvitation: async (token: string) => {

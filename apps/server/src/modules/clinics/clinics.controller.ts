@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -17,6 +18,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Public } from '../auth/decorators/public.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { ClinicRolesGuard } from '../../common/guards/clinic-roles.guard';
@@ -29,20 +31,27 @@ import { UpdateTherapistDto } from './dto/update-therapist.dto';
 
 @ApiTags('clinics')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, ClinicRolesGuard)
 @Controller('clinics')
 export class ClinicsController {
   constructor(private readonly clinicsService: ClinicsService) {}
 
   @Post()
-  @Roles(ROLES.ADMIN)
-  @ApiOperation({ summary: 'Create a clinic (admin only)' })
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Create a clinic' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Clinic created' })
-  createClinic(@Body() dto: CreateClinicDto) {
-    return this.clinicsService.createClinic(dto);
+  createClinic(@Body() dto: CreateClinicDto, @CurrentUser() user: any) {
+    return this.clinicsService.createClinic(dto, user);
+  }
+
+  @Get('check-name')
+  @Public()
+  @ApiOperation({ summary: 'Check if clinic name is available' })
+  checkNameAvailability(@Query('name') name: string) {
+    return this.clinicsService.checkNameAvailability(name);
   }
 
   @Get('/admin/all')
+  @UseGuards(JwtAuthGuard, ClinicRolesGuard)
   @Roles(ROLES.ADMIN)
   @ApiOperation({ summary: 'List all clinics (admin only)' })
   listClinics() {
@@ -50,6 +59,7 @@ export class ClinicsController {
   }
 
   @Get(':clinicId')
+  @UseGuards(JwtAuthGuard, ClinicRolesGuard)
   @Roles(ROLES.CLINIC_OWNER, ROLES.ADMIN)
   @ApiOperation({ summary: 'Get clinic details' })
   getClinic(@Param('clinicId') clinicId: string, @CurrentUser() user: any) {
@@ -57,6 +67,7 @@ export class ClinicsController {
   }
 
   @Patch(':clinicId')
+  @UseGuards(JwtAuthGuard, ClinicRolesGuard)
   @Roles(ROLES.CLINIC_OWNER, ROLES.ADMIN)
   @ApiOperation({ summary: 'Update clinic details' })
   updateClinic(
@@ -68,6 +79,7 @@ export class ClinicsController {
   }
 
   @Post(':clinicId/invite')
+  @UseGuards(JwtAuthGuard, ClinicRolesGuard)
   @Roles(ROLES.CLINIC_OWNER, ROLES.ADMIN)
   @ApiOperation({ summary: 'Invite therapist to clinic' })
   inviteTherapist(
@@ -79,6 +91,7 @@ export class ClinicsController {
   }
 
   @Get(':clinicId/therapists')
+  @UseGuards(JwtAuthGuard, ClinicRolesGuard)
   @Roles(ROLES.CLINIC_OWNER, ROLES.ADMIN)
   @ApiOperation({ summary: 'List clinic therapists' })
   listTherapists(
@@ -89,6 +102,7 @@ export class ClinicsController {
   }
 
   @Patch(':clinicId/therapists/:userId')
+  @UseGuards(JwtAuthGuard, ClinicRolesGuard)
   @Roles(ROLES.CLINIC_OWNER, ROLES.ADMIN)
   @ApiOperation({ summary: 'Update therapist role/status in clinic' })
   updateTherapist(
@@ -101,6 +115,7 @@ export class ClinicsController {
   }
 
   @Delete(':clinicId/therapists/:userId')
+  @UseGuards(JwtAuthGuard, ClinicRolesGuard)
   @Roles(ROLES.CLINIC_OWNER, ROLES.ADMIN)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Remove therapist from clinic' })
@@ -110,5 +125,16 @@ export class ClinicsController {
     @CurrentUser() user: any,
   ) {
     await this.clinicsService.removeTherapist(clinicId, userId, user);
+  }
+
+  @Post(':clinicId/migrate-solo-patients')
+  @UseGuards(JwtAuthGuard, ClinicRolesGuard)
+  @Roles(ROLES.CLINIC_OWNER, ROLES.ADMIN)
+  @ApiOperation({ summary: 'Migrate solo patients to clinic' })
+  migrateSoloPatients(
+    @Param('clinicId') clinicId: string,
+    @CurrentUser() user: any,
+  ) {
+    return this.clinicsService.migrateSoloPatients(clinicId, user);
   }
 }

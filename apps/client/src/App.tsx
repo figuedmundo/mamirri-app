@@ -25,6 +25,8 @@ import Ajustes from './pages/Ajustes';
 import Perfil from './pages/Perfil';
 import ClinicDashboard from './pages/ClinicDashboard';
 import CaseDetail from './pages/CaseDetail';
+import ClinicOnboarding from './pages/ClinicOnboarding';
+import ClinicQuickStart from './pages/ClinicQuickStart';
 import { LoggerErrorBoundary } from './lib/logger/error-boundary';
 import { useInteractionLogger } from './lib/logger/hooks/useInteractionLogger';
 import { usePerformanceLogger } from './lib/logger/hooks/usePerformanceLogger';
@@ -57,6 +59,24 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/invite/accept" element={<InvitationAcceptance />} />
       </Route>
+
+      <Route
+        path="/onboarding/clinic"
+        element={
+          <ProtectedRoute>
+            <ClinicOnboarding />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/onboarding/quick-start"
+        element={
+          <ProtectedRoute>
+            <ClinicQuickStart />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/"

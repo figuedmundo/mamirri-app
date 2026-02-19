@@ -58,7 +58,7 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    const { email, password, name, clinicName } = registerDto;
+    const { email, password, name } = registerDto;
 
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
@@ -71,23 +71,14 @@ export class AuthService {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
 
-    const createdClinic = clinicName
-      ? await this.prisma.clinic.create({
-          data: {
-            name: clinicName,
-            isActive: true,
-          },
-        })
-      : null;
-
     const user = await this.prisma.user.create({
       data: {
         email,
         passwordHash,
         name,
-        role: createdClinic ? ROLES.CLINIC_OWNER : ROLES.THERAPIST,
-        clinicName: clinicName ?? null,
-        clinicId: createdClinic?.id ?? null,
+        role: ROLES.THERAPIST,
+        clinicName: null,
+        clinicId: null,
       },
     });
 

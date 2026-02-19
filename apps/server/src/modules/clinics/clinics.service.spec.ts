@@ -1,0 +1,199 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { BadRequestException, ConflictException } from '@nestjs/common';
+import { ClinicsService } from './clinics.service';
+import { PrismaService } from '../../prisma/prisma.service';
+
+describe('ClinicsService', () => {
+  let service: ClinicsService;
+  let prisma: {
+    clinic: {
+      findFirst: jest.Mock;
+      create: jest.Mock;
+    };
+    user: {
+      findUnique: jest.Mock;
+      update: jest.Mock;
+      findMany: jest.Mock;
+      findFirst: jest.Mock;
+    };
+    clinicInvitation: {
+      create: jest.Mock;
+    };
+    patient: {
+      updateMany: jest.Mock;
+    };
+    $transaction: jest.Mock;
+  };
+
+  let txClinicCreate: jest.Mock;
+
+  beforeEach(async () => {
+    txClinicCreate = jest.fn().mockResolvedValue({
+      id: 'clinic-1',
+      name: 'Mamirri Clinic',
+      email: 'clinic@example.com',
+      isActive: true,
+    });
+
+    prisma = {
+      clinic: {
+        findFirst: jest.fn(),
+        create: jest.fn(),
+      },
+      user: {
+        findUnique: jest.fn(),
+        update: jest.fn(),
+        findMany: jest.fn(),
+        findFirst: jest.fn(),
+      },
+      clinicInvitation: {
+        create: jest.fn(),
+      },
+      patient: {
+        updateMany: jest.fn(),
+      },
+      $transaction: jest.fn(async (cb: any) =>
+        cb({
+          clinic: {
+            create: txClinicCreate,
+          },
+          user: {
+            findUnique: jest
+              .fn()
+              .mockResolvedValue({ id: 'user-1', clinicId: null }),
+            update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+            findMany: jest.fn().mockResolvedValue([]),
+          },
+          clinicInvitation: {
+            create: jest.fn().mockResolvedValue({ id: 'inv-1' }),
+          },
+        }),
+      ),
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        ClinicsService,
+        {
+          provide: PrismaService,
+          useValue: prisma,
+        },
+      ],
+    }).compile();
+
+    service = module.get<ClinicsService>(ClinicsService);
+  });
+
+  it('returns availability true when name does not exist', async () => {
+    prisma.clinic.findFirst.mockResolvedValue(null);
+
+    const result = await service.checkNameAvailability('Clinic A');
+
+    expect(result).toEqual({ available: true });
+  });
+
+  it('validates clinic name uniqueness with case-insensitive lookup', async () => {
+    prisma.clinic.findFirst.mockResolvedValue({ id: 'clinic-1' });
+
+    await expect(
+      service.createClinic(
+        {
+          name: '  Mamirri Clinic  ',
+          email: 'clinic@example.com',
+        },
+        { userId: 'user-1', role: 'THERAPIST', clinicId: null },
+      ),
+    ).rejects.toBeInstanceOf(ConflictException);
+
+    expect(prisma.clinic.findFirst).toHaveBeenCalledWith({
+      where: {
+        name: {
+          equals: 'Mamirri Clinic',
+          mode: 'insensitive',
+        },
+      },
+      select: { id: true },
+    });
+  });
+
+  it('validates required fields for clinic creation (name and email)', async () => {
+    await expect(
+      service.createClinic(
+        {
+          name: 'A',
+          email: 'clinic@example.com',
+        },
+        { userId: 'user-1', role: 'THERAPIST', clinicId: null },
+      ),
+    ).rejects.toBeInstanceOf(BadRequestException);
+
+    await expect(
+      service.createClinic(
+        {
+          name: 'Valid Clinic',
+          email: '   ',
+        },
+        { userId: 'user-1', role: 'THERAPIST', clinicId: null },
+      ),
+    ).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  it('handles optional fields (phone, address, logoUrl) when omitted', async () => {
+    prisma.clinic.findFirst.mockResolvedValue(null);
+
+    const result = await service.createClinic(
+      {
+        name: 'Mamirri Clinic',
+        email: 'clinic@example.com',
+      },
+      { userId: 'user-1', role: 'THERAPIST', clinicId: null },
+    );
+
+    expect(result.id).toBe('clinic-1');
+    expect(txClinicCreate).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        name: 'Mamirri Clinic',
+        email: 'clinic@example.com',
+        phone: undefined,
+        address: undefined,
+        logoUrl: undefined,
+      }),
+    });
+  });
+
+  it('stores businessHours JSON structure in clinic creation', async () => {
+    prisma.clinic.findFirst.mockResolvedValue(null);
+
+    const businessHours = {
+      monday: { open: '09:00', close: '17:00', closed: false },
+      tuesday: { open: '10:00', close: '18:00', closed: false },
+    };
+
+    await service.createClinic(
+      {
+        name: 'Mamirri Clinic',
+        email: 'clinic@example.com',
+        businessHours,
+      },
+      { userId: 'user-1', role: 'THERAPIST', clinicId: null },
+    );
+
+    expect(txClinicCreate).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        businessHours,
+      }),
+    });
+  });
+
+  it('migrates solo patients for clinic owner', async () => {
+    prisma.patient.updateMany.mockResolvedValue({ count: 3 });
+
+    const result = await service.migrateSoloPatients('clinic-1', {
+      userId: 'owner-1',
+      role: 'CLINIC_OWNER',
+      clinicId: 'clinic-1',
+    });
+
+    expect(result).toEqual({ clinicId: 'clinic-1', migratedCount: 3 });
+  });
+});

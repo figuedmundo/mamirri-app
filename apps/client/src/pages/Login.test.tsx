@@ -67,7 +67,7 @@ describe('Login Component', () => {
     });
 
     expect(mockLogin).toHaveBeenCalledWith(mockUser, mockToken);
-    expect(mockNavigate).toHaveBeenCalledWith('/');
+    expect(mockNavigate).toHaveBeenCalledWith('/onboarding/clinic');
   });
 
   it('shows error message on failed auth', async () => {

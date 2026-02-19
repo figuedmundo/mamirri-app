@@ -41,11 +41,17 @@ const Register: React.FC = () => {
 
       const hasPin = await checkPinStatus();
       const skipped = localStorage.getItem('pin_setup_skipped') === 'true';
+      const hasClinic = !!response.data.user?.clinicId;
+      const onboardingSkipped =
+        localStorage.getItem('clinic_onboarding_skipped') === 'true';
+
+      const nextPath =
+        hasClinic || onboardingSkipped ? '/' : '/onboarding/clinic';
 
       if (!hasPin && !skipped) {
         setShowPinSetup(true);
       } else {
-        navigate('/');
+        navigate(nextPath);
       }
     } catch {
       setError('Error al registrar. El correo podría estar en uso.');
@@ -143,7 +149,14 @@ const Register: React.FC = () => {
       </Card>
 
       {showPinSetup && (
-        <PinSetupModal isOpen={showPinSetup} onClose={() => navigate('/')} />
+        <PinSetupModal
+          isOpen={showPinSetup}
+          onClose={() => {
+            const onboardingSkipped =
+              localStorage.getItem('clinic_onboarding_skipped') === 'true';
+            navigate(onboardingSkipped ? '/' : '/onboarding/clinic');
+          }}
+        />
       )}
     </div>
   );

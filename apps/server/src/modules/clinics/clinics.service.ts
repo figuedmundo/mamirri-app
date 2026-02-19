@@ -1,10 +1,12 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import * as crypto from 'crypto';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ROLES } from '../../common/constants/roles';
 import { CreateClinicDto } from './dto/create-clinic.dto';
@@ -22,16 +24,129 @@ type CurrentUser = {
 export class ClinicsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createClinic(dto: CreateClinicDto) {
-    return this.prisma.clinic.create({
-      data: {
-        name: dto.name,
-        address: dto.address,
-        phone: dto.phone,
-        email: dto.email,
-        isActive: true,
+  async createClinic(dto: CreateClinicDto, currentUser: CurrentUser) {
+    const normalizedName = dto.name.trim();
+    const normalizedEmail = dto.email?.trim();
+
+    if (normalizedName.length < 2) {
+      throw new BadRequestException(
+        'Clinic name must be at least 2 characters',
+      );
+    }
+
+    if (!normalizedEmail) {
+      throw new BadRequestException('Clinic email is required');
+    }
+
+    const existingByName = await this.prisma.clinic.findFirst({
+      where: {
+        name: {
+          equals: normalizedName,
+          mode: 'insensitive',
+        },
       },
+      select: { id: true },
     });
+
+    if (existingByName) {
+      throw new ConflictException('Clinic name is already in use');
+    }
+
+    const result = await this.prisma.$transaction(async (tx) => {
+      const clinic = await tx.clinic.create({
+        data: {
+          name: normalizedName,
+          address: dto.address,
+          phone: dto.phone,
+          email: normalizedEmail,
+          logoUrl: dto.logoUrl,
+          businessHours: dto.businessHours as Prisma.InputJsonValue | undefined,
+          subdomain: dto.subdomain,
+          isActive: true,
+        },
+      });
+
+      if (currentUser.role !== ROLES.ADMIN) {
+        const user = await tx.user.findUnique({
+          where: { id: currentUser.userId },
+          select: { id: true, clinicId: true },
+        });
+
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+
+        if (user.clinicId) {
+          throw new ConflictException('User already belongs to a clinic');
+        }
+
+        await tx.user.update({
+          where: { id: currentUser.userId },
+          data: {
+            clinicId: clinic.id,
+            clinicName: clinic.name,
+            role: ROLES.CLINIC_OWNER,
+          },
+        });
+      }
+
+      const invitations = dto.initialInvitations ?? [];
+      if (invitations.length > 0) {
+        const existingEmails = await tx.user.findMany({
+          where: {
+            email: { in: invitations.map((inv) => inv.email) },
+          },
+          select: { email: true },
+        });
+        const existingSet = new Set(existingEmails.map((u) => u.email));
+
+        for (const invitation of invitations) {
+          if (existingSet.has(invitation.email)) {
+            continue;
+          }
+
+          const token = crypto.randomBytes(32).toString('hex');
+          const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+          await tx.clinicInvitation.create({
+            data: {
+              email: invitation.email,
+              token,
+              role: invitation.role ?? ROLES.THERAPIST,
+              clinicId: clinic.id,
+              invitedById: currentUser.userId,
+              expiresAt,
+            },
+          });
+        }
+      }
+
+      return {
+        ...clinic,
+        invitationsSent: invitations.length,
+      };
+    });
+
+    return result;
+  }
+
+  async checkNameAvailability(name: string) {
+    const normalizedName = name?.trim();
+    if (!normalizedName || normalizedName.length < 2) {
+      throw new BadRequestException('Name must be at least 2 characters');
+    }
+
+    const existing = await this.prisma.clinic.findFirst({
+      where: {
+        name: {
+          equals: normalizedName,
+          mode: 'insensitive',
+        },
+      },
+      select: { id: true },
+    });
+
+    return { available: !existing };
   }
 
   async listClinics() {
@@ -218,6 +333,25 @@ export class ClinicsService {
     });
 
     return { success: true };
+  }
+
+  async migrateSoloPatients(clinicId: string, currentUser: CurrentUser) {
+    this.ensureClinicOwnerAccess(clinicId, currentUser);
+
+    const result = await this.prisma.patient.updateMany({
+      where: {
+        therapistId: currentUser.userId,
+        clinicId: null,
+      },
+      data: {
+        clinicId,
+      },
+    });
+
+    return {
+      clinicId,
+      migratedCount: result.count,
+    };
   }
 
   async consumeInvitation(token: string) {
