@@ -17,7 +17,7 @@ import { OfflineBanner } from './components/pwa/OfflineBanner';
 import Patients from './pages/Patients';
 import PatientDetail from './pages/PatientDetail';
 const Analisis = lazy(() => import('./pages/Analisis'));
-const Biblioteca = lazy(() => import('./pages/Biblioteca'));
+import Biblioteca from './pages/Biblioteca';
 const BibliotecaBook = lazy(() => import('./pages/BibliotecaBook'));
 const Plantillas = lazy(() => import('./pages/Plantillas'));
 import Ajustes from './pages/Ajustes';
@@ -115,9 +115,7 @@ function AppContent() {
         element={
           <ProtectedRoute>
             <MainLayout>
-              <Suspense fallback={<PageLoader />}>
-                <Biblioteca />
-              </Suspense>
+              <Biblioteca />
             </MainLayout>
           </ProtectedRoute>
         }
