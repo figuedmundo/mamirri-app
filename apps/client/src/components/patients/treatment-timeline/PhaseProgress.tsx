@@ -40,7 +40,7 @@ export function PhaseProgress({
         )}
       </div>
 
-      <div className="flex items-start gap-2 overflow-x-auto pb-2">
+      <div className="flex items-start gap-2 overflow-x-auto py-1">
         {phases.map((phase, index) => {
           const sessionCount = getSessionCount(phase.number);
           const completed = isPhaseCompleted(phase.number);
@@ -52,10 +52,10 @@ export function PhaseProgress({
               <button
                 onClick={() => onPhaseClick(selected ? null : phase.number)}
                 className={cn(
-                  'flex flex-col items-center min-w-[80px] p-2 rounded-lg transition-all',
+                  'flex flex-col items-center min-w-[80px] p-2 rounded-lg border border-transparent transition-all',
                   'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2',
                   selected
-                    ? 'bg-teal-50 dark:bg-teal-900/30 ring-2 ring-teal-500'
+                    ? 'bg-teal-50 dark:bg-teal-900/30 border-teal-500'
                     : 'hover:bg-slate-100 dark:hover:bg-slate-800',
                 )}
                 aria-pressed={selected}
