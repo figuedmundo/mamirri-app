@@ -45,7 +45,7 @@ async function main() {
       email: 'test@example.com',
       name: 'Example User',
       password: 'password123',
-      role: 'USER',
+      role: 'THERAPIST',
     },
   ];
 

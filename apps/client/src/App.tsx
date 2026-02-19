@@ -18,8 +18,8 @@ import Patients from './pages/Patients';
 import PatientDetail from './pages/PatientDetail';
 const Analisis = lazy(() => import('./pages/Analisis'));
 const Biblioteca = lazy(() => import('./pages/Biblioteca'));
+const BibliotecaBook = lazy(() => import('./pages/BibliotecaBook'));
 const Plantillas = lazy(() => import('./pages/Plantillas'));
-const AdminProtocols = lazy(() => import('./pages/admin/Protocols'));
 import Ajustes from './pages/Ajustes';
 import Perfil from './pages/Perfil';
 import CaseDetail from './pages/CaseDetail';
@@ -121,20 +121,16 @@ function AppContent() {
             </MainLayout>
           </ProtectedRoute>
         }
-      />
-
-      <Route
-        path="/protocolos"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
-              <Suspense fallback={<PageLoader />}>
-                <AdminProtocols />
-              </Suspense>
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
+      >
+        <Route
+          path="libros/:documentId"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <BibliotecaBook />
+            </Suspense>
+          }
+        />
+      </Route>
 
       <Route
         path="/plantillas"

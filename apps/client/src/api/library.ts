@@ -7,6 +7,7 @@ import type {
   BibliographicReference,
   SearchResult,
   TreatmentPlanProtocol,
+  BookMarkdown,
 } from '../types/library';
 
 export const libraryApi = {
@@ -42,6 +43,13 @@ export const libraryApi = {
     const response = await axios.get<SearchResult>('/library/protocols', {
       params: { q: query },
     });
+    return response.data;
+  },
+
+  getBookMarkdown: async (documentId: string) => {
+    const response = await axios.get<BookMarkdown>(
+      `/library/books/${documentId}/markdown`,
+    );
     return response.data;
   },
 

@@ -399,22 +399,32 @@ Methodology: Agile Development (1-week Sprints).
 
 ## 📚 Phase 4: Biblioteca Médica (Weeks 17-18) — Milestone 8
 
+**Implementation note (2026-02-18):** Biblioteca is currently implemented as **books-only** search (RAG results) with an "Open book" markdown viewer. Protocol/category/bibliography overlays are quarantined (hidden) to avoid manual maintenance risk.
+
 ### Week 17: Search & Categories
 
 **Components:**
 
-- [x] **17.1** BibliotecaDashboard — Main interface with search, categories, results ✅ ALREADY IMPLEMENTED
-- [x] **17.2** SearchBar — Prominent input with natural language support ✅ ALREADY IMPLEMENTED
-- [x] **17.3** CategoryNav — Structured navigation (Osteology, Myology, etc.) ✅ ALREADY IMPLEMENTED
-- [x] **17.4** ProtocolList — List of techniques/protocols matching search ✅ ALREADY IMPLEMENTED
+- [x] **17.1** LibraryDashboard — Main interface with search + book passages (BibliotecaDashboard)
+- [x] **17.2** Book grouping — Results grouped by book with cited pages
+- [x] **17.3** Snippet + context — Focused match + expandable context
+- [x] **17.4** Open book viewer — Full markdown viewer with page jump
 
 **Backend:**
 
-- [x] **17.5** Database schema: Protocol, ReferenciaBibliografica ✅ ALREADY IMPLEMENTED
-- [x] **17.6** API endpoints: Protocol search with full-text + RAG ✅ ALREADY IMPLEMENTED
-- [x] **17.7** Category filtering endpoint ✅ ALREADY IMPLEMENTED
-- [x] **17.8** Search debouncing (300ms) ✅ ALREADY IMPLEMENTED
-- [ ] 17.9 Protocol CRUD
+- [x] **17.5** Database schema: Document, Embedding
+- [x] **17.6** API endpoint: `GET /library/protocols?q=...` (ragResults)
+- [x] **17.7** API endpoint: `GET /library/books/:documentId/markdown`
+- [x] **17.8** Client caching to avoid repeated retrieval calls
+
+<!--
+Legacy overlay plan (protocol/category/reference layers) was quarantined in favor of books-only Biblioteca.
+
+- [ ] **17.5** Database schema: Protocol, ReferenciaBibliografica
+- [ ] **17.6** API endpoints: Protocol search with full-text + RAG
+- [ ] **17.7** Category filtering endpoint
+- [ ] **17.8** Search debouncing (300ms)
+-->
 
 **Flows:**
 
@@ -425,20 +435,22 @@ Methodology: Agile Development (1-week Sprints).
 
 **Components:**
 
-- [ ] **18.1** BibliographyPanel — Formal citations and references
+- [ ] **18.1** Citations — show title/author/page for each passage
+- [ ] **18.1.1** BibliographyPanel — Formal citations and references
+      **Features:**
 
-**Features:**
-
-- [ ] **18.2** Protocol detail view (Ficha Explicativa)
-- [ ] **18.3** Definition, justification, procedure steps
-- [ ] **18.4** EN/ES translation toggle (uses AI from Phase 3)
-- [ ] **18.5** Bibliographic references with author, year, title, source
-- [ ] **18.6** Add reference to treatment plan
+- [ ] **18.2** Side-panel navigation — open book without losing results
+- [ ] **18.3** Markdown rendering — readable formatting + safe sanitization
+- [ ] **18.4** Protocol detail view (Ficha Explicativa)
+- [ ] **18.5** Definition, justification, procedure steps
+- [ ] **18.6** EN/ES translation toggle (uses AI from Phase 3)
+- [ ] **18.7** Bibliographic references with author, year, title, source
+- [ ] **18.8** Add reference to treatment plan
 
 **Flows:**
 
-- [ ] **18.7** Flow 3: View Protocol Details with language toggle
-- [ ] **18.8** Flow 4: Add Reference to Treatment Plan
+- [ ] **18.9** Flow 3: View Protocol Details with language toggle
+- [ ] **18.10** Flow 4: Add Reference to Treatment Plan
 
 **Empty States:**
 

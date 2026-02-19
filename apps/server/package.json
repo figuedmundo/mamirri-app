@@ -22,6 +22,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:deploy": "prisma migrate deploy",
     "seed": "ts-node prisma/seed.ts",
+    "seed:categories": "node prisma/seed-categories.js",
+    "category:add": "node prisma/add-category.js",
     "knowledge:ingest": "ts-node scripts/ingest.ts",
     "knowledge:batch-status": "ts-node scripts/batch-status.ts",
     "knowledge:verify": "ts-node scripts/verify-ingestion.ts",

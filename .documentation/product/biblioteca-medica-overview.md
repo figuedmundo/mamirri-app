@@ -4,6 +4,14 @@
 
 ---
 
+## Current Mode (Books-Only)
+
+**Status (2026-02-18):** Biblioteca is currently a **books-only semantic search** experience.
+
+- The UI shows **relevant book passages** (RAG results) grouped by book.
+- The Protocol/Categories/Bibliography panels are **quarantined (hidden in the UI)** to avoid manual maintenance risk.
+- The backend still contains protocol endpoints/models so the feature can be re-enabled later, but it is not part of the user workflow right now.
+
 ## Overview
 
 The Biblioteca Médica is a digital clinical research assistant that helps physiotherapists find evidence-based treatment techniques quickly and reliably. Think of it as having a medical library expert available at your fingertips during patient consultations — one that understands your questions in plain language and instantly connects you with proven protocols and scientific literature.
@@ -34,8 +42,8 @@ Traditional approaches have limitations:
 Biblioteca Médica solves these problems by:
 
 ✅ **Natural Language Search** — Ask questions the way you think
-✅ **Instant Results** — Relevant protocols appear in seconds
-✅ **Evidence-Based** — Every technique is backed by scientific literature
+✅ **Instant Results** — Relevant book passages appear in seconds
+✅ **Evidence-First** — Every result is backed by a source book and page number
 ✅ **Cross-Language** — Reads English research, explains in Spanish
 ✅ **Visual Aids** — Anatomy diagrams and step-by-step procedures
 
@@ -44,6 +52,8 @@ Biblioteca Médica solves these problems by:
 ## What is a Protocol?
 
 A **protocol** is a complete treatment technique with everything you need to apply it correctly.
+
+**Note:** the protocol catalog is currently **disabled in the UI** (books-only mode). This section describes a possible future/optional overlay.
 
 ### Example: "Posición de la Esfinge"
 
@@ -84,56 +94,53 @@ You're with a patient. You need to find the right technique. You type:
 
 > _"88-year-old patient with hyperkyphosis and cervical pain"_
 
-#### 2. **System Searches Two Sources**
+#### 2. **System Searches Your Ingested Books**
 
-The Biblioteca Médica searches in parallel:
-
-| Source                 | What It Finds                                        |
-| ---------------------- | ---------------------------------------------------- |
-| **Protocol Database**  | Structured techniques with step-by-step instructions |
-| **Medical Literature** | Scientific articles and textbook excerpts            |
+The Biblioteca Médica searches your ingested library using hybrid retrieval (dense + full-text) and returns the most relevant passages with citations.
 
 #### 3. **Results Appear**
 
 You see:
 
 ```
-Se han encontrado 3 protocolos relevantes para tu consulta clínica.
+Encontramos N pasajes relevantes en M libros.
 ```
 
 The results show:
 
-- **Protocol cards** with title, definition, and tags
-- **Matched literature** from research papers
-- **Bibliography panel** on the right with citations
+- **Book cards** (title/author)
+- **Top passages** per book (with page number)
+- Quick scan snippets (expand/collapse)
 
 #### 4. **Explore and Apply**
 
-Click any protocol to see:
+Click **Abrir libro** to open the full source Markdown at the cited page.
 
-- ✅ Clear definition in Spanish
-- ✅ Why it works (clinical rationale)
-- ✅ Numbered procedure steps
-- ✅ Tags for quick identification
-- ✅ Scientific sources
-- ✅ Language toggle (English ↔ Spanish)
+The UI keeps the search results visible while the book opens in a side panel so you can compare multiple sources without re-running the search.
 
-#### 5. **Add to Treatment Plan**
+#### 5. **Use It as a Research Tool**
 
-When you find the right technique, you can add it directly to the patient's treatment plan with optional notes explaining your clinical reasoning.
+The goal is to help the clinician quickly decide which book to consult and where to start reading.
+
+Notes:
+
+- Search results are cached client-side for a few hours to avoid repeated retrieval requests when navigating to/from the book viewer.
+- External links inside the book content open in a new tab.
 
 ---
 
 ## Browsing by Categories
 
-Sometimes you don't have a specific question — you want to explore what's available. Categories help you browse systematically.
+Sometimes you don't have a specific question — you want to explore what's available.
+
+**Note:** category browsing is currently **not exposed in the UI** (books-only mode). Categories remain in the database as an optional future overlay.
 
 ### Available Categories
 
 | Category                      | Description                                   | Example Protocols               |
 | ----------------------------- | --------------------------------------------- | ------------------------------- |
-| **Osteología y Artrología**   | Bone structure and joints                     | Pelvis anatomy, spine alignment |
-| **Miología**                  | Muscles and muscle chains                     | Back muscles, hip flexors       |
+| **Osteologia y Artrologia**   | Bone structure and joints                     | Pelvis anatomy, spine alignment |
+| **Miologia**                  | Muscles and muscle chains                     | Back muscles, hip flexors       |
 | **Test de Elasticidad**       | Flexibility evaluation tests                  | Thomas test, hamstring stretch  |
 | **Test Funcionales**          | Mobility and function tests                   | Range of motion assessments     |
 | **Protocolos de Tratamiento** | Intervention techniques (McKenzie, RPG, etc.) | Sphinx position, frog posture   |
@@ -181,8 +188,15 @@ Sometimes you don't have a specific question — you want to explore what's avai
 
 ### How Search Works Behind the Scenes
 
-When you type a query, the system does two things simultaneously:
+When you type a query, Biblioteca searches only the ingested knowledge base:
 
+1. **Dense retrieval (embeddings)** — semantic similarity over chunk vectors.
+2. **Sparse retrieval (BM25)** — keyword search over chunk text.
+3. **Fusion + reranking** — results are merged (RRF) and reranked (Cohere) when configured.
+
+The output is a set of cited passages grouped by book.
+
+Idea future dev
 1. **Direct Database Search**
    - Looks for exact matches in protocol titles
    - Searches definitions and descriptions
@@ -194,7 +208,6 @@ When you type a query, the system does two things simultaneously:
    - Translates Spanish symptoms to English medical terminology
    - Searches across all literature (not just our database)
    - Ranks results by clinical relevance
-
 ### Example Search Flow
 
 **Your Query:**
@@ -203,77 +216,38 @@ When you type a query, the system does two things simultaneously:
 
 **What Happens:**
 
-1. System understands: "plantar fasciitis" (English)
-2. Searches protocols in database
-3. Searches medical literature using AI
-4. Returns combined results
+1. Dense + sparse retrieval runs over the ingested corpus
+2. Results are reranked for relevance
+3. Biblioteca returns cited passages grouped by book
 
 **You See:**
 
-- Stretching protocols for plantar fasciitis
-- Evidence from research articles
-- Step-by-step procedures
-- Scientific references
+- Top passages per book (with page number)
+- A focused snippet (match) plus expandable context
+- "Abrir libro" to open the full Markdown at the cited page
 
 ---
 
-## Language Bridge
+## Language Notes
 
-### The Problem
+Biblioteca is primarily a search-and-reading workflow. It can be used with Spanish queries, but it does not currently generate Spanish summaries or provide an EN/ES toggle in the Biblioteca UI.
 
-Most high-quality medical literature is published in English. Spanish-speaking physiotherapists face a language barrier when accessing current research.
-
-### Our Solution
-
-The Biblioteca Médica automatically:
-
-1. **Reads English literature**
-2. **Summarizes in Spanish**
-3. **Shows the original source**
-4. **Lets you toggle between languages**
-
-### Example
-
-**Spanish Summary:**
-
-> "Método de diagnóstico y terapia mecánica para el dolor lumbar, enfatizando la centralización del dolor mediante movimientos repetidos."
-
-**Toggle Switch → English Original:**
-
-> "The centralization phenomenon describes movement of pain from a distal to a more central location..."
-
-### Why This Matters
-
-- **No Translation Barrier** — Access international research without needing to be bilingual
-- **Scientific Accuracy** — Original text preserved for verification
-- **Clinical Confidence** — Make decisions based on primary sources
+If you need translated summaries, use the AI Analysis feature (patient case analysis), which is explicitly designed to generate grounded responses with citations.
 
 ---
 
 ## Evidence Verification
 
-Every protocol in the Biblioteca Médica is backed by scientific literature. You never have to wonder, _"Where did this technique come from?"_
+Every returned passage includes its source metadata (book title/author + page number). You never have to wonder, _"Where did this come from?"_
 
-### Bibliography Panel
+### Citations
 
-When you view a protocol, you see:
+Each passage includes a citation header:
 
-**Referencias Bibliográficas:**
+- Book title + author
+- Page number
 
-1. **Latarjet, M. & Ruiz Liard, A. (2019).** _Anatomía Humana_. Editorial Médica Panamericana.
-   - Summary in Spanish available
-
-2. **McKenzie, R.A. (1981).** _The Lumbar Spine: Mechanical Diagnosis and Therapy_. Spinal Publications.
-   - ✅ Original text in English
-   - ✅ Spanish summary available
-
-3. **Kendall, F.P. (2005).** _Muscles: Testing and Function_. Lippincott Williams & Wilkins.
-
-### Click to Explore
-
-- Click any reference to see full details
-- Links to original sources when available
-- Author, year, title, and source clearly displayed
+This makes it easy to verify and continue reading in the original source.
 
 ---
 
@@ -281,7 +255,7 @@ When you view a protocol, you see:
 
 ### Who Can Use It?
 
-**✅ All authenticated physiotherapists** with an account can access the Biblioteca Médica for search and protocol viewing.
+**✅ All authenticated physiotherapists** with an account can access the Biblioteca Médica for book search.
 
 **Why?**
 
@@ -291,30 +265,17 @@ When you view a protocol, you see:
 
 ### What's Restricted?
 
-Only therapists can **add protocols to treatment plans**. This is because:
+This feature is a research tool: it does not expose patient data, and it only returns content from the ingested book corpus.
 
-- A treatment plan belongs to a specific therapist's patient
-- Therapist ownership must be verified
-- Prevents unauthorized access to patient data
+### Protocol Curation Flow (Quarantined)
 
-Therapists can also manage protocol catalog content (create, edit, archive, restore) to keep the library aligned with their clinic’s practice.
-
-### Protocol Curation Flow
-
-Therapists can curate protocols from `/protocolos`:
-
-- Create new protocols (title, category, definition, rationale, steps, tags, references)
-- Edit existing protocol content
-- Archive protocols (soft delete)
-- Restore archived protocols when needed
-
-Archived protocols are hidden from standard Biblioteca searches by default.
+The protocol curation UI is currently hidden to avoid maintenance burden until we have a stable references workflow.
 
 ### Data Privacy
 
 - Patient data is never shared
 - Treatment plans are private to the therapist
-- Biblioteca Médica contains only clinical protocols (no personal health information)
+- Biblioteca Médica contains only medical literature content (no personal health information)
 
 ---
 
@@ -334,9 +295,9 @@ Archived protocols are hidden from standard Biblioteca searches by default.
 **With Biblioteca Médica:**
 
 - Type patient's symptoms
-- See 3 relevant protocols instantly
-- Read step-by-step procedures
-- Verify with scientific references
+- See relevant book passages instantly
+- Jump to a specific book + page number
+- Verify by reading the source context
 - **Total time: 2 minutes**
 
 **Outcome:** Confidence in treatment, faster patient care.
@@ -356,11 +317,8 @@ Archived protocols are hidden from standard Biblioteca searches by default.
 **With Biblioteca Médica:**
 
 - Type "RPG" during the conversation
-- Immediately see "Reeducación Postural Global"
-- Click to see "Rana al suelo" posture
-- Read definition, rationale, procedure
-- See scientific references
-- **Add to treatment plan right there**
+- Immediately see relevant book passages
+- Open the source markdown at the cited page
 
 **Outcome:** Continuous learning, improved patient outcomes.
 
@@ -380,9 +338,8 @@ Archived protocols are hidden from standard Biblioteca searches by default.
 **With Biblioteca Médica:**
 
 - Search each condition separately
-- Find relevant protocols for each
-- Add all protocols to treatment plan with one click
-- Bibliography automatically attached
+- Find relevant passages for each question
+- Keep a short list of source books to consult
 - **Total time: 10 minutes**
 
 **Outcome:** Comprehensive, evidence-based treatment plan quickly created.
@@ -395,7 +352,7 @@ Archived protocols are hidden from standard Biblioteca searches by default.
 
 | Component         | Technology                  | Purpose                                  |
 | ----------------- | --------------------------- | ---------------------------------------- |
-| **Database**      | PostgreSQL with Prisma      | Stores protocols, categories, references |
+| **Database**      | PostgreSQL with Prisma      | Stores documents + embeddings for search |
 | **Search Engine** | pgvector embeddings         | Semantic search in natural language      |
 | **AI**            | Cohere Reranker v4-pro      | Intelligent result ranking               |
 | **Translation**   | HyDE + Translation pipeline | English ↔ Spanish translation            |
@@ -404,16 +361,13 @@ Archived protocols are hidden from standard Biblioteca searches by default.
 
 ### Data Structure
 
-Each protocol contains:
+Search results return book passages with citations:
 
 ```
-- Title (e.g., "Posición de la Esfinge")
-- Category (e.g., "Protocolos de Tratamiento")
-- Definition (Clinical explanation)
-- Rationale (Why it works)
-- Procedure (Step-by-step instructions)
-- Tags (For quick search)
-- References (Scientific citations)
+- Book title / author
+- Page number
+- Passage text (context-rich chunk)
+- Optional: section type + relevance scores
 ```
 
 ### Search Algorithm

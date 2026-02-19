@@ -56,13 +56,14 @@ Run Prisma migrations to set up the database schema:
 pnpm --filter server exec npx prisma migrate dev
 ```
 
-### 2.3.1 Protocol Management (Local Dev)
+### 2.3.1 Biblioteca (Local Dev)
 
-Protocol CRUD is available to any authenticated therapist.
+**Current product behavior (2026-02-18):** Biblioteca runs in **books-only mode**.
 
-Protocol UI route:
+- Search route: `http://localhost:5173/biblioteca`
+- "Open book" route: `http://localhost:5173/biblioteca/libros/:documentId`
 
-- `http://localhost:5173/protocolos`
+Note: protocol management UI is currently quarantined (hidden).
 
 ### 2.4 Docling PDF Extraction (Zero Setup)
 

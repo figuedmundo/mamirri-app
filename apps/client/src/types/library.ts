@@ -68,13 +68,27 @@ export interface SearchResult {
 
 export interface RagResult {
   id: string;
+  documentId: string;
   content: string;
+  snippet?: string;
+  context?: string;
+  fullContext?: string;
   parentContent?: string;
   pageNumber: number;
+  sectionType?: string;
   documentTitle: string;
   documentAuthor: string;
+  documentFilePath?: string;
   similarity?: number;
   rerankScore?: number;
+}
+
+export interface BookMarkdown {
+  documentId: string;
+  title: string;
+  author: string;
+  filePath: string;
+  content: string;
 }
 
 export interface TreatmentPlanProtocol {

@@ -123,7 +123,9 @@ Defines the strategy and goals for a Clinical Case.
 
 ## Clinical Library (`clinical_categories`, `protocols`, `bibliographic_references`)
 
-Supports Biblioteca Medica protocol search and admin curation.
+Optional curated overlay for Biblioteca.
+
+**Current product note (2026-02-18):** the Biblioteca UI runs in **books-only mode** (search over ingested `documents`/`embeddings`). Protocol/category/reference UI is currently quarantined (hidden) to avoid ongoing manual maintenance risk.
 
 ### Clinical Categories (`clinical_categories`)
 
@@ -188,6 +190,11 @@ Stores metadata for ingested medical literature.
 | `filePath`  | `String`   | Unique path to source file  |
 | `metadata`  | `Json?`    | Volume, edition, year, etc. |
 | `createdAt` | `DateTime` | Ingestion timestamp         |
+
+Notes:
+
+- `filePath` is used as the canonical pointer to the source book artifact produced during offline ingestion (typically a Markdown file under `apps/server/data/library/markdowns/`).
+- Full document text is not stored in this table; retrieval uses chunk content from `embeddings`.
 
 ## Embeddings (`embeddings`)
 

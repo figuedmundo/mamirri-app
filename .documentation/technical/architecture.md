@@ -37,7 +37,8 @@ The project uses a **Docker-Native** initialization strategy. This ensures that 
    - The primary application logic container.
    - **Entrypoint Responsibilities**:
      - Migrations: Automatically executes `prisma migrate deploy` on boot.
-     - Seeding: Executes `prisma db seed` to ensure a default `THERAPIST` user exists.
+     - Categories: Ensures default Biblioteca categories exist (idempotent seed at startup).
+     - Optional seed: `prisma db seed` may run only if `SEED_DATABASE=true` and the runtime has `ts-node` available.
      - Health Tracking: Blocks until the database is ready to accept connections.
    - **Global Configuration**:
      - `ValidationPipe`: Enabled globally with `whitelist: true` to enforce DTO validation rules.
@@ -64,4 +65,4 @@ The application uses **Driver Adapters** (`@prisma/adapter-pg`) to manage runtim
 
 ---
 
-**Last Updated:** 2026-02-05
+**Last Updated:** 2026-02-18

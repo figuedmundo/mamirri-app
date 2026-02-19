@@ -1,50 +1,86 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
 
-const prisma = new PrismaClient();
+dotenv.config({ path: path.join(__dirname, '../../../.env') });
+
+let connectionString = process.env.DATABASE_URL;
+if (connectionString && connectionString.includes('${')) {
+  connectionString = connectionString
+    .replace('${POSTGRES_USER}', process.env.POSTGRES_USER || 'postgres')
+    .replace(
+      '${POSTGRES_PASSWORD}',
+      process.env.POSTGRES_PASSWORD || 'postgres',
+    )
+    .replace('${POSTGRES_PORT}', process.env.POSTGRES_PORT || '5432')
+    .replace('${POSTGRES_DB}', process.env.POSTGRES_DB || 'mamirri');
+}
+
+const poolConfig: any = {
+  connectionString,
+};
+
+if (process.env.POSTGRES_USER) poolConfig.user = process.env.POSTGRES_USER;
+if (process.env.POSTGRES_PASSWORD)
+  poolConfig.password = process.env.POSTGRES_PASSWORD;
+if (process.env.POSTGRES_DB) poolConfig.database = process.env.POSTGRES_DB;
+
+const pool = new Pool(poolConfig);
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log('🏥 Seeding Biblioteca Médica...');
 
   const categories = [
     {
-      id: 'cat-001',
-      name: 'Osteología y Artrología',
-      description: 'Estructura ósea y articulaciones',
+      name: 'Osteologia y Artrologia',
+      description: 'Estructura osea y articulaciones',
       icon: 'bone',
     },
     {
-      id: 'cat-002',
-      name: 'Miología',
-      description: 'Músculos y cadenas musculares',
+      name: 'Miologia',
+      description: 'Musculos y cadenas musculares',
       icon: 'muscle',
     },
     {
-      id: 'cat-003',
       name: 'Test de Elasticidad',
-      description: 'Evaluación de flexibilidad y retracciones',
+      description: 'Evaluacion de flexibilidad y retracciones',
       icon: 'activity',
     },
     {
-      id: 'cat-004',
       name: 'Test Funcionales',
-      description: 'Pruebas de movilidad y función',
+      description: 'Pruebas de movilidad y funcion',
       icon: 'move',
     },
     {
-      id: 'cat-005',
       name: 'Protocolos de Tratamiento',
-      description: 'Técnicas de intervención (McKenzie, RPG, etc.)',
+      description: 'Tecnicas de intervencion (McKenzie, RPG, etc.)',
       icon: 'clipboard',
     },
   ];
 
+  const categoryIdByName = new Map<string, string>();
   for (const cat of categories) {
-    await prisma.clinicalCategory.upsert({
-      where: { id: cat.id },
-      update: cat,
-      create: cat,
+    const existing = await prisma.clinicalCategory.findFirst({
+      where: { name: { equals: cat.name, mode: 'insensitive' } },
+      select: { id: true },
     });
+
+    if (existing) {
+      categoryIdByName.set(cat.name, existing.id);
+      continue;
+    }
+
+    const created = await prisma.clinicalCategory.create({
+      data: cat,
+      select: { id: true },
+    });
+    categoryIdByName.set(cat.name, created.id);
   }
+
   console.log(`  ✓ ${categories.length} clinical categories`);
 
   const references = [
@@ -110,7 +146,7 @@ async function main() {
     {
       id: 'prot-001',
       title: 'Posición de la Esfinge',
-      categoryId: 'cat-005',
+      categoryName: 'Protocolos de Tratamiento',
       definition: 'Ejercicio de extensión pasiva en decúbito prono.',
       rationale:
         'Indicado para rectificación lumbar y hernias discales posteriores. Busca centralizar el dolor y restaurar la lordosis fisiológica.',
@@ -126,7 +162,7 @@ async function main() {
     {
       id: 'prot-002',
       title: 'Test de Thomas',
-      categoryId: 'cat-003',
+      categoryName: 'Test de Elasticidad',
       definition:
         'Prueba para evaluar la flexibilidad de los flexores de cadera (Psoas e Ilíaco).',
       rationale:
@@ -143,7 +179,7 @@ async function main() {
     {
       id: 'prot-003',
       title: 'Reeducación Postural Global (RPG) - Rana al suelo',
-      categoryId: 'cat-005',
+      categoryName: 'Protocolos de Tratamiento',
       definition: 'Postura de estiramiento global de la cadena anterior.',
       rationale:
         'Eficaz para corregir hipercifosis, hombros enrollados y rectificación cervical.',
@@ -159,7 +195,7 @@ async function main() {
     {
       id: 'prot-004',
       title: 'Stretching Estático de Isquiotibiales',
-      categoryId: 'cat-005',
+      categoryName: 'Protocolos de Tratamiento',
       definition: 'Estiramiento analítico mantenido sin rebote.',
       rationale:
         'Mejora la flexibilidad sin activar el reflejo miotático, reduciendo riesgo de lesión.',
@@ -174,11 +210,16 @@ async function main() {
     },
   ];
 
-  for (const { referenceIds, ...protocolData } of protocols) {
+  for (const { referenceIds, categoryName, ...protocolData } of protocols) {
+    const categoryId = categoryIdByName.get(categoryName);
+    if (!categoryId) {
+      throw new Error(`Missing categoryId for category: ${categoryName}`);
+    }
+
     await prisma.protocol.upsert({
       where: { id: protocolData.id },
-      update: protocolData,
-      create: protocolData,
+      update: { ...protocolData, categoryId },
+      create: { ...protocolData, categoryId },
     });
 
     for (const referenceId of referenceIds) {
@@ -233,4 +274,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });
