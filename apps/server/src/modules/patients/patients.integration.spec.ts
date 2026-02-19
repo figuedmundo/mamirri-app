@@ -7,7 +7,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 // Load env vars for test
-dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env'), quiet: true });
 
 // Manual variable expansion for DATABASE_URL since dotenv doesn't do it automatically
 if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('${')) {

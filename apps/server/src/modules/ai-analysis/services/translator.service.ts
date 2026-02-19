@@ -12,7 +12,7 @@ export class TranslatorService {
 
   constructor(private readonly configService: ConfigService) {
     const apiKey = this.configService.get<string>('GOOGLE_API_KEY');
-    if (!apiKey) {
+    if (!apiKey && process.env.NODE_ENV !== 'test') {
       this.logger.warn(
         'GOOGLE_API_KEY not set. Translation will use passthrough mode.',
       );
