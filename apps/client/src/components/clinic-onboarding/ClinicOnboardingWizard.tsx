@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -23,9 +23,10 @@ function ClinicOnboardingWizardContent() {
   const { user, updateUser } = useAuth();
   const { state, setCurrentStep, setError, setLoading, reset } =
     useClinicOnboarding();
+  const shouldBypassClinicRedirectRef = useRef(false);
 
   useEffect(() => {
-    if (user?.clinicId) {
+    if (user?.clinicId && !shouldBypassClinicRedirectRef.current) {
       navigate('/', { replace: true });
     }
   }, [navigate, user?.clinicId]);
@@ -42,6 +43,8 @@ function ClinicOnboardingWizardContent() {
     setError(undefined);
 
     try {
+      shouldBypassClinicRedirectRef.current = true;
+
       const payload = {
         name: state.clinicData.name.trim(),
         email: state.clinicData.email.trim(),
