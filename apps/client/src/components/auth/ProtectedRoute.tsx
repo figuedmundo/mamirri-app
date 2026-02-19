@@ -3,9 +3,9 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/use-auth';
 import { Loader2 } from 'lucide-react';
 
-export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const ProtectedRoute: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {

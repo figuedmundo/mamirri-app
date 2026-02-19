@@ -161,6 +161,21 @@ describe('PatientsService', () => {
       expect(mockPrismaService.patient.findFirst).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: 'p1', therapistId: mockTherapistId, deletedAt: null },
+          include: expect.objectContaining({
+            clinicalCases: expect.objectContaining({
+              include: expect.objectContaining({
+                treatmentPlan: {
+                  include: {
+                    protocols: {
+                      include: {
+                        protocol: true,
+                      },
+                    },
+                  },
+                },
+              }),
+            }),
+          }),
         }),
       );
     });

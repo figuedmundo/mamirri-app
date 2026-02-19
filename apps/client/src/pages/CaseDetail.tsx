@@ -84,6 +84,7 @@ export default function CaseDetail() {
       patient={patient}
       clinicalCase={clinicalCase}
       onBack={handleBack}
+      onOpenLibrary={(planId) => navigate(`/biblioteca?planId=${planId}`)}
     />
   );
 }

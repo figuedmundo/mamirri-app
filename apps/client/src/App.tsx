@@ -18,6 +18,7 @@ import Patients from './pages/Patients';
 import PatientDetail from './pages/PatientDetail';
 const Analisis = lazy(() => import('./pages/Analisis'));
 const Biblioteca = lazy(() => import('./pages/Biblioteca'));
+const BibliotecaBook = lazy(() => import('./pages/BibliotecaBook'));
 const Plantillas = lazy(() => import('./pages/Plantillas'));
 import Ajustes from './pages/Ajustes';
 import Perfil from './pages/Perfil';
@@ -120,7 +121,16 @@ function AppContent() {
             </MainLayout>
           </ProtectedRoute>
         }
-      />
+      >
+        <Route
+          path="libros/:documentId"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <BibliotecaBook />
+            </Suspense>
+          }
+        />
+      </Route>
 
       <Route
         path="/plantillas"

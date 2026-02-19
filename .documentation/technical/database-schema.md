@@ -121,6 +121,63 @@ Defines the strategy and goals for a Clinical Case.
 
 - **One-to-One** with `ClinicalCase`.
 
+## Clinical Library (`clinical_categories`, `protocols`, `bibliographic_references`)
+
+Optional curated overlay for Biblioteca.
+
+**Current product note (2026-02-18):** the Biblioteca UI runs in **books-only mode** (search over ingested `documents`/`embeddings`). Protocol/category/reference UI is currently quarantined (hidden) to avoid ongoing manual maintenance risk.
+
+### Clinical Categories (`clinical_categories`)
+
+| Field         | Type       | Description                |
+| ------------- | ---------- | -------------------------- |
+| `id`          | `String`   | Unique identifier (CUID)   |
+| `name`        | `String`   | Category display name      |
+| `description` | `String`   | Human-readable description |
+| `icon`        | `String`   | Icon key used by frontend  |
+| `createdAt`   | `DateTime` | Creation timestamp         |
+
+### Protocols (`protocols`)
+
+| Field        | Type        | Description                                      |
+| ------------ | ----------- | ------------------------------------------------ |
+| `id`         | `String`    | Unique identifier (CUID)                         |
+| `title`      | `String`    | Protocol title                                   |
+| `categoryId` | `String`    | Foreign key to `clinical_categories`             |
+| `definition` | `String`    | Clinical description                             |
+| `rationale`  | `String`    | Why protocol is used                             |
+| `procedure`  | `String[]`  | Ordered procedural steps                         |
+| `tags`       | `String[]`  | Search tags                                      |
+| `deletedAt`  | `DateTime?` | Soft-delete timestamp (archived when non-null)   |
+| `documentId` | `String?`   | Optional link to source `documents` entry (UUID) |
+| `createdAt`  | `DateTime`  | Creation timestamp                               |
+| `updatedAt`  | `DateTime`  | Last update timestamp                            |
+
+**Indexes:**
+
+- `protocols_categoryId_idx`
+- `protocols_deletedAt_idx`
+
+### Bibliographic References (`bibliographic_references`)
+
+| Field              | Type       | Description                    |
+| ------------------ | ---------- | ------------------------------ |
+| `id`               | `String`   | Unique identifier (CUID)       |
+| `author`           | `String`   | Citation author(s)             |
+| `year`             | `Int`      | Publication year               |
+| `title`            | `String`   | Work title                     |
+| `source`           | `String`   | Journal/book/source            |
+| `originalLanguage` | `String`   | Source language (default `es`) |
+| `summaryEs`        | `String`   | Spanish summary                |
+| `originalText`     | `String?`  | Optional source quote/text     |
+| `url`              | `String?`  | Optional external URL          |
+| `createdAt`        | `DateTime` | Creation timestamp             |
+
+### Link Tables
+
+- `protocol_references` maps many-to-many between protocols and references.
+- `treatment_plan_protocols` maps many-to-many between treatment plans and protocols.
+
 ## Knowledge Base Documents (`documents`)
 
 Stores metadata for ingested medical literature.
@@ -133,6 +190,11 @@ Stores metadata for ingested medical literature.
 | `filePath`  | `String`   | Unique path to source file  |
 | `metadata`  | `Json?`    | Volume, edition, year, etc. |
 | `createdAt` | `DateTime` | Ingestion timestamp         |
+
+Notes:
+
+- `filePath` is used as the canonical pointer to the source book artifact produced during offline ingestion (typically a Markdown file under `apps/server/data/library/markdowns/`).
+- Full document text is not stored in this table; retrieval uses chunk content from `embeddings`.
 
 ## Embeddings (`embeddings`)
 
@@ -148,4 +210,4 @@ Stores vectorized text chunks for semantic search.
 
 ---
 
-**Last Updated:** 2026-02-05
+**Last Updated:** 2026-02-18

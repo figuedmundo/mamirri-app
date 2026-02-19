@@ -34,6 +34,13 @@ if ! npx prisma migrate deploy; then
 fi
 echo "Migrations completed successfully"
 
+echo "Ensuring default clinical categories exist..."
+if ! node prisma/seed-categories.js; then
+  echo "ERROR: Default category seeding failed"
+  exit 1
+fi
+echo "Default categories ready"
+
 # Run seed script (only if SEED_DATABASE is set to true)
 # Note: Seed script requires ts-node which is not available in production
 # For production seeding, use a compiled JS seed script or run manually

@@ -15,6 +15,7 @@ const RESOURCE_STALE_TIMES = {
   users: { staleTime: 10 * 60 * 1000, gcTime: 15 * 60 * 1000 },
   media: { staleTime: 0, gcTime: 5 * 60 * 1000 },
   'ai-analysis': { staleTime: 1 * 60 * 1000, gcTime: 5 * 60 * 1000 },
+  library: { staleTime: 30 * 60 * 1000, gcTime: 60 * 60 * 1000 },
 } as const;
 
 export type ResourceType = keyof typeof RESOURCE_STALE_TIMES;

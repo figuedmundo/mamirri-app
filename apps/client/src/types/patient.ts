@@ -292,6 +292,19 @@ export interface TreatmentPlan {
   objectives: TreatmentObjectives;
   phases: TreatmentPhase[];
   insole?: Insole | null;
+  protocols?: TreatmentPlanProtocol[];
+}
+
+export interface TreatmentPlanProtocol {
+  treatmentPlanId: string;
+  protocolId: string;
+  addedAt: string;
+  notes?: string | null;
+  protocol: {
+    id: string;
+    title: string;
+    tags: string[];
+  };
 }
 
 export interface TreatmentSession {

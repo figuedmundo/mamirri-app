@@ -24,7 +24,10 @@ import { GoogleGenAI } from '@google/genai';
 
 export interface BM25Result {
   id: string;
+  documentId: string;
   content: string;
+  snippet?: string;
+  context?: string;
   pageNumber: number;
   documentTitle: string;
   documentAuthor: string;
@@ -1208,11 +1211,18 @@ export class KnowledgeBaseService {
       return true;
     });
 
-    // If no reranking, still add fullContext for consistency
-    const finalizedResults = results.slice(0, limit).map((r) => ({
-      ...r,
-      fullContext: r.parentContent || r.content,
-    }));
+    const finalizedResults = results.slice(0, limit).map((r) => {
+      const snippet = r.content;
+      const context = r.parentContent || r.content;
+
+      return {
+        ...r,
+        content: context,
+        snippet,
+        context,
+        fullContext: context,
+      };
+    });
 
     // Apply Cross-Encoder Reranking
     const reranked = await this.rerank(query, finalizedResults, limit);
@@ -1240,14 +1250,18 @@ export class KnowledgeBaseService {
       // Map rerank results back to original documents
       return response.results.map((r) => {
         const originalDoc = documents[r.index];
-        const parentContent = originalDoc.parentContent || originalDoc.content;
+        const snippet = originalDoc.snippet || originalDoc.content;
+        const context =
+          originalDoc.context ||
+          originalDoc.parentContent ||
+          originalDoc.content;
         return {
           ...originalDoc,
           rerankScore: r.relevanceScore,
-          // Store parent content separately so the UI can show the specific match
-          // but the AI can still use the full context.
-          content: parentContent,
-          fullContext: parentContent,
+          content: context,
+          snippet,
+          context,
+          fullContext: context,
         };
       });
     } catch (error) {
@@ -1283,6 +1297,7 @@ export class KnowledgeBaseService {
     const results: any[] = await (this.prisma as any).$queryRaw`
       SELECT 
         e.id,
+        e."documentId" as "documentId",
         e.content,
         e."parentId",
         e."parentContent",
@@ -1341,6 +1356,7 @@ export class KnowledgeBaseService {
     const results: any[] = await (this.prisma as any).$queryRaw`
       SELECT 
         e.id,
+        e."documentId" as "documentId",
         e.content,
         e."parentId",
         e."parentContent",
@@ -1371,7 +1387,10 @@ export class KnowledgeBaseService {
     // Map raw results to typed interface
     return results.map((r) => ({
       id: r.id,
-      content: r.content,
+      documentId: r.documentId,
+      content: r.parentContent || r.content,
+      snippet: r.content,
+      context: r.parentContent || r.content,
       pageNumber: r.pageNumber,
       documentTitle: r.documentTitle,
       documentAuthor: r.documentAuthor,
