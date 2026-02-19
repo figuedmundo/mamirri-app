@@ -38,12 +38,13 @@ export class TreatmentPlansController {
   async updateObjectives(
     @Param('id') id: string,
     @Body() updateObjectivesDto: UpdateObjectivesDto,
-    @CurrentTherapist() user: { userId: string },
+    @CurrentTherapist() user: { userId: string; clinicId?: string | null },
   ): Promise<TreatmentPlan> {
     return this.treatmentPlansService.updateObjectives(
       id,
       updateObjectivesDto,
       user.userId,
+      user.clinicId,
     );
   }
 }

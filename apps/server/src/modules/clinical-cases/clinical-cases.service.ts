@@ -12,11 +12,17 @@ export class ClinicalCasesService {
   async create(
     createClinicalCaseDto: CreateClinicalCaseDto,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<ClinicalCase> {
     const { patientId, ...rest } = createClinicalCaseDto;
 
     const patient = await this.prisma.patient.findFirst({
-      where: { id: patientId, therapistId, deletedAt: null },
+      where: {
+        id: patientId,
+        therapistId,
+        deletedAt: null,
+        ...(clinicId ? { clinicId } : {}),
+      },
     });
 
     if (!patient) {
@@ -27,6 +33,7 @@ export class ClinicalCasesService {
       return tx.clinicalCase.create({
         data: {
           ...rest,
+          clinicId: clinicId ?? null,
           patientId,
           startDate: new Date(),
           status: 'active',
@@ -43,10 +50,15 @@ export class ClinicalCasesService {
     patientId?: string,
     status?: string,
     search?: string,
+    clinicId?: string | null,
   ): Promise<PaginatedResponseDto<ClinicalCase>> {
     const skip = (page - 1) * limit;
     const where: any = {
-      patient: { therapistId, deletedAt: null },
+      patient: {
+        therapistId,
+        deletedAt: null,
+        ...(clinicId ? { clinicId } : {}),
+      },
     };
 
     if (patientId) {
@@ -94,11 +106,19 @@ export class ClinicalCasesService {
     };
   }
 
-  async findOne(id: string, therapistId: string): Promise<ClinicalCase> {
+  async findOne(
+    id: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ): Promise<ClinicalCase> {
     const clinicalCase = await this.prisma.clinicalCase.findFirst({
       where: {
         id,
-        patient: { therapistId, deletedAt: null },
+        patient: {
+          therapistId,
+          deletedAt: null,
+          ...(clinicId ? { clinicId } : {}),
+        },
       },
       include: {
         patient: {
@@ -124,8 +144,9 @@ export class ClinicalCasesService {
     id: string,
     updateClinicalCaseDto: UpdateClinicalCaseDto,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<ClinicalCase> {
-    await this.findOne(id, therapistId);
+    await this.findOne(id, therapistId, clinicId);
 
     return this.prisma.clinicalCase.update({
       where: { id },
@@ -141,8 +162,12 @@ export class ClinicalCasesService {
     });
   }
 
-  async remove(id: string, therapistId: string): Promise<void> {
-    await this.findOne(id, therapistId);
+  async remove(
+    id: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ): Promise<void> {
+    await this.findOne(id, therapistId, clinicId);
 
     await this.prisma.clinicalCase.delete({
       where: { id },

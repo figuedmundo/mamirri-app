@@ -39,6 +39,7 @@ export class PatientsService {
   async create(
     createPatientDto: CreatePatientDto,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<Patient> {
     const { birthDate, emergencyContact, ...rest } = createPatientDto;
 
@@ -54,14 +55,18 @@ export class PatientsService {
           emergencyContact: emergencyContact as any,
           birthDate: birthDateObj,
           therapistId,
+          clinicId: clinicId ?? null,
+          primaryTherapistId: therapistId,
           clinicalCases: {
             create: {
+              clinicId: clinicId ?? null,
               title: 'Initial Case - General Evaluation',
               status: 'active',
               startDate: new Date(),
               consultationReason: 'Initial evaluation',
               evaluations: {
                 create: {
+                  clinicId: clinicId ?? null,
                   date: new Date(),
                   type: 'INITIAL',
                   posturogram: {},
@@ -73,6 +78,7 @@ export class PatientsService {
               },
               treatmentPlan: {
                 create: {
+                  clinicId: clinicId ?? null,
                   objectives: {},
                   phases: [
                     {
@@ -160,11 +166,13 @@ export class PatientsService {
     page: number = 1,
     limit: number = 20,
     search?: string,
+    clinicId?: string | null,
   ): Promise<PaginatedResponseDto<Patient>> {
     const skip = (page - 1) * limit;
     const where: any = {
       therapistId,
       deletedAt: null,
+      ...(clinicId ? { clinicId } : {}),
     };
 
     if (search) {
@@ -218,9 +226,18 @@ export class PatientsService {
     };
   }
 
-  async findOne(id: string, therapistId: string): Promise<Patient> {
+  async findOne(
+    id: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ): Promise<Patient> {
     const patient = await this.prisma.patient.findFirst({
-      where: { id, therapistId, deletedAt: null },
+      where: {
+        id,
+        therapistId,
+        deletedAt: null,
+        ...(clinicId ? { clinicId } : {}),
+      },
       include: {
         clinicalCases: {
           include: {
@@ -373,8 +390,9 @@ export class PatientsService {
     id: string,
     updatePatientDto: Partial<CreatePatientDto>,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<Patient> {
-    await this.findOne(id, therapistId);
+    await this.findOne(id, therapistId, clinicId);
 
     const { birthDate, ...rest } = updatePatientDto;
     const data: any = { ...rest };
@@ -392,8 +410,12 @@ export class PatientsService {
     });
   }
 
-  async remove(id: string, therapistId: string): Promise<void> {
-    await this.findOne(id, therapistId);
+  async remove(
+    id: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ): Promise<void> {
+    await this.findOne(id, therapistId, clinicId);
 
     await this.prisma.patient.update({
       where: { id },
@@ -405,11 +427,15 @@ export class PatientsService {
     clinicalCaseId: string,
     createSessionDto: CreateTreatmentSessionDto,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<TreatmentSession> {
     const clinicalCase = await this.prisma.clinicalCase.findFirst({
       where: {
         id: clinicalCaseId,
-        patient: { therapistId },
+        patient: {
+          therapistId,
+          ...(clinicId ? { clinicId } : {}),
+        },
       },
     });
 
@@ -430,6 +456,7 @@ export class PatientsService {
         date: dateObj,
         clinicalCaseId,
         therapistId,
+        clinicId: clinicId ?? null,
       },
     });
   }
@@ -438,12 +465,16 @@ export class PatientsService {
     evaluationId: string,
     updateDto: UpdateEvaluationDto,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<Evaluation> {
     const evaluation = await this.prisma.evaluation.findFirst({
       where: {
         id: evaluationId,
         clinicalCase: {
-          patient: { therapistId },
+          patient: {
+            therapistId,
+            ...(clinicId ? { clinicId } : {}),
+          },
         },
       },
     });

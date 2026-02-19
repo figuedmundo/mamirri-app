@@ -46,7 +46,11 @@ export class ClinicalCasesController {
     @Body() createClinicalCaseDto: CreateClinicalCaseDto,
     @CurrentTherapist() user: any,
   ): Promise<ClinicalCase> {
-    return this.clinicalCasesService.create(createClinicalCaseDto, user.userId);
+    return this.clinicalCasesService.create(
+      createClinicalCaseDto,
+      user.userId,
+      user.clinicId,
+    );
   }
 
   @Get()
@@ -70,6 +74,7 @@ export class ClinicalCasesController {
       patientId,
       status,
       search,
+      user.clinicId,
     );
   }
 
@@ -88,7 +93,7 @@ export class ClinicalCasesController {
     @Param('id') id: string,
     @CurrentTherapist() user: any,
   ): Promise<ClinicalCase> {
-    return this.clinicalCasesService.findOne(id, user.userId);
+    return this.clinicalCasesService.findOne(id, user.userId, user.clinicId);
   }
 
   @Patch(':id')
@@ -110,6 +115,7 @@ export class ClinicalCasesController {
       id,
       updateClinicalCaseDto,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -128,6 +134,6 @@ export class ClinicalCasesController {
     @Param('id') id: string,
     @CurrentTherapist() user: any,
   ): Promise<void> {
-    return this.clinicalCasesService.remove(id, user.userId);
+    return this.clinicalCasesService.remove(id, user.userId, user.clinicId);
   }
 }

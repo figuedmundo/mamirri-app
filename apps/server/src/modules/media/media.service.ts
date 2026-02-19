@@ -66,8 +66,9 @@ export class MediaService {
     patientId: string,
     file: File,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<{ url: string; patientId: string }> {
-    await this.verifyPatientOwnership(patientId, therapistId);
+    await this.verifyPatientOwnership(patientId, therapistId, clinicId);
 
     const path = `patients/${patientId}/photos`;
     const url = await this.storage.uploadFile(file, path);
@@ -82,8 +83,9 @@ export class MediaService {
     type: FootprintType,
     side: FootprintSide = FootprintSide.UNKNOWN,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<FootprintWithUrl> {
-    await this.verifyEvaluationOwnership(evaluationId, therapistId);
+    await this.verifyEvaluationOwnership(evaluationId, therapistId, clinicId);
 
     const path = `evaluations/${evaluationId}/footprints`;
     const storagePath = await this.storage.uploadFile(file, path);
@@ -96,6 +98,7 @@ export class MediaService {
         date: new Date(),
         url: storagePath,
         evaluationId,
+        clinicId: clinicId ?? null,
       },
     });
 
@@ -116,8 +119,9 @@ export class MediaService {
     type: PostureVideoType,
     duration: number,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<PostureVideoWithUrl> {
-    await this.verifyEvaluationOwnership(evaluationId, therapistId);
+    await this.verifyEvaluationOwnership(evaluationId, therapistId, clinicId);
 
     const path = `evaluations/${evaluationId}/videos`;
     const storagePath = await this.storage.uploadFile(file, path);
@@ -131,6 +135,7 @@ export class MediaService {
         duration,
         observations: '',
         evaluationId,
+        clinicId: clinicId ?? null,
       },
     });
 
@@ -152,11 +157,12 @@ export class MediaService {
     file: File,
     durationSeconds: number,
     therapistId: string,
+    clinicId?: string | null,
   ) {
     if (entityType === 'evaluation') {
-      await this.verifyEvaluationOwnership(entityId, therapistId);
+      await this.verifyEvaluationOwnership(entityId, therapistId, clinicId);
     } else {
-      await this.verifySessionOwnership(entityId, therapistId);
+      await this.verifySessionOwnership(entityId, therapistId, clinicId);
     }
 
     const path = `voice-notes/${entityType}/${entityId}`;
@@ -215,11 +221,12 @@ export class MediaService {
     entityId: string,
     voiceNoteId: string,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<VoiceNote> {
     if (entityType === 'evaluation') {
-      await this.verifyEvaluationOwnership(entityId, therapistId);
+      await this.verifyEvaluationOwnership(entityId, therapistId, clinicId);
     } else {
-      await this.verifySessionOwnership(entityId, therapistId);
+      await this.verifySessionOwnership(entityId, therapistId, clinicId);
     }
 
     const entity =
@@ -251,10 +258,11 @@ export class MediaService {
   private async verifyPatientOwnership(
     patientId: string,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<void> {
     const patient = await this.prisma.patient.findUnique({
       where: { id: patientId },
-      select: { therapistId: true },
+      select: { therapistId: true, clinicId: true },
     });
 
     if (!patient) {
@@ -264,11 +272,16 @@ export class MediaService {
     if (patient.therapistId !== therapistId) {
       throw new ForbiddenException('Access denied');
     }
+
+    if (clinicId && patient.clinicId !== clinicId) {
+      throw new ForbiddenException('Access denied');
+    }
   }
 
   private async verifyEvaluationOwnership(
     evaluationId: string,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<void> {
     const evaluation = await this.prisma.evaluation.findUnique({
       where: { id: evaluationId },
@@ -276,7 +289,7 @@ export class MediaService {
         clinicalCase: {
           select: {
             patient: {
-              select: { therapistId: true },
+              select: { therapistId: true, clinicId: true },
             },
           },
         },
@@ -290,15 +303,20 @@ export class MediaService {
     if (evaluation.clinicalCase.patient.therapistId !== therapistId) {
       throw new ForbiddenException('Access denied');
     }
+
+    if (clinicId && evaluation.clinicalCase.patient.clinicId !== clinicId) {
+      throw new ForbiddenException('Access denied');
+    }
   }
 
   private async verifySessionOwnership(
     sessionId: string,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<void> {
     const session = await this.prisma.treatmentSession.findUnique({
       where: { id: sessionId },
-      select: { therapistId: true },
+      select: { therapistId: true, clinicId: true },
     });
 
     if (!session) {
@@ -306,6 +324,10 @@ export class MediaService {
     }
 
     if (session.therapistId !== therapistId) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    if (clinicId && session.clinicId !== clinicId) {
       throw new ForbiddenException('Access denied');
     }
   }

@@ -64,7 +64,7 @@ describe('PatientsController', () => {
         userId: therapistId,
       } as any);
 
-      expect(service.create).toHaveBeenCalledWith(dto, therapistId);
+      expect(service.create).toHaveBeenCalledWith(dto, therapistId, undefined);
       expect(result).toEqual(serviceResult);
     });
   });
@@ -92,6 +92,7 @@ describe('PatientsController', () => {
         query.page,
         query.limit,
         query.search,
+        undefined,
       );
       expect(result).toEqual(serviceResult);
     });
@@ -122,7 +123,7 @@ describe('PatientsController', () => {
         userId: therapistId,
       } as any);
 
-      expect(service.findOne).toHaveBeenCalledWith(id, therapistId);
+      expect(service.findOne).toHaveBeenCalledWith(id, therapistId, undefined);
       expect(result).toEqual(serviceResult);
     });
   });
@@ -154,7 +155,12 @@ describe('PatientsController', () => {
         userId: therapistId,
       } as any);
 
-      expect(service.update).toHaveBeenCalledWith(id, dto, therapistId);
+      expect(service.update).toHaveBeenCalledWith(
+        id,
+        dto,
+        therapistId,
+        undefined,
+      );
       expect(result).toEqual(serviceResult);
     });
   });
@@ -168,7 +174,7 @@ describe('PatientsController', () => {
 
       await controller.remove(id, { userId: therapistId } as any);
 
-      expect(service.remove).toHaveBeenCalledWith(id, therapistId);
+      expect(service.remove).toHaveBeenCalledWith(id, therapistId, undefined);
     });
   });
 });

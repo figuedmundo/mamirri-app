@@ -88,6 +88,7 @@ describe('MediaController', () => {
         'p-1',
         mockFile,
         'therapist-1',
+        undefined,
       );
       expect(response).toEqual(result);
     });
@@ -112,6 +113,7 @@ describe('MediaController', () => {
         dto.type,
         undefined,
         'therapist-1',
+        undefined,
       );
       expect(response).toEqual(result);
     });
@@ -136,6 +138,7 @@ describe('MediaController', () => {
         dto.type,
         120,
         'therapist-1',
+        undefined,
       );
       expect(response).toEqual(result);
     });
@@ -164,6 +167,7 @@ describe('MediaController', () => {
         mockFile,
         60,
         'therapist-1',
+        undefined,
       );
       expect(response).toEqual(result);
     });
@@ -192,6 +196,7 @@ describe('MediaController', () => {
         mockFile,
         45,
         'therapist-1',
+        undefined,
       );
       expect(response).toEqual(result);
     });
@@ -224,6 +229,7 @@ describe('MediaController', () => {
         sessionId,
         mockFile,
         mockUser.userId,
+        undefined,
         dto.caption,
       );
       expect(response).toEqual(result);
@@ -235,6 +241,7 @@ describe('MediaController', () => {
       expect(sessionPhotoService.getPhotos).toHaveBeenCalledWith(
         sessionId,
         mockUser.userId,
+        undefined,
       );
     });
 
@@ -246,6 +253,7 @@ describe('MediaController', () => {
         sessionId,
         photoId,
         mockUser.userId,
+        undefined,
       );
     });
   });

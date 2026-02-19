@@ -156,6 +156,7 @@ export class VisionService {
     imageId: string,
     imageType: VisionImageType,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<VisionAnalysisResult> {
     const imageRecord = await this.getImageRecord(imageId, imageType);
 
@@ -163,7 +164,7 @@ export class VisionService {
       throw new NotFoundException(`Image not found: ${imageId}`);
     }
 
-    this.verifyAccess(imageRecord, therapistId);
+    this.verifyAccess(imageRecord, therapistId, clinicId);
 
     const storagePath = this.getStoragePath(imageRecord, imageType);
     const imageBuffer = await this.storageService.getFile(storagePath);
@@ -189,9 +190,17 @@ export class VisionService {
     });
   }
 
-  private verifyAccess(imageRecord: any, therapistId: string): void {
+  private verifyAccess(
+    imageRecord: any,
+    therapistId: string,
+    clinicId?: string | null,
+  ): void {
     const patient = imageRecord.evaluation?.clinicalCase?.patient;
     if (!patient || patient.therapistId !== therapistId) {
+      throw new ForbiddenException('You do not have access to this image');
+    }
+
+    if (clinicId && patient.clinicId !== clinicId) {
       throw new ForbiddenException('You do not have access to this image');
     }
   }
