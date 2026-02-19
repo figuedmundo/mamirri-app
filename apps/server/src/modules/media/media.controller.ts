@@ -68,7 +68,12 @@ export class MediaController {
     if (!file) {
       throw new BadRequestException('File is required');
     }
-    return this.mediaService.uploadPatientPhoto(patientId, file, user.userId);
+    return this.mediaService.uploadPatientPhoto(
+      patientId,
+      file,
+      user.userId,
+      user.clinicId,
+    );
   }
 
   @Post('evaluations/:evaluationId/footprints')
@@ -113,6 +118,7 @@ export class MediaController {
       dto.type,
       dto.side,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -157,6 +163,7 @@ export class MediaController {
       dto.type,
       dto.duration,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -197,6 +204,7 @@ export class MediaController {
       file,
       dto.durationSeconds,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -237,6 +245,7 @@ export class MediaController {
       file,
       dto.durationSeconds,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -256,6 +265,7 @@ export class MediaController {
       evaluationId,
       voiceNoteId,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -275,6 +285,7 @@ export class MediaController {
       sessionId,
       voiceNoteId,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -330,6 +341,7 @@ export class MediaController {
       sessionId,
       file,
       user.userId,
+      user.clinicId,
       dto.caption,
     );
   }
@@ -353,7 +365,11 @@ export class MediaController {
     @Param('sessionId') sessionId: string,
     @CurrentTherapist() user: any,
   ) {
-    return this.sessionPhotoService.getPhotos(sessionId, user.userId);
+    return this.sessionPhotoService.getPhotos(
+      sessionId,
+      user.userId,
+      user.clinicId,
+    );
   }
 
   @Delete('sessions/:sessionId/photos/:photoId')
@@ -378,6 +394,11 @@ export class MediaController {
     @Param('photoId') photoId: string,
     @CurrentTherapist() user: any,
   ) {
-    await this.sessionPhotoService.deletePhoto(sessionId, photoId, user.userId);
+    await this.sessionPhotoService.deletePhoto(
+      sessionId,
+      photoId,
+      user.userId,
+      user.clinicId,
+    );
   }
 }

@@ -10,6 +10,7 @@ jest.mock('bcrypt');
 describe('AuthService', () => {
   let service: AuthService;
   let prisma: PrismaService;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,7 +21,9 @@ describe('AuthService', () => {
           useValue: {
             sign: jest.fn().mockReturnValue('token'),
             signAsync: jest.fn().mockResolvedValue('token'),
-            verify: jest.fn().mockReturnValue({ sub: '1', role: 'USER' }),
+            verify: jest
+              .fn()
+              .mockReturnValue({ sub: '1', role: 'THERAPIST', clinicId: null }),
           },
         },
         {
@@ -43,6 +46,7 @@ describe('AuthService', () => {
 
     service = module.get<AuthService>(AuthService);
     prisma = module.get<PrismaService>(PrismaService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   it('should be defined', () => {
@@ -55,7 +59,8 @@ describe('AuthService', () => {
         id: '1',
         email: 'test@example.com',
         passwordHash: 'hash',
-        role: 'USER',
+        role: 'THERAPIST',
+        clinicId: 'clinic-1',
       };
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(user);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
@@ -64,7 +69,8 @@ describe('AuthService', () => {
       expect(result).toEqual({
         id: '1',
         email: 'test@example.com',
-        role: 'USER',
+        role: 'THERAPIST',
+        clinicId: 'clinic-1',
       });
     });
 
@@ -80,12 +86,35 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('should return access and refresh tokens', () => {
-      const user = { id: '1', email: 'test@example.com', role: 'USER' };
+      const user = {
+        id: '1',
+        email: 'test@example.com',
+        role: 'THERAPIST',
+        clinicId: 'clinic-1',
+      };
       const result = service.login(user);
       expect(result).toEqual({
         accessToken: 'token',
         refreshToken: 'token',
         user,
+      });
+    });
+
+    it('should include clinicId in jwt payload', () => {
+      const user = {
+        id: '1',
+        email: 'test@example.com',
+        role: 'THERAPIST',
+        clinicId: 'clinic-abc',
+      };
+
+      service.login(user);
+
+      expect(jwtService.sign).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        sub: '1',
+        role: 'THERAPIST',
+        clinicId: 'clinic-abc',
       });
     });
   });
@@ -102,7 +131,8 @@ describe('AuthService', () => {
         id: '2',
         ...dto,
         passwordHash: 'hash',
-        role: 'USER',
+        role: 'THERAPIST',
+        clinicId: null,
         createdAt: new Date(),
       };
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);

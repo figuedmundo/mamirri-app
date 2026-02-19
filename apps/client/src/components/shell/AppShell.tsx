@@ -5,7 +5,12 @@ import { UserMenu } from './UserMenu';
 export interface AppShellProps {
   children: React.ReactNode;
   navigationItems: Array<{ label: string; href: string; isActive?: boolean }>;
-  user?: { name: string; avatarUrl?: string };
+  user?: {
+    name: string;
+    avatarUrl?: string;
+    clinicName?: string | null;
+    role?: string | null;
+  };
   onNavigate?: (href: string) => void;
   onLogout?: () => void;
   onLogoClick?: () => void;

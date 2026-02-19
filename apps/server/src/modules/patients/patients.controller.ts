@@ -46,7 +46,11 @@ export class PatientsController {
     @Body() createPatientDto: CreatePatientDto,
     @CurrentTherapist() user: any,
   ): Promise<Patient> {
-    return this.patientsService.create(createPatientDto, user.userId);
+    return this.patientsService.create(
+      createPatientDto,
+      user.userId,
+      user.clinicId,
+    );
   }
 
   @Get()
@@ -61,7 +65,13 @@ export class PatientsController {
     @Query('limit') limit: number = 20,
     @Query('search') search?: string,
   ): Promise<PaginatedResponseDto<Patient>> {
-    return this.patientsService.findAll(user.userId, page, limit, search);
+    return this.patientsService.findAll(
+      user.userId,
+      page,
+      limit,
+      search,
+      user.clinicId,
+    );
   }
 
   @Get(':id')
@@ -78,7 +88,7 @@ export class PatientsController {
     @Param('id') id: string,
     @CurrentTherapist() user: any,
   ): Promise<Patient> {
-    return this.patientsService.findOne(id, user.userId);
+    return this.patientsService.findOne(id, user.userId, user.clinicId);
   }
 
   @Patch(':id')
@@ -96,7 +106,12 @@ export class PatientsController {
     @Body() updatePatientDto: Partial<CreatePatientDto>,
     @CurrentTherapist() user: any,
   ): Promise<Patient> {
-    return this.patientsService.update(id, updatePatientDto, user.userId);
+    return this.patientsService.update(
+      id,
+      updatePatientDto,
+      user.userId,
+      user.clinicId,
+    );
   }
 
   @Delete(':id')
@@ -114,7 +129,7 @@ export class PatientsController {
     @Param('id') id: string,
     @CurrentTherapist() user: any,
   ): Promise<void> {
-    return this.patientsService.remove(id, user.userId);
+    return this.patientsService.remove(id, user.userId, user.clinicId);
   }
 
   @Post('cases/:caseId/sessions')
@@ -128,6 +143,7 @@ export class PatientsController {
       caseId,
       createSessionDto,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -138,6 +154,11 @@ export class PatientsController {
     @Body() updateDto: UpdateEvaluationDto,
     @CurrentTherapist() user: any,
   ) {
-    return this.patientsService.updateEvaluation(id, updateDto, user.userId);
+    return this.patientsService.updateEvaluation(
+      id,
+      updateDto,
+      user.userId,
+      user.clinicId,
+    );
   }
 }

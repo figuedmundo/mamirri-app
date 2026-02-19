@@ -1,0 +1,286 @@
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import * as crypto from 'crypto';
+import { PrismaService } from '../../prisma/prisma.service';
+import { ROLES } from '../../common/constants/roles';
+import { CreateClinicDto } from './dto/create-clinic.dto';
+import { UpdateClinicDto } from './dto/update-clinic.dto';
+import { InviteTherapistDto } from './dto/invite-therapist.dto';
+import { UpdateTherapistDto } from './dto/update-therapist.dto';
+
+type CurrentUser = {
+  userId: string;
+  role: string;
+  clinicId?: string | null;
+};
+
+@Injectable()
+export class ClinicsService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createClinic(dto: CreateClinicDto) {
+    return this.prisma.clinic.create({
+      data: {
+        name: dto.name,
+        address: dto.address,
+        phone: dto.phone,
+        email: dto.email,
+        isActive: true,
+      },
+    });
+  }
+
+  async listClinics() {
+    return this.prisma.clinic.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        _count: {
+          select: {
+            users: true,
+            patients: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getClinicById(clinicId: string, currentUser: CurrentUser) {
+    this.ensureClinicAccess(clinicId, currentUser);
+
+    const clinic = await this.prisma.clinic.findUnique({
+      where: { id: clinicId },
+      include: {
+        _count: {
+          select: {
+            users: true,
+            patients: true,
+          },
+        },
+      },
+    });
+
+    if (!clinic) {
+      throw new NotFoundException('Clinic not found');
+    }
+
+    return clinic;
+  }
+
+  async updateClinic(
+    clinicId: string,
+    dto: UpdateClinicDto,
+    currentUser: CurrentUser,
+  ) {
+    this.ensureClinicAccess(clinicId, currentUser);
+
+    const existing = await this.prisma.clinic.findUnique({
+      where: { id: clinicId },
+      select: { id: true },
+    });
+    if (!existing) {
+      throw new NotFoundException('Clinic not found');
+    }
+
+    return this.prisma.clinic.update({
+      where: { id: clinicId },
+      data: {
+        name: dto.name,
+        address: dto.address,
+        phone: dto.phone,
+        email: dto.email,
+      },
+    });
+  }
+
+  async inviteTherapist(
+    clinicId: string,
+    dto: InviteTherapistDto,
+    currentUser: CurrentUser,
+  ) {
+    this.ensureClinicOwnerAccess(clinicId, currentUser);
+
+    const clinic = await this.prisma.clinic.findUnique({
+      where: { id: clinicId },
+      select: { id: true, name: true, isActive: true },
+    });
+
+    if (!clinic || !clinic.isActive) {
+      throw new NotFoundException('Clinic not found or inactive');
+    }
+
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+      select: { id: true },
+    });
+    if (existingUser) {
+      throw new ConflictException('A user with this email already exists');
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    const invitation = await this.prisma.clinicInvitation.create({
+      data: {
+        email: dto.email,
+        token,
+        role: dto.role ?? ROLES.THERAPIST,
+        clinicId,
+        invitedById: currentUser.userId,
+        expiresAt,
+      },
+    });
+
+    return {
+      id: invitation.id,
+      clinicId: invitation.clinicId,
+      email: invitation.email,
+      role: invitation.role,
+      expiresAt: invitation.expiresAt,
+      inviteUrl: `/invite/accept?token=${invitation.token}`,
+    };
+  }
+
+  async listTherapists(clinicId: string, currentUser: CurrentUser) {
+    this.ensureClinicOwnerAccess(clinicId, currentUser);
+
+    return this.prisma.user.findMany({
+      where: {
+        clinicId,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async updateTherapist(
+    clinicId: string,
+    userId: string,
+    dto: UpdateTherapistDto,
+    currentUser: CurrentUser,
+  ) {
+    this.ensureClinicOwnerAccess(clinicId, currentUser);
+
+    const therapist = await this.prisma.user.findFirst({
+      where: { id: userId, clinicId },
+      select: { id: true },
+    });
+
+    if (!therapist) {
+      throw new NotFoundException('Therapist not found in this clinic');
+    }
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        role: dto.role,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  async removeTherapist(
+    clinicId: string,
+    userId: string,
+    currentUser: CurrentUser,
+  ) {
+    this.ensureClinicOwnerAccess(clinicId, currentUser);
+
+    const therapist = await this.prisma.user.findFirst({
+      where: { id: userId, clinicId },
+      select: { id: true },
+    });
+
+    if (!therapist) {
+      throw new NotFoundException('Therapist not found in this clinic');
+    }
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        clinicId: null,
+      },
+    });
+
+    return { success: true };
+  }
+
+  async consumeInvitation(token: string) {
+    const invitation = await this.prisma.clinicInvitation.findUnique({
+      where: { token },
+      include: {
+        clinic: {
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+          },
+        },
+      },
+    });
+
+    if (!invitation) {
+      throw new NotFoundException('Invitation not found');
+    }
+
+    if (invitation.usedAt) {
+      throw new ForbiddenException('Invitation already used');
+    }
+
+    if (invitation.expiresAt.getTime() < Date.now()) {
+      throw new ForbiddenException('Invitation expired');
+    }
+
+    if (!invitation.clinic.isActive) {
+      throw new ForbiddenException('Clinic is inactive');
+    }
+
+    return invitation;
+  }
+
+  async markInvitationUsed(invitationId: string) {
+    await this.prisma.clinicInvitation.update({
+      where: { id: invitationId },
+      data: { usedAt: new Date() },
+    });
+  }
+
+  private ensureClinicAccess(clinicId: string, currentUser: CurrentUser) {
+    if (currentUser.role === ROLES.ADMIN) {
+      return;
+    }
+
+    if (currentUser.clinicId !== clinicId) {
+      throw new NotFoundException('Clinic not found');
+    }
+  }
+
+  private ensureClinicOwnerAccess(clinicId: string, currentUser: CurrentUser) {
+    if (currentUser.role === ROLES.ADMIN) {
+      return;
+    }
+
+    if (currentUser.role !== ROLES.CLINIC_OWNER) {
+      throw new ForbiddenException('Clinic owner permissions required');
+    }
+
+    if (currentUser.clinicId !== clinicId) {
+      throw new NotFoundException('Clinic not found');
+    }
+  }
+}

@@ -17,17 +17,21 @@ model User {
   createdAt         DateTime           @default(now())
   pinHash           String?
   clinicName        String?
+  clinicId          String?
   licenseNumber     String?
   phone             String?
   profilePhotoUrl   String?
   specialty         String?
   yearsExperience   Int?
+  clinic            Clinic?            @relation(fields: [clinicId], references: [id], onDelete: SetNull)
+  sentInvitations   ClinicInvitation[] @relation("ClinicInvitationInviter")
   patients          Patient[]
   sessions          Session[]
   treatmentSessions TreatmentSession[]
   aiAnalyses        AiAnalysis[]
 
   @@index([email])
+  @@index([clinicId])
   @@map("users")
 }
 
@@ -35,6 +39,7 @@ model Patient {
   id                    String         @id @default(cuid())
   email                 String?
   therapistId           String
+  clinicId              String?
   deletedAt             DateTime?
   birthDate             DateTime
   createdAt             DateTime       @default(now())
@@ -49,17 +54,58 @@ model Patient {
   referralSource        String?
   medicalFlagsOther     String?
   referralSourceDetails String?
+  primaryTherapistId    String?
   clinicalCases         ClinicalCase[]
+  clinic                Clinic?        @relation(fields: [clinicId], references: [id], onDelete: SetNull)
   therapist             User           @relation(fields: [therapistId], references: [id], onDelete: Cascade)
   sessions              Session[]
 
   @@index([name])
+  @@index([clinicId])
+  @@index([therapistId])
+  @@index([primaryTherapistId])
   @@map("patients")
+}
+
+model Clinic {
+  id        String    @id @default(cuid())
+  name      String
+  address   String?
+  phone     String?
+  email     String?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  users     User[]
+  patients  Patient[]
+  invitations ClinicInvitation[]
+
+  @@map("clinics")
+}
+
+model ClinicInvitation {
+  id          String   @id @default(cuid())
+  email       String
+  token       String   @unique
+  role        String   @default("THERAPIST")
+  clinicId    String
+  invitedById String
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime @default(now())
+  clinic      Clinic   @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  invitedBy   User     @relation("ClinicInvitationInviter", fields: [invitedById], references: [id], onDelete: Cascade)
+
+  @@index([clinicId])
+  @@index([email])
+  @@index([expiresAt])
+  @@map("clinic_invitations")
 }
 
 model ClinicalCase {
   id                      String             @id @default(cuid())
   patientId               String
+  clinicId                String?
   createdAt               DateTime           @default(now())
   updatedAt               DateTime           @updatedAt
   consultationReason      String
@@ -77,12 +123,15 @@ model ClinicalCase {
   treatmentSessions       TreatmentSession[]
   aiAnalyses              AiAnalysis[]
 
+  @@index([clinicId])
+
   @@map("clinical_cases")
 }
 
 model Evaluation {
   id              String         @id @default(cuid())
   clinicalCaseId  String
+  clinicId        String?
   avdEvaluation   Json
   date            DateTime
   diagnosis       Json
@@ -95,18 +144,23 @@ model Evaluation {
   footprints      Footprint[]
   postureVideos   PostureVideo[]
 
+  @@index([clinicId])
+
   @@map("evaluations")
 }
 
 model TreatmentPlan {
   id             String                  @id @default(cuid())
   clinicalCaseId String                  @unique
+  clinicId       String?
   createdAt      DateTime                @default(now())
   insoleSnapshot Json?
   objectives     Json
   phases         Json
   clinicalCase   ClinicalCase            @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
   protocols      TreatmentPlanProtocol[]
+
+  @@index([clinicId])
 
   @@map("treatment_plans")
 }
@@ -115,6 +169,7 @@ model TreatmentSession {
   id              String         @id @default(cuid())
   clinicalCaseId  String
   therapistId     String
+  clinicId        String?
   createdAt       DateTime       @default(now())
   date            DateTime
   finalPainLevel  Int
@@ -129,24 +184,29 @@ model TreatmentSession {
   clinicalCase    ClinicalCase   @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
   therapist       User           @relation(fields: [therapistId], references: [id])
 
+  @@index([clinicId])
+
   @@map("treatment_sessions")
 }
 
 model SessionPhoto {
   id         String           @id @default(cuid())
   sessionId  String
+  clinicId   String?
   storageKey String
   caption    String?          @db.VarChar(140)
   capturedAt DateTime
   createdAt  DateTime         @default(now())
   session    TreatmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
+  @@index([clinicId])
   @@index([sessionId])
   @@map("session_photos")
 }
 
 model Footprint {
   id           String     @id @default(cuid())
+  clinicId     String?
   type         String
   date         DateTime
   url          String
@@ -157,11 +217,13 @@ model Footprint {
   analyzedAt   DateTime?
   evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
 
+  @@index([clinicId])
   @@map("footprints")
 }
 
 model PostureVideo {
   id           String     @id @default(cuid())
+  clinicId     String?
   type         String
   date         DateTime
   url          String
@@ -170,17 +232,20 @@ model PostureVideo {
   evaluationId String
   evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
 
+  @@index([clinicId])
   @@map("posture_videos")
 }
 
 model Insole {
   id             String       @id @default(cuid())
+  clinicId       String?
   type           String
   material       String
   features       Json?
   clinicalCaseId String
   clinicalCase   ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
 
+  @@index([clinicId])
   @@map("insoles")
 }
 
@@ -188,6 +253,7 @@ model Session {
   id          String   @id @default(cuid())
   patientId   String
   therapistId String
+  clinicId    String?
   notes       String?
   date        DateTime @default(now())
   createdAt   DateTime @default(now())
@@ -195,6 +261,7 @@ model Session {
   patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
   therapist   User     @relation(fields: [therapistId], references: [id], onDelete: Cascade)
 
+  @@index([clinicId])
   @@map("sessions")
 }
 
@@ -251,12 +318,14 @@ model AiAnalysis {
   id             String       @id @default(cuid())
   clinicalCaseId String
   therapistId     String
+  clinicId       String?
   result         Json
   createdAt      DateTime     @default(now())
   clinicalCase   ClinicalCase @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
   therapist      User         @relation(fields: [therapistId], references: [id], onDelete: Cascade)
   feedbacks      AiFeedback[]
 
+  @@index([clinicId])
   @@index([clinicalCaseId])
   @@map("ai_analyses")
 }
@@ -264,6 +333,7 @@ model AiAnalysis {
 model AiFeedback {
   id              String     @id @default(cuid())
   aiAnalysisId    String
+  clinicId        String?
   suggestionIndex Int
   isPositive      Boolean
   comment         String?
@@ -271,6 +341,7 @@ model AiFeedback {
   updatedAt       DateTime   @updatedAt
   aiAnalysis      AiAnalysis @relation(fields: [aiAnalysisId], references: [id], onDelete: Cascade)
 
+  @@index([clinicId])
   @@unique([aiAnalysisId, suggestionIndex])
   @@map("ai_feedbacks")
 }

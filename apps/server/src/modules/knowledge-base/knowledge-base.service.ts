@@ -5,7 +5,6 @@ import { VoyageEmbeddingService } from './services/voyage-embedding.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync, spawn } from 'child_process';
-import { PDFParse } from 'pdf-parse';
 import { randomUUID } from 'crypto';
 
 import { Prisma } from '@prisma/client';
@@ -359,6 +358,7 @@ export class KnowledgeBaseService {
    */
   private async extractPdfWithPdfParse(filePath: string): Promise<string> {
     const dataBuffer = fs.readFileSync(filePath);
+    const { PDFParse } = await import('pdf-parse');
     const parser = new PDFParse({ data: dataBuffer });
     const textResult = await parser.getText();
     await parser.destroy();

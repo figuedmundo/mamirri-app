@@ -325,6 +325,7 @@ describe('PatientsService', () => {
           date: new Date(createSessionDto.date),
           clinicalCaseId: caseId,
           therapistId: mockTherapistId,
+          clinicId: null,
         },
       });
     });

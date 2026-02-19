@@ -4,7 +4,6 @@ import { ClinicalCasesService } from './clinical-cases.service';
 import { CreateClinicalCaseDto } from './dto/create-clinical-case.dto';
 import { UpdateClinicalCaseDto } from './dto/update-clinical-case.dto';
 import { NotFoundException } from '@nestjs/common';
-import { type ClinicalCase } from '@prisma/client';
 
 describe('ClinicalCases API', () => {
   let controller: ClinicalCasesController;
@@ -43,9 +42,10 @@ describe('ClinicalCases API', () => {
         consultationReason: 'Chronic knee pain',
       };
 
-      const expectedCase: ClinicalCase = {
+      const expectedCase = {
         id: 'case-1',
         ...createDto,
+        clinicId: 'clinic-1',
         startDate: new Date(),
         status: 'active',
         consultationReason: createDto.consultationReason || '',
@@ -62,9 +62,14 @@ describe('ClinicalCases API', () => {
 
       const result = await controller.create(createDto, {
         userId: therapistId,
+        clinicId: 'clinic-1',
       });
 
-      expect(service.create).toHaveBeenCalledWith(createDto, therapistId);
+      expect(service.create).toHaveBeenCalledWith(
+        createDto,
+        therapistId,
+        'clinic-1',
+      );
       expect(result).toEqual(expectedCase);
     });
 
@@ -81,7 +86,10 @@ describe('ClinicalCases API', () => {
       );
 
       await expect(
-        controller.create(createDto, { userId: therapistId }),
+        controller.create(createDto, {
+          userId: therapistId,
+          clinicId: 'clinic-1',
+        }),
       ).rejects.toThrow(NotFoundException);
     });
   });
@@ -100,7 +108,7 @@ describe('ClinicalCases API', () => {
       mockClinicalCasesService.findAll.mockResolvedValue(mockPaginatedResponse);
 
       const result = await controller.findAll(
-        { userId: therapistId },
+        { userId: therapistId, clinicId: 'clinic-1' },
         1,
         20,
         patientId,
@@ -114,6 +122,7 @@ describe('ClinicalCases API', () => {
         patientId,
         status,
         undefined,
+        'clinic-1',
       );
       expect(result).toEqual(mockPaginatedResponse);
     });
@@ -145,9 +154,16 @@ describe('ClinicalCases API', () => {
 
       mockClinicalCasesService.findOne.mockResolvedValue(expectedCase as any);
 
-      const result = await controller.findOne(caseId, { userId: therapistId });
+      const result = await controller.findOne(caseId, {
+        userId: therapistId,
+        clinicId: 'clinic-1',
+      });
 
-      expect(service.findOne).toHaveBeenCalledWith(caseId, therapistId);
+      expect(service.findOne).toHaveBeenCalledWith(
+        caseId,
+        therapistId,
+        'clinic-1',
+      );
       expect(result).toEqual(expectedCase);
       expect((result as any).evaluations).toBeDefined();
       expect((result as any).treatmentSessions).toBeDefined();
@@ -162,7 +178,10 @@ describe('ClinicalCases API', () => {
       );
 
       await expect(
-        controller.findOne(caseId, { userId: therapistId }),
+        controller.findOne(caseId, {
+          userId: therapistId,
+          clinicId: 'clinic-1',
+        }),
       ).rejects.toThrow(NotFoundException);
     });
   });
@@ -198,12 +217,14 @@ describe('ClinicalCases API', () => {
 
       const result = await controller.update(caseId, updateDto, {
         userId: therapistId,
+        clinicId: 'clinic-1',
       });
 
       expect(service.update).toHaveBeenCalledWith(
         caseId,
         updateDto,
         therapistId,
+        'clinic-1',
       );
       expect((result as any).status).toBe('completed');
     });
@@ -240,12 +261,14 @@ describe('ClinicalCases API', () => {
 
       const result = await controller.update(caseId, updateDto, {
         userId: therapistId,
+        clinicId: 'clinic-1',
       });
 
       expect(service.update).toHaveBeenCalledWith(
         caseId,
         updateDto,
         therapistId,
+        'clinic-1',
       );
       expect((result as any).status).toBe('inactive');
       expect((result as any).title).toBe('Updated Title');
@@ -264,7 +287,10 @@ describe('ClinicalCases API', () => {
       );
 
       await expect(
-        controller.update(caseId, updateDto, { userId: therapistId }),
+        controller.update(caseId, updateDto, {
+          userId: therapistId,
+          clinicId: 'clinic-1',
+        }),
       ).rejects.toThrow(NotFoundException);
     });
   });
@@ -276,9 +302,16 @@ describe('ClinicalCases API', () => {
 
       mockClinicalCasesService.remove.mockResolvedValue(undefined);
 
-      await controller.remove(caseId, { userId: therapistId });
+      await controller.remove(caseId, {
+        userId: therapistId,
+        clinicId: 'clinic-1',
+      });
 
-      expect(service.remove).toHaveBeenCalledWith(caseId, therapistId);
+      expect(service.remove).toHaveBeenCalledWith(
+        caseId,
+        therapistId,
+        'clinic-1',
+      );
     });
 
     it('should return 404 when deleting a case owned by another therapist', async () => {
@@ -290,7 +323,10 @@ describe('ClinicalCases API', () => {
       );
 
       await expect(
-        controller.remove(caseId, { userId: therapistId }),
+        controller.remove(caseId, {
+          userId: therapistId,
+          clinicId: 'clinic-1',
+        }),
       ).rejects.toThrow(NotFoundException);
     });
   });

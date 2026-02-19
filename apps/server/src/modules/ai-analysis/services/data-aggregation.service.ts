@@ -35,6 +35,7 @@ export class DataAggregationService {
     clinicalCaseId: string,
     therapistId: string,
     forceVision = false,
+    clinicId?: string | null,
   ): Promise<CaseDataAggregate> {
     const clinicalCase = await this.prisma.clinicalCase.findUnique({
       where: { id: clinicalCaseId },
@@ -48,6 +49,12 @@ export class DataAggregationService {
     }
 
     if (clinicalCase.patient.therapistId !== therapistId) {
+      throw new ForbiddenException(
+        'You do not have access to this clinical case',
+      );
+    }
+
+    if (clinicId && clinicalCase.patient.clinicId !== clinicId) {
       throw new ForbiddenException(
         'You do not have access to this clinical case',
       );

@@ -2,6 +2,8 @@ import {
   Injectable,
   UnauthorizedException,
   ConflictException,
+  ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -9,6 +11,8 @@ import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { SetupPinDto } from './dto/setup-pin.dto';
+import { AcceptInviteDto } from './dto/accept-invite.dto';
+import { ROLES } from '../../common/constants/roles';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +36,12 @@ export class AuthService {
   }
 
   login(user: any) {
-    const payload = { email: user.email, sub: user.id, role: user.role };
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      role: user.role,
+      clinicId: user.clinicId ?? null,
+    };
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, {
       secret:
@@ -49,7 +58,7 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    const { email, password, name } = registerDto;
+    const { email, password, name, clinicName } = registerDto;
 
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
@@ -62,12 +71,23 @@ export class AuthService {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
 
+    const createdClinic = clinicName
+      ? await this.prisma.clinic.create({
+          data: {
+            name: clinicName,
+            isActive: true,
+          },
+        })
+      : null;
+
     const user = await this.prisma.user.create({
       data: {
         email,
         passwordHash,
         name,
-        role: 'THERAPIST',
+        role: createdClinic ? ROLES.CLINIC_OWNER : ROLES.THERAPIST,
+        clinicName: clinicName ?? null,
+        clinicId: createdClinic?.id ?? null,
       },
     });
 
@@ -131,6 +151,103 @@ export class AuthService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordHash: _hash, pinHash: _pin, ...result } = user;
     return this.login(result);
+  }
+
+  async acceptInvitation(dto: AcceptInviteDto) {
+    const invitation = await this.prisma.clinicInvitation.findUnique({
+      where: { token: dto.token },
+      include: {
+        clinic: {
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+          },
+        },
+      },
+    });
+
+    if (!invitation) {
+      throw new NotFoundException('Invitation not found');
+    }
+
+    if (invitation.usedAt) {
+      throw new ForbiddenException('Invitation already used');
+    }
+
+    if (invitation.expiresAt.getTime() < Date.now()) {
+      throw new ForbiddenException('Invitation expired');
+    }
+
+    if (!invitation.clinic.isActive) {
+      throw new ForbiddenException('Clinic is inactive');
+    }
+
+    if (invitation.email.toLowerCase() !== dto.email.toLowerCase()) {
+      throw new ForbiddenException('Invitation email mismatch');
+    }
+
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+      select: { id: true },
+    });
+
+    if (existingUser) {
+      throw new ConflictException('Email already in use');
+    }
+
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(dto.password, salt);
+
+    const user = await this.prisma.user.create({
+      data: {
+        email: dto.email,
+        passwordHash,
+        name: dto.name,
+        role: invitation.role,
+        clinicId: invitation.clinicId,
+        clinicName: invitation.clinic.name,
+      },
+    });
+
+    await this.prisma.clinicInvitation.update({
+      where: { id: invitation.id },
+      data: { usedAt: new Date() },
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordHash: _hash, pinHash: _pinHash, ...result } = user;
+    return this.login(result);
+  }
+
+  async getInvitation(token: string) {
+    const invitation = await this.prisma.clinicInvitation.findUnique({
+      where: { token },
+      include: {
+        clinic: {
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+          },
+        },
+      },
+    });
+
+    if (!invitation) {
+      throw new NotFoundException('Invitation not found');
+    }
+
+    if (invitation.usedAt || invitation.expiresAt.getTime() < Date.now()) {
+      throw new ForbiddenException('Invitation is no longer valid');
+    }
+
+    return {
+      email: invitation.email,
+      role: invitation.role,
+      clinicName: invitation.clinic.name,
+      expiresAt: invitation.expiresAt,
+    };
   }
 
   async getPinStatus(userId: string) {

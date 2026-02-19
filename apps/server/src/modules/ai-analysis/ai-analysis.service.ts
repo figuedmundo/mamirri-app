@@ -80,6 +80,7 @@ export class AiAnalysisService {
     clinicalCaseId: string,
     therapistId: string,
     forceVision = false,
+    clinicId?: string | null,
   ): Promise<AnalysisResult> {
     const startTime = Date.now();
 
@@ -88,6 +89,7 @@ export class AiAnalysisService {
         clinicalCaseId,
         therapistId,
         forceVision,
+        clinicId,
       );
 
     const anonymized = this.anonymizerService.anonymize(caseData as any);
@@ -153,6 +155,7 @@ export class AiAnalysisService {
         data: {
           clinicalCaseId,
           therapistId,
+          clinicId: clinicId ?? null,
           result: resultWithoutId as any,
         },
       });
@@ -176,8 +179,9 @@ export class AiAnalysisService {
     isPositive: boolean,
     comment: string | undefined,
     therapistId: string,
+    clinicId?: string | null,
   ) {
-    await this.verifyAnalysisOwnership(analysisId, therapistId);
+    await this.verifyAnalysisOwnership(analysisId, therapistId, clinicId);
 
     return await (this.prisma as any).aiFeedback.upsert({
       where: {
@@ -195,6 +199,7 @@ export class AiAnalysisService {
         suggestionIndex,
         isPositive,
         comment,
+        clinicId: clinicId ?? null,
       },
     });
   }
@@ -203,8 +208,9 @@ export class AiAnalysisService {
     analysisId: string,
     suggestionIndex: number,
     therapistId: string,
+    clinicId?: string | null,
   ) {
-    await this.verifyAnalysisOwnership(analysisId, therapistId);
+    await this.verifyAnalysisOwnership(analysisId, therapistId, clinicId);
 
     try {
       await (this.prisma as any).aiFeedback.delete({
@@ -220,17 +226,25 @@ export class AiAnalysisService {
     }
   }
 
-  async getFeedbacks(analysisId: string, therapistId: string) {
-    await this.verifyAnalysisOwnership(analysisId, therapistId);
+  async getFeedbacks(
+    analysisId: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ) {
+    await this.verifyAnalysisOwnership(analysisId, therapistId, clinicId);
 
     return await (this.prisma as any).aiFeedback.findMany({
-      where: { aiAnalysisId: analysisId },
+      where: {
+        aiAnalysisId: analysisId,
+        ...(clinicId ? { clinicId } : {}),
+      },
     });
   }
 
   private async verifyAnalysisOwnership(
     analysisId: string,
     therapistId: string,
+    clinicId?: string | null,
   ) {
     const analysis = await (this.prisma as any).aiAnalysis.findUnique({
       where: { id: analysisId },
@@ -248,6 +262,10 @@ export class AiAnalysisService {
     }
 
     if (analysis.clinicalCase.patient.therapistId !== therapistId) {
+      throw new ForbiddenException('You do not have access to this analysis');
+    }
+
+    if (clinicId && analysis.clinicalCase.patient.clinicId !== clinicId) {
       throw new ForbiddenException('You do not have access to this analysis');
     }
   }

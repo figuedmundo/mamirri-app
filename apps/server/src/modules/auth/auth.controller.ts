@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Body,
+  Param,
   UseGuards,
   Res,
   HttpCode,
@@ -20,6 +21,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { SetupPinDto } from './dto/setup-pin.dto';
 import { PinLoginDto } from './dto/pin-login.dto';
+import { AcceptInviteDto } from './dto/accept-invite.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
@@ -73,7 +75,7 @@ export class AuthController {
           id: '1',
           email: 'test@example.com',
           name: 'Test User',
-          role: 'USER',
+          role: 'THERAPIST',
         },
       },
     },
@@ -122,9 +124,38 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'User successfully logged out' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   logout(@CurrentUser() user: any, @Res() res: Response) {
-    this.authService.logout(user.id);
+    this.authService.logout(user.userId);
     res.clearCookie('refresh_token');
     res.send({ success: true });
+  }
+
+  @Public()
+  @Get('invite/:token')
+  @ApiOperation({ summary: 'Get invitation details by token' })
+  @ApiResponse({ status: 200, description: 'Invitation metadata' })
+  @ApiResponse({ status: 404, description: 'Invitation not found' })
+  getInvitation(@Param('token') token: string) {
+    return this.authService.getInvitation(token);
+  }
+
+  @Public()
+  @Post('invite/accept')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Accept clinic invitation and create account' })
+  @ApiBody({ type: AcceptInviteDto })
+  @ApiResponse({ status: 200, description: 'Invitation accepted' })
+  @ApiResponse({ status: 403, description: 'Invitation invalid or expired' })
+  async acceptInvitation(
+    @Body() acceptInviteDto: AcceptInviteDto,
+    @Res() res: Response,
+  ) {
+    const tokens = await this.authService.acceptInvitation(acceptInviteDto);
+    this.setRefreshTokenCookie(res, tokens.refreshToken);
+    res.send({
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      user: tokens.user,
+    });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -154,7 +185,7 @@ export class AuthController {
           id: '1',
           email: 'test@example.com',
           name: 'Test User',
-          role: 'USER',
+          role: 'THERAPIST',
         },
       },
     },

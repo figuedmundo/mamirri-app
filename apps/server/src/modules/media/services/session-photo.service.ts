@@ -40,9 +40,10 @@ export class SessionPhotoService {
     sessionId: string,
     file: File,
     therapistId: string,
+    clinicId?: string | null,
     caption?: string,
   ): Promise<SessionPhotoWithUrl> {
-    await this.verifySessionOwnership(sessionId, therapistId);
+    await this.verifySessionOwnership(sessionId, therapistId, clinicId);
 
     const path = `sessions/${sessionId}/photos`;
     const storagePath = await this.storage.uploadFile(file, path);
@@ -51,6 +52,7 @@ export class SessionPhotoService {
     const photo = await this.prisma.sessionPhoto.create({
       data: {
         sessionId,
+        clinicId: clinicId ?? null,
         storageKey: storagePath,
         caption: caption || null,
         capturedAt: new Date(),
@@ -71,8 +73,9 @@ export class SessionPhotoService {
   async getPhotos(
     sessionId: string,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<SessionPhotoWithUrl[]> {
-    await this.verifySessionOwnership(sessionId, therapistId);
+    await this.verifySessionOwnership(sessionId, therapistId, clinicId);
 
     const photos = await this.prisma.sessionPhoto.findMany({
       where: { sessionId },
@@ -117,8 +120,9 @@ export class SessionPhotoService {
     sessionId: string,
     photoId: string,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<void> {
-    await this.verifySessionOwnership(sessionId, therapistId);
+    await this.verifySessionOwnership(sessionId, therapistId, clinicId);
 
     const photo = await this.prisma.sessionPhoto.findUnique({
       where: { id: photoId },
@@ -154,10 +158,11 @@ export class SessionPhotoService {
   private async verifySessionOwnership(
     sessionId: string,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<void> {
     const session = await this.prisma.treatmentSession.findUnique({
       where: { id: sessionId },
-      select: { therapistId: true },
+      select: { therapistId: true, clinicId: true },
     });
 
     if (!session) {
@@ -165,6 +170,10 @@ export class SessionPhotoService {
     }
 
     if (session.therapistId !== therapistId) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    if (clinicId && session.clinicId !== clinicId) {
       throw new ForbiddenException('Access denied');
     }
   }

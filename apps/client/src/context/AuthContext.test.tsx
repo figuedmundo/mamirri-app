@@ -29,6 +29,8 @@ const TestComponent = () => {
               email: 'test@example.com',
               name: 'Test User',
               role: 'user',
+              clinicId: 'clinic-1',
+              clinicName: 'Mamirri Clinic',
             },
             'fake-token',
           )
@@ -93,6 +95,9 @@ describe('AuthContext', () => {
     expect(screen.getByTestId('user-email')).toHaveTextContent(
       'test@example.com',
     );
+
+    const stored = JSON.parse(localStorage.getItem('user_data') || '{}');
+    expect(stored.clinicId).toBe('clinic-1');
   });
 
   it('clears localStorage on logout', async () => {

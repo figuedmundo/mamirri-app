@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env'), quiet: true });
 
 if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('${')) {
   process.env.DATABASE_URL = process.env.DATABASE_URL.replace(
