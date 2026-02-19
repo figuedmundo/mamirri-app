@@ -106,17 +106,17 @@ describe('Transcription Accuracy Integration Tests', () => {
     if (useMockMode) {
       jest
         .spyOn(service, 'transcribe')
-        .mockImplementation(async (_audioBuffer: Buffer, filename: string) => {
+        .mockImplementation((_audioBuffer: Buffer, filename: string) => {
           const expected = expectedTranscriptions[filename];
           if (!expected) {
             throw new Error(`No expected data found for ${filename}`);
           }
 
-          return {
+          return Promise.resolve({
             text: expected.text,
             status: 'completed',
             retryCount: 0,
-          };
+          });
         });
     }
   });

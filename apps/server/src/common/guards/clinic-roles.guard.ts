@@ -38,7 +38,7 @@ export class ClinicRolesGuard implements CanActivate {
     ]);
 
     if (requiredRoles && requiredRoles.length > 0) {
-      const role = user.role as Role | undefined;
+      const role = user.role;
       if (!role || !requiredRoles.includes(role)) {
         throw new ForbiddenException('Insufficient permissions');
       }
