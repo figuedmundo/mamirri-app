@@ -113,6 +113,17 @@ export class LibraryController {
     return this.libraryService.findAllReferences();
   }
 
+  @Get('books/:documentId/markdown')
+  @ApiOperation({ summary: 'Get source markdown for an ingested book' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Book markdown loaded.' })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Book markdown not found.',
+  })
+  async getBookMarkdown(@Param('documentId') documentId: string) {
+    return this.libraryService.getBookMarkdown(documentId);
+  }
+
   @Post('treatment-plans/:planId/protocols')
   @ApiOperation({ summary: 'Add a protocol to a treatment plan' })
   @ApiResponse({

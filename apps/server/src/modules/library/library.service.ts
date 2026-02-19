@@ -4,6 +4,8 @@ import {
   ConflictException,
   BadRequestException,
 } from '@nestjs/common';
+import { promises as fs } from 'node:fs';
+import * as path from 'node:path';
 import { PrismaService } from '../../prisma/prisma.service';
 import { KnowledgeBaseService } from '../knowledge-base/knowledge-base.service';
 import { CreateProtocolDto } from './dto/create-protocol.dto';
@@ -86,6 +88,50 @@ export class LibraryService {
     ]);
 
     return { protocols, ragResults };
+  }
+
+  async getBookMarkdown(documentId: string) {
+    const document = await this.prisma.document.findUnique({
+      where: { id: documentId },
+      select: {
+        id: true,
+        title: true,
+        author: true,
+        filePath: true,
+      },
+    });
+
+    if (!document) {
+      throw new NotFoundException(`Document with ID ${documentId} not found`);
+    }
+
+    const serverRoot = process.cwd();
+    const booksRoot = path.resolve(serverRoot, 'data/library/markdowns');
+    const absolutePath = path.resolve(serverRoot, document.filePath);
+
+    if (
+      !absolutePath.startsWith(`${booksRoot}${path.sep}`) &&
+      absolutePath !== booksRoot
+    ) {
+      throw new BadRequestException('Document path is outside books directory');
+    }
+
+    let content: string;
+    try {
+      content = await fs.readFile(absolutePath, 'utf-8');
+    } catch {
+      throw new NotFoundException(
+        `Source markdown not found for document ${documentId}`,
+      );
+    }
+
+    return {
+      documentId: document.id,
+      title: document.title,
+      author: document.author,
+      filePath: document.filePath,
+      content,
+    };
   }
 
   async createProtocol(dto: CreateProtocolDto) {
