@@ -9,6 +9,8 @@ describe('ClinicsService', () => {
     clinic: {
       findFirst: jest.Mock;
       create: jest.Mock;
+      findUnique: jest.Mock;
+      update: jest.Mock;
     };
     user: {
       findUnique: jest.Mock;
@@ -39,6 +41,8 @@ describe('ClinicsService', () => {
       clinic: {
         findFirst: jest.fn(),
         create: jest.fn(),
+        findUnique: jest.fn(),
+        update: jest.fn(),
       },
       user: {
         findUnique: jest.fn(),
@@ -195,5 +199,50 @@ describe('ClinicsService', () => {
     });
 
     expect(result).toEqual({ clinicId: 'clinic-1', migratedCount: 3 });
+  });
+
+  it('updates onboarding-related clinic fields from admin settings', async () => {
+    const updated = {
+      id: 'clinic-1',
+      name: 'Mamirri Clinic Updated',
+      logoUrl: '/uploads/new-logo.png',
+      subdomain: 'mamirri-updated',
+      businessHours: {
+        monday: { open: '08:00', close: '16:00', closed: false },
+      },
+    };
+
+    prisma.clinic.findUnique.mockResolvedValue({
+      id: 'clinic-1',
+      name: 'Mamirri Clinic',
+    });
+    prisma.clinic.findFirst.mockResolvedValue(null);
+    prisma.clinic.update.mockResolvedValue(updated);
+
+    const result = await service.updateClinic(
+      'clinic-1',
+      {
+        name: '  Mamirri Clinic Updated  ',
+        logoUrl: '/uploads/new-logo.png',
+        subdomain: '  mamirri-updated  ',
+        businessHours: {
+          monday: { open: '08:00', close: '16:00', closed: false },
+        },
+      },
+      { userId: 'owner-1', role: 'CLINIC_OWNER', clinicId: 'clinic-1' },
+    );
+
+    expect(prisma.clinic.update).toHaveBeenCalledWith({
+      where: { id: 'clinic-1' },
+      data: expect.objectContaining({
+        name: 'Mamirri Clinic Updated',
+        logoUrl: '/uploads/new-logo.png',
+        subdomain: 'mamirri-updated',
+        businessHours: {
+          monday: { open: '08:00', close: '16:00', closed: false },
+        },
+      }),
+    });
+    expect(result).toEqual(updated);
   });
 });

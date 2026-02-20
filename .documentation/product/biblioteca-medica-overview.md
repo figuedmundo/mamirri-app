@@ -216,9 +216,10 @@ Idea future dev
 
 **What Happens:**
 
-1. Dense + sparse retrieval runs over the ingested corpus
-2. Results are reranked for relevance
-3. Biblioteca returns cited passages grouped by book
+1. System understands: "plantar fasciitis" (English)
+2. Searches protocols in database
+3. Searches medical literature using AI
+4. Returns combined results
 
 **You See:**
 
@@ -228,11 +229,36 @@ Idea future dev
 
 ---
 
-## Language Notes
+## Language Bridge
 
-Biblioteca is primarily a search-and-reading workflow. It can be used with Spanish queries, but it does not currently generate Spanish summaries or provide an EN/ES toggle in the Biblioteca UI.
+### The Problem
 
-If you need translated summaries, use the AI Analysis feature (patient case analysis), which is explicitly designed to generate grounded responses with citations.
+Most high-quality medical literature is published in English. Spanish-speaking physiotherapists face a language barrier when accessing current research.
+
+### Our Solution
+
+The Biblioteca Médica automatically:
+
+1. **Reads English literature**
+2. **Summarizes in Spanish**
+3. **Shows the original source**
+4. **Lets you toggle between languages**
+
+### Example
+
+**Spanish Summary:**
+
+> "Método de diagnóstico y terapia mecánica para el dolor lumbar, enfatizando la centralización del dolor mediante movimientos repetidos."
+
+**Toggle Switch → English Original:**
+
+> "The centralization phenomenon describes movement of pain from a distal to a more central location..."
+
+### Why This Matters
+
+- **No Translation Barrier** — Access international research without needing to be bilingual
+- **Scientific Accuracy** — Original text preserved for verification
+- **Clinical Confidence** — Make decisions based on primary sources
 
 ---
 
@@ -240,14 +266,26 @@ If you need translated summaries, use the AI Analysis feature (patient case anal
 
 Every returned passage includes its source metadata (book title/author + page number). You never have to wonder, _"Where did this come from?"_
 
-### Citations
+### Bibliography Panel
 
-Each passage includes a citation header:
+When you view a protocol, you see:
 
-- Book title + author
-- Page number
+**Referencias Bibliográficas:**
 
-This makes it easy to verify and continue reading in the original source.
+1. **Latarjet, M. & Ruiz Liard, A. (2019).** _Anatomía Humana_. Editorial Médica Panamericana.
+   - Summary in Spanish available
+
+2. **McKenzie, R.A. (1981).** _The Lumbar Spine: Mechanical Diagnosis and Therapy_. Spinal Publications.
+   - ✅ Original text in English
+   - ✅ Spanish summary available
+
+3. **Kendall, F.P. (2005).** _Muscles: Testing and Function_. Lippincott Williams & Wilkins.
+
+### Click to Explore
+
+- Click any reference to see full details
+- Links to original sources when available
+- Author, year, title, and source clearly displayed
 
 ---
 

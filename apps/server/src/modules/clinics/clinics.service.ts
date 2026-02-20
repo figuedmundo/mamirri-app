@@ -13,6 +13,7 @@ import { CreateClinicDto } from './dto/create-clinic.dto';
 import { UpdateClinicDto } from './dto/update-clinic.dto';
 import { InviteTherapistDto } from './dto/invite-therapist.dto';
 import { UpdateTherapistDto } from './dto/update-therapist.dto';
+import { AuthService } from '../auth/auth.service';
 
 type CurrentUser = {
   userId: string;
@@ -22,7 +23,10 @@ type CurrentUser = {
 
 @Injectable()
 export class ClinicsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly authService: AuthService,
+  ) {}
 
   async createClinic(dto: CreateClinicDto, currentUser: CurrentUser) {
     const normalizedName = dto.name.trim();
@@ -127,7 +131,29 @@ export class ClinicsService {
       };
     });
 
-    return result;
+    if (currentUser.role !== ROLES.ADMIN) {
+      const updatedUser = await this.prisma.user.findUnique({
+        where: { id: currentUser.userId },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          clinicId: true,
+          clinicName: true,
+        },
+      });
+
+      if (updatedUser) {
+        const tokens = this.authService.login(updatedUser);
+        return {
+          clinic: result,
+          ...tokens,
+        };
+      }
+    }
+
+    return { clinic: result };
   }
 
   async checkNameAvailability(name: string) {
@@ -194,19 +220,59 @@ export class ClinicsService {
 
     const existing = await this.prisma.clinic.findUnique({
       where: { id: clinicId },
-      select: { id: true },
+      select: { id: true, name: true },
     });
     if (!existing) {
       throw new NotFoundException('Clinic not found');
     }
 
+    const normalizedName = dto.name?.trim();
+    const normalizedEmail = dto.email?.trim();
+    const normalizedSubdomain = dto.subdomain?.trim();
+
+    if (
+      dto.name !== undefined &&
+      (!normalizedName || normalizedName.length < 2)
+    ) {
+      throw new BadRequestException(
+        'Clinic name must be at least 2 characters',
+      );
+    }
+
+    if (dto.email !== undefined && !normalizedEmail) {
+      throw new BadRequestException('Clinic email cannot be empty');
+    }
+
+    if (
+      normalizedName &&
+      normalizedName.toLowerCase() !== existing.name.toLowerCase()
+    ) {
+      const duplicateName = await this.prisma.clinic.findFirst({
+        where: {
+          id: { not: clinicId },
+          name: {
+            equals: normalizedName,
+            mode: 'insensitive',
+          },
+        },
+        select: { id: true },
+      });
+
+      if (duplicateName) {
+        throw new ConflictException('Clinic name is already in use');
+      }
+    }
+
     return this.prisma.clinic.update({
       where: { id: clinicId },
       data: {
-        name: dto.name,
+        name: normalizedName,
         address: dto.address,
         phone: dto.phone,
-        email: dto.email,
+        email: normalizedEmail,
+        logoUrl: dto.logoUrl,
+        subdomain: normalizedSubdomain,
+        businessHours: dto.businessHours as Prisma.InputJsonValue | undefined,
       },
     });
   }

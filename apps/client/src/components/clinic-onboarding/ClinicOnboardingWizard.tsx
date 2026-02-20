@@ -67,25 +67,39 @@ function ClinicOnboardingWizardContent() {
             : undefined,
       };
 
-      const clinic = await clinicsApi.create(payload);
+      const response = await clinicsApi.create(payload);
+
+      const clinicId = (response as any).clinic?.id || response?.id;
+      const clinicName = (response as any).clinic?.name || response?.name;
 
       if (localStorage.getItem('clinic_onboarding_solo_mode') === 'true') {
-        await clinicsApi.migrateSoloPatients(clinic.id);
+        if (clinicId) {
+          await clinicsApi.migrateSoloPatients(clinicId);
+        }
       }
 
-      updateUser({
-        clinicId: clinic.id,
-        clinicName: clinic.name,
-        role: 'CLINIC_OWNER',
-      });
+      if ('accessToken' in response) {
+        localStorage.setItem('access_token', (response as any).accessToken);
+        localStorage.setItem('refresh_token', (response as any).refreshToken);
+        localStorage.setItem(
+          'user_data',
+          JSON.stringify((response as any).user),
+        );
+      } else {
+        updateUser({
+          clinicId: clinicId,
+          clinicName: clinicName,
+          role: 'CLINIC_OWNER',
+        });
+      }
 
       localStorage.removeItem('clinic_onboarding_solo_mode');
       localStorage.removeItem('clinic_onboarding_skipped');
       reset();
 
       navigate(
-        `/onboarding/quick-start?clinicId=${clinic.id}&clinicName=${encodeURIComponent(
-          clinic.name,
+        `/onboarding/quick-start?clinicId=${clinicId}&clinicName=${encodeURIComponent(
+          clinicName,
         )}`,
       );
     } catch {

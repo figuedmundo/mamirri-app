@@ -10,6 +10,7 @@ import {
   Post,
   Query,
   UseGuards,
+  Res,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -39,8 +40,35 @@ export class ClinicsController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a clinic' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Clinic created' })
-  createClinic(@Body() dto: CreateClinicDto, @CurrentUser() user: any) {
-    return this.clinicsService.createClinic(dto, user);
+  async createClinic(
+    @Body() dto: CreateClinicDto,
+    @CurrentUser() user: any,
+    @Res() res: any,
+  ) {
+    const result = await this.clinicsService.createClinic(dto, user);
+
+    if ('accessToken' in result) {
+      const tokenResult = result as {
+        accessToken: string;
+        refreshToken: string;
+        user: any;
+        clinic: any;
+      };
+      res.cookie('refresh_token', tokenResult.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      return res.send({
+        clinic: tokenResult.clinic,
+        accessToken: tokenResult.accessToken,
+        refreshToken: tokenResult.refreshToken,
+        user: tokenResult.user,
+      });
+    }
+
+    return result;
   }
 
   @Get('check-name')

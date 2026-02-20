@@ -24,6 +24,9 @@ export default function ClinicDashboard() {
     address?: string | null;
     phone?: string | null;
     email?: string | null;
+    logoUrl?: string | null;
+    subdomain?: string | null;
+    businessHours?: Record<string, unknown> | null;
   } | null>(null);
   const [therapists, setTherapists] = useState<TherapistRow[]>([]);
   const [inviteOpen, setInviteOpen] = useState(false);

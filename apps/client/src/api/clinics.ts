@@ -100,7 +100,16 @@ export const clinicsApi = {
   updateById: async (
     clinicId: string,
     payload: Partial<
-      Pick<ClinicSummary, 'name' | 'address' | 'phone' | 'email'>
+      Pick<
+        ClinicSummary,
+        | 'name'
+        | 'address'
+        | 'phone'
+        | 'email'
+        | 'logoUrl'
+        | 'subdomain'
+        | 'businessHours'
+      >
     >,
   ) => {
     const response = await axios.patch<ClinicSummary>(
