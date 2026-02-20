@@ -6,9 +6,10 @@ import { Dashboard } from './pages/Dashboard';
 import { AuthProvider } from './context/AuthProvider';
 import Login from './pages/Login';
 import PinLogin from './pages/PinLogin';
-import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import InvitationAcceptance from './pages/InvitationAcceptance';
+import Onboarding from './pages/Onboarding';
+import OnboardingSuccess from './pages/OnboardingSuccess';
 import AuthLayout from './components/auth/AuthLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -55,10 +56,16 @@ function AppContent() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/pin-login" element={<PinLogin />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/register"
+          element={<Navigate to="/onboarding" replace />}
+        />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/invite/accept" element={<InvitationAcceptance />} />
       </Route>
+
+      <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/onboarding/success" element={<OnboardingSuccess />} />
 
       <Route
         path="/onboarding/clinic"

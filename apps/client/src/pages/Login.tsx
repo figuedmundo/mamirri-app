@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/use-auth';
 import { useNavigate, Navigate, useSearchParams } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Building2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import PinSetupModal from '../components/auth/PinSetupModal';
 import { Input } from '../components/ui/input';
@@ -115,16 +115,28 @@ const Login: React.FC = () => {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col gap-4 border-t py-6">
+          <div className="w-full p-3 bg-blue-50 border border-blue-200 rounded-lg mb-2">
+            <p className="text-sm text-blue-700 text-center">
+              ¿Eres fisioterapeuta y trabajas en una clínica existente?
+              <br />
+              <span className="font-medium">
+                Solicita una invitación a tu administrador
+              </span>
+            </p>
+          </div>
+
           <Button
             variant="outline"
             className="w-full h-12 text-lg font-medium gap-2"
-            onClick={() => navigate('/register')}
+            onClick={() => navigate('/onboarding')}
           >
-            Crear Cuenta
+            <Building2 className="w-5 h-5" />
+            Crear Nueva Clínica
             <ArrowRight className="w-5 h-5" />
           </Button>
+
           <p className="text-sm text-gray-500 text-center">
-            ¿No tienes cuenta? Regístrate arriba
+            ¿Quieres abrir tu propia clínica? Crea una nueva arriba
           </p>
         </CardFooter>
       </Card>
