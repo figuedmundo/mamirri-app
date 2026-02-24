@@ -102,7 +102,7 @@ export default function ClinicQuickStart() {
           open={inviteOpen}
           onOpenChange={setInviteOpen}
           onSubmit={async (payload) => {
-            await clinicsApi.inviteTherapist(clinicId, payload);
+            return await clinicsApi.inviteTherapist(clinicId, payload);
           }}
         />
       ) : null}

@@ -1,6 +1,9 @@
+import { useState } from 'react';
+import { Check, Copy } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Loader2 } from 'lucide-react';
+import { useToast } from '../../hooks/use-toast';
 import type { InvitationSummary } from '../../api/clinics';
 
 interface InvitationListProps {
@@ -46,6 +49,26 @@ export function InvitationList({
   isLoading,
   onResend,
 }: InvitationListProps) {
+  const { toast } = useToast();
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const handleCopyLink = async (invitation: InvitationSummary) => {
+    const inviteUrl = `${window.location.origin}/invite/${invitation.token}`;
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      setCopiedId(invitation.id);
+      toast({
+        description: 'Enlace copiado',
+      });
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      toast({
+        variant: 'destructive',
+        description: 'No se pudo copiar el enlace',
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
@@ -90,6 +113,7 @@ export function InvitationList({
             const canResend =
               invitation.status === 'PENDING' ||
               invitation.status === 'EXPIRED';
+            const isCopied = copiedId === invitation.id;
 
             return (
               <tr key={invitation.id} className="hover:bg-slate-50">
@@ -110,22 +134,34 @@ export function InvitationList({
                   {formatDate(invitation.createdAt)}
                 </td>
                 <td className="px-4 py-3">
-                  {canResend ? (
+                  <div className="flex gap-2">
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() =>
-                        onResend(
-                          invitation.email,
-                          invitation.role as 'THERAPIST' | 'CLINIC_OWNER',
-                        )
-                      }
+                      onClick={() => handleCopyLink(invitation)}
+                      title="Copiar enlace de invitación"
                     >
-                      Reenviar
+                      {isCopied ? (
+                        <Check className="h-4 w-4" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
                     </Button>
-                  ) : (
-                    <span className="text-muted-foreground">—</span>
-                  )}
+                    {canResend ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          onResend(
+                            invitation.email,
+                            invitation.role as 'THERAPIST' | 'CLINIC_OWNER',
+                          )
+                        }
+                      >
+                        Reenviar
+                      </Button>
+                    ) : null}
+                  </div>
                 </td>
               </tr>
             );

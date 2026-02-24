@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -37,7 +37,7 @@ export default function ClinicDashboard() {
 
   const resolvedClinicId = useMemo(() => clinicId ?? '', [clinicId]);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!resolvedClinicId) {
       setLoading(false);
       return;
@@ -57,11 +57,11 @@ export default function ClinicDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [resolvedClinicId]);
 
   useEffect(() => {
     void loadData();
-  }, [resolvedClinicId]);
+  }, [loadData]);
 
   if (!canManage) {
     return (

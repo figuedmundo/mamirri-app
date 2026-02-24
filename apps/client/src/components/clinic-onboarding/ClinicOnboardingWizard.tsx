@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card';
-import { clinicsApi } from '../../api/clinics';
+import { clinicsApi, type CreateClinicResponse } from '../../api/clinics';
 import { useAuth } from '../../hooks/use-auth';
 import {
   ClinicOnboardingProvider,
@@ -67,10 +67,10 @@ function ClinicOnboardingWizardContent() {
             : undefined,
       };
 
-      const response = await clinicsApi.create(payload);
+      const response: CreateClinicResponse = await clinicsApi.create(payload);
 
-      const clinicId = (response as any).clinic?.id || response?.id;
-      const clinicName = (response as any).clinic?.name || response?.name;
+      const clinicId = response.clinic.id;
+      const clinicName = response.clinic.name;
 
       if (localStorage.getItem('clinic_onboarding_solo_mode') === 'true') {
         if (clinicId) {
@@ -78,13 +78,12 @@ function ClinicOnboardingWizardContent() {
         }
       }
 
-      if ('accessToken' in response) {
-        localStorage.setItem('access_token', (response as any).accessToken);
-        localStorage.setItem('refresh_token', (response as any).refreshToken);
-        localStorage.setItem(
-          'user_data',
-          JSON.stringify((response as any).user),
-        );
+      if (response.accessToken) {
+        localStorage.setItem('access_token', response.accessToken);
+        localStorage.setItem('refresh_token', response.refreshToken ?? '');
+        if (response.user) {
+          localStorage.setItem('user_data', JSON.stringify(response.user));
+        }
       } else {
         updateUser({
           clinicId: clinicId,

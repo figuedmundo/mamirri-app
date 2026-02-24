@@ -20,6 +20,7 @@ import { EmailService } from '../email/email.service';
 type CurrentUser = {
   userId: string;
   role: string;
+  token: string;
   clinicId?: string | null;
 };
 
@@ -27,6 +28,7 @@ type InvitationWithStatus = {
   id: string;
   email: string;
   role: string;
+  token: string;
   createdAt: Date;
   usedAt: Date | null;
   expiresAt: Date;
@@ -386,6 +388,7 @@ export class ClinicsService {
         id: inv.id,
         email: inv.email,
         role: inv.role,
+        token: inv.token,
         createdAt: inv.createdAt,
         usedAt: inv.usedAt,
         expiresAt: inv.expiresAt,
