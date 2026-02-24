@@ -60,7 +60,7 @@ describe('ClinicsService', () => {
       patient: {
         updateMany: jest.fn(),
       },
-      $transaction: jest.fn(async (cb: any) =>
+      $transaction: jest.fn((cb: any) =>
         cb({
           clinic: {
             create: txClinicCreate,

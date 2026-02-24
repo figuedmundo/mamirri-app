@@ -8,7 +8,6 @@ jest.mock('resend');
 
 describe('EmailService', () => {
   let service: EmailService;
-  let configService: ConfigService;
 
   const mockResendSend = jest.fn();
 
@@ -37,7 +36,6 @@ describe('EmailService', () => {
       }).compile();
 
       service = module.get<EmailService>(EmailService);
-      configService = module.get<ConfigService>(ConfigService);
     });
 
     it('should be defined', () => {
