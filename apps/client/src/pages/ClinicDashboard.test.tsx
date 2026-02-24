@@ -27,9 +27,17 @@ vi.mock('../api/clinics', () => ({
         createdAt: new Date().toISOString(),
       },
     ]),
+    listInvitations: vi.fn().mockResolvedValue([]),
     updateTherapist: vi.fn(),
     removeTherapist: vi.fn(),
-    inviteTherapist: vi.fn(),
+    inviteTherapist: vi.fn().mockResolvedValue({
+      id: 'inv-1',
+      clinicId: 'clinic-1',
+      email: 'test@test.com',
+      role: 'THERAPIST',
+      expiresAt: new Date().toISOString(),
+      inviteUrl: '/invite/token123',
+    }),
     updateById: vi.fn(),
   },
 }));
