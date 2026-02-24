@@ -53,7 +53,7 @@ export function InvitationList({
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCopyLink = async (invitation: InvitationSummary) => {
-    const inviteUrl = `${window.location.origin}/invite/${invitation.token}`;
+    const inviteUrl = `${window.location.origin}/invite/accept?token=${invitation.token}`;
     try {
       await navigator.clipboard.writeText(inviteUrl);
       setCopiedId(invitation.id);

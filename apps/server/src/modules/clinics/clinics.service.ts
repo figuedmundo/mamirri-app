@@ -9,6 +9,7 @@ import {
 import * as crypto from 'crypto';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ConfigService } from '@nestjs/config';
 import { ROLES } from '../../common/constants/roles';
 import { CreateClinicDto } from './dto/create-clinic.dto';
 import { UpdateClinicDto } from './dto/update-clinic.dto';
@@ -43,6 +44,7 @@ export class ClinicsService {
     private readonly prisma: PrismaService,
     private readonly authService: AuthService,
     private readonly emailService: EmailService,
+    private readonly configService: ConfigService,
   ) {}
 
   async createClinic(dto: CreateClinicDto, currentUser: CurrentUser) {
@@ -332,7 +334,8 @@ export class ClinicsService {
       },
     });
 
-    const inviteUrl = `/invite/accept?token=${invitation.token}`;
+    const baseUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
+    const inviteUrl = `${baseUrl}/invite/accept?token=${invitation.token}`;
 
     // Send invitation email (graceful degradation if email service unavailable)
     try {

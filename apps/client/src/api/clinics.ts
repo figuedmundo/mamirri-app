@@ -211,7 +211,7 @@ export const clinicsApi = {
     return response.data;
   },
 
-  acceptInvitation: async (payload: AcceptInvitePayload) => {
+  acceptInvitation: async ({ confirmPassword, ...payload }: AcceptInvitePayload) => {
     const response = await axios.post('/auth/invite/accept', payload);
     return response.data;
   },
