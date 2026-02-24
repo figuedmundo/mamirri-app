@@ -24,7 +24,7 @@ type ErrorType = 'expired' | 'used' | 'invalid' | 'generic';
 export default function InvitationAcceptance() {
   const [params] = useSearchParams();
   const { token: pathToken } = useParams<{ token: string }>();
-  const token = pathToken || params.get('token') ?? '';
+  const token = pathToken ?? params.get('token') ?? '';
   const navigate = useNavigate();
   const { login } = useAuth();
 
