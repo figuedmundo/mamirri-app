@@ -125,7 +125,12 @@ describe('ClinicsService', () => {
           name: '  Mamirri Clinic  ',
           email: 'clinic@example.com',
         },
-        { userId: 'user-1', role: 'THERAPIST', clinicId: null },
+        {
+          userId: 'user-1',
+          role: 'THERAPIST',
+          token: 'test-token',
+          clinicId: null,
+        },
       ),
     ).rejects.toBeInstanceOf(ConflictException);
 
@@ -147,7 +152,12 @@ describe('ClinicsService', () => {
           name: 'A',
           email: 'clinic@example.com',
         },
-        { userId: 'user-1', role: 'THERAPIST', clinicId: null },
+        {
+          userId: 'user-1',
+          role: 'THERAPIST',
+          token: 'test-token',
+          clinicId: null,
+        },
       ),
     ).rejects.toBeInstanceOf(BadRequestException);
 
@@ -157,7 +167,12 @@ describe('ClinicsService', () => {
           name: 'Valid Clinic',
           email: '   ',
         },
-        { userId: 'user-1', role: 'THERAPIST', clinicId: null },
+        {
+          userId: 'user-1',
+          role: 'THERAPIST',
+          token: 'test-token',
+          clinicId: null,
+        },
       ),
     ).rejects.toBeInstanceOf(BadRequestException);
   });
@@ -171,7 +186,7 @@ describe('ClinicsService', () => {
         name: 'Mamirri Clinic',
         email: 'clinic@example.com',
       },
-      { userId: 'user-1', role: 'ADMIN', clinicId: null },
+      { userId: 'user-1', role: 'ADMIN', token: 'test-token', clinicId: null },
     );
 
     expect(result.clinic.id).toBe('clinic-1');
@@ -200,7 +215,7 @@ describe('ClinicsService', () => {
         email: 'clinic@example.com',
         businessHours,
       },
-      { userId: 'user-1', role: 'ADMIN', clinicId: null },
+      { userId: 'user-1', role: 'ADMIN', token: 'test-token', clinicId: null },
     );
 
     expect(txClinicCreate).toHaveBeenCalledWith({
@@ -217,6 +232,7 @@ describe('ClinicsService', () => {
       userId: 'owner-1',
       role: 'CLINIC_OWNER',
       clinicId: 'clinic-1',
+      token: 'test-token',
     });
 
     expect(result).toEqual({ clinicId: 'clinic-1', migratedCount: 3 });
@@ -250,7 +266,12 @@ describe('ClinicsService', () => {
           monday: { open: '08:00', close: '16:00', closed: false },
         },
       },
-      { userId: 'owner-1', role: 'CLINIC_OWNER', clinicId: 'clinic-1' },
+      {
+        userId: 'owner-1',
+        role: 'CLINIC_OWNER',
+        token: 'test-token',
+        clinicId: 'clinic-1',
+      },
     );
 
     expect(prisma.clinic.update).toHaveBeenCalledWith({
