@@ -68,6 +68,7 @@ function AppContent() {
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/onboarding/success" element={<OnboardingSuccess />} />
       <Route path="/invite/success" element={<InvitationSuccess />} />
+      <Route path="/invite/:token" element={<InvitationAcceptance />} />
 
       <Route
         path="/onboarding/clinic"

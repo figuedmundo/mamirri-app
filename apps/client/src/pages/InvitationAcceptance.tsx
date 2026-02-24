@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Loader2, CircleX, CheckCircle, AlertCircle } from 'lucide-react';
 import {
   Card,
@@ -23,7 +23,8 @@ type ErrorType = 'expired' | 'used' | 'invalid' | 'generic';
 
 export default function InvitationAcceptance() {
   const [params] = useSearchParams();
-  const token = params.get('token') ?? '';
+  const { token: pathToken } = useParams<{ token: string }>();
+  const token = pathToken || params.get('token') ?? '';
   const navigate = useNavigate();
   const { login } = useAuth();
 
