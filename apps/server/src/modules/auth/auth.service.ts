@@ -198,6 +198,7 @@ export class AuthService {
         role: invitation.role,
         clinicId: invitation.clinicId,
         clinicName: invitation.clinic.name,
+        licenseNumber: dto.licenseNumber,
       },
     });
 

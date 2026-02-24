@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import PinLogin from './pages/PinLogin';
 import ForgotPassword from './pages/ForgotPassword';
 import InvitationAcceptance from './pages/InvitationAcceptance';
+import InvitationSuccess from './pages/InvitationSuccess';
 import Onboarding from './pages/Onboarding';
 import OnboardingSuccess from './pages/OnboardingSuccess';
 import AuthLayout from './components/auth/AuthLayout';
@@ -66,6 +67,7 @@ function AppContent() {
 
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/onboarding/success" element={<OnboardingSuccess />} />
+      <Route path="/invite/success" element={<InvitationSuccess />} />
 
       <Route
         path="/onboarding/clinic"

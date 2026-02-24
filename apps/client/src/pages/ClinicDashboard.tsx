@@ -6,12 +6,13 @@ import {
   CardTitle,
 } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { clinicsApi } from '../api/clinics';
+import { clinicsApi, type InvitationSummary } from '../api/clinics';
 import { useClinic } from '../hooks/use-clinic';
 import {
   TherapistList,
   type TherapistRow,
 } from '../components/clinic/TherapistList';
+import { InvitationList } from '../components/clinic/InvitationList';
 import { InviteTherapistDialog } from '../components/clinic/InviteTherapistDialog';
 import { ClinicSettings } from '../components/clinic/ClinicSettings';
 
@@ -29,6 +30,7 @@ export default function ClinicDashboard() {
     businessHours?: Record<string, unknown> | null;
   } | null>(null);
   const [therapists, setTherapists] = useState<TherapistRow[]>([]);
+  const [invitations, setInvitations] = useState<InvitationSummary[]>([]);
   const [inviteOpen, setInviteOpen] = useState(false);
 
   const canManage = isAdmin || isClinicOwner;
@@ -43,12 +45,15 @@ export default function ClinicDashboard() {
 
     setLoading(true);
     try {
-      const [clinicResponse, therapistsResponse] = await Promise.all([
-        clinicsApi.getById(resolvedClinicId),
-        clinicsApi.listTherapists(resolvedClinicId),
-      ]);
+      const [clinicResponse, therapistsResponse, invitationsResponse] =
+        await Promise.all([
+          clinicsApi.getById(resolvedClinicId),
+          clinicsApi.listTherapists(resolvedClinicId),
+          clinicsApi.listInvitations(resolvedClinicId),
+        ]);
       setClinic(clinicResponse);
       setTherapists(therapistsResponse);
+      setInvitations(invitationsResponse);
     } finally {
       setLoading(false);
     }
@@ -124,6 +129,25 @@ export default function ClinicDashboard() {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <CardTitle>Invitaciones</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <InvitationList
+            invitations={invitations}
+            isLoading={loading}
+            onResend={async (email, role) => {
+              await clinicsApi.inviteTherapist(resolvedClinicId, {
+                email,
+                role,
+              });
+              await loadData();
+            }}
+          />
+        </CardContent>
+      </Card>
+
       {clinic ? (
         <Card>
           <CardHeader>
@@ -145,8 +169,12 @@ export default function ClinicDashboard() {
         open={inviteOpen}
         onOpenChange={setInviteOpen}
         onSubmit={async (payload) => {
-          await clinicsApi.inviteTherapist(resolvedClinicId, payload);
+          const result = await clinicsApi.inviteTherapist(
+            resolvedClinicId,
+            payload,
+          );
           await loadData();
+          return result;
         }}
       />
     </div>

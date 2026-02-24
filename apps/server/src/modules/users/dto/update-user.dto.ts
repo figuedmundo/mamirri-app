@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   IsInt,
+  IsBoolean,
   Max,
   Min,
   Length,
@@ -53,6 +54,11 @@ export class CreateUserDto {
   @Min(0)
   @Max(80)
   yearsExperience?: number;
+
+  @ApiPropertyOptional({ description: 'Profile nudge dismissed' })
+  @IsOptional()
+  @IsBoolean()
+  profileNudgeDismissed?: boolean;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}

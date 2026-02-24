@@ -3,6 +3,7 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import * as crypto from 'crypto';
@@ -14,6 +15,7 @@ import { UpdateClinicDto } from './dto/update-clinic.dto';
 import { InviteTherapistDto } from './dto/invite-therapist.dto';
 import { UpdateTherapistDto } from './dto/update-therapist.dto';
 import { AuthService } from '../auth/auth.service';
+import { EmailService } from '../email/email.service';
 
 type CurrentUser = {
   userId: string;
@@ -21,11 +23,24 @@ type CurrentUser = {
   clinicId?: string | null;
 };
 
+type InvitationWithStatus = {
+  id: string;
+  email: string;
+  role: string;
+  createdAt: Date;
+  usedAt: Date | null;
+  expiresAt: Date;
+  status: 'ACCEPTED' | 'PENDING' | 'EXPIRED';
+};
+
 @Injectable()
 export class ClinicsService {
+  private readonly logger = new Logger(ClinicsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly authService: AuthService,
+    private readonly emailService: EmailService,
   ) {}
 
   async createClinic(dto: CreateClinicDto, currentUser: CurrentUser) {
@@ -315,14 +330,68 @@ export class ClinicsService {
       },
     });
 
+    const inviteUrl = `/invite/accept?token=${invitation.token}`;
+
+    // Send invitation email (graceful degradation if email service unavailable)
+    try {
+      await this.emailService.sendInvitationEmail({
+        to: invitation.email,
+        clinicName: clinic.name,
+        inviteUrl,
+        role: invitation.role,
+      });
+    } catch (error) {
+      this.logger.warn(
+        `Failed to send invitation email to ${invitation.email}:`,
+        error,
+      );
+      // Don't fail the request - the invite URL is still returned
+    }
+
     return {
       id: invitation.id,
       clinicId: invitation.clinicId,
       email: invitation.email,
       role: invitation.role,
       expiresAt: invitation.expiresAt,
-      inviteUrl: `/invite/accept?token=${invitation.token}`,
+      inviteUrl,
     };
+  }
+
+  async listInvitations(
+    clinicId: string,
+    currentUser: CurrentUser,
+  ): Promise<InvitationWithStatus[]> {
+    this.ensureClinicOwnerAccess(clinicId, currentUser);
+
+    const invitations = await this.prisma.clinicInvitation.findMany({
+      where: { clinicId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const now = Date.now();
+
+    return invitations.map((inv) => {
+      let status: 'ACCEPTED' | 'PENDING' | 'EXPIRED';
+
+      if (inv.usedAt) {
+        status = 'ACCEPTED';
+      } else if (inv.expiresAt.getTime() < now) {
+        status = 'EXPIRED';
+      } else {
+        status = 'PENDING';
+      }
+
+      return {
+        id: inv.id,
+        email: inv.email,
+        role: inv.role,
+        createdAt: inv.createdAt,
+        usedAt: inv.usedAt,
+        expiresAt: inv.expiresAt,
+        status,
+      };
+    });
   }
 
   async listTherapists(clinicId: string, currentUser: CurrentUser) {

@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException, ConflictException } from '@nestjs/common';
 import { ClinicsService } from './clinics.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuthService } from '../auth/auth.service';
+import { EmailService } from '../email/email.service';
 
 describe('ClinicsService', () => {
   let service: ClinicsService;
@@ -20,6 +22,7 @@ describe('ClinicsService', () => {
     };
     clinicInvitation: {
       create: jest.Mock;
+      findMany: jest.Mock;
     };
     patient: {
       updateMany: jest.Mock;
@@ -52,6 +55,7 @@ describe('ClinicsService', () => {
       },
       clinicInvitation: {
         create: jest.fn(),
+        findMany: jest.fn().mockResolvedValue([]),
       },
       patient: {
         updateMany: jest.fn(),
@@ -81,6 +85,22 @@ describe('ClinicsService', () => {
         {
           provide: PrismaService,
           useValue: prisma,
+        },
+        {
+          provide: AuthService,
+          useValue: {
+            login: jest.fn().mockReturnValue({
+              accessToken: 'token',
+              refreshToken: 'refresh',
+              user: { id: 'user-1' },
+            }),
+          },
+        },
+        {
+          provide: EmailService,
+          useValue: {
+            sendInvitationEmail: jest.fn().mockResolvedValue(undefined),
+          },
         },
       ],
     }).compile();
@@ -144,16 +164,17 @@ describe('ClinicsService', () => {
 
   it('handles optional fields (phone, address, logoUrl) when omitted', async () => {
     prisma.clinic.findFirst.mockResolvedValue(null);
+    prisma.user.findUnique.mockResolvedValue({ id: 'user-1', clinicId: null });
 
     const result = await service.createClinic(
       {
         name: 'Mamirri Clinic',
         email: 'clinic@example.com',
       },
-      { userId: 'user-1', role: 'THERAPIST', clinicId: null },
+      { userId: 'user-1', role: 'ADMIN', clinicId: null },
     );
 
-    expect(result.id).toBe('clinic-1');
+    expect(result.clinic.id).toBe('clinic-1');
     expect(txClinicCreate).toHaveBeenCalledWith({
       data: expect.objectContaining({
         name: 'Mamirri Clinic',
@@ -179,7 +200,7 @@ describe('ClinicsService', () => {
         email: 'clinic@example.com',
         businessHours,
       },
-      { userId: 'user-1', role: 'THERAPIST', clinicId: null },
+      { userId: 'user-1', role: 'ADMIN', clinicId: null },
     );
 
     expect(txClinicCreate).toHaveBeenCalledWith({

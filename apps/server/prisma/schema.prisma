@@ -23,6 +23,7 @@ model User {
   profilePhotoUrl   String?
   specialty         String?
   yearsExperience   Int?
+  profileNudgeDismissed Boolean @default(false)
   clinic            Clinic?            @relation(fields: [clinicId], references: [id], onDelete: SetNull)
   sentInvitations   ClinicInvitation[] @relation("ClinicInvitationInviter")
   patients          Patient[]

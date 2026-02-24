@@ -26,6 +26,25 @@ export interface TherapistSummary {
   createdAt: string;
 }
 
+export interface InvitationSummary {
+  id: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  usedAt: string | null;
+  expiresAt: string;
+  status: 'ACCEPTED' | 'PENDING' | 'EXPIRED';
+}
+
+export interface InviteTherapistResponse {
+  id: string;
+  clinicId: string;
+  email: string;
+  role: string;
+  expiresAt: string;
+  inviteUrl: string;
+}
+
 export interface InviteTherapistPayload {
   email: string;
   role?: 'THERAPIST' | 'CLINIC_OWNER';
@@ -37,6 +56,7 @@ export interface AcceptInvitePayload {
   name: string;
   password: string;
   confirmPassword: string;
+  licenseNumber?: string;
 }
 
 export interface CreateClinicPayload {
@@ -130,7 +150,10 @@ export const clinicsApi = {
     clinicId: string,
     payload: InviteTherapistPayload,
   ) => {
-    const response = await axios.post(`/clinics/${clinicId}/invite`, payload);
+    const response = await axios.post<InviteTherapistResponse>(
+      `/clinics/${clinicId}/invite`,
+      payload,
+    );
     return response.data;
   },
 
@@ -155,6 +178,13 @@ export const clinicsApi = {
       clinicId: string;
       migratedCount: number;
     }>(`/clinics/${clinicId}/migrate-solo-patients`);
+    return response.data;
+  },
+
+  listInvitations: async (clinicId: string) => {
+    const response = await axios.get<InvitationSummary[]>(
+      `/clinics/${clinicId}/invitations`,
+    );
     return response.data;
   },
 

@@ -118,6 +118,17 @@ export class ClinicsController {
     return this.clinicsService.inviteTherapist(clinicId, dto, user);
   }
 
+  @Get(':clinicId/invitations')
+  @UseGuards(JwtAuthGuard, ClinicRolesGuard)
+  @Roles(ROLES.CLINIC_OWNER, ROLES.ADMIN)
+  @ApiOperation({ summary: 'List clinic invitations' })
+  listInvitations(
+    @Param('clinicId') clinicId: string,
+    @CurrentUser() user: any,
+  ) {
+    return this.clinicsService.listInvitations(clinicId, user);
+  }
+
   @Get(':clinicId/therapists')
   @UseGuards(JwtAuthGuard, ClinicRolesGuard)
   @Roles(ROLES.CLINIC_OWNER, ROLES.ADMIN)

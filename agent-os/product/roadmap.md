@@ -198,6 +198,8 @@ Methodology: Agile Development (1-week Sprints).
 - [x] 9.7 Improve login
 - [x] 9.8 Possibility to add a clinic that will habe theraphists and patients (multi-tenancy)
 - [ ] 9.9 Clinic onboarding 
+- [x] 9.10 Therapist onboarding
+- [ ] 9.11 Pacient onboarding
 
 **🎯 Milestone 5:** "Mother used it with a real patient without asking for help"
 

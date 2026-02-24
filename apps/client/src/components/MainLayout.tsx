@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppShell } from './shell/AppShell';
+import { ProfileNudgeBanner } from './ProfileNudgeBanner';
 import { useAuth } from '../hooks/use-auth';
 
 interface MainLayoutProps {
@@ -71,6 +72,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       onLogout={handleLogout}
       onLogoClick={handleLogoClick}
     >
+      <ProfileNudgeBanner />
       {children}
     </AppShell>
   );
