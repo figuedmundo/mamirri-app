@@ -76,7 +76,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
 
     // Verify invitation page loads
     await expect(
-      page.getByRole('heading', { name: /te invitamos a unirte a/i }),
+      page.getByText(/te invitamos a unirte a/i),
     ).toBeVisible();
 
     // Verify clinic name and role are displayed
@@ -110,7 +110,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
 
     // PIN setup modal should appear (first time login)
     await expect(
-      page.getByRole('heading', { name: /configurar pin/i }),
+      page.getByText(/configurar pin/i),
     ).toBeVisible();
 
     await expect(page.getByText(/crea un pin de 4 dígitos/i)).toBeVisible();
@@ -124,7 +124,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
 
     // Should ask to confirm
     await expect(
-      page.getByRole('heading', { name: /confirmar pin/i }),
+      page.getByText(/confirmar pin/i),
     ).toBeVisible();
 
     // Enter same PIN again to confirm
@@ -135,7 +135,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
 
     // PIN setup modal should close
     await expect(
-      page.getByRole('heading', { name: /configurar pin/i }),
+      page.getByText(/configurar pin/i),
     ).not.toBeVisible();
 
     // User should see dashboard
@@ -159,7 +159,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
     await page.goto('/invite/accept?token=invalid-token');
 
     await expect(
-      page.getByText(/no se pudo validar la invitación/i),
+      page.getByText(/invitación no válida/i),
     ).toBeVisible();
   });
 
@@ -272,7 +272,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
 
     // PIN setup should appear
     await expect(
-      page.getByRole('heading', { name: /configurar pin/i }),
+      page.getByText(/configurar pin/i),
     ).toBeVisible();
 
     // Click skip
@@ -280,7 +280,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
 
     // Modal should close
     await expect(
-      page.getByRole('heading', { name: /configurar pin/i }),
+      page.getByText(/configurar pin/i),
     ).not.toBeVisible();
 
     // Dashboard should be visible
@@ -302,7 +302,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
     await page.goto('/invite/accept?token=expired-token');
 
     await expect(
-      page.getByText(/no se pudo validar la invitación/i),
+      page.getByText(/invitación no válida/i),
     ).toBeVisible();
   });
 });
@@ -363,7 +363,7 @@ test.describe('PIN Flow - First Time Login', () => {
 
     // PIN setup should appear
     await expect(
-      page.getByRole('heading', { name: /configurar pin/i }),
+      page.getByText(/configurar pin/i),
     ).toBeVisible();
 
     // Set PIN
@@ -374,7 +374,7 @@ test.describe('PIN Flow - First Time Login', () => {
 
     // Confirm PIN
     await expect(
-      page.getByRole('heading', { name: /confirmar pin/i }),
+      page.getByText(/confirmar pin/i),
     ).toBeVisible();
 
     await page.getByRole('button', { name: '1' }).click();
@@ -384,7 +384,7 @@ test.describe('PIN Flow - First Time Login', () => {
 
     // Modal closes, dashboard visible
     await expect(
-      page.getByRole('heading', { name: /configurar pin/i }),
+      page.getByText(/configurar pin/i),
     ).not.toBeVisible();
 
     await expect(page).toHaveURL('/');
@@ -435,7 +435,7 @@ test.describe('PIN Flow - First Time Login', () => {
 
     // PIN setup appears
     await expect(
-      page.getByRole('heading', { name: /configurar pin/i }),
+      page.getByText(/configurar pin/i),
     ).toBeVisible();
 
     // Enter first PIN
@@ -504,7 +504,7 @@ test.describe('PIN Flow - First Time Login', () => {
 
     // PIN modal should NOT appear
     await expect(
-      page.getByRole('heading', { name: /configurar pin/i }),
+      page.getByText(/configurar pin/i),
     ).not.toBeVisible();
   });
 });

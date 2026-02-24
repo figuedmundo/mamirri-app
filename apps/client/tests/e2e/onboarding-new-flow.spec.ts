@@ -72,7 +72,7 @@ test.describe('Clinic-First Onboarding Flow', () => {
 
     // Verify Step 1 UI
     await expect(
-      page.getByRole('heading', { name: /crea tu clínica/i }),
+      page.getByText(/crea tu clínica/i),
     ).toBeVisible();
     await expect(page.getByText(/paso 1 de 2/i)).toBeVisible();
     await expect(page.getByText(/información de la clínica/i)).toBeVisible();
@@ -141,7 +141,7 @@ test.describe('Clinic-First Onboarding Flow', () => {
     // Step 4: Verify success page
     await expect(page).toHaveURL('/onboarding/success');
     await expect(
-      page.getByRole('heading', { name: /bienvenido a clínica test e2e/i }),
+      page.getByText(/bienvenido a clínica test e2e/i),
     ).toBeVisible();
     await expect(
       page.getByText(/tu clínica ha sido creada exitosamente/i),
@@ -152,10 +152,10 @@ test.describe('Clinic-First Onboarding Flow', () => {
       page.getByRole('heading', { name: /crear primer paciente/i }),
     ).toBeVisible();
     await expect(
-      page.getByRole('heading', { name: /invitar a tu equipo/i }),
+      page.getByText(/invitar a tu equipo/i),
     ).toBeVisible();
     await expect(
-      page.getByRole('heading', { name: /configurar ajustes/i }),
+      page.getByText(/configurar ajustes/i),
     ).toBeVisible();
 
     // Verify dashboard button

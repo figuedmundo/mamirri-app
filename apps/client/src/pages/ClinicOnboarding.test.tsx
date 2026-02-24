@@ -56,7 +56,7 @@ describe('ClinicOnboarding', () => {
 
   it('creates clinic after finishing wizard', async () => {
     mockCheckName.mockResolvedValue({ available: true });
-    mockCreate.mockResolvedValue({ id: 'clinic-1', name: 'Mamirri Clinic' });
+    mockCreate.mockResolvedValue({ clinic: { id: 'clinic-1', name: 'Mamirri Clinic' } });
 
     render(
       <BrowserRouter>
