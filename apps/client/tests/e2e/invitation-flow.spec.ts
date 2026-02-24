@@ -10,7 +10,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
   }) => {
     // Mock invitation validation
     await page.route(
-      `**/api/v1/clinics/invitations/${INVITATION_TOKEN}`,
+      `**/api/v1/auth/invite/${INVITATION_TOKEN}`,
       async (route) => {
         await route.fulfill({
           status: 200,
@@ -28,7 +28,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
     );
 
     // Mock invitation acceptance
-    await page.route('**/api/v1/clinics/accept-invitation', async (route) => {
+    await page.route('**/api/v1/auth/invite/accept', async (route) => {
       if (route.request().method() === 'POST') {
         const payload = await route.request().postDataJSON();
 
@@ -76,7 +76,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
 
     // Verify invitation page loads
     await expect(
-      page.getByRole('heading', { name: /aceptar invitación/i }),
+      page.getByRole('heading', { name: /te invitamos a unirte a/i }),
     ).toBeVisible();
 
     // Verify clinic name and role are displayed
@@ -146,7 +146,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
 
   test('shows error for invalid invitation token', async ({ page }) => {
     await page.route(
-      '**/api/v1/clinics/invitations/invalid-token',
+      '**/api/v1/auth/invite/invalid-token',
       async (route) => {
         await route.fulfill({
           status: 404,
@@ -165,7 +165,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
 
   test('shows error when passwords do not match', async ({ page }) => {
     await page.route(
-      `**/api/v1/clinics/invitations/${INVITATION_TOKEN}`,
+      `**/api/v1/auth/invite/${INVITATION_TOKEN}`,
       async (route) => {
         await route.fulfill({
           status: 200,
@@ -206,7 +206,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
   test('can skip PIN setup on first login', async ({ page }) => {
     // Mock APIs
     await page.route(
-      `**/api/v1/clinics/invitations/${INVITATION_TOKEN}`,
+      `**/api/v1/auth/invite/${INVITATION_TOKEN}`,
       async (route) => {
         await route.fulfill({
           status: 200,
@@ -223,7 +223,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
       },
     );
 
-    await page.route('**/api/v1/clinics/accept-invitation', async (route) => {
+    await page.route('**/api/v1/auth/invite/accept', async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({
           status: 200,
@@ -289,7 +289,7 @@ test.describe('Invitation Flow - Therapist Joins Clinic', () => {
 
   test('shows error when invitation is expired', async ({ page }) => {
     await page.route(
-      `**/api/v1/clinics/invitations/expired-token`,
+      `**/api/v1/auth/invite/expired-token`,
       async (route) => {
         await route.fulfill({
           status: 410,
