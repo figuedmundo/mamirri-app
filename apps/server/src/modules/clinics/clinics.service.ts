@@ -358,11 +358,11 @@ export class ClinicsService {
       clinicId: invitation.clinicId,
       email: invitation.email,
       role: invitation.role,
+      token: invitation.token,
       expiresAt: invitation.expiresAt,
       inviteUrl,
     };
   }
-
   async listInvitations(
     clinicId: string,
     currentUser: CurrentUser,
