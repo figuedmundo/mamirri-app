@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from '../ui/dialog';
 import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 import {
   Select,
   SelectContent,
@@ -127,21 +128,27 @@ export function InviteTherapistDialog({
             </Button>
           </div>
         ) : (
-          <div className="space-y-3">
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="terapeuta@clinic.com"
-              className="h-12"
-            />
-            <Select
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="invite-email">Email del terapeuta</Label>
+              <Input
+                id="invite-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="terapeuta@clinic.com"
+                className="h-12"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="invite-role">Rol</Label>
+              <Select
               value={role}
               onValueChange={(value) =>
                 setRole(value as 'THERAPIST' | 'CLINIC_OWNER')
               }
             >
-              <SelectTrigger className="h-12">
+                <SelectTrigger id="invite-role" className="h-12">
                 <SelectValue placeholder="Selecciona rol" />
               </SelectTrigger>
               <SelectContent>
@@ -150,7 +157,8 @@ export function InviteTherapistDialog({
                   Propietario de Clínica
                 </SelectItem>
               </SelectContent>
-            </Select>
+              </Select>
+            </div>
             <Button
               type="button"
               className="w-full h-12"

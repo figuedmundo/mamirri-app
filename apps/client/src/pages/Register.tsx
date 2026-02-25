@@ -3,7 +3,6 @@ import { useAuth } from '../hooks/use-auth';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import PinSetupModal from '../components/auth/PinSetupModal';
 import {
   Card,
   CardContent,
@@ -19,10 +18,9 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { login, checkPinStatus } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState('');
-  const [showPinSetup, setShowPinSetup] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,8 +37,6 @@ const Register: React.FC = () => {
       });
       login(response.data.user, response.data.accessToken);
 
-      const hasPin = await checkPinStatus();
-      const skipped = localStorage.getItem('pin_setup_skipped') === 'true';
       const hasClinic = !!response.data.user?.clinicId;
       const onboardingSkipped =
         localStorage.getItem('clinic_onboarding_skipped') === 'true';
@@ -48,11 +44,7 @@ const Register: React.FC = () => {
       const nextPath =
         hasClinic || onboardingSkipped ? '/' : '/onboarding/clinic';
 
-      if (!hasPin && !skipped) {
-        setShowPinSetup(true);
-      } else {
-        navigate(nextPath);
-      }
+      navigate(nextPath);
     } catch {
       setError('Error al registrar. El correo podría estar en uso.');
     }
@@ -148,16 +140,6 @@ const Register: React.FC = () => {
         </CardFooter>
       </Card>
 
-      {showPinSetup && (
-        <PinSetupModal
-          isOpen={showPinSetup}
-          onClose={() => {
-            const onboardingSkipped =
-              localStorage.getItem('clinic_onboarding_skipped') === 'true';
-            navigate(onboardingSkipped ? '/' : '/onboarding/clinic');
-          }}
-        />
-      )}
     </div>
   );
 };

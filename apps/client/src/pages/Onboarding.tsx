@@ -71,7 +71,7 @@ export default function Onboarding() {
       setNameCheck({
         isChecking: false,
         available: response.available,
-        error: response.available ? null : 'This name is already taken',
+        error: response.available ? null : 'Ese nombre ya está en uso',
       });
     } catch {
       setNameCheck({

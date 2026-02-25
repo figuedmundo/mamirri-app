@@ -3,7 +3,6 @@ import { useAuth } from '../hooks/use-auth';
 import { useNavigate, Navigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Building2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import PinSetupModal from '../components/auth/PinSetupModal';
 import { Input } from '../components/ui/input';
 import {
   Card,
@@ -18,16 +17,15 @@ import { api } from '../lib/axios';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, checkPinStatus, isAuthenticated, isLoading } = useAuth();
+  const { login, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [error, setError] = useState('');
-  const [showPinSetup, setShowPinSetup] = useState(false);
 
   const lastEmail = localStorage.getItem('last_user_email');
   const isManual = searchParams.get('manual') === 'true';
 
-  if (isAuthenticated && !isLoading && !showPinSetup) {
+  if (isAuthenticated && !isLoading) {
     return <Navigate to="/" replace />;
   }
 
@@ -44,8 +42,6 @@ const Login: React.FC = () => {
       });
       login(response.data.user, response.data.accessToken);
 
-      const hasPin = await checkPinStatus();
-      const skipped = localStorage.getItem('pin_setup_skipped') === 'true';
       const hasClinic = !!response.data.user?.clinicId;
       const onboardingSkipped =
         localStorage.getItem('clinic_onboarding_skipped') === 'true';
@@ -53,11 +49,7 @@ const Login: React.FC = () => {
       const nextPath =
         hasClinic || onboardingSkipped ? '/' : '/onboarding/clinic';
 
-      if (!hasPin && !skipped) {
-        setShowPinSetup(true);
-      } else {
-        navigate(nextPath);
-      }
+      navigate(nextPath);
     } catch {
       setError('Correo o contraseña incorrectos');
     }
@@ -141,16 +133,6 @@ const Login: React.FC = () => {
         </CardFooter>
       </Card>
 
-      {showPinSetup && (
-        <PinSetupModal
-          isOpen={showPinSetup}
-          onClose={() => {
-            const onboardingSkipped =
-              localStorage.getItem('clinic_onboarding_skipped') === 'true';
-            navigate(onboardingSkipped ? '/' : '/onboarding/clinic');
-          }}
-        />
-      )}
     </div>
   );
 };

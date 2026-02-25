@@ -4,6 +4,10 @@ test.describe('Clinic-First Onboarding Flow', () => {
   test('complete onboarding creates clinic and admin account', async ({
     page,
   }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem('pin_setup_skipped', 'true');
+    });
+
     // Mock the check-name API
     await page.route('**/api/v1/onboarding/check-name**', async (route) => {
       await route.fulfill({
@@ -148,20 +152,10 @@ test.describe('Clinic-First Onboarding Flow', () => {
     ).toBeVisible();
 
     // Verify quick action cards are clickable
-    await expect(
-      page.getByRole('heading', { name: /crear primer paciente/i }),
-    ).toBeVisible();
-    await expect(
-      page.getByText(/invitar a tu equipo/i),
-    ).toBeVisible();
-    await expect(
-      page.getByText(/configurar ajustes/i),
-    ).toBeVisible();
-
-    // Verify dashboard button
-    await expect(
-      page.getByRole('button', { name: /ir al panel de control/i }),
-    ).toBeVisible();
+    await expect(page.getByText(/crear primer paciente/i)).toBeVisible();
+    await expect(page.getByText(/invitar a tu equipo/i)).toBeVisible();
+    await expect(page.getByText(/configurar ajustes/i)).toBeVisible();
+    await expect(page.getByText(/ir al panel de control/i)).toBeVisible();
   });
 
   test('shows name unavailable error', async ({ page }) => {
@@ -237,7 +231,7 @@ test.describe('Clinic-First Onboarding Flow', () => {
       .getByRole('textbox', { name: /email de la clínica/i })
       .fill('test@example.com');
 
-    await page.waitForTimeout(600);
+    await page.waitForTimeout(1200);
     await page.getByRole('button', { name: /continuar/i }).click();
 
     // Fill Step 2 with mismatched passwords

@@ -37,8 +37,8 @@ export function MainLayout({ children }: MainLayoutProps) {
       ? [
           {
             label: 'Clínica',
-            href: '/clinic/dashboard',
-            isActive: location.pathname.startsWith('/clinic/dashboard'),
+            href: '/clinica',
+            isActive: location.pathname.startsWith('/clinica'),
           },
         ]
       : []),

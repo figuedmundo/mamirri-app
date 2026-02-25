@@ -5,6 +5,10 @@ type NameAvailability = {
 };
 
 async function mockOnboardingAuth(page: import('@playwright/test').Page) {
+  await page.addInitScript(() => {
+    window.localStorage.setItem('pin_setup_skipped', 'true');
+  });
+
   await page.route('**/api/v1/auth/pin/status', async (route) => {
     await route.fulfill({
       status: 200,
@@ -29,6 +33,12 @@ async function mockOnboardingAuth(page: import('@playwright/test').Page) {
 }
 
 test.describe('Clinic onboarding wizard', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem('pin_setup_skipped', 'true');
+    });
+  });
+
   test('blocks step 1 progression until required fields are valid', async ({
     page,
   }) => {
@@ -45,7 +55,7 @@ test.describe('Clinic onboarding wizard', () => {
 
     await page.goto('/onboarding/clinic');
 
-    const nextButton = page.getByRole('button', { name: 'Siguiente' });
+    const nextButton = page.getByRole('button', { name: /siguiente/i });
     await expect(nextButton).toBeDisabled();
 
     await page.getByLabel('Nombre de clínica').fill('Mi Clínica');
@@ -77,9 +87,7 @@ test.describe('Clinic onboarding wizard', () => {
     await expect(
       page.getByText('Ese nombre ya está en uso. Prueba uno distinto.'),
     ).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: 'Siguiente' }),
-    ).toBeDisabled();
+    await expect(page.getByRole('button', { name: /siguiente/i })).toBeDisabled();
   });
 
   test('supports configure-later path and returns to dashboard personal mode', async ({
@@ -149,9 +157,7 @@ test.describe('Clinic onboarding wizard', () => {
       if (route.request().method() === 'POST') {
         createPayload = route.request().postDataJSON();
         await route.fulfill({
-          status: 201,
-          contentType: 'application/json',
-          body: JSON.stringify({ id: 'clinic-1', name: 'Mamirri Clinic' }),
+          body: JSON.stringify({ clinic: { id: 'clinic-1', name: 'Mamirri Clinic' } }),
         });
         return;
       }
@@ -253,9 +259,7 @@ test.describe('Clinic onboarding wizard', () => {
     await page.route('**/api/v1/clinics', async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({
-          status: 201,
-          contentType: 'application/json',
-          body: JSON.stringify({ id: 'clinic-2', name: 'Solo Clinic' }),
+          body: JSON.stringify({ clinic: { id: 'clinic-2', name: 'Solo Clinic' } }),
         });
         return;
       }

@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { BrowserRouter, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { MainLayout } from './components/MainLayout';
 import { Dashboard } from './pages/Dashboard';
@@ -37,6 +37,8 @@ import { setupInterceptors } from './lib/logger/axios-logger';
 import { Loader2 } from 'lucide-react';
 import { queryClient } from './lib/query-client';
 import { initSentry } from './lib/sentry-init';
+import { useAuth } from './hooks/use-auth';
+import PinSetupModal from './components/auth/PinSetupModal';
 
 setupInterceptors(api);
 
@@ -49,10 +51,40 @@ function PageLoader() {
 }
 
 function AppContent() {
+  const { pathname } = useLocation();
+  const { isAuthenticated, hasPinSet } = useAuth();
+  const [showPinSetup, setShowPinSetup] = useState(false);
+
+  useEffect(() => {
+    const excludedPaths = [
+      '/onboarding',
+      '/invite/accept',
+      '/invite/success',
+      '/login',
+      '/register',
+      '/forgot-password',
+      '/pin-login',
+      '/perfil',
+    ];
+    const isExcluded = excludedPaths.some((path) => pathname.startsWith(path));
+
+    if (isAuthenticated && hasPinSet === false && !isExcluded) {
+      const skipped = localStorage.getItem('pin_setup_skipped') === 'true';
+      if (!skipped) {
+        setShowPinSetup(true);
+      } else {
+        setShowPinSetup(false);
+      }
+    } else {
+      setShowPinSetup(false);
+    }
+  }, [isAuthenticated, hasPinSet, pathname]);
+
   useInteractionLogger();
   usePerformanceLogger();
 
   return (
+    <div className="relative min-h-screen">
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
@@ -176,7 +208,7 @@ function AppContent() {
       />
 
       <Route
-        path="/clinic/dashboard"
+        path="/clinica"
         element={
           <ProtectedRoute>
             <MainLayout>
@@ -209,7 +241,14 @@ function AppContent() {
       />
 
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      </Routes>
+      {showPinSetup && (
+        <PinSetupModal
+          isOpen={showPinSetup}
+          onClose={() => setShowPinSetup(false)}
+        />
+      )}
+    </div>
   );
 }
 
