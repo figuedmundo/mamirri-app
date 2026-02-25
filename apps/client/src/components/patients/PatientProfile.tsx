@@ -489,6 +489,25 @@ function ClinicalCaseCard({
               </div>
             </div>
           )}
+
+        {clinicalCase.treatmentPlan?.protocols &&
+          clinicalCase.treatmentPlan.protocols.length > 0 && (
+            <div className="md:col-span-2 lg:col-span-3">
+              <h4 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
+                Protocolos Adjuntos
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {clinicalCase.treatmentPlan.protocols.map((item) => (
+                  <span
+                    key={`${item.treatmentPlanId}-${item.protocolId}`}
+                    className="inline-flex items-center gap-2 rounded-full bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 px-3 py-1 text-xs font-semibold"
+                  >
+                    {item.protocol.title}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
       </div>
 
       {/* Sessions Footer */}

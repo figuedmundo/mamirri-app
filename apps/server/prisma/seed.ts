@@ -45,7 +45,7 @@ async function main() {
       email: 'test@example.com',
       name: 'Example User',
       password: 'password123',
-      role: 'USER',
+      role: 'THERAPIST',
     },
   ];
 
@@ -62,7 +62,7 @@ async function main() {
         email: userData.email,
         name: userData.name,
         passwordHash,
-        role: userData.role as any,
+        role: userData.role,
       },
     });
     console.log(`User created/found: ${user.email}`);

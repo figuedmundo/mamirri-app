@@ -1,9 +1,14 @@
 import { useState } from 'react';
-import { User, LogOut, UserCircle } from 'lucide-react';
+import { User, LogOut, UserCircle, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export interface UserMenuProps {
-  user: { name: string; avatarUrl?: string };
+  user: {
+    name: string;
+    avatarUrl?: string;
+    clinicName?: string | null;
+    role?: string | null;
+  };
   onLogout?: () => void;
 }
 
@@ -42,7 +47,17 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
           <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg border border-slate-200 dark:border-slate-700 z-20">
             <div className="py-1">
               <div className="px-4 py-2 text-sm text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
-                {user.name}
+                <div className="font-medium text-slate-700 dark:text-slate-200">
+                  {user.name}
+                </div>
+                {user.clinicName ? (
+                  <div className="text-xs mt-1">{user.clinicName}</div>
+                ) : null}
+                {user.role ? (
+                  <div className="text-xs mt-1 text-teal-600 dark:text-teal-400">
+                    {user.role}
+                  </div>
+                ) : null}
               </div>
               <Link
                 to="/perfil"
@@ -51,6 +66,14 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
               >
                 <UserCircle className="w-4 h-4" />
                 <span>Mi Perfil</span>
+              </Link>
+              <Link
+                to="/ajustes"
+                className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 flex items-center space-x-2"
+                onClick={() => setIsOpen(false)}
+              >
+                <Settings className="w-4 h-4" />
+                <span>Ajustes</span>
               </Link>
               <button
                 onClick={() => {

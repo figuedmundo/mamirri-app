@@ -513,8 +513,7 @@ describe('RAG Evaluation Framework', () => {
     }
   }
 
-  // This is marked as .skip by default - run manually for evaluation
-  it.skip('should evaluate all test cases with baseline and HyDE, then compare', async () => {
+  it('should evaluate all test cases with baseline and HyDE, then compare', async () => {
     console.log('\n========================================');
     console.log('RAG EVALUATION: BASELINE VS HYDE COMPARISON');
     console.log('========================================');

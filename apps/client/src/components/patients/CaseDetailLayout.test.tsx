@@ -13,6 +13,8 @@ import type {
 } from '../../types/patient';
 import { EvaluationType } from '../../types/patient';
 import { patientsApi } from '../../api/patients';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
 
 // Mock dependencies
 const mockToast = vi.fn();
@@ -26,8 +28,28 @@ vi.mock('../../hooks/use-toast', () => ({
 vi.mock('../../api/patients', () => ({
   patientsApi: {
     updateEvaluation: vi.fn(),
+    updateTreatmentPlanObjectives: vi.fn(),
   },
 }));
+
+vi.mock('../../api/media', () => ({
+  mediaApi: {
+    uploadEvaluationVoiceNote: vi.fn(),
+  },
+}));
+
+const renderWithQuery = (ui: React.ReactElement) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+  );
+};
 
 // Mock EvaluationForm to simplify testing interaction
 vi.mock('./EvaluationForm', () => ({
@@ -391,7 +413,7 @@ describe('CaseDetailLayout', () => {
 
   describe('Rendering', () => {
     it('should render patient name and case title in header', () => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
@@ -405,7 +427,7 @@ describe('CaseDetailLayout', () => {
     });
 
     it('should render case status badge', () => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
@@ -422,7 +444,7 @@ describe('CaseDetailLayout', () => {
         status: 'completed',
       };
 
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={completedCase}
@@ -439,7 +461,7 @@ describe('CaseDetailLayout', () => {
         status: 'inactive',
       };
 
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={inactiveCase}
@@ -451,7 +473,7 @@ describe('CaseDetailLayout', () => {
     });
 
     it('should render back button with correct aria-label', () => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
@@ -464,7 +486,7 @@ describe('CaseDetailLayout', () => {
     });
 
     it('should render timeline component', () => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
@@ -478,7 +500,7 @@ describe('CaseDetailLayout', () => {
 
   describe('Empty States', () => {
     it('should render timeline component even when no sessions exist', () => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithoutSessions}
@@ -494,7 +516,7 @@ describe('CaseDetailLayout', () => {
 
   describe('Session Details (via SessionDetailView)', () => {
     beforeEach(() => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
@@ -541,7 +563,7 @@ describe('CaseDetailLayout', () => {
 
   describe('User Interactions', () => {
     it('should call onBack when back button is clicked', async () => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
@@ -558,7 +580,7 @@ describe('CaseDetailLayout', () => {
 
   describe('Session Lifecycle Callbacks', () => {
     it('should update local case state when session created', async () => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
@@ -573,7 +595,7 @@ describe('CaseDetailLayout', () => {
     });
 
     it('should update local case state when session updated', async () => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
@@ -588,7 +610,7 @@ describe('CaseDetailLayout', () => {
     });
 
     it('should update local case state when session deleted', async () => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
@@ -606,7 +628,7 @@ describe('CaseDetailLayout', () => {
   describe('Evaluation Integration', () => {
     beforeEach(() => {
       vi.clearAllMocks();
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}
@@ -726,7 +748,7 @@ describe('CaseDetailLayout', () => {
 
   describe('Session Navigation Flow', () => {
     beforeEach(() => {
-      render(
+      renderWithQuery(
         <CaseDetailLayout
           patient={mockPatient}
           clinicalCase={mockClinicalCaseWithSessions}

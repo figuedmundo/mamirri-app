@@ -191,6 +191,7 @@ describe('AiAnalysisService', () => {
         'case-123',
         'therapist-123',
         true,
+        undefined,
       );
     });
 

@@ -2,9 +2,9 @@
 
 ## Define Section Variables
 
-- **SECTION_NAME** = Pacientes
-- **SECTION_ID** = pacientes
-- **NN** = Milestone 2
+- **SECTION_NAME** = Biblioteca
+- **SECTION_ID** = biblioteca-medica
+- **NN** = 04
 
 ---
 

@@ -9,7 +9,7 @@ import {
   Trash2,
   Activity,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
 const getAge = (birthDateString: string) => {
   if (!birthDateString) return 0;
@@ -34,10 +34,26 @@ export function PatientList({
   onDelete,
   onSchedule,
 }: PatientListProps) {
+  const [isPending, startTransition] = useTransition();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState<
     'all' | 'active' | 'recent' | 'today'
   >('all');
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    startTransition(() => {
+      setSearchTerm(value);
+    });
+  };
+
+  const handleFilterChange = (
+    filter: 'all' | 'active' | 'recent' | 'today',
+  ) => {
+    startTransition(() => {
+      setActiveFilter(filter);
+    });
+  };
 
   const filteredPatients = (patients || []).filter((patient) => {
     const matchesSearch = patient.name
@@ -76,7 +92,7 @@ export function PatientList({
     const baseClasses =
       'px-4 py-2 rounded-full font-medium transition-all duration-200 whitespace-nowrap text-sm';
     const activeClasses =
-      'bg-teal-600 text-white shadow-md ring-2 ring-teal-600 ring-offset-2 dark:ring-offset-slate-900';
+      'bg-teal-600 text-white shadow-md border border-teal-600';
     const inactiveClasses =
       'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700';
 
@@ -116,33 +132,38 @@ export function PatientList({
           <input
             type="text"
             placeholder="Buscar por nombre, ID o teléfono..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-xl leading-5 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all shadow-sm"
+            defaultValue={searchTerm}
+            onChange={handleSearchChange}
+            className="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-xl leading-5 bg-white dark:bg-slate-800 text-slate-900 dark:white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all shadow-sm"
           />
+          {isPending && (
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <div className="w-4 h-4 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-2 overflow-x-auto py-1 scrollbar-hide">
           <button
-            onClick={() => setActiveFilter('all')}
+            onClick={() => handleFilterChange('all')}
             className={getFilterClasses('all', activeFilter === 'all')}
           >
             Todos
           </button>
           <button
-            onClick={() => setActiveFilter('active')}
+            onClick={() => handleFilterChange('active')}
             className={getFilterClasses('active', activeFilter === 'active')}
           >
             Activos
           </button>
           <button
-            onClick={() => setActiveFilter('recent')}
+            onClick={() => handleFilterChange('recent')}
             className={getFilterClasses('recent', activeFilter === 'recent')}
           >
             Recientes
           </button>
           <button
-            onClick={() => setActiveFilter('today')}
+            onClick={() => handleFilterChange('today')}
             className={getFilterClasses('today', activeFilter === 'today')}
           >
             <span className="flex items-center gap-1.5">

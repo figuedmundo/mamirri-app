@@ -72,6 +72,8 @@ describe('AiAnalysisController', () => {
       expect(service.analyzeCase).toHaveBeenCalledWith(
         'case-123',
         'therapist-123',
+        false,
+        undefined,
       );
     });
 
@@ -112,6 +114,8 @@ describe('AiAnalysisController', () => {
       expect(service.analyzeCase).toHaveBeenCalledWith(
         'case-123',
         'my-therapist-id',
+        false,
+        undefined,
       );
     });
   });
@@ -131,6 +135,7 @@ describe('AiAnalysisController', () => {
         'case-123',
         'therapist-123',
         false,
+        undefined,
       );
     });
 
@@ -147,6 +152,7 @@ describe('AiAnalysisController', () => {
         'case-123',
         'therapist-123',
         true,
+        undefined,
       );
     });
 
@@ -185,6 +191,7 @@ describe('AiAnalysisController', () => {
         'case-123',
         'my-therapist-id',
         false,
+        undefined,
       );
     });
   });

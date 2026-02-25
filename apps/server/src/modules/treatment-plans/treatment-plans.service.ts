@@ -11,10 +11,12 @@ export class TreatmentPlansService {
     id: string,
     updateObjectivesDto: UpdateObjectivesDto,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<TreatmentPlan> {
     const treatmentPlan = await this.findOneWithTherapistAccess(
       id,
       therapistId,
+      clinicId,
     );
 
     const currentObjectives =
@@ -40,17 +42,23 @@ export class TreatmentPlansService {
     });
   }
 
-  async findOne(id: string, therapistId: string): Promise<TreatmentPlan> {
-    return this.findOneWithTherapistAccess(id, therapistId);
+  async findOne(
+    id: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ): Promise<TreatmentPlan> {
+    return this.findOneWithTherapistAccess(id, therapistId, clinicId);
   }
 
   private async findOneWithTherapistAccess(
     id: string,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<TreatmentPlan> {
     const treatmentPlan = await this.prisma.treatmentPlan.findFirst({
       where: {
         id,
+        ...(clinicId ? { clinicId } : {}),
         clinicalCase: {
           patient: {
             therapistId,

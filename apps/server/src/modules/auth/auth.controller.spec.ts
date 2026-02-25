@@ -104,7 +104,7 @@ describe('AuthController', () => {
 
   describe('logout', () => {
     it('should clear cookie', () => {
-      const user = { id: '1' };
+      const user = { userId: '1' };
       const res = {
         clearCookie: jest.fn(),
         send: jest.fn(),

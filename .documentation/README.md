@@ -6,13 +6,15 @@ Welcome to the central documentation hub for **Mamirri App** (formerly PhysioCop
 
 ## 🚀 Quick Start
 
-| Section                                                       | Description                                                     |
-| ------------------------------------------------------------- | --------------------------------------------------------------- |
-| [**Developer Setup**](onboarding/developer-setup.md)          | **Start here!** Environment setup and local installation guide. |
-| [**Product Vision**](documentation/product/product-vision.md) | The "why" and "what" of Mamirri App.                            |
-| [**Architecture Overview**](technical/architecture.md)        | High-level system design and technology choices.                |
-| [**CI/CD Pipeline**](technical/ci-cd.md)                      | GitHub Actions configuration and secrets management.            |
-| [**Deployment Guide**](onboarding/deployment-guide.md)        | Instructions for deploying to home lab environment.             |
+| Section                                                                         | Description                                                     |
+| ------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [**Developer Setup**](onboarding/developer-setup.md)                            | **Start here!** Environment setup and local installation guide. |
+| [**Product Vision**](.documentation/product/product-vision.md)                  | The "why" and "what" of Mamirri App.                            |
+| [**Biblioteca Overview**](.documentation/product/biblioteca-medica-overview.md) | Functional overview of books-only library search and citations. |
+| [**Architecture Overview**](technical/architecture.md)                          | High-level system design and technology choices.                |
+| [**Biblioteca (Books-Only)**](technical/biblioteca-books-only.md)               | UI routing, caching, open-book viewer, and production mounting. |
+| [**CI/CD Pipeline**](technical/ci-cd.md)                                        | GitHub Actions configuration and secrets management.            |
+| [**Deployment Guide**](onboarding/deployment-guide.md)                          | Instructions for deploying to home lab environment.             |
 
 ---
 
@@ -39,6 +41,11 @@ Comprehensive documentation is available in the [`.documentation/`](.documentati
 - **[Knowledge Base & RAG](.documentation/technical/knowledge-base-rag.md)**: AI semantic search and medical literature retrieval.
 - **[AI Analysis Guide](.documentation/technical/ai-analysis-feature-guide.md)**: Multi-modal AI orchestration (Voice + Vision + RAG + LLM) for clinical suggestions.
 - **[Frontend Auth](.documentation/technical/frontend-authentication.md)**: Implementation details for JWT and protected routes.
+
+### 🔐 Roles & Onboarding (NEW)
+
+- **[Roles & Onboarding](.documentation/roles-and-onboarding.md)**: **Complete guide** covering the 3-tier role system (ADMIN, CLINIC_OWNER, THERAPIST), permissions, and the new clinic-first onboarding flow.
+- **[Quick Reference](.documentation/QUICK_REFERENCE.md)**: Developer cheat sheet with code snippets, API examples, and common patterns for role-based development.
 
 ### 🇪🇸 Original Project Proposal (ES)
 
@@ -97,6 +104,8 @@ To maintain consistency, all documentation should follow these standards:
 ```
 documentation/
 ├── README.md                          # This file (main index)
+├── roles-and-onboarding.md            # Role system & onboarding flow (NEW)
+├── QUICK_REFERENCE.md                 # Developer cheat sheet (NEW)
 ├── product/                           # Product vision, personas, and phases
 │   ├── product-vision.md             # Product vision and strategic goals
 │   ├── user-personas.md               # Target user personas

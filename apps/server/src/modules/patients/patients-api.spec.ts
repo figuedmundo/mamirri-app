@@ -74,6 +74,7 @@ describe('Patients API Refactoring', () => {
       expect(mockPatientsService.findOne).toHaveBeenCalledWith(
         patientId,
         therapistId,
+        undefined,
       );
     });
 
@@ -92,6 +93,7 @@ describe('Patients API Refactoring', () => {
         patientId,
         updateDto,
         therapistId,
+        undefined,
       );
     });
 
@@ -108,6 +110,7 @@ describe('Patients API Refactoring', () => {
       expect(mockPatientsService.remove).toHaveBeenCalledWith(
         patientId,
         therapistId,
+        undefined,
       );
     });
   });
@@ -156,7 +159,11 @@ describe('Patients API Refactoring', () => {
         userId: therapistId,
       });
 
-      expect(service.create).toHaveBeenCalledWith(createDto, therapistId);
+      expect(service.create).toHaveBeenCalledWith(
+        createDto,
+        therapistId,
+        undefined,
+      );
       expect(result).toEqual(mockPatient);
     });
 
@@ -176,6 +183,7 @@ describe('Patients API Refactoring', () => {
         patientId,
         updateDto,
         therapistId,
+        undefined,
       );
       expect(result).toEqual(mockPatient);
     });
@@ -188,7 +196,11 @@ describe('Patients API Refactoring', () => {
 
       await controller.remove(patientId, { userId: therapistId });
 
-      expect(service.remove).toHaveBeenCalledWith(patientId, therapistId);
+      expect(service.remove).toHaveBeenCalledWith(
+        patientId,
+        therapistId,
+        undefined,
+      );
     });
   });
 
@@ -209,7 +221,13 @@ describe('Patients API Refactoring', () => {
         'John',
       );
 
-      expect(service.findAll).toHaveBeenCalledWith(therapistId, 1, 20, 'John');
+      expect(service.findAll).toHaveBeenCalledWith(
+        therapistId,
+        1,
+        20,
+        'John',
+        undefined,
+      );
       expect(result).toEqual(mockPaginatedResponse);
     });
 
@@ -228,6 +246,7 @@ describe('Patients API Refactoring', () => {
         therapistId,
         1,
         20,
+        undefined,
         undefined,
       );
       expect(result.meta.total).toBe(10);

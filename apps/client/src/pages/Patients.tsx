@@ -1,13 +1,17 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PatientList } from '../components/patients/PatientList';
 import {
   PatientForm,
   type PatientFormData,
 } from '../components/patients/PatientForm';
-import { patientsApi } from '../api/patients';
 import type { Patient } from '../types/patient';
-import { useToast } from '../hooks/use-toast';
+import {
+  usePatientsQuery,
+  useCreatePatient,
+  useUpdatePatient,
+  useDeletePatient,
+} from '../hooks/use-patients';
 import {
   Dialog,
   DialogContent,
@@ -28,54 +32,16 @@ import { Loader2 } from 'lucide-react';
 
 export default function Patients() {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: patients = [], isLoading } = usePatientsQuery();
+  const createPatient = useCreatePatient();
+  const updatePatient = useUpdatePatient();
+  const deletePatient = useDeletePatient();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editPatient, setEditPatient] = useState<Patient | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const loadPatients = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await patientsApi.findAll();
-      setPatients(data);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'No se pudieron cargar los pacientes',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [toast]);
-
-  useEffect(() => {
-    void loadPatients();
-  }, [loadPatients]);
-
-  const handleCreate = async (formData: PatientFormData) => {
-    try {
-      await patientsApi.create(formData);
-      toast({ title: 'Éxito', description: 'Paciente creado correctamente' });
-      setIsCreateOpen(false);
-      loadPatients();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo crear el paciente',
-        variant: 'destructive',
-      });
-      throw error;
-    }
-  };
 
   const handleView = (id: string) => {
     navigate(`/pacientes/${id}`);
@@ -89,27 +55,14 @@ export default function Patients() {
     }
   };
 
-  const handleEditSubmit = async (formData: PatientFormData) => {
-    if (!editPatient) return;
-
-    try {
-      await patientsApi.update(editPatient.id, formData);
-      toast({
-        title: 'Éxito',
-        description: 'Paciente actualizado correctamente',
+  const handleEditSubmit = (formData: PatientFormData) => {
+    if (!editPatient) return Promise.reject(new Error('No patient selected'));
+    return updatePatient
+      .mutateAsync({ id: editPatient.id, data: formData })
+      .then(() => {
+        setIsEditOpen(false);
+        setEditPatient(null);
       });
-      setIsEditOpen(false);
-      setEditPatient(null);
-      loadPatients();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo actualizar el paciente',
-        variant: 'destructive',
-      });
-      throw error;
-    }
   };
 
   const handleDeleteClick = (id: string) => {
@@ -122,27 +75,9 @@ export default function Patients() {
 
   const handleDeleteConfirm = async () => {
     if (!patientToDelete) return;
-
-    try {
-      setIsDeleting(true);
-      await patientsApi.delete(patientToDelete.id);
-      toast({
-        title: 'Eliminado',
-        description: `${patientToDelete.name} ha sido eliminado`,
-      });
-      setIsDeleteOpen(false);
-      setPatientToDelete(null);
-      loadPatients();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo eliminar el paciente',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsDeleting(false);
-    }
+    await deletePatient.mutateAsync(patientToDelete.id);
+    setIsDeleteOpen(false);
+    setPatientToDelete(null);
   };
 
   const handleSchedule = (id: string) => {
@@ -170,7 +105,7 @@ export default function Patients() {
     };
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-8 flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-3">
@@ -202,7 +137,11 @@ export default function Patients() {
           </DialogDescription>
           <PatientForm
             mode="create"
-            onSubmit={handleCreate}
+            onSubmit={(formData) => {
+              return createPatient
+                .mutateAsync(formData)
+                .then(() => setIsCreateOpen(false));
+            }}
             onCancel={() => setIsCreateOpen(false)}
           />
         </DialogContent>
@@ -243,15 +182,15 @@ export default function Patients() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>
+            <AlertDialogCancel disabled={deletePatient.isPending}>
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
-              disabled={isDeleting}
+              disabled={deletePatient.isPending}
               className="bg-rose-600 hover:bg-rose-700 focus:ring-rose-600"
             >
-              {isDeleting ? (
+              {deletePatient.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Eliminando...

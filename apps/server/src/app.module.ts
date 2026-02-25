@@ -12,6 +12,9 @@ import { TreatmentPlansModule } from './modules/treatment-plans/treatment-plans.
 import { UsersModule } from './modules/users/users.module';
 import { LoggerModule } from './common/logger/logger.module';
 import { AiAnalysisModule } from './modules/ai-analysis/ai-analysis.module';
+import { LibraryModule } from './modules/library/library.module';
+import { ClinicsModule } from './modules/clinics/clinics.module';
+import { OnboardingModule } from './modules/onboarding/onboarding.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import transcriptionConfig from './config/transcription.config';
 import voyageConfig from './config/voyage.config';
@@ -34,6 +37,9 @@ import voyageConfig from './config/voyage.config';
     UsersModule,
     LoggerModule,
     AiAnalysisModule,
+    LibraryModule,
+    ClinicsModule,
+    OnboardingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

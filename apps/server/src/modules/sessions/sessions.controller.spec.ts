@@ -49,7 +49,11 @@ describe('SessionsController', () => {
       expect(await controller.create(dto, { userId: 'therapist-1' })).toEqual(
         result,
       );
-      expect(service.create).toHaveBeenCalledWith(dto, 'therapist-1');
+      expect(service.create).toHaveBeenCalledWith(
+        dto,
+        'therapist-1',
+        undefined,
+      );
     });
   });
 
@@ -61,7 +65,11 @@ describe('SessionsController', () => {
       expect(
         await controller.finalize('sess-1', { userId: 'therapist-1' }),
       ).toEqual(result);
-      expect(service.finalize).toHaveBeenCalledWith('sess-1', 'therapist-1');
+      expect(service.finalize).toHaveBeenCalledWith(
+        'sess-1',
+        'therapist-1',
+        undefined,
+      );
     });
   });
 
@@ -69,7 +77,11 @@ describe('SessionsController', () => {
     it('should soft delete a session', async () => {
       mockSessionsService.remove.mockResolvedValue(undefined);
       await controller.remove('sess-1', { userId: 'therapist-1' });
-      expect(service.remove).toHaveBeenCalledWith('sess-1', 'therapist-1');
+      expect(service.remove).toHaveBeenCalledWith(
+        'sess-1',
+        'therapist-1',
+        undefined,
+      );
     });
   });
 });

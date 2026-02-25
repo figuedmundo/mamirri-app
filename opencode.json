@@ -48,14 +48,14 @@
       ],
       "enabled": false
     },
-    "web-search-prime": {
+    "websearch": {
       "enabled": true,
       "type": "remote",
       "url": "https://api.z.ai/api/mcp/web_search_prime/mcp",
       "headers": {
         "Authorization": "Bearer 2abc7127803b4c66b16f73158aca25b5.yVVpgpSFyqAVdod4"
       }
-    },
+    },  
     "web-reader": {
       "enabled": true,
       "type": "remote",

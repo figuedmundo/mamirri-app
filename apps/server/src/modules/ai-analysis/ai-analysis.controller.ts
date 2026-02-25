@@ -68,13 +68,14 @@ export class AiAnalysisController {
   })
   async analyzeCaseMultiModal(
     @Param('caseId') caseId: string,
-    @CurrentTherapist() user: { userId: string },
+    @CurrentTherapist() user: { userId: string; clinicId?: string | null },
     @Query('forceVision') forceVision?: string,
   ): Promise<AnalysisResultDto> {
     return this.aiAnalysisService.analyzeCase(
       caseId,
       user.userId,
       forceVision === 'true',
+      user.clinicId,
     );
   }
 
@@ -103,11 +104,13 @@ export class AiAnalysisController {
   })
   async analyzeCase(
     @Body() analyzeCaseDto: AnalyzeCaseDto,
-    @CurrentTherapist() user: { userId: string },
+    @CurrentTherapist() user: { userId: string; clinicId?: string | null },
   ): Promise<AnalysisResultDto> {
     return this.aiAnalysisService.analyzeCase(
       analyzeCaseDto.clinicalCaseId,
       user.userId,
+      false,
+      user.clinicId,
     );
   }
 
@@ -136,12 +139,13 @@ export class AiAnalysisController {
   })
   async analyzeImage(
     @Body() analyzeImageDto: AnalyzeImageDto,
-    @CurrentTherapist() user: { userId: string },
+    @CurrentTherapist() user: { userId: string; clinicId?: string | null },
   ): Promise<VisionAnalysisResultDto> {
     return this.visionService.analyzeImageById(
       analyzeImageDto.imageId,
       analyzeImageDto.imageType,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -170,7 +174,7 @@ export class AiAnalysisController {
     @Param('analysisId') analysisId: string,
     @Param('suggestionIndex', ParseIntPipe) suggestionIndex: number,
     @Body() dto: SubmitFeedbackDto,
-    @CurrentTherapist() user: { userId: string },
+    @CurrentTherapist() user: { userId: string; clinicId?: string | null },
   ): Promise<FeedbackResponseDto> {
     return this.aiAnalysisService.submitFeedback(
       analysisId,
@@ -178,6 +182,7 @@ export class AiAnalysisController {
       dto.isPositive,
       dto.comment,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -201,12 +206,13 @@ export class AiAnalysisController {
   async deleteFeedback(
     @Param('analysisId') analysisId: string,
     @Param('suggestionIndex', ParseIntPipe) suggestionIndex: number,
-    @CurrentTherapist() user: { userId: string },
+    @CurrentTherapist() user: { userId: string; clinicId?: string | null },
   ): Promise<void> {
     await this.aiAnalysisService.deleteFeedback(
       analysisId,
       suggestionIndex,
       user.userId,
+      user.clinicId,
     );
   }
 
@@ -229,8 +235,12 @@ export class AiAnalysisController {
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Access denied' })
   async getFeedbacks(
     @Param('analysisId') analysisId: string,
-    @CurrentTherapist() user: { userId: string },
+    @CurrentTherapist() user: { userId: string; clinicId?: string | null },
   ): Promise<FeedbackResponseDto[]> {
-    return this.aiAnalysisService.getFeedbacks(analysisId, user.userId);
+    return this.aiAnalysisService.getFeedbacks(
+      analysisId,
+      user.userId,
+      user.clinicId,
+    );
   }
 }

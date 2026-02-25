@@ -56,6 +56,15 @@ Run Prisma migrations to set up the database schema:
 pnpm --filter server exec npx prisma migrate dev
 ```
 
+### 2.3.1 Biblioteca (Local Dev)
+
+**Current product behavior (2026-02-18):** Biblioteca runs in **books-only mode**.
+
+- Search route: `http://localhost:5173/biblioteca`
+- "Open book" route: `http://localhost:5173/biblioteca/libros/:documentId`
+
+Note: protocol management UI is currently quarantined (hidden).
+
 ### 2.4 Docling PDF Extraction (Zero Setup)
 
 Mamirri uses **Docling** for high-quality PDF extraction with automatic Docker management.

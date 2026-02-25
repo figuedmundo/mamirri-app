@@ -25,6 +25,9 @@ export class UserProfileDto {
   @ApiPropertyOptional({ description: 'Clinic name' })
   clinicName?: string | null;
 
+  @ApiPropertyOptional({ description: 'Clinic ID' })
+  clinicId?: string | null;
+
   @ApiPropertyOptional({ description: 'License number' })
   licenseNumber?: string | null;
 

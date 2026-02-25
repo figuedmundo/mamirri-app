@@ -1,49 +1,32 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { CaseDetailLayout } from '../components/patients/CaseDetailLayout';
-import { patientsApi } from '../api/patients';
-import type { Patient, ClinicalCase } from '../types/patient';
+import { usePatientQuery } from '../hooks/use-patients';
+import type { ClinicalCase } from '../types/patient';
 import { useToast } from '../hooks/use-toast';
 
 export default function CaseDetail() {
   const { id, caseId } = useParams<{ id: string; caseId: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [patient, setPatient] = useState<Patient | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const loadPatient = useCallback(
-    async (patientId: string) => {
-      try {
-        setLoading(true);
-        const data = await patientsApi.findOne(patientId);
-        setPatient(data);
-      } catch (error) {
-        console.error(error);
-        toast({
-          title: 'Error',
-          description: 'No se pudo cargar el caso clínico',
-          variant: 'destructive',
-        });
-        navigate('/pacientes');
-      } finally {
-        setLoading(false);
-      }
-    },
-    [navigate, toast],
-  );
+  const { data: patient, isLoading, isError } = usePatientQuery(id!);
 
   useEffect(() => {
-    if (id) {
-      void loadPatient(id);
+    if (isError) {
+      toast({
+        title: 'Error',
+        description: 'No se pudo cargar el caso clínico',
+        variant: 'destructive',
+      });
+      navigate('/pacientes');
     }
-  }, [id, loadPatient]);
+  }, [isError, navigate, toast]);
 
   const handleBack = () => {
     navigate(`/pacientes/${id}`);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="fixed inset-0 bg-white dark:bg-slate-950 z-50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
@@ -101,6 +84,7 @@ export default function CaseDetail() {
       patient={patient}
       clinicalCase={clinicalCase}
       onBack={handleBack}
+      onOpenLibrary={(planId) => navigate(`/biblioteca?planId=${planId}`)}
     />
   );
 }

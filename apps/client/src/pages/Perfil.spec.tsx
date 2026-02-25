@@ -3,11 +3,19 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Perfil from './Perfil';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthContext } from '../context/auth-context-base';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const mockUpdateUser = vi.fn();
 
 vi.mock('../api/users', () => ({
   usersApi: {
+    getMe: vi.fn().mockResolvedValue({
+      id: '1',
+      email: 'test@example.com',
+      name: 'Test User',
+      role: 'THERAPIST',
+      createdAt: new Date().toISOString(),
+    }),
     updateProfile: vi.fn().mockResolvedValue({
       id: '1',
       email: 'test@example.com',
@@ -29,23 +37,33 @@ const mockUser = {
 };
 
 const renderWithContext = (ui: React.ReactNode) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
   return render(
-    <BrowserRouter>
-      <AuthContext.Provider
-        value={{
-          user: mockUser,
-          isAuthenticated: true,
-          isLoading: false,
-          hasPinSet: false,
-          login: vi.fn(),
-          logout: vi.fn(),
-          checkPinStatus: vi.fn().mockResolvedValue(false),
-          updateUser: mockUpdateUser,
-        }}
-      >
-        {ui}
-      </AuthContext.Provider>
-    </BrowserRouter>,
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AuthContext.Provider
+          value={{
+            user: mockUser,
+            isAuthenticated: true,
+            isLoading: false,
+            hasPinSet: false,
+            login: vi.fn(),
+            logout: vi.fn(),
+            checkPinStatus: vi.fn().mockResolvedValue(false),
+            updateUser: mockUpdateUser,
+          }}
+        >
+          {ui}
+        </AuthContext.Provider>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 };
 

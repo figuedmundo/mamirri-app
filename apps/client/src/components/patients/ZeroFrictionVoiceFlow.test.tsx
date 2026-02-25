@@ -10,10 +10,13 @@ import { CaseDetailLayout } from './CaseDetailLayout';
 import type { Patient, ClinicalCase } from '../../types/patient';
 import { MemoryRouter } from 'react-router-dom';
 import { Toaster } from '../ui/toaster';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
 
 vi.mock('../../api/patients', () => ({
   patientsApi: {
     updateEvaluation: vi.fn().mockResolvedValue({}),
+    updateTreatmentPlanObjectives: vi.fn(),
   },
 }));
 
@@ -23,9 +26,22 @@ vi.mock('../../api/media', () => ({
   },
 }));
 
-vi.mock('../../lib/pdf', () => ({
+vi.mock('../../lib/pdf/generateComparisonReport', () => ({
   generateComparisonReport: vi.fn(),
 }));
+
+const renderWithQuery = (ui: React.ReactElement) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+  );
+};
 
 const mockPatient: Patient = {
   id: 'p1',
@@ -160,7 +176,7 @@ describe('ZeroFrictionVoiceFlow Integration', () => {
   });
 
   it('starts recording immediately and shows floating bar when "Grabar Evolucion" is clicked', async () => {
-    render(
+    renderWithQuery(
       <MemoryRouter>
         <CaseDetailLayout
           patient={mockPatient}
@@ -192,7 +208,7 @@ describe('ZeroFrictionVoiceFlow Integration', () => {
   });
 
   it('stops recording and auto-saves when stop button is clicked', async () => {
-    render(
+    renderWithQuery(
       <MemoryRouter>
         <CaseDetailLayout
           patient={mockPatient}
@@ -249,7 +265,7 @@ describe('ZeroFrictionVoiceFlow Integration', () => {
       }
     ).mockRejectedValue(error);
 
-    render(
+    renderWithQuery(
       <MemoryRouter>
         <CaseDetailLayout
           patient={mockPatient}

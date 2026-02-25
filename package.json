@@ -12,12 +12,15 @@
     "test:e2e:ui": "pnpm --filter client test:e2e:ui",
     "test:e2e:headed": "pnpm --filter client exec playwright test --headed",
     "db:deploy": "pnpm --filter server db:deploy",
+    "seed:categories": "pnpm --filter server seed:categories",
+    "category:add": "pnpm --filter server category:add",
     "knowledge:list": "pnpm --filter server knowledge:list",
     "knowledge:ingest": "pnpm --filter server knowledge:ingest",
     "knowledge:batch-status": "pnpm --filter server knowledge:batch-status",
     "knowledge:verify": "pnpm --filter server knowledge:verify",
     "knowledge:convert": "pnpm --filter server knowledge:convert",
     "knowledge:search": "pnpm --filter server knowledge:search",
+    "knowledge:rag": "pnpm --filter server knowledge:rag",
     "knowledge:clean": "pnpm --filter server knowledge:clean",
     "knowledge:update": "pnpm --filter server knowledge:update",
     "knowledge:archive": "pnpm --filter server knowledge:archive",
@@ -45,6 +48,10 @@
     "dotenv": "^17.2.3"
   },
   "pnpm": {
+    "overrides": {
+      "react": "19.2.0",
+      "react-dom": "19.2.0"
+    },
     "onlyBuiltDependencies": [
       "@nestjs/core",
       "@prisma/engines",

@@ -16,6 +16,7 @@ export class SessionsService {
   async create(
     createSessionDto: CreateSessionDto,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<TreatmentSession> {
     const { clinicalCaseId, ...rest } = createSessionDto;
 
@@ -25,6 +26,7 @@ export class SessionsService {
         patient: {
           therapistId,
           deletedAt: null,
+          ...(clinicId ? { clinicId } : {}),
         },
       },
     });
@@ -38,6 +40,7 @@ export class SessionsService {
         ...rest,
         clinicalCaseId,
         therapistId,
+        clinicId: clinicId ?? null,
         status: 'DRAFT',
       },
     });
@@ -48,11 +51,13 @@ export class SessionsService {
     page: number = 1,
     limit: number = 20,
     clinicalCaseId?: string,
+    clinicId?: string | null,
   ): Promise<PaginatedResponseDto<TreatmentSession>> {
     const skip = (page - 1) * limit;
     const where: any = {
       therapistId,
       deletedAt: null,
+      ...(clinicId ? { clinicId } : {}),
     };
 
     if (clinicalCaseId) {
@@ -79,12 +84,17 @@ export class SessionsService {
     };
   }
 
-  async findOne(id: string, therapistId: string): Promise<TreatmentSession> {
+  async findOne(
+    id: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ): Promise<TreatmentSession> {
     const session = await this.prisma.treatmentSession.findFirst({
       where: {
         id,
         therapistId,
         deletedAt: null,
+        ...(clinicId ? { clinicId } : {}),
       },
       include: {
         clinicalCase: {
@@ -106,8 +116,9 @@ export class SessionsService {
     id: string,
     updateSessionDto: UpdateSessionDto,
     therapistId: string,
+    clinicId?: string | null,
   ): Promise<TreatmentSession> {
-    const session = await this.findOne(id, therapistId);
+    const session = await this.findOne(id, therapistId, clinicId);
 
     if (session.status === 'COMPLETED') {
       throw new BadRequestException('Cannot update a completed session');
@@ -125,8 +136,12 @@ export class SessionsService {
     });
   }
 
-  async finalize(id: string, therapistId: string): Promise<TreatmentSession> {
-    const session = await this.findOne(id, therapistId);
+  async finalize(
+    id: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ): Promise<TreatmentSession> {
+    const session = await this.findOne(id, therapistId, clinicId);
 
     if (session.status === 'COMPLETED') {
       return session;
@@ -138,8 +153,12 @@ export class SessionsService {
     });
   }
 
-  async remove(id: string, therapistId: string): Promise<void> {
-    await this.findOne(id, therapistId);
+  async remove(
+    id: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ): Promise<void> {
+    await this.findOne(id, therapistId, clinicId);
 
     await this.prisma.treatmentSession.update({
       where: { id },

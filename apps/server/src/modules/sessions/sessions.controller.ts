@@ -42,7 +42,11 @@ export class SessionsController {
     @Body() createSessionDto: CreateSessionDto,
     @CurrentTherapist() user: any,
   ): Promise<TreatmentSession> {
-    return this.sessionsService.create(createSessionDto, user.userId);
+    return this.sessionsService.create(
+      createSessionDto,
+      user.userId,
+      user.clinicId,
+    );
   }
 
   @Get()
@@ -62,6 +66,7 @@ export class SessionsController {
       page,
       limit,
       clinicalCaseId,
+      user.clinicId,
     );
   }
 
@@ -75,7 +80,7 @@ export class SessionsController {
     @Param('id') id: string,
     @CurrentTherapist() user: any,
   ): Promise<TreatmentSession> {
-    return this.sessionsService.findOne(id, user.userId);
+    return this.sessionsService.findOne(id, user.userId, user.clinicId);
   }
 
   @Patch(':id')
@@ -89,7 +94,12 @@ export class SessionsController {
     @Body() updateSessionDto: UpdateSessionDto,
     @CurrentTherapist() user: any,
   ): Promise<TreatmentSession> {
-    return this.sessionsService.update(id, updateSessionDto, user.userId);
+    return this.sessionsService.update(
+      id,
+      updateSessionDto,
+      user.userId,
+      user.clinicId,
+    );
   }
 
   @Patch(':id/finalize')
@@ -102,7 +112,7 @@ export class SessionsController {
     @Param('id') id: string,
     @CurrentTherapist() user: any,
   ): Promise<TreatmentSession> {
-    return this.sessionsService.finalize(id, user.userId);
+    return this.sessionsService.finalize(id, user.userId, user.clinicId);
   }
 
   @Delete(':id')
@@ -116,6 +126,6 @@ export class SessionsController {
     @Param('id') id: string,
     @CurrentTherapist() user: any,
   ): Promise<void> {
-    return this.sessionsService.remove(id, user.userId);
+    return this.sessionsService.remove(id, user.userId, user.clinicId);
   }
 }

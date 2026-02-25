@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppShell } from './shell/AppShell';
+import { ProfileNudgeBanner } from './ProfileNudgeBanner';
 import { useAuth } from '../hooks/use-auth';
 
 interface MainLayoutProps {
@@ -32,16 +33,22 @@ export function MainLayout({ children }: MainLayoutProps) {
       href: '/plantillas',
       isActive: location.pathname === '/plantillas',
     },
-    {
-      label: 'Ajustes',
-      href: '/ajustes',
-      isActive: location.pathname === '/ajustes',
-    },
+    ...(authUser?.role === 'CLINIC_OWNER' || authUser?.role === 'ADMIN'
+      ? [
+          {
+            label: 'Clínica',
+            href: '/clinica',
+            isActive: location.pathname.startsWith('/clinica'),
+          },
+        ]
+      : []),
   ];
 
   const user = {
     name: authUser?.name || 'Dra. Noemi Herbas',
     avatarUrl: undefined,
+    clinicName: authUser?.clinicName ?? null,
+    role: authUser?.role ?? null,
   };
 
   const handleNavigate = (href: string) => {
@@ -65,6 +72,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       onLogout={handleLogout}
       onLogoClick={handleLogoClick}
     >
+      <ProfileNudgeBanner />
       {children}
     </AppShell>
   );

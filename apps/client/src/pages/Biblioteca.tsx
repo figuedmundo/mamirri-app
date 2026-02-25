@@ -1,13 +1,25 @@
+import { useState, useCallback } from 'react';
+import { useOutlet } from 'react-router-dom';
+import { LibraryDashboard } from '@/components/library/LibraryDashboard';
+import { useLibrarySearch } from '@/hooks/use-library';
+
 export default function Biblioteca() {
+  const bookPanel = useOutlet();
+  const [searchQuery, setSearchQuery] = useState('');
+  const { data: searchResult = null, isLoading: searchLoading } =
+    useLibrarySearch(searchQuery);
+
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-        Biblioteca Médica
-      </h1>
-      <p className="text-slate-600 dark:text-slate-400">
-        Búsqueda inteligente en libros, artículos y evidencia médica global en
-        cualquier idioma con resultados en español o inglés.
-      </p>
-    </div>
+    <LibraryDashboard
+      searchResult={searchResult}
+      isLoading={searchLoading}
+      searchQuery={searchQuery}
+      onSearch={handleSearch}
+      bookPanel={bookPanel}
+    />
   );
 }

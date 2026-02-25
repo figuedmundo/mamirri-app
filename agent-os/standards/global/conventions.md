@@ -6,6 +6,8 @@
 - **Environment Configuration**: Use environment variables for configuration; never commit secrets or API keys to version control
 - **Dependency Management**: Keep dependencies up-to-date and minimal; document why major dependencies are used
 - **Code Review Process**: Establish a consistent code review process with clear expectations for reviewers and authors
-- **Testing Requirements**: Define what level of testing is required before merging (unit tests, integration tests, etc.)
+- **Performance-First Development**: Prioritize TTI (Time to Interactive). Defer non-critical scripts (e.g., Sentry, Analytics) until after initial hydration.
+- **Explicit Imports**: Avoid barrel files for internal components to improve tree-shaking and reduce bundle size.
+- **Testing Requirements**: Define what level of testing is required before merging (unit tests, integration tests, etc.). Use TDD for core logic.
 - **Feature Flags**: Use feature flags for incomplete features rather than long-lived feature branches
 - **Changelog Maintenance**: Keep a changelog or release notes to track significant changes and improvements
