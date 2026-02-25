@@ -25,7 +25,7 @@ interface InviteTherapistDialogProps {
   onSubmit: (payload: {
     email: string;
     role: 'THERAPIST' | 'CLINIC_OWNER';
-  }) => Promise<{ inviteUrl: string }>;
+  }) => Promise<{ inviteUrl: string; token: string }>;
 }
 
 export function InviteTherapistDialog({
@@ -38,6 +38,7 @@ export function InviteTherapistDialog({
   const [loading, setLoading] = useState(false);
   const [inviteResult, setInviteResult] = useState<{
     inviteUrl: string;
+    token: string;
   } | null>(null);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
@@ -58,7 +59,8 @@ export function InviteTherapistDialog({
   const handleCopyLink = async () => {
     if (!inviteResult?.inviteUrl) return;
 
-    const fullUrl = `${window.location.origin}${inviteResult.inviteUrl}`;
+    const invitePath = `/invite/accept?token=${inviteResult.token}`;
+    const fullUrl = `${window.location.origin}${invitePath}`;
     try {
       await navigator.clipboard.writeText(fullUrl);
       setCopied(true);
@@ -100,7 +102,7 @@ export function InviteTherapistDialog({
           <div className="space-y-4">
             <div className="flex gap-2">
               <Input
-                value={`${window.location.origin}${inviteResult.inviteUrl}`}
+                value={`${window.location.origin}/invite/accept?token=${inviteResult.token}`}
                 readOnly
                 className="h-12 text-sm"
               />
