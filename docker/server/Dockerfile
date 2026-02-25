@@ -107,4 +107,4 @@ WORKDIR /app/apps/server
 EXPOSE 3000
 
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["node", "dist/src/main"]
+CMD ["node", "dist/main"]
