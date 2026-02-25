@@ -25,7 +25,7 @@ interface InviteTherapistDialogProps {
   onSubmit: (payload: {
     email: string;
     role: 'THERAPIST' | 'CLINIC_OWNER';
-  }) => Promise<{ inviteUrl: string }>;
+  }) => Promise<{ inviteUrl: string; token: string }>;
 }
 
 export function InviteTherapistDialog({
@@ -38,6 +38,7 @@ export function InviteTherapistDialog({
   const [loading, setLoading] = useState(false);
   const [inviteResult, setInviteResult] = useState<{
     inviteUrl: string;
+    token: string;
   } | null>(null);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
@@ -56,11 +57,14 @@ export function InviteTherapistDialog({
   };
 
   const handleCopyLink = async () => {
-    if (!inviteResult?.inviteUrl) return;
+    const displayUrl = inviteResult?.token
+      ? `${window.location.origin}/invite/accept?token=${inviteResult.token}`
+      : inviteResult?.inviteUrl;
 
-    const fullUrl = `${window.location.origin}${inviteResult.inviteUrl}`;
+    if (!displayUrl) return;
+
     try {
-      await navigator.clipboard.writeText(fullUrl);
+      await navigator.clipboard.writeText(displayUrl);
       setCopied(true);
       toast({
         description: 'Enlace copiado',
@@ -100,7 +104,11 @@ export function InviteTherapistDialog({
           <div className="space-y-4">
             <div className="flex gap-2">
               <Input
-                value={`${window.location.origin}${inviteResult.inviteUrl}`}
+                value={
+                  inviteResult.token
+                    ? `${window.location.origin}/invite/accept?token=${inviteResult.token}`
+                    : inviteResult.inviteUrl
+                }
                 readOnly
                 className="h-12 text-sm"
               />
