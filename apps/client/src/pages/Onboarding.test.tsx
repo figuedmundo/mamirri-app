@@ -6,11 +6,20 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const mockLogin = vi.fn();
 const mockNavigate = vi.fn();
+const mockCheckNameAvailability = vi.fn();
+const mockCreateClinicWithAdmin = vi.fn();
 
 vi.mock('../hooks/use-auth', () => ({
   useAuth: () => ({
     login: mockLogin,
   }),
+}));
+
+vi.mock('../api/onboarding', () => ({
+  onboardingApi: {
+    checkNameAvailability: (...args: unknown[]) => mockCheckNameAvailability(...args),
+    createClinicWithAdmin: (...args: unknown[]) => mockCreateClinicWithAdmin(...args),
+  },
 }));
 
 vi.mock('react-router-dom', async () => {
@@ -35,6 +44,29 @@ describe('Onboarding Component - Clinic-First Flow', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCheckNameAvailability.mockResolvedValue({ available: true });
+    mockCreateClinicWithAdmin.mockResolvedValue({
+      user: {
+        id: 'user-123',
+        email: 'test@example.com',
+        name: 'Test User',
+        role: 'ADMIN',
+        clinicId: 'clinic-123',
+        clinicName: 'Test Clinic',
+        licenseNumber: 'LIC-123',
+      },
+      clinic: {
+        id: 'clinic-123',
+        name: 'Test Clinic',
+        email: 'clinic@example.com',
+        phone: '123456789',
+        address: 'Test Address',
+        isActive: true,
+        createdAt: new Date().toISOString(),
+      },
+      accessToken: 'access-token',
+      refreshToken: 'refresh-token',
+    });
     queryClient = createTestQueryClient();
     localStorage.clear();
   });
@@ -53,9 +85,7 @@ describe('Onboarding Component - Clinic-First Flow', () => {
     it('renders clinic information form with Spanish UI labels', () => {
       renderOnboarding();
 
-      expect(
-        screen.getByText(/crea tu clínica/i),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/crea tu clínica/i)).toBeInTheDocument();
       expect(screen.getByText(/paso 1 de 2/i)).toBeInTheDocument();
       expect(
         screen.getByText(/información de la clínica/i),
@@ -160,9 +190,7 @@ describe('Onboarding Component - Clinic-First Flow', () => {
       fireEvent.click(screen.getByRole('button', { name: /continuar/i }));
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/creando clínica:/i),
-        ).toBeInTheDocument();
+        expect(screen.getByText(/creando clínica:/i)).toBeInTheDocument();
       });
     });
 
@@ -189,9 +217,7 @@ describe('Onboarding Component - Clinic-First Flow', () => {
         expect(
           screen.getByLabelText(/correo electrónico/i),
         ).toBeInTheDocument();
-        expect(
-          screen.getByLabelText(/contraseña/i, { exact: false }),
-        ).toBeInTheDocument();
+        expect(screen.getByLabelText(/^contraseña/i)).toBeInTheDocument();
         expect(
           screen.getByLabelText(/confirmar contraseña/i),
         ).toBeInTheDocument();
@@ -262,7 +288,7 @@ describe('Onboarding Component - Clinic-First Flow', () => {
       fireEvent.change(screen.getByLabelText(/correo electrónico/i), {
         target: { value: 'test@example.com' },
       });
-      fireEvent.change(screen.getAllByLabelText(/contraseña/i)[0], {
+      fireEvent.change(screen.getAllByLabelText(/^contraseña/i)[0], {
         target: { value: 'password123' },
       });
       fireEvent.change(screen.getByLabelText(/confirmar contraseña/i), {

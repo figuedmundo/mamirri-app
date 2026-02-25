@@ -50,35 +50,31 @@ function PageLoader() {
   );
 }
 
+const EXCLUDED_PATHS = [
+  '/onboarding',
+  '/invite/accept',
+  '/invite/success',
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/pin-login',
+  '/perfil',
+];
+
 function AppContent() {
   const { pathname } = useLocation();
   const { isAuthenticated, hasPinSet } = useAuth();
-  const [showPinSetup, setShowPinSetup] = useState(false);
+  const [hasDismissedModal, setHasDismissedModal] = useState(false);
 
-  useEffect(() => {
-    const excludedPaths = [
-      '/onboarding',
-      '/invite/accept',
-      '/invite/success',
-      '/login',
-      '/register',
-      '/forgot-password',
-      '/pin-login',
-      '/perfil',
-    ];
-    const isExcluded = excludedPaths.some((path) => pathname.startsWith(path));
+  const isExcluded = EXCLUDED_PATHS.some((path) => pathname.startsWith(path));
+  const isSkipped = localStorage.getItem('pin_setup_skipped') === 'true';
 
-    if (isAuthenticated && hasPinSet === false && !isExcluded) {
-      const skipped = localStorage.getItem('pin_setup_skipped') === 'true';
-      if (!skipped) {
-        setShowPinSetup(true);
-      } else {
-        setShowPinSetup(false);
-      }
-    } else {
-      setShowPinSetup(false);
-    }
-  }, [isAuthenticated, hasPinSet, pathname]);
+  const showPinSetup =
+    isAuthenticated &&
+    hasPinSet === false &&
+    !isExcluded &&
+    !hasDismissedModal &&
+    !isSkipped;
 
   useInteractionLogger();
   usePerformanceLogger();
@@ -245,7 +241,10 @@ function AppContent() {
       {showPinSetup && (
         <PinSetupModal
           isOpen={showPinSetup}
-          onClose={() => setShowPinSetup(false)}
+          onClose={() => {
+            localStorage.setItem('pin_setup_skipped', 'true');
+            setHasDismissedModal(true);
+          }}
         />
       )}
     </div>
