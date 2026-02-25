@@ -1,6 +1,12 @@
 import { test } from '@playwright/test';
 import { PatientPage } from './pages/PatientPage';
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem('pin_setup_skipped', 'true');
+  });
+});
+
 test('create patient flow', async ({ page }) => {
   const patientPage = new PatientPage(page);
 

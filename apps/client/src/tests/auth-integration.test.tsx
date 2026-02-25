@@ -104,7 +104,7 @@ describe('Auth Integration Flows', () => {
     expect(localStorage.getItem('access_token')).toBe(mockToken);
     expect(localStorage.getItem('user_data')).toContain('New User');
 
-    expect(mockNavigate).toHaveBeenCalledWith('/');
+    expect(mockNavigate).toHaveBeenCalledWith('/onboarding/clinic');
   });
 
   it('Login Flow: User logs in, updates context/storage, and redirects', async () => {
@@ -157,7 +157,7 @@ describe('Auth Integration Flows', () => {
     expect(localStorage.getItem('access_token')).toBe(mockToken);
     expect(localStorage.getItem('user_data')).toContain('Integration User');
 
-    expect(mockNavigate).toHaveBeenCalledWith('/');
+    expect(mockNavigate).toHaveBeenCalledWith('/onboarding/clinic');
   });
 
   it('Persistence Flow: User accesses protected route with existing token', async () => {

@@ -1,14 +1,16 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { BrowserRouter, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { MainLayout } from './components/MainLayout';
 import { Dashboard } from './pages/Dashboard';
 import { AuthProvider } from './context/AuthProvider';
 import Login from './pages/Login';
 import PinLogin from './pages/PinLogin';
-import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import InvitationAcceptance from './pages/InvitationAcceptance';
+import InvitationSuccess from './pages/InvitationSuccess';
+import Onboarding from './pages/Onboarding';
+import OnboardingSuccess from './pages/OnboardingSuccess';
 import AuthLayout from './components/auth/AuthLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -25,6 +27,8 @@ import Ajustes from './pages/Ajustes';
 import Perfil from './pages/Perfil';
 import ClinicDashboard from './pages/ClinicDashboard';
 import CaseDetail from './pages/CaseDetail';
+import ClinicOnboarding from './pages/ClinicOnboarding';
+import ClinicQuickStart from './pages/ClinicQuickStart';
 import { LoggerErrorBoundary } from './lib/logger/error-boundary';
 import { useInteractionLogger } from './lib/logger/hooks/useInteractionLogger';
 import { usePerformanceLogger } from './lib/logger/hooks/usePerformanceLogger';
@@ -33,6 +37,8 @@ import { setupInterceptors } from './lib/logger/axios-logger';
 import { Loader2 } from 'lucide-react';
 import { queryClient } from './lib/query-client';
 import { initSentry } from './lib/sentry-init';
+import { useAuth } from './hooks/use-auth';
+import PinSetupModal from './components/auth/PinSetupModal';
 
 setupInterceptors(api);
 
@@ -44,19 +50,70 @@ function PageLoader() {
   );
 }
 
+const EXCLUDED_PATHS = [
+  '/onboarding',
+  '/invite/accept',
+  '/invite/success',
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/pin-login',
+  '/perfil',
+];
+
 function AppContent() {
+  const { pathname } = useLocation();
+  const { isAuthenticated, hasPinSet } = useAuth();
+  const [hasDismissedModal, setHasDismissedModal] = useState(false);
+
+  const isExcluded = EXCLUDED_PATHS.some((path) => pathname.startsWith(path));
+  const isSkipped = localStorage.getItem('pin_setup_skipped') === 'true';
+
+  const showPinSetup =
+    isAuthenticated &&
+    hasPinSet === false &&
+    !isExcluded &&
+    !hasDismissedModal &&
+    !isSkipped;
+
   useInteractionLogger();
   usePerformanceLogger();
 
   return (
+    <div className="relative min-h-screen">
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/pin-login" element={<PinLogin />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/register"
+          element={<Navigate to="/onboarding" replace />}
+        />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/invite/accept" element={<InvitationAcceptance />} />
       </Route>
+
+      <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/onboarding/success" element={<OnboardingSuccess />} />
+      <Route path="/invite/success" element={<InvitationSuccess />} />
+
+      <Route
+        path="/onboarding/clinic"
+        element={
+          <ProtectedRoute>
+            <ClinicOnboarding />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/onboarding/quick-start"
+        element={
+          <ProtectedRoute>
+            <ClinicQuickStart />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/"
@@ -147,7 +204,7 @@ function AppContent() {
       />
 
       <Route
-        path="/clinic/dashboard"
+        path="/clinica"
         element={
           <ProtectedRoute>
             <MainLayout>
@@ -180,7 +237,17 @@ function AppContent() {
       />
 
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      </Routes>
+      {showPinSetup && (
+        <PinSetupModal
+          isOpen={showPinSetup}
+          onClose={() => {
+            localStorage.setItem('pin_setup_skipped', 'true');
+            setHasDismissedModal(true);
+          }}
+        />
+      )}
+    </div>
   );
 }
 

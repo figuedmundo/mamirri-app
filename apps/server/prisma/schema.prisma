@@ -23,6 +23,7 @@ model User {
   profilePhotoUrl   String?
   specialty         String?
   yearsExperience   Int?
+  profileNudgeDismissed Boolean @default(false)
   clinic            Clinic?            @relation(fields: [clinicId], references: [id], onDelete: SetNull)
   sentInvitations   ClinicInvitation[] @relation("ClinicInvitationInviter")
   patients          Patient[]
@@ -73,6 +74,9 @@ model Clinic {
   address   String?
   phone     String?
   email     String?
+  logoUrl   String?
+  subdomain String?   @unique
+  businessHours Json?
   isActive  Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -80,6 +84,7 @@ model Clinic {
   patients  Patient[]
   invitations ClinicInvitation[]
 
+  @@index([name])
   @@map("clinics")
 }
 

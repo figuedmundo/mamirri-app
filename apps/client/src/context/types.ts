@@ -10,6 +10,7 @@ export interface User {
   licenseNumber?: string;
   specialty?: string;
   yearsExperience?: number;
+  profileNudgeDismissed?: boolean;
   createdAt?: string;
 }
 

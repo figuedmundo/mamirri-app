@@ -18,6 +18,7 @@ interface Session {
 export const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const showSoloModeBanner = !user?.clinicId;
 
   const todaySessions: Session[] = [];
 
@@ -37,6 +38,22 @@ export const Dashboard = () => {
           Bienvenido, {user?.name || 'Dr. García'}
         </p>
       </div>
+
+      {showSoloModeBanner ? (
+        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
+          <p className="text-sm font-medium">
+            Estás en modo personal. Configura una clínica para desbloquear
+            funciones de equipo.
+          </p>
+          <button
+            type="button"
+            className="mt-2 text-sm font-semibold underline"
+            onClick={() => navigate('/onboarding/clinic')}
+          >
+            Configurar clínica ahora
+          </button>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
