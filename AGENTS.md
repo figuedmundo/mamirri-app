@@ -8,7 +8,7 @@
 
 ## Source Control (Git)
 
-- when invoking `git commit`, always use `--author="[my-name] AI <my-name+ai@gmail.com>"`
+- when invoking `git commit`, always use `--author="Edmundo AI <figuedmundo+ai@gmail.com>"`
 
 ## Useful Command-Line Tools
 
