@@ -29,17 +29,12 @@ export class TranscriptionProcessor {
   private async processEvaluations() {
     let evaluations: { id: string; voiceNotes: unknown }[] = [];
     try {
-      evaluations = await this.prisma.evaluation.findMany({
-        where: {
-          voiceNotes: {
-            string_contains: 'pending',
-          },
-        },
-        select: {
-          id: true,
-          voiceNotes: true,
-        },
-      });
+      evaluations = await this.prisma.$queryRaw<
+        { id: string; voiceNotes: unknown }[]
+      >`SELECT "id", "voiceNotes"
+         FROM "evaluations"
+         WHERE "voiceNotes"::text LIKE ${'%pending%'}
+           AND JSONB_TYPEOF("voiceNotes") = 'array'`;
     } catch (error: unknown) {
       if (this.isMissingColumnError(error)) {
         this.logger.warn(

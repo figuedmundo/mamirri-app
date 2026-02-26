@@ -551,7 +551,6 @@ describe('CaseDetailLayout', () => {
       expect(patientsApi.updateEvaluation).toHaveBeenCalledWith(
         'eval-001',
         expect.objectContaining({
-          id: 'eval-001',
           painScale: expect.objectContaining({ activity: 5 }),
         }),
       );
@@ -665,7 +664,6 @@ describe('CaseDetailLayout', () => {
       expect(patientsApi.updateEvaluation).toHaveBeenCalledWith(
         'eval-001',
         expect.objectContaining({
-          id: 'eval-001',
           painScale: expect.objectContaining({ activity: 5 }),
         }),
       );

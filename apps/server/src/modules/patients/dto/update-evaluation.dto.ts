@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsObject } from 'class-validator';
+import { IsOptional, IsObject, IsArray } from 'class-validator';
 
 export class UpdateEvaluationDto {
   @ApiPropertyOptional()
@@ -20,10 +20,15 @@ export class UpdateEvaluationDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsObject()
-  diagnosis?: any;
+  painScale?: any;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsObject()
+  diagnosis?: any;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsArray()
   voiceNotes?: any;
 }

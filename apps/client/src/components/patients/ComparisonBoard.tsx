@@ -4,7 +4,7 @@ import type { ComparisonProps } from '../../types/patient';
 
 type ViewMode = 'slider' | 'side-by-side';
 
-import { Loader2 } from 'lucide-react';
+import { Loader2, Share2, Download, Columns2 } from 'lucide-react';
 
 export function ComparisonBoard({
   clinicalCase,
@@ -58,19 +58,7 @@ export function ComparisonBoard({
             onClick={onShare}
             className="px-4 py-2 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center gap-2"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 17a3 3 0 003 3h10a3 3 0 110-2.684a3 3 0 110-2.684l6.632 3.316m0 0a3 3 0 00-5.368a3 3 0 105.368 2.684a3 3 0 00-5.368a3 3 0 00-3.316m0 0a3 3 0 105.368 2.684z"
-              />
-            </svg>
+            <Share2 className="w-4 h-4" />
             Compartir
           </button>
           <button
@@ -81,19 +69,7 @@ export function ComparisonBoard({
             {isExporting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 110-2.684l6.632 3.316m0 0a3 3 0 003 3h10a3 3 0 105.368 2.684a3 3 0 00-5.368a3 3 0 00-3.316m0 0a3 3 0 003 3v-1m-4.4l4 4V4"
-                />
-              </svg>
+              <Download className="w-4 h-4" />
             )}
             {isExporting ? 'Generando...' : 'Exportar Informe'}
           </button>
@@ -103,19 +79,7 @@ export function ComparisonBoard({
           onClick={toggleMode}
           className="px-4 py-2 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center gap-2"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 17a3 3 0 003 3h10a3 3 0 110-2.684l6.632 3.316m0 0a3 3 0 00-5.368a3 3 0 00-3.316m0 0a3 3 0 00-3.316m0 0 105.368 2.684a3 3 0 00-3.316m0 0 0 003 3v-1m-4 4l4 4V4"
-            />
-          </svg>
+          <Columns2 className="w-4 h-4" />
           {viewMode === 'slider' ? (
             <span className="text-xs text-teal-600 dark:text-teal-400 font-medium">
               Slider

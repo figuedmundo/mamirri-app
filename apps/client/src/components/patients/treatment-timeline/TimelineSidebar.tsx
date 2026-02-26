@@ -14,6 +14,18 @@ export function TimelineSidebar({
   onSelectSession,
 }: TimelineSidebarProps) {
   const { treatmentPlan, treatmentSessions } = clinicalCase;
+  const phases =
+    treatmentPlan && treatmentPlan.phases.length > 0
+      ? treatmentPlan.phases
+      : [
+          {
+            number: 1,
+            name: 'General',
+            durationWeeks: 0,
+            techniques: [],
+            objectives: '',
+          },
+        ];
 
   const sortedSessions = [...treatmentSessions].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
@@ -31,7 +43,7 @@ export function TimelineSidebar({
       </div>
 
       <div className="p-4 space-y-6">
-        {treatmentPlan.phases.map((phase) => {
+        {phases.map((phase) => {
           const sessionsInPhase = sortedSessions.filter(
             (s) => s.phaseNumber === phase.number,
           );
