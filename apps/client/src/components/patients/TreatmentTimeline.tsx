@@ -52,24 +52,11 @@ export function TreatmentTimeline({
 
   const { treatmentPlan, treatmentSessions } = clinicalCase;
 
-  if (!treatmentPlan) {
-    return (
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
-            Plan de tratamiento pendiente
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-sm">
-            Define el diagnóstico en la evaluación SOAP para habilitar la
-            planificación de fases y sesiones.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   React.useEffect(() => {
-    // Process queued photos when back online
+    if (!treatmentPlan) {
+      return () => {};
+    }
+
     const cleanup = onOnline(async () => {
       const pending = await photoQueue.getAll();
       if (pending.length === 0) return;
@@ -96,11 +83,26 @@ export function TreatmentTimeline({
         title: 'Sincronización completada',
         description: 'Todas las fotos pendientes se han subido.',
       });
-      // Trigger refresh if needed, for now user might need to reload or we rely on parent update
     });
 
     return cleanup;
-  }, [toast]);
+  }, [toast, treatmentPlan]);
+
+  if (!treatmentPlan) {
+    return (
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+            Plan de tratamiento pendiente
+          </h2>
+          <p className="text-slate-600 dark:text-slate-400 text-sm">
+            Define el diagnóstico en la evaluación SOAP para habilitar la
+            planificación de fases y sesiones.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const currentPhase =
     treatmentSessions.length > 0
