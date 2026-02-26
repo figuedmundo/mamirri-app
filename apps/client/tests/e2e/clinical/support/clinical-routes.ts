@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 
 export const mockPatientFlow = async (page: Page, overrides = {}) => {
   const patientId = 'p-canonical-1';
