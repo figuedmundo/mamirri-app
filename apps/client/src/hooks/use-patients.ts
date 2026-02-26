@@ -189,7 +189,7 @@ export function useUpdateEvaluation() {
     mutationFn: ({ id, data }: { id: string; data: UpdateEvaluationDto }) =>
       patientsApi.updateEvaluation(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.patients.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.patients.all });
       toast({
         title: 'Éxito',
         description: 'Evaluación actualizada correctamente',

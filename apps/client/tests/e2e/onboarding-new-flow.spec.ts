@@ -175,7 +175,7 @@ test.describe('Clinic-First Onboarding Flow', () => {
       .fill('Existing Clinic');
 
     // Wait for validation
-    await page.waitForTimeout(600);
+    await page.waitForTimeout(1000);
 
     // Should show error
     await expect(page.getByText(/ese nombre ya está en uso/i)).toBeVisible();
@@ -231,7 +231,7 @@ test.describe('Clinic-First Onboarding Flow', () => {
       .getByRole('textbox', { name: /email de la clínica/i })
       .fill('test@example.com');
 
-    await page.waitForTimeout(1200);
+    await page.waitForTimeout(1500);
     await page.getByRole('button', { name: /continuar/i }).click();
 
     // Fill Step 2 with mismatched passwords
