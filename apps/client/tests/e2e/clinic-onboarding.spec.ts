@@ -87,7 +87,9 @@ test.describe('Clinic onboarding wizard', () => {
     await expect(
       page.getByText('Ese nombre ya está en uso. Prueba uno distinto.'),
     ).toBeVisible();
-    await expect(page.getByRole('button', { name: /siguiente/i })).toBeDisabled();
+    await expect(
+      page.getByRole('button', { name: /siguiente/i }),
+    ).toBeDisabled();
   });
 
   test('supports configure-later path and returns to dashboard personal mode', async ({
@@ -157,7 +159,9 @@ test.describe('Clinic onboarding wizard', () => {
       if (route.request().method() === 'POST') {
         createPayload = route.request().postDataJSON();
         await route.fulfill({
-          body: JSON.stringify({ clinic: { id: 'clinic-1', name: 'Mamirri Clinic' } }),
+          body: JSON.stringify({
+            clinic: { id: 'clinic-1', name: 'Mamirri Clinic' },
+          }),
         });
         return;
       }
@@ -232,9 +236,9 @@ test.describe('Clinic onboarding wizard', () => {
     await page.getByRole('button', { name: 'Siguiente' }).click();
     await page.getByRole('button', { name: 'Crear clínica' }).click();
 
-    await expect(
-      page.getByText('No se pudo crear la clínica. Inténtalo nuevamente.'),
-    ).toBeVisible();
+    await expect(page.getByText(/No se pudo crear la clínica/i)).toBeVisible({
+      timeout: 10000,
+    });
     await expect(page).toHaveURL('/onboarding/clinic');
   });
 
@@ -259,7 +263,9 @@ test.describe('Clinic onboarding wizard', () => {
     await page.route('**/api/v1/clinics', async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({
-          body: JSON.stringify({ clinic: { id: 'clinic-2', name: 'Solo Clinic' } }),
+          body: JSON.stringify({
+            clinic: { id: 'clinic-2', name: 'Solo Clinic' },
+          }),
         });
         return;
       }

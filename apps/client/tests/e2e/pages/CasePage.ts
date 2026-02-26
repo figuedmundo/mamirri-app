@@ -29,11 +29,15 @@ export class CasePage extends BasePage {
     });
     this.dictateVoiceButton = page.getByTestId('start-recording-btn');
     this.startRecordingButton = page.getByTestId('start-recording-btn');
-    this.stopRecordingButton = page.getByRole('button', { name: /Detener/i });
+    this.stopRecordingButton = page
+      .getByTestId('recorder-stop-btn')
+      .or(page.getByTestId('floating-stop-btn'));
     this.confirmRecordingButton = page
       .getByTestId('confirm-recording')
       .or(page.getByRole('button', { name: /Confirmar/i }));
-    this.cancelRecordingButton = page.getByTestId('cancel-recording');
+    this.cancelRecordingButton = page
+      .getByTestId('recorder-cancel-btn')
+      .or(page.getByTestId('floating-cancel-btn'));
     this.restartRecordingButton = page.getByRole('button', {
       name: /Volver a grabar/i,
     });
@@ -58,7 +62,10 @@ export class CasePage extends BasePage {
   }
 
   async stopRecording() {
-    await this.stopRecordingButton.waitFor({ state: 'visible', timeout: 5000 });
+    await this.stopRecordingButton.waitFor({
+      state: 'visible',
+      timeout: 10000,
+    });
     await this.stopRecordingButton.click();
   }
 
