@@ -9,7 +9,6 @@ import type {
 import { getActiveEvaluation } from '../../lib/evaluation-utils';
 import { VoiceRecorder } from './VoiceRecorder';
 import { useToast } from '../../hooks/use-toast';
-import { useDebounce } from '../../hooks/use-debounce';
 
 type SoapSection = 'subjective' | 'objective' | 'assessment' | 'plan';
 
@@ -24,11 +23,7 @@ const ORTHOPEDIC_TESTS = [
   { key: 'dedoSuelo', label: 'Dedo-Suelo' },
 ] as const;
 
-export function EvaluationForm({
-  clinicalCase,
-  onSave,
-  onPainScaleChange,
-}: EvaluationFormProps) {
+export function EvaluationForm({ clinicalCase, onSave }: EvaluationFormProps) {
   const { toast } = useToast();
   const activeEvaluation = getActiveEvaluation(clinicalCase);
   const [activeSection, setActiveSection] =
@@ -61,9 +56,21 @@ export function EvaluationForm({
       },
   );
   const hasHydratedRef = React.useRef(false);
+  const isSavingRef = React.useRef(false);
+  const snapshotRef = React.useRef<string>('');
+  const hasPendingChangesRef = React.useRef(false);
+  const onSaveRef = React.useRef(onSave);
+  const buildPayloadRef = React.useRef<() => Evaluation | null>(() => null);
+
+  React.useEffect(() => {
+    onSaveRef.current = onSave;
+  }, [onSave]);
 
   React.useEffect(() => {
     if (!activeEvaluation) return;
+    const diagnosisWithSubjective = (activeEvaluation.diagnosis ||
+      {}) as Diagnosis & { subjective?: string };
+
     setOrthopedicTests(
       (activeEvaluation.orthopedicTests || {}) as OrthopedicTests,
     );
@@ -76,41 +83,71 @@ export function EvaluationForm({
       },
     );
     setDiagnosis(
-      activeEvaluation.diagnosis || {
+      diagnosisWithSubjective || {
         functionalIndicator: '',
         clinicalAspect: '',
         anatomopathology: '',
         avdConsequences: '',
       },
     );
+    setSubjectiveText(diagnosisWithSubjective.subjective || '');
+
+    const hydratedSnapshot = JSON.stringify({
+      orthopedicTests: (activeEvaluation.orthopedicTests ||
+        {}) as OrthopedicTests,
+      painScale: activeEvaluation.painScale || {
+        activity: 0,
+        rest: 0,
+        palpation: 0,
+        type: 'chronic',
+      },
+      diagnosis: diagnosisWithSubjective,
+      subjectiveText: diagnosisWithSubjective.subjective || '',
+    });
+    snapshotRef.current = hydratedSnapshot;
+    hasPendingChangesRef.current = false;
     hasHydratedRef.current = true;
   }, [activeEvaluation]);
 
-  const debouncedAutoSave = useDebounce(async () => {
-    if (!onSave || !activeEvaluation || !hasHydratedRef.current) return;
+  const buildPayload = React.useCallback((): Evaluation | null => {
+    if (!activeEvaluation) return null;
 
-    const payload: Evaluation = {
+    return {
       ...activeEvaluation,
       orthopedicTests,
       painScale,
-      diagnosis,
+      diagnosis: {
+        ...diagnosis,
+        subjective: subjectiveText,
+      },
     };
+  }, [activeEvaluation, orthopedicTests, painScale, diagnosis, subjectiveText]);
 
-    try {
-      await onSave(payload);
-    } catch {
-      toast({
-        title: 'Error',
-        description: 'No se pudo guardar automáticamente la evaluación.',
-        variant: 'destructive',
-      });
-    }
-  }, 350);
+  const getCurrentSnapshot = React.useCallback(() => {
+    return JSON.stringify({
+      orthopedicTests,
+      painScale,
+      diagnosis,
+      subjectiveText,
+    });
+  }, [orthopedicTests, painScale, diagnosis, subjectiveText]);
 
   React.useEffect(() => {
-    if (!hasHydratedRef.current) return;
-    void debouncedAutoSave();
-  }, [orthopedicTests, painScale, diagnosis, debouncedAutoSave]);
+    buildPayloadRef.current = buildPayload;
+  }, [buildPayload]);
+
+  React.useEffect(() => {
+    return () => {
+      const currentOnSave = onSaveRef.current;
+      if (!currentOnSave || !hasHydratedRef.current || isSavingRef.current)
+        return;
+      if (!hasPendingChangesRef.current) return;
+
+      const payload = buildPayloadRef.current();
+      if (!payload) return;
+      void currentOnSave(payload, { silent: true });
+    };
+  }, []);
 
   if (!activeEvaluation) {
     return (
@@ -134,6 +171,7 @@ export function EvaluationForm({
     result: number,
     interpretation: string,
   ) => {
+    hasPendingChangesRef.current = true;
     setOrthopedicTests((prev) => ({
       ...prev,
       [test]: { result, interpretation },
@@ -144,24 +182,23 @@ export function EvaluationForm({
     field: 'activity' | 'rest' | 'palpation',
     value: number,
   ) => {
+    hasPendingChangesRef.current = true;
     const updated = { ...painScale, [field]: value };
     setPainScale(updated);
-    onPainScaleChange?.(updated);
   };
 
   const handleSave = async () => {
     if (!onSave) return;
 
     setIsSaving(true);
+    isSavingRef.current = true;
     try {
-      const payload: Evaluation = {
-        ...activeEvaluation,
-        orthopedicTests,
-        painScale,
-        diagnosis,
-      };
+      const payload = buildPayload();
+      if (!payload) return;
 
       await onSave(payload);
+      snapshotRef.current = getCurrentSnapshot();
+      hasPendingChangesRef.current = false;
       toast({
         title: 'Guardado',
         description: 'La evaluación SOAP se guardó correctamente.',
@@ -173,6 +210,7 @@ export function EvaluationForm({
         variant: 'destructive',
       });
     } finally {
+      isSavingRef.current = false;
       setIsSaving(false);
     }
   };
@@ -221,7 +259,10 @@ export function EvaluationForm({
           <VoiceRecorder onRecordingComplete={() => {}} className="w-full" />
           <textarea
             value={subjectiveText}
-            onChange={(e) => setSubjectiveText(e.target.value)}
+            onChange={(e) => {
+              hasPendingChangesRef.current = true;
+              setSubjectiveText(e.target.value);
+            }}
             placeholder="Motivo de consulta, historia y síntomas"
             className="w-full min-h-36 px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg"
           />
@@ -342,45 +383,49 @@ export function EvaluationForm({
           </h2>
           <input
             value={diagnosis.functionalIndicator}
-            onChange={(e) =>
+            onChange={(e) => {
+              hasPendingChangesRef.current = true;
               setDiagnosis((prev) => ({
                 ...prev,
                 functionalIndicator: e.target.value,
-              }))
-            }
+              }));
+            }}
             placeholder="Indicador funcional"
             className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg"
           />
           <input
             value={diagnosis.clinicalAspect}
-            onChange={(e) =>
+            onChange={(e) => {
+              hasPendingChangesRef.current = true;
               setDiagnosis((prev) => ({
                 ...prev,
                 clinicalAspect: e.target.value,
-              }))
-            }
+              }));
+            }}
             placeholder="Aspecto clínico"
             className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg"
           />
           <input
             value={diagnosis.anatomopathology}
-            onChange={(e) =>
+            onChange={(e) => {
+              hasPendingChangesRef.current = true;
               setDiagnosis((prev) => ({
                 ...prev,
                 anatomopathology: e.target.value,
-              }))
-            }
+              }));
+            }}
             placeholder="Anatomopatología"
             className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg"
           />
           <textarea
             value={diagnosis.avdConsequences}
-            onChange={(e) =>
+            onChange={(e) => {
+              hasPendingChangesRef.current = true;
               setDiagnosis((prev) => ({
                 ...prev,
                 avdConsequences: e.target.value,
-              }))
-            }
+              }));
+            }}
             placeholder="Consecuencias AVD"
             className="w-full min-h-24 px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg"
           />

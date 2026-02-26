@@ -26,6 +26,7 @@ import {
   useUpdateEvaluation,
   useUpdateTreatmentPlanObjectives,
 } from '../../hooks/use-patients';
+import type { UpdateEvaluationDto } from '../../api/patients';
 import { useUploadEvaluationVoiceNote } from '../../hooks/use-media';
 import { AnalyzeButton } from './AnalyzeButton';
 import { AnalysisResultsPanel } from './analysis/AnalysisResultsPanel';
@@ -214,25 +215,46 @@ export function CaseDetailLayout({
     setViewMode('session-detail');
   };
 
-  const handleSaveEvaluation = async (evaluation: Evaluation) => {
+  const handleSaveEvaluation = async (
+    evaluation: Evaluation,
+    options?: { silent?: boolean },
+  ) => {
+    const isSilent = options?.silent === true;
+
     try {
       setLocalCase({ ...localCase, evaluation, evaluations: [evaluation] });
 
+      const data: UpdateEvaluationDto = {
+        posturogram: evaluation.posturogram,
+        orthopedicTests: evaluation.orthopedicTests,
+        avdEvaluation: evaluation.avdEvaluation,
+        painScale: evaluation.painScale,
+        diagnosis: evaluation.diagnosis,
+      };
+
+      if (evaluation.voiceNotes) {
+        data.voiceNotes = evaluation.voiceNotes;
+      }
+
       await updateEvaluation.mutateAsync({
         id: evaluation.id,
-        data: evaluation,
+        data,
       });
 
-      toast({
-        title: 'Evaluacion actualizada',
-        description: 'Los cambios se han guardado correctamente.',
-      });
+      if (!isSilent) {
+        toast({
+          title: 'Evaluacion actualizada',
+          description: 'Los cambios se han guardado correctamente.',
+        });
+      }
     } catch {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'No se pudo guardar la evaluacion.',
-      });
+      if (!isSilent) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'No se pudo guardar la evaluacion.',
+        });
+      }
     }
   };
 

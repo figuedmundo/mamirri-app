@@ -4,6 +4,7 @@ import type {
   Evaluation,
   TreatmentSession,
   TreatmentPlan,
+  VoiceNote,
 } from '../types/patient';
 
 export interface CreatePatientDto {
@@ -46,6 +47,7 @@ export interface UpdateEvaluationDto {
   avdEvaluation?: Partial<Evaluation['avdEvaluation']>;
   painScale?: Partial<Evaluation['painScale']>;
   diagnosis?: Partial<Evaluation['diagnosis']>;
+  voiceNotes?: VoiceNote[];
 }
 
 export interface UpdateTreatmentPlanObjectivesDto {

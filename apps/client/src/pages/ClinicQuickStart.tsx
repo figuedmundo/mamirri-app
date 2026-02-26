@@ -46,7 +46,7 @@ export default function ClinicQuickStart() {
             <CardContent>
               <Button
                 className="w-full"
-                onClick={() => navigate('/pacientes/nuevo')}
+                onClick={() => navigate('/pacientes?action=new')}
               >
                 Ir a pacientes
               </Button>
@@ -82,7 +82,7 @@ export default function ClinicQuickStart() {
               <Button
                 className="w-full"
                 variant="outline"
-                onClick={() => navigate('/clinic/dashboard')}
+                onClick={() => navigate('/clinica')}
               >
                 Ir a configuración
               </Button>

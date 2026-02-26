@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PatientList } from '../components/patients/PatientList';
 import {
   PatientForm,
@@ -32,6 +32,7 @@ import { Loader2 } from 'lucide-react';
 
 export default function Patients() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { data: patients = [], isLoading } = usePatientsQuery();
   const createPatient = useCreatePatient();
   const updatePatient = useUpdatePatient();
@@ -42,6 +43,21 @@ export default function Patients() {
   const [editPatient, setEditPatient] = useState<Patient | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
+  const openCreateFromUrl = searchParams.get('action') === 'new';
+
+  useEffect(() => {
+    if (openCreateFromUrl) {
+      setIsCreateOpen(true);
+    }
+  }, [openCreateFromUrl]);
+
+  const closeCreateDialog = () => {
+    setIsCreateOpen(false);
+
+    if (openCreateFromUrl) {
+      navigate('/pacientes', { replace: true });
+    }
+  };
 
   const handleView = (id: string) => {
     navigate(`/pacientes/${id}`);
@@ -129,7 +145,17 @@ export default function Patients() {
         onSchedule={handleSchedule}
       />
 
-      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+      <Dialog
+        open={isCreateOpen}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) {
+            closeCreateDialog();
+            return;
+          }
+
+          setIsCreateOpen(true);
+        }}
+      >
         <DialogContent className="sm:max-w-[425px] md:max-w-screen-md lg:max-w-screen-lg p-0">
           <DialogTitle className="sr-only">Crear Nuevo Paciente</DialogTitle>
           <DialogDescription className="sr-only">
@@ -140,9 +166,9 @@ export default function Patients() {
             onSubmit={(formData) => {
               return createPatient
                 .mutateAsync(formData)
-                .then(() => setIsCreateOpen(false));
+                .then(closeCreateDialog);
             }}
-            onCancel={() => setIsCreateOpen(false)}
+            onCancel={closeCreateDialog}
           />
         </DialogContent>
       </Dialog>

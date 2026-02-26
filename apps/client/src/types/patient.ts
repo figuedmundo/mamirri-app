@@ -148,6 +148,7 @@ export interface Diagnosis {
   clinicalAspect: string;
   anatomopathology: string;
   avdConsequences: string;
+  subjective?: string;
 }
 
 export interface Footprint {
@@ -393,7 +394,7 @@ export interface EvaluationFormProps {
   clinicalCase: ClinicalCase;
 
   /** Called when user wants to save evaluation */
-  onSave?: (evaluation: Evaluation) => void;
+  onSave?: (evaluation: Evaluation, options?: { silent?: boolean }) => void;
 
   /** Called when user starts voice dictation */
   onVoiceDictation?: () => void;

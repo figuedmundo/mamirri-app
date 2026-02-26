@@ -112,10 +112,10 @@ export const generateComparisonReport = async (
 
     const activeEval = getActiveEvaluation(clinicalCase);
 
-    const initialFootprint = activeEval?.footprints.find(
+    const initialFootprint = activeEval?.footprints?.find(
       (f) => f.type === 'initial',
     );
-    const finalFootprint = activeEval?.footprints.find(
+    const finalFootprint = activeEval?.footprints?.find(
       (f) => f.type === 'final',
     );
 
@@ -195,21 +195,33 @@ export const generateComparisonReport = async (
     addSectionTitle('Métricas Clínicas');
 
     const activeEval = getActiveEvaluation(clinicalCase);
-    const initialPain = activeEval?.painScale.activity || 0;
+    const initialPain = activeEval?.painScale?.activity ?? 0;
     const finalSession =
       clinicalCase.treatmentSessions[clinicalCase.treatmentSessions.length - 1];
     const finalPain = finalSession ? finalSession.finalPainLevel : '-';
     const painChange =
       typeof finalPain === 'number' ? finalPain - initialPain : '-';
 
-    const initialBarthel = activeEval?.avdEvaluation.barthel.total || 0;
+    const initialBarthel =
+      (
+        activeEval?.avdEvaluation as
+          | { barthel?: { total?: number } }
+          | undefined
+      )?.barthel?.total ?? 0;
     const finalBarthel =
       clinicalCase.treatmentSessions.length > 0
         ? Math.min(100, initialBarthel + 5)
         : initialBarthel;
     const barthelChange = finalBarthel - initialBarthel;
 
-    const schoberResult = activeEval?.orthopedicTests.schober.result || '-';
+    const schoberResult =
+      (
+        activeEval?.orthopedicTests as
+          | {
+              schober?: { result?: number | string };
+            }
+          | undefined
+      )?.schober?.result ?? '-';
 
     const metrics = [
       {

@@ -17,8 +17,8 @@ describe('TranscriptionProcessor', () => {
         {
           provide: PrismaService,
           useValue: {
+            $queryRaw: jest.fn(),
             evaluation: {
-              findMany: jest.fn(),
               update: jest.fn(),
             },
             treatmentSession: {
@@ -55,7 +55,7 @@ describe('TranscriptionProcessor', () => {
 
   describe('handlePendingTranscriptions', () => {
     it('should swallow P2022 missing column errors from evaluation scan', async () => {
-      (prismaService.evaluation.findMany as jest.Mock).mockRejectedValue({
+      (prismaService.$queryRaw as jest.Mock).mockRejectedValue({
         code: 'P2022',
         message:
           'The column `(not available)` does not exist in the current database.',
@@ -86,7 +86,7 @@ describe('TranscriptionProcessor', () => {
         ],
       };
 
-      (prismaService.evaluation.findMany as jest.Mock).mockResolvedValue([
+      (prismaService.$queryRaw as jest.Mock).mockResolvedValue([
         mockEvaluation,
       ]);
       (prismaService.treatmentSession.findMany as jest.Mock).mockResolvedValue(
@@ -129,7 +129,7 @@ describe('TranscriptionProcessor', () => {
         ],
       };
 
-      (prismaService.evaluation.findMany as jest.Mock).mockResolvedValue([
+      (prismaService.$queryRaw as jest.Mock).mockResolvedValue([
         mockEvaluation,
       ]);
       (prismaService.treatmentSession.findMany as jest.Mock).mockResolvedValue(
@@ -172,7 +172,7 @@ describe('TranscriptionProcessor', () => {
         ],
       };
 
-      (prismaService.evaluation.findMany as jest.Mock).mockResolvedValue([
+      (prismaService.$queryRaw as jest.Mock).mockResolvedValue([
         mockEvaluation,
       ]);
       (prismaService.treatmentSession.findMany as jest.Mock).mockResolvedValue(

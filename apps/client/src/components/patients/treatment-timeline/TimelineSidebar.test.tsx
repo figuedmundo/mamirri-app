@@ -273,4 +273,23 @@ describe('TimelineSidebar', () => {
     expect(screen.getByText('10 ene')).toBeInTheDocument();
     expect(screen.getByText('20 ene')).toBeInTheDocument();
   });
+
+  it('should render with fallback phase when treatment plan is missing', () => {
+    const clinicalCaseWithoutPlan = {
+      ...mockClinicalCase,
+      treatmentPlan: null,
+    } as unknown as ClinicalCase;
+
+    render(
+      <TimelineSidebar
+        clinicalCase={clinicalCaseWithoutPlan}
+        onSelectSession={mockOnSelectSession}
+      />,
+    );
+
+    expect(screen.getByText(/Fase 1: General/)).toBeInTheDocument();
+    expect(screen.getAllByTestId('sidebar-session-btn').length).toBeGreaterThan(
+      0,
+    );
+  });
 });

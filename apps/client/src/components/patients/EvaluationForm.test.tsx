@@ -104,6 +104,48 @@ describe('EvaluationForm SOAP', () => {
     ).toBeInTheDocument();
   });
 
+  it('persists subjective text inside diagnosis on manual save', async () => {
+    const onSave = vi.fn();
+    render(<EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />);
+
+    fireEvent.change(
+      screen.getByPlaceholderText('Motivo de consulta, historia y síntomas'),
+      {
+        target: { value: 'Paciente refiere dolor mandibular al despertar' },
+      },
+    );
+    fireEvent.click(screen.getByText('Guardar Evaluación'));
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    const payload = onSave.mock.calls[0][0] as Evaluation;
+    expect(payload.diagnosis.subjective).toBe(
+      'Paciente refiere dolor mandibular al despertar',
+    );
+  });
+
+  it('does a silent save on unmount when there are unsaved changes', async () => {
+    const onSave = vi.fn();
+    const { unmount } = render(
+      <EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />,
+    );
+
+    fireEvent.change(
+      screen.getByPlaceholderText('Motivo de consulta, historia y síntomas'),
+      {
+        target: { value: 'Texto pendiente antes de salir de la vista' },
+      },
+    );
+
+    unmount();
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    const payload = onSave.mock.calls[0][0] as Evaluation;
+    expect(payload.diagnosis.subjective).toBe(
+      'Texto pendiente antes de salir de la vista',
+    );
+    expect(onSave.mock.calls[0][1]).toEqual({ silent: true });
+  });
+
   it('shows objective section and allows adding tests', () => {
     render(<EvaluationForm clinicalCase={mockClinicalCase} />);
 
@@ -119,20 +161,18 @@ describe('EvaluationForm SOAP', () => {
     expect(screen.getByText('Quitar')).toBeInTheDocument();
   });
 
-  it('calls onPainScaleChange when objective slider changes', async () => {
-    const onPainScaleChange = vi.fn();
-    render(
-      <EvaluationForm
-        clinicalCase={mockClinicalCase}
-        onPainScaleChange={onPainScaleChange}
-      />,
-    );
+  it('updates objective slider value locally without triggering external save callback', async () => {
+    const onSave = vi.fn();
+    render(<EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />);
 
     fireEvent.click(screen.getByText('O - Objective'));
     const sliders = screen.getAllByRole('slider');
     fireEvent.change(sliders[0], { target: { value: '8' } });
 
-    await waitFor(() => expect(onPainScaleChange).toHaveBeenCalled());
+    await waitFor(() =>
+      expect((sliders[0] as HTMLInputElement).value).toBe('8'),
+    );
+    expect(onSave).not.toHaveBeenCalled();
   });
 
   it('calls onSave with updated diagnosis', async () => {
