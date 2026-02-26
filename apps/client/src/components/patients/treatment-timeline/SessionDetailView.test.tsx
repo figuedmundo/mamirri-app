@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SessionDetailView } from './SessionDetailView';
 import type { ClinicalCase } from '../../../types/patient';
-import { EvaluationType } from '../../../types/patient';
 
 vi.mock('./TimelineSidebar', () => ({
   TimelineSidebar: ({
@@ -123,7 +122,6 @@ const mockClinicalCase: ClinicalCase = {
       id: 'eval-initial',
       clinicalCaseId: 'case-001',
       date: '2024-01-01',
-      type: EvaluationType.INITIAL,
       posturogram: {},
       orthopedicTests: {
         thomas: { result: 'normal', interpretation: 'Negative' },
@@ -181,7 +179,6 @@ const mockClinicalCase: ClinicalCase = {
       id: 'eval-final',
       clinicalCaseId: 'case-001',
       date: '2024-02-01',
-      type: EvaluationType.FINAL,
       posturogram: {},
       orthopedicTests: {
         thomas: { result: 'normal', interpretation: 'Negative' },

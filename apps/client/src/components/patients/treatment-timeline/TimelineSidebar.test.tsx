@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TimelineSidebar } from './TimelineSidebar';
 import type { ClinicalCase } from '../../../types/patient';
-import { EvaluationType } from '../../../types/patient';
 
 const mockClinicalCase: ClinicalCase = {
   id: 'case-001',
@@ -107,7 +106,6 @@ const mockClinicalCase: ClinicalCase = {
       id: 'eval-001',
       clinicalCaseId: 'case-001',
       date: '2024-01-01',
-      type: EvaluationType.INITIAL,
       posturogram: {},
       orthopedicTests: {
         thomas: { result: 'normal', interpretation: 'Negative' },

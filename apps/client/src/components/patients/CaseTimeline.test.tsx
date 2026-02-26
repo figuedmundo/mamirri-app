@@ -112,7 +112,6 @@ const mockClinicalCase: ClinicalCase = {
       id: 'eval-001',
       clinicalCaseId: 'caso-001',
       date: '2024-01-01T00:00:00Z',
-      type: 'INITIAL',
       posturogram: {},
       orthopedicTests: {
         thomas: { result: 'normal', interpretation: 'Negative' },

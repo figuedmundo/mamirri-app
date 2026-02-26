@@ -108,7 +108,6 @@ const mockPatient: Patient = {
           id: 'e1',
           clinicalCaseId: 'c1',
           date: '2025-01-10',
-          type: 'INITIAL',
           posturogram: {},
           orthopedicTests: {
             thomas: { result: 'negative', interpretation: '' },

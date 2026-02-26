@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  getInitialEvaluation,
-  getFinalEvaluation,
-} from '../../lib/evaluation-utils';
+import { getActiveEvaluation } from '../../lib/evaluation-utils';
 import type { ComparisonProps } from '../../types/patient';
 
 type ViewMode = 'slider' | 'side-by-side';
@@ -30,13 +27,14 @@ export function ComparisonBoard({
     }
   };
 
-  const initialEval = getInitialEvaluation(clinicalCase);
-  const finalEval = getFinalEvaluation(clinicalCase);
+  const activeEvaluation = getActiveEvaluation(clinicalCase);
 
-  const initialFootprint = initialEval?.footprints.find(
+  const initialFootprint = activeEvaluation?.footprints.find(
     (h) => h.type === 'initial',
   );
-  const finalFootprint = finalEval?.footprints.find((h) => h.type === 'final');
+  const finalFootprint = activeEvaluation?.footprints.find(
+    (h) => h.type === 'final',
+  );
 
   const toggleMode = () => {
     const newMode: ViewMode = viewMode === 'slider' ? 'side-by-side' : 'slider';

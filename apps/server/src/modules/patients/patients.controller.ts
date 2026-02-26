@@ -19,10 +19,8 @@ import {
 } from '@nestjs/swagger';
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
-import type {
-  CreateTreatmentSessionDto,
-  UpdateEvaluationDto,
-} from './patients.service';
+import type { CreateTreatmentSessionDto } from './patients.service';
+import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTherapist } from './decorators/current-therapist.decorator';
 

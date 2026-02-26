@@ -223,28 +223,10 @@ export type PostureView =
   | 'footprint-left'
   | 'footprint-right';
 
-export const EvaluationType = {
-  INITIAL: 'INITIAL',
-  PROGRESS: 'PROGRESS',
-  FINAL: 'FINAL',
-} as const;
-
-export type EvaluationTypeValue =
-  (typeof EvaluationType)[keyof typeof EvaluationType];
-
-/**
- * Evaluation type options available in UI (PROGRESS is reserved for future use)
- */
-export const EVALUATION_TYPE_OPTIONS = [
-  { value: EvaluationType.INITIAL, label: 'Evaluación Inicial', icon: '🟢' },
-  { value: EvaluationType.FINAL, label: 'Evaluación Final', icon: '🔵' },
-] as const;
-
 export interface Evaluation {
   id: string;
   clinicalCaseId: string;
   date: string;
-  type: EvaluationTypeValue;
   posturogram: Posturogram;
   orthopedicTests: OrthopedicTests;
   avdEvaluation: AVDEvaluation;
@@ -331,6 +313,7 @@ export interface ClinicalCase {
   pathologicalHistory?: string[];
   pharmacologicalHistory?: string;
   initialMedicalDiagnosis?: string;
+  evaluation?: Evaluation;
   evaluations: Evaluation[];
   treatmentPlan: TreatmentPlan;
   treatmentSessions: TreatmentSession[];
@@ -420,13 +403,9 @@ export interface EvaluationFormProps {
 
   /** Called when user updates pain scale */
   onPainScaleChange?: (painScale: PainScale) => void;
-
-  /** Evaluation type being edited (for new evaluations, this is auto-defaulted) */
-  evaluationType?: EvaluationTypeValue;
 }
 
 export interface ComparisonProps {
-  /** The clinical case with initial and final evaluations */
   clinicalCase: ClinicalCase;
 
   /** Called when user wants to export comparison report */
