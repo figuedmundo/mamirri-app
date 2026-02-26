@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PatientList } from '../components/patients/PatientList';
 import {
@@ -38,18 +38,13 @@ export default function Patients() {
   const updatePatient = useUpdatePatient();
   const deletePatient = useDeletePatient();
 
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(openCreateFromUrl);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editPatient, setEditPatient] = useState<Patient | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
   const openCreateFromUrl = searchParams.get('action') === 'new';
 
-  useEffect(() => {
-    if (openCreateFromUrl) {
-      setIsCreateOpen(true);
-    }
-  }, [openCreateFromUrl]);
 
   const closeCreateDialog = () => {
     setIsCreateOpen(false);
