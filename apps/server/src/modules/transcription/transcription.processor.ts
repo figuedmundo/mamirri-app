@@ -18,8 +18,12 @@ export class TranscriptionProcessor {
   @Cron('*/30 * * * * *')
   async handlePendingTranscriptions() {
     this.logger.log('Checking for pending transcriptions...');
-    await this.processEvaluations();
-    await this.processSessions();
+    await this.runSafely('evaluation transcription scan', async () => {
+      await this.processEvaluations();
+    });
+    await this.runSafely('session transcription scan', async () => {
+      await this.processSessions();
+    });
   }
 
   private async processEvaluations() {
@@ -180,6 +184,42 @@ export class TranscriptionProcessor {
       return false;
     }
 
-    return maybeMessage.includes('does not exist');
+    if (
+      maybeMessage.includes('P2022') ||
+      maybeMessage.includes('does not exist') ||
+      maybeMessage.includes('ColumnNotFound')
+    ) {
+      return true;
+    }
+
+    try {
+      const serialized = JSON.stringify(error);
+      return (
+        serialized.includes('P2022') ||
+        serialized.includes('ColumnNotFound') ||
+        serialized.includes('does not exist')
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  private async runSafely(label: string, fn: () => Promise<void>) {
+    try {
+      await fn();
+    } catch (error: unknown) {
+      if (this.isMissingColumnError(error)) {
+        this.logger.warn(
+          `Skipping ${label} due to missing database column. Run Prisma migrations or db push and restart the server.`,
+        );
+        return;
+      }
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Unknown transcription scheduler error';
+      this.logger.error(`Failed during ${label}: ${message}`);
+    }
   }
 }

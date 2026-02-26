@@ -54,6 +54,22 @@ describe('TranscriptionProcessor', () => {
   });
 
   describe('handlePendingTranscriptions', () => {
+    it('should swallow P2022 missing column errors from evaluation scan', async () => {
+      (prismaService.evaluation.findMany as jest.Mock).mockRejectedValue({
+        code: 'P2022',
+        message:
+          'The column `(not available)` does not exist in the current database.',
+      });
+      (prismaService.treatmentSession.findMany as jest.Mock).mockResolvedValue(
+        [],
+      );
+
+      await expect(
+        processor.handlePendingTranscriptions(),
+      ).resolves.toBeUndefined();
+      expect(prismaService.evaluation.update).not.toHaveBeenCalled();
+    });
+
     it('should process pending evaluation voice notes', async () => {
       const mockEvaluation = {
         id: 'eval-1',
