@@ -176,7 +176,7 @@ export function VoiceRecorder({
                 variant="ghost"
                 size="sm"
                 className="text-slate-600 dark:text-slate-400"
-                data-testid="cancel-recording"
+                data-testid="recorder-cancel-btn"
               >
                 Cancelar
               </Button>
@@ -185,6 +185,7 @@ export function VoiceRecorder({
                 variant="default"
                 size="sm"
                 className="bg-rose-600 hover:bg-rose-700"
+                data-testid="recorder-stop-btn"
               >
                 Detener
               </Button>

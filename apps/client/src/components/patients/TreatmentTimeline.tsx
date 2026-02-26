@@ -302,7 +302,7 @@ export function TreatmentTimeline({
       <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <PhaseProgress
-            phases={treatmentPlan.phases}
+            phases={treatmentPlan?.phases || []}
             currentPhase={currentPhase}
             sessions={treatmentSessions}
             selectedPhase={selectedPhase}
@@ -352,7 +352,7 @@ export function TreatmentTimeline({
           setEditingSession(null);
         }}
         onSubmit={handleFormSubmit}
-        phases={treatmentPlan.phases}
+        phases={treatmentPlan?.phases || []}
         initialData={editingSession || undefined}
         isLoading={isSubmitting}
       />
