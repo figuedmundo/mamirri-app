@@ -57,7 +57,7 @@ export function MultimediaSection({
   const [lightboxIndex, setLightboxIndex] = React.useState<number>(-1);
 
   // Flatten media
-  const footprints = clinicalCase.evaluations.flatMap((e) => e.footprints);
+  const footprints = clinicalCase.evaluation?.footprints ?? [];
 
   // Transform to common media format for lightbox
   const mediaItems: MediaItem[] = footprints.map((fp) => ({
@@ -135,7 +135,7 @@ export function MultimediaSection({
       setUploadStep('uploading');
 
       // Get current evaluation or create fallback logic
-      const targetEvaluation = clinicalCase.evaluations[0];
+      const targetEvaluation = clinicalCase.evaluation;
       if (!targetEvaluation) {
         throw new Error('No hay evaluación activa para subir la foto');
       }

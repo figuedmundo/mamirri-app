@@ -25,19 +25,45 @@ vi.mock('@/components/ui/media-lightbox', () => ({
 describe('MultimediaSection', () => {
   const mockCase = {
     id: 'case-1',
-    evaluations: [
-      {
-        id: 'eval-1',
-        date: '2026-01-01',
-        type: 'INITIAL',
-        footprints: [
-          { id: 'fp-1', url: 'fp1.jpg', side: 'left', date: '2026-01-01' },
-          { id: 'fp-2', url: 'fp2.jpg', side: 'right', date: '2026-01-01' },
-        ],
-        postureVideos: [],
-        voiceNotes: [],
+    evaluation: {
+      id: 'eval-1',
+      clinicalCaseId: 'case-1',
+      date: '2026-01-01',
+      posturogram: {},
+      orthopedicTests: {},
+      avdEvaluation: {
+        barthel: { total: 0 },
+        lawton: { total: 0 },
       },
-    ],
+      painScale: { activity: 0, rest: 0, palpation: 0, type: 'chronic' },
+      diagnosis: {
+        functionalIndicator: '',
+        clinicalAspect: '',
+        anatomopathology: '',
+        avdConsequences: '',
+      },
+      footprints: [
+        {
+          id: 'fp-1',
+          evaluationId: 'eval-1',
+          url: 'fp1.jpg',
+          side: 'left',
+          date: '2026-01-01',
+          type: 'initial',
+        },
+        {
+          id: 'fp-2',
+          evaluationId: 'eval-1',
+          url: 'fp2.jpg',
+          side: 'right',
+          date: '2026-01-01',
+          type: 'final',
+        },
+      ],
+      postureVideos: [],
+      voiceNotes: [],
+    },
+    evaluations: [],
     treatmentSessions: [],
   } as unknown as ClinicalCase;
 

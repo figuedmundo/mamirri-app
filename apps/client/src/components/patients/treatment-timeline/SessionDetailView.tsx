@@ -5,10 +5,7 @@ import { PosturogramViewer } from '../PosturogramViewer';
 import { SessionPhotoGallery } from './SessionPhotoGallery';
 import { SessionPhotoCapture } from './SessionPhotoCapture';
 import { Play } from 'lucide-react';
-import {
-  getInitialEvaluation,
-  getFinalEvaluation,
-} from '../../../lib/evaluation-utils';
+import { getActiveEvaluation } from '../../../lib/evaluation-utils';
 import { photoQueue, type PendingPhoto, isOnline } from '@/lib/photo-queue';
 import { mediaApi } from '../../../api/media';
 import { useToast } from '@/hooks/use-toast';
@@ -34,13 +31,14 @@ export function SessionDetailView({
 
   const activeSession = treatmentSessions.find((s) => s.id === activeSessionId);
 
-  const initialEval = getInitialEvaluation(clinicalCase);
-  const finalEval = getFinalEvaluation(clinicalCase);
+  const activeEval = getActiveEvaluation(clinicalCase);
 
-  const initialFootprint = initialEval?.footprints?.find(
+  const initialFootprint = activeEval?.footprints?.find(
     (f) => f.type === 'initial',
   );
-  const finalFootprint = finalEval?.footprints?.find((f) => f.type === 'final');
+  const finalFootprint = activeEval?.footprints?.find(
+    (f) => f.type === 'final',
+  );
 
   const activeSessionIndex = [...treatmentSessions]
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())

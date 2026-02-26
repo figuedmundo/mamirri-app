@@ -127,7 +127,7 @@ export class ClinicalCasesService {
             name: true,
           },
         },
-        evaluations: true,
+        evaluation: true,
         treatmentSessions: true,
         treatmentPlan: true,
       },

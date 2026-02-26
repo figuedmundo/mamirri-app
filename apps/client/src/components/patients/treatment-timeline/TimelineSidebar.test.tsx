@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TimelineSidebar } from './TimelineSidebar';
 import type { ClinicalCase } from '../../../types/patient';
-import { EvaluationType } from '../../../types/patient';
 
 const mockClinicalCase: ClinicalCase = {
   id: 'case-001',
@@ -107,7 +106,6 @@ const mockClinicalCase: ClinicalCase = {
       id: 'eval-001',
       clinicalCaseId: 'case-001',
       date: '2024-01-01',
-      type: EvaluationType.INITIAL,
       posturogram: {},
       orthopedicTests: {
         thomas: { result: 'normal', interpretation: 'Negative' },
@@ -274,5 +272,24 @@ describe('TimelineSidebar', () => {
 
     expect(screen.getByText('10 ene')).toBeInTheDocument();
     expect(screen.getByText('20 ene')).toBeInTheDocument();
+  });
+
+  it('should render with fallback phase when treatment plan is missing', () => {
+    const clinicalCaseWithoutPlan = {
+      ...mockClinicalCase,
+      treatmentPlan: null,
+    } as unknown as ClinicalCase;
+
+    render(
+      <TimelineSidebar
+        clinicalCase={clinicalCaseWithoutPlan}
+        onSelectSession={mockOnSelectSession}
+      />,
+    );
+
+    expect(screen.getByText(/Fase 1: General/)).toBeInTheDocument();
+    expect(screen.getAllByTestId('sidebar-session-btn').length).toBeGreaterThan(
+      0,
+    );
   });
 });

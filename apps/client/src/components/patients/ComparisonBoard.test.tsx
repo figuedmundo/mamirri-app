@@ -28,7 +28,6 @@ describe('ComparisonBoard', () => {
         id: 'e1',
         clinicalCaseId: 'c1',
         date: '2026-01-01',
-        type: 'INITIAL',
         posturogram: {},
         orthopedicTests: {
           thomas: { result: 'Negative', interpretation: '' },

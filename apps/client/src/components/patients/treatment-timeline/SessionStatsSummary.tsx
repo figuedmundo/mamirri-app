@@ -31,7 +31,7 @@ export function SessionStatsSummary({
       ? Math.max(...treatmentSessions.map((s) => s.phaseNumber))
       : 1;
 
-  const currentPhase = treatmentPlan.phases.find(
+  const currentPhase = treatmentPlan?.phases?.find(
     (p) => p.number === currentPhaseNumber,
   );
 
@@ -40,9 +40,9 @@ export function SessionStatsSummary({
       (1000 * 60 * 60 * 24),
   );
 
-  const remainingPhases = treatmentPlan.phases.filter(
+  const remainingPhases = treatmentPlan?.phases?.filter(
     (p) => p.number > currentPhaseNumber,
-  ).length;
+  ).length || 0;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

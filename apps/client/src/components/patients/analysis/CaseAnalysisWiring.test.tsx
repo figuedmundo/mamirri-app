@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CaseDetailLayout } from '../CaseDetailLayout';
 import type { Patient, ClinicalCase } from '../../../types/patient';
-import { EvaluationType } from '../../../types/patient';
 import type { AnalysisResult } from '@/types/analysis';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
@@ -102,7 +101,6 @@ const mockClinicalCase: ClinicalCase = {
       id: 'eval-001',
       clinicalCaseId: 'caso-001',
       date: '2024-01-01T00:00:00Z',
-      type: EvaluationType.INITIAL,
       posturogram: {},
       orthopedicTests: {
         thomas: { result: 'normal', interpretation: '' },

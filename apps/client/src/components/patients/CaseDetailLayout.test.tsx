@@ -11,7 +11,6 @@ import type {
   Posturogram,
   PainScale,
 } from '../../types/patient';
-import { EvaluationType } from '../../types/patient';
 import { patientsApi } from '../../api/patients';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
@@ -70,7 +69,6 @@ vi.mock('./EvaluationForm', () => ({
             id: 'eval-001',
             clinicalCaseId: 'caso-001',
             date: '2024-01-01T00:00:00Z',
-            type: EvaluationType.INITIAL,
             posturogram: {},
             orthopedicTests: {
               thomas: { result: 'normal', interpretation: 'Negative' },
@@ -345,7 +343,6 @@ const mockClinicalCaseWithSessions: ClinicalCase = {
       id: 'eval-001',
       clinicalCaseId: 'caso-001',
       date: '2024-01-01T00:00:00Z',
-      type: EvaluationType.INITIAL,
       posturogram: {},
       orthopedicTests: {
         thomas: { result: 'normal', interpretation: 'Negative' },
@@ -554,7 +551,6 @@ describe('CaseDetailLayout', () => {
       expect(patientsApi.updateEvaluation).toHaveBeenCalledWith(
         'eval-001',
         expect.objectContaining({
-          id: 'eval-001',
           painScale: expect.objectContaining({ activity: 5 }),
         }),
       );
@@ -668,7 +664,6 @@ describe('CaseDetailLayout', () => {
       expect(patientsApi.updateEvaluation).toHaveBeenCalledWith(
         'eval-001',
         expect.objectContaining({
-          id: 'eval-001',
           painScale: expect.objectContaining({ activity: 5 }),
         }),
       );

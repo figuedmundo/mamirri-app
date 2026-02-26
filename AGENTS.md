@@ -8,7 +8,7 @@
 
 ## Source Control (Git)
 
-- when invoking `git commit`, always use `--author="[my-name] AI <my-name+ai@gmail.com>"`
+- when invoking `git commit`, always use `--author="Edmundo AI <figuedmundo+ai@gmail.com>"`
 
 ## Useful Command-Line Tools
 
@@ -66,11 +66,11 @@
 
 You have new skills. If any skill might be relevant then you MUST read it.
 
-- [docs-write](.opencode/skill/docs-write/SKILL.md) - Write documentation following Metabase's conversational, clear, and user-focused style. Use when creating or editing documentation files (markdown, MDX, etc.).
-- [frontend-design](.opencode/skill/frontend-design/SKILL.md) - Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished code that avoids generic AI aesthetics.
-- [modern-javascript-patterns](.opencode/skill/modern-javascript-patterns/SKILL.md) - Master ES6+ features including async/await, destructuring, spread operators, arrow functions, promises, modules, iterators, generators, and functional programming patterns for writing clean, efficient JavaScript code. Use when refactoring legacy code, implementing modern patterns, or optimizing JavaScript applications.
+- [docs-write](.agents/skills/docs-write/SKILL.md) - Write documentation following Metabase's conversational, clear, and user-focused style. Use when creating or editing documentation files (markdown, MDX, etc.).
+- [frontend-design](.agents/skills/frontend-design/SKILL.md) - Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished code that avoids generic AI aesthetics.
+- [modern-javascript-patterns](.agents/skills/modern-javascript-patterns/SKILL.md) - Master ES6+ features including async/await, destructuring, spread operators, arrow functions, promises, modules, iterators, generators, and functional programming patterns for writing clean, efficient JavaScript code. Use when refactoring legacy code, implementing modern patterns, or optimizing JavaScript applications.
 - [playwright](.skills/playwright/SKILL.md) - Playwright E2E testing patterns. Trigger: When writing Playwright E2E tests (Page Object Model, selectors, MCP exploration workflow). For Prowler-specific UI conventions under ui/tests, also use prowler-test-ui.
-- [systematic-debugging](.opencode/skill/systematic-debugging/SKILL.md) - Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes - four-phase framework (root cause investigation, pattern analysis, hypothesis testing, implementation) that ensures understanding before attempting solutions
-- [test-writer](.opencode/skill/test-writer/SKILL.md) - Generate comprehensive Vitest tests for code examples in JavaScript concept documentation pages, following project conventions and referencing source lines
-- [web-artifacts-builder](.opencode/skill/web-artifacts-builder/SKILL.md) - Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.
+- [systematic-debugging](.agents/skills/systematic-debugging/SKILL.md) - Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes - four-phase framework (root cause investigation, pattern analysis, hypothesis testing, implementation) that ensures understanding before attempting solutions
+- [test-writer](.agents/skills/test-writer/SKILL.md) - Generate comprehensive Vitest tests for code examples in JavaScript concept documentation pages, following project conventions and referencing source lines
+- [web-artifacts-builder](.agents/skills/web-artifacts-builder/SKILL.md) - Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.
   </skills>

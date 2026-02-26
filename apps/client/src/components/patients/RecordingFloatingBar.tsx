@@ -45,6 +45,7 @@ export function RecordingFloatingBar({
           className="h-11 w-11 rounded-full shadow-md"
           onClick={onStop}
           aria-label="Detener grabación"
+          data-testid="floating-stop-btn"
         >
           <Square className="h-5 w-5 fill-current" />
         </Button>
@@ -55,6 +56,7 @@ export function RecordingFloatingBar({
           className="h-11 w-11 rounded-full text-slate-400 hover:text-white hover:bg-slate-800"
           onClick={onCancel}
           aria-label="Cancelar grabación"
+          data-testid="floating-cancel-btn"
         >
           <X className="h-5 w-5" />
         </Button>

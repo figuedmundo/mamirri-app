@@ -205,7 +205,6 @@ describe('Clinical Cases Integration (DB Layer)', () => {
     const evaluation = await prisma.evaluation.create({
       data: {
         date: new Date(),
-        type: 'INITIAL',
         clinicalCaseId: clinicalCase.id,
         painScale: { rest: 3, activity: 7 },
         posturogram: {},

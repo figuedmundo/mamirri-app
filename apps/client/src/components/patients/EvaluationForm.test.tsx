@@ -1,94 +1,57 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { EvaluationForm } from './EvaluationForm';
 import type { ClinicalCase, Evaluation } from '../../types/patient';
-import type { AnatomicalPoint, PointStatus } from './body-silhouette-types';
-
-// Mock child components to simplify testing
-vi.mock('./BodySilhouette', () => ({
-  BodySilhouette: ({
-    onChange,
-  }: {
-    onChange: (point: AnatomicalPoint, status: PointStatus) => void;
-  }) => (
-    <div
-      data-testid="body-silhouette"
-      onClick={() =>
-        onChange('head', { deviation: 'normal', severity: 'normal' })
-      }
-    >
-      Body Silhouette
-    </div>
-  ),
-}));
 
 vi.mock('./VoiceRecorder', () => ({
   VoiceRecorder: () => <div data-testid="voice-recorder">Voice Recorder</div>,
 }));
 
-// Mock hooks
-const mockMarkDirty = vi.fn();
-const mockMarkClean = vi.fn();
-
-vi.mock('../../hooks/use-unsaved-changes', () => ({
-  useUnsavedChanges: () => ({
-    isDirty: true, // Force dirty to enable save button for testing
-    markDirty: mockMarkDirty,
-    markClean: mockMarkClean,
-  }),
-}));
-
 vi.mock('../../hooks/use-toast', () => ({
-  useToast: () => ({
-    toast: vi.fn(),
-  }),
+  useToast: () => ({ toast: vi.fn() }),
 }));
 
 const mockEvaluation: Evaluation = {
   id: 'eval-1',
   clinicalCaseId: 'case-1',
-  date: '2023-01-01',
-  type: 'INITIAL',
-  posturogram: {
-    head: { deviation: 'normal', severity: 'normal' },
-    shoulders: { deviation: 'normal', severity: 'normal' },
-  },
+  date: '2026-02-26',
+  posturogram: {},
   orthopedicTests: {
-    thomas: { result: 1, interpretation: 'Normal' },
-    ely: { result: 1, interpretation: 'Normal' },
-    ober: { result: 1, interpretation: 'Normal' },
-    schober: { result: 1, interpretation: 'Normal' },
+    thomas: { result: 0, interpretation: '' },
+    ely: { result: 0, interpretation: '' },
+    ober: { result: 0, interpretation: '' },
+    schober: { result: 0, interpretation: '' },
   },
   avdEvaluation: {
     barthel: {
-      feeding: 10,
-      bathing: 5,
-      grooming: 5,
-      dressing: 10,
-      bowels: 10,
-      bladder: 10,
-      toiletUse: 10,
-      transfers: 15,
-      mobility: 15,
-      stairs: 10,
-      total: 100,
-      interpretation: 'Independiente',
+      feeding: 0,
+      bathing: 0,
+      grooming: 0,
+      dressing: 0,
+      bowels: 0,
+      bladder: 0,
+      toiletUse: 0,
+      transfers: 0,
+      mobility: 0,
+      stairs: 0,
+      total: 0,
+      interpretation: '',
     },
     lawton: {
-      phoneUse: 1,
-      shopping: 1,
-      foodPreparation: 1,
-      housekeeping: 1,
-      laundry: 1,
-      transportation: 1,
-      medication: 1,
-      finances: 1,
-      total: 8,
-      interpretation: 'Independiente',
+      phoneUse: 0,
+      shopping: 0,
+      foodPreparation: 0,
+      housekeeping: 0,
+      laundry: 0,
+      transportation: 0,
+      medication: 0,
+      finances: 0,
+      total: 0,
+      interpretation: '',
     },
   },
   painScale: {
-    activity: 5,
+    activity: 1,
     rest: 2,
     palpation: 3,
     type: 'chronic',
@@ -108,105 +71,123 @@ const mockClinicalCase: ClinicalCase = {
   patientId: 'patient-1',
   title: 'Test Case',
   status: 'active',
-  startDate: '2023-01-01',
+  startDate: '2026-02-26',
   consultationReason: 'Test',
+  evaluation: mockEvaluation,
   evaluations: [mockEvaluation],
   treatmentPlan: {
     id: 'plan-1',
     clinicalCaseId: 'case-1',
-    createdAt: '2023-01-01',
+    createdAt: '2026-02-26',
     objectives: { therapeutic: '', prophylactic: '', educational: '' },
     phases: [],
   },
   treatmentSessions: [],
 };
 
-describe('EvaluationForm', () => {
-  it('calls onPosturogramChange when posturogram data changes', async () => {
-    const onPosturogramChange = vi.fn();
-    render(
-      <EvaluationForm
-        clinicalCase={mockClinicalCase}
-        onPosturogramChange={onPosturogramChange}
-      />,
-    );
+describe('EvaluationForm SOAP', () => {
+  it('renders SOAP tabs', () => {
+    render(<EvaluationForm clinicalCase={mockClinicalCase} />);
 
-    // Simulate change in BodySilhouette
-    const silhouette = screen.getByTestId('body-silhouette');
-    fireEvent.click(silhouette);
-
-    // Wait for debounce
-    await waitFor(
-      () => {
-        expect(onPosturogramChange).toHaveBeenCalled();
-      },
-      { timeout: 1000 },
-    );
+    expect(screen.getByText('S - Subjective')).toBeInTheDocument();
+    expect(screen.getByText('O - Objective')).toBeInTheDocument();
+    expect(screen.getByText('A - Assessment')).toBeInTheDocument();
+    expect(screen.getByText('P - Plan')).toBeInTheDocument();
   });
 
-  it('calls onPainScaleChange when pain scale data changes', async () => {
-    const onPainScaleChange = vi.fn();
-    render(
-      <EvaluationForm
-        clinicalCase={mockClinicalCase}
-        onPainScaleChange={onPainScaleChange}
-      />,
-    );
+  it('renders voice recorder in Subjective section', () => {
+    render(<EvaluationForm clinicalCase={mockClinicalCase} />);
 
-    // Switch to Pain section
-    const painTab = screen.getByText('Escala de Dolor');
-    fireEvent.click(painTab);
-
-    // Change pain value
-    const activitySlider = screen.getByLabelText(/Durante actividad/i);
-    fireEvent.change(activitySlider, { target: { value: '8' } });
-
-    // Wait for debounce
-    await waitFor(
-      () => {
-        expect(onPainScaleChange).toHaveBeenCalled();
-      },
-      { timeout: 1000 },
-    );
+    expect(screen.getByTestId('voice-recorder')).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('Motivo de consulta, historia y síntomas'),
+    ).toBeInTheDocument();
   });
 
-  it('calls onSave when save button is clicked', async () => {
+  it('persists subjective text inside diagnosis on manual save', async () => {
     const onSave = vi.fn();
     render(<EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />);
 
-    const saveButton = screen.getByText('Guardar Evaluación');
-    fireEvent.click(saveButton);
+    fireEvent.change(
+      screen.getByPlaceholderText('Motivo de consulta, historia y síntomas'),
+      {
+        target: { value: 'Paciente refiere dolor mandibular al despertar' },
+      },
+    );
+    fireEvent.click(screen.getByText('Guardar Evaluación'));
 
-    await waitFor(() => {
-      expect(onSave).toHaveBeenCalled();
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    const payload = onSave.mock.calls[0][0] as Evaluation;
+    expect(payload.diagnosis.subjective).toBe(
+      'Paciente refiere dolor mandibular al despertar',
+    );
+  });
+
+  it('does a silent save on unmount when there are unsaved changes', async () => {
+    const onSave = vi.fn();
+    const { unmount } = render(
+      <EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />,
+    );
+
+    fireEvent.change(
+      screen.getByPlaceholderText('Motivo de consulta, historia y síntomas'),
+      {
+        target: { value: 'Texto pendiente antes de salir de la vista' },
+      },
+    );
+
+    unmount();
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    const payload = onSave.mock.calls[0][0] as Evaluation;
+    expect(payload.diagnosis.subjective).toBe(
+      'Texto pendiente antes de salir de la vista',
+    );
+    expect(onSave.mock.calls[0][1]).toEqual({ silent: true });
+  });
+
+  it('shows objective section and allows adding tests', () => {
+    render(<EvaluationForm clinicalCase={mockClinicalCase} />);
+
+    fireEvent.click(screen.getByText('O - Objective'));
+    expect(screen.getByText('Escala de dolor')).toBeInTheDocument();
+
+    fireEvent.change(screen.getByPlaceholderText('Buscar prueba'), {
+      target: { value: 'Thomas' },
     });
+    fireEvent.click(screen.getByText('+ Thomas'));
+
+    expect(screen.getByText('Thomas')).toBeInTheDocument();
+    expect(screen.getByText('Quitar')).toBeInTheDocument();
   });
 
-  it('updates orthopedic tests state correctly', () => {
-    render(<EvaluationForm clinicalCase={mockClinicalCase} />);
+  it('updates objective slider value locally without triggering external save callback', async () => {
+    const onSave = vi.fn();
+    render(<EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />);
 
-    const testsTab = screen.getByText('Tests Ortopédicos');
-    fireEvent.click(testsTab);
+    fireEvent.click(screen.getByText('O - Objective'));
+    const sliders = screen.getAllByRole('slider');
+    fireEvent.change(sliders[0], { target: { value: '8' } });
 
-    const thomasSelect = screen.getAllByRole('combobox')[0];
-    fireEvent.change(thomasSelect, { target: { value: '2' } });
-
-    expect(mockMarkDirty).toHaveBeenCalled();
+    await waitFor(() =>
+      expect((sliders[0] as HTMLInputElement).value).toBe('8'),
+    );
+    expect(onSave).not.toHaveBeenCalled();
   });
 
-  it('updates AVD evaluation and calculates totals correctly', () => {
-    render(<EvaluationForm clinicalCase={mockClinicalCase} />);
+  it('calls onSave with updated diagnosis', async () => {
+    const onSave = vi.fn();
+    render(<EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />);
 
-    const avdTab = screen.getByText('Evaluación AVD');
-    fireEvent.click(avdTab);
+    fireEvent.click(screen.getByText('A - Assessment'));
+    fireEvent.change(screen.getByPlaceholderText('Indicador funcional'), {
+      target: { value: 'Dolor mandibular' },
+    });
 
-    const feedingLabel = screen.getByText('Comer');
-    const feedingSelect = feedingLabel.nextElementSibling;
+    fireEvent.click(screen.getByText('Guardar Evaluación'));
 
-    if (!feedingSelect) throw new Error('Select not found');
-
-    fireEvent.change(feedingSelect, { target: { value: '1' } });
-
-    expect(mockMarkDirty).toHaveBeenCalled();
+    await waitFor(() => expect(onSave).toHaveBeenCalled());
+    const payload = onSave.mock.calls[0][0] as Evaluation;
+    expect(payload.diagnosis.functionalIndicator).toBe('Dolor mandibular');
   });
 });

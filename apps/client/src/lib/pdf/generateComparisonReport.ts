@@ -1,7 +1,7 @@
 import { jsPDF } from 'jspdf';
 import type { ClinicalCase, Patient } from '@/types/patient';
 import { fetchImageAsBase64 } from './fetchImageAsBase64';
-import { getInitialEvaluation, getFinalEvaluation } from '../evaluation-utils';
+import { getActiveEvaluation } from '../evaluation-utils';
 
 export const generateComparisonReport = async (
   clinicalCase: ClinicalCase,
@@ -110,13 +110,12 @@ export const generateComparisonReport = async (
   const addVisualComparison = async () => {
     addSectionTitle('Comparativa Visual (Huellas)');
 
-    const initialEval = getInitialEvaluation(clinicalCase);
-    const finalEval = getFinalEvaluation(clinicalCase);
+    const activeEval = getActiveEvaluation(clinicalCase);
 
-    const initialFootprint = initialEval?.footprints.find(
+    const initialFootprint = activeEval?.footprints?.find(
       (f) => f.type === 'initial',
     );
-    const finalFootprint = finalEval?.footprints.find(
+    const finalFootprint = activeEval?.footprints?.find(
       (f) => f.type === 'final',
     );
 
@@ -195,22 +194,34 @@ export const generateComparisonReport = async (
   const addMetricsTable = () => {
     addSectionTitle('Métricas Clínicas');
 
-    const initialEval = getInitialEvaluation(clinicalCase);
-    const initialPain = initialEval?.painScale.activity || 0;
+    const activeEval = getActiveEvaluation(clinicalCase);
+    const initialPain = activeEval?.painScale?.activity ?? 0;
     const finalSession =
       clinicalCase.treatmentSessions[clinicalCase.treatmentSessions.length - 1];
     const finalPain = finalSession ? finalSession.finalPainLevel : '-';
     const painChange =
       typeof finalPain === 'number' ? finalPain - initialPain : '-';
 
-    const initialBarthel = initialEval?.avdEvaluation.barthel.total || 0;
+    const initialBarthel =
+      (
+        activeEval?.avdEvaluation as
+          | { barthel?: { total?: number } }
+          | undefined
+      )?.barthel?.total ?? 0;
     const finalBarthel =
       clinicalCase.treatmentSessions.length > 0
         ? Math.min(100, initialBarthel + 5)
         : initialBarthel;
     const barthelChange = finalBarthel - initialBarthel;
 
-    const schoberResult = initialEval?.orthopedicTests.schober.result || '-';
+    const schoberResult =
+      (
+        activeEval?.orthopedicTests as
+          | {
+              schober?: { result?: number | string };
+            }
+          | undefined
+      )?.schober?.result ?? '-';
 
     const metrics = [
       {

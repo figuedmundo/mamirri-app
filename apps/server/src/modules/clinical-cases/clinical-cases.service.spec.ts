@@ -197,8 +197,7 @@ describe('ClinicalCasesService', () => {
         id: 'c1',
         title: 'Lower Back Pain',
         patient: { id: mockPatientId, name: 'John' },
-        evaluations: [],
-        treatmentSessions: [],
+        evaluation: null,
         treatmentPlan: null,
       };
       mockPrismaService.clinicalCase.findFirst.mockResolvedValue(clinicalCase);
@@ -213,7 +212,7 @@ describe('ClinicalCasesService', () => {
         },
         include: {
           patient: { select: { id: true, name: true } },
-          evaluations: true,
+          evaluation: true,
           treatmentSessions: true,
           treatmentPlan: true,
         },
@@ -248,8 +247,7 @@ describe('ClinicalCasesService', () => {
         id: 'c1',
         title: 'Original Title',
         patient: { id: mockPatientId, name: 'John' },
-        evaluations: [],
-        treatmentSessions: [],
+        evaluation: null,
         treatmentPlan: null,
       };
       const updatedCase = {
@@ -287,8 +285,7 @@ describe('ClinicalCasesService', () => {
         id: 'c1',
         title: 'Lower Back Pain',
         patient: { id: mockPatientId, name: 'John' },
-        evaluations: [],
-        treatmentSessions: [],
+        evaluation: null,
         treatmentPlan: null,
       };
       mockPrismaService.clinicalCase.findFirst.mockResolvedValue(existingCase);

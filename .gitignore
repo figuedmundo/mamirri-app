@@ -43,6 +43,7 @@ test-results/
 
 # App Data
 apps/server/data/library/
+# !apps/server/data/library/temporal/*.md
 apps/server/data/batches/
 apps/server/data/logs/
 backups/*
