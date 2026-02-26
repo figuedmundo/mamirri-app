@@ -58,14 +58,23 @@ export class CasePage extends BasePage {
   }
 
   async stopRecording() {
+    await this.stopRecordingButton.waitFor({ state: 'visible', timeout: 5000 });
     await this.stopRecordingButton.click();
   }
 
   async confirmRecording() {
+    await this.confirmRecordingButton.waitFor({
+      state: 'visible',
+      timeout: 5000,
+    });
     await this.confirmRecordingButton.click();
   }
 
   async cancelRecording() {
+    await this.cancelRecordingButton.waitFor({
+      state: 'visible',
+      timeout: 5000,
+    });
     await this.cancelRecordingButton.click();
   }
 
