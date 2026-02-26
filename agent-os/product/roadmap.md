@@ -200,6 +200,7 @@ Methodology: Agile Development (1-week Sprints).
 - [x] 9.9 Clinic onboarding
 - [x] 9.10 Therapist onboarding
 - [x] 9.11 Pacient flow evaluation
+- [ ] 9.12 Evaluation SOAP 
 
 **🎯 Milestone 5:** "Mother used it with a real patient without asking for help"
 

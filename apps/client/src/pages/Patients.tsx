@@ -38,12 +38,12 @@ export default function Patients() {
   const updatePatient = useUpdatePatient();
   const deletePatient = useDeletePatient();
 
+  const openCreateFromUrl = searchParams.get('action') === 'new';
   const [isCreateOpen, setIsCreateOpen] = useState(openCreateFromUrl);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editPatient, setEditPatient] = useState<Patient | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
-  const openCreateFromUrl = searchParams.get('action') === 'new';
 
 
   const closeCreateDialog = () => {
