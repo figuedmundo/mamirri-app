@@ -9,7 +9,10 @@ import type {
 } from '../../types/patient';
 import { getActiveEvaluation } from '../../lib/evaluation-utils';
 import { VoiceRecorder } from './VoiceRecorder';
+import { TranscriptionDisplay } from './TranscriptionDisplay';
 import { useToast } from '../../hooks/use-toast';
+import { useTranscriptionPolling } from '../../hooks/use-transcription-polling';
+import { mediaApi } from '../../api/media';
 
 type SoapSection = 'subjective' | 'objective' | 'assessment' | 'plan';
 
@@ -67,6 +70,17 @@ export function EvaluationForm({
   >('idle');
 
   const [subjectiveText, setSubjectiveText] = React.useState('');
+  const [voiceNoteId, setVoiceNoteId] = React.useState<string | null>(null);
+  const [pendingVoiceNote, setPendingVoiceNote] = React.useState<{
+    blob: Blob;
+    duration: number;
+  } | null>(null);
+  const [pendingVoicePreviewUrl, setPendingVoicePreviewUrl] = React.useState<
+    string | null
+  >(null);
+  const [voiceUploadStatus, setVoiceUploadStatus] = React.useState<
+    'idle' | 'uploading' | 'success' | 'error'
+  >('idle');
   const [testSearch, setTestSearch] = React.useState('');
   const [selectedTests, setSelectedTests] = React.useState<string[]>(() =>
     getSelectedTestKeys(
@@ -100,8 +114,21 @@ export function EvaluationForm({
   const snapshotRef = React.useRef<string>('');
   const hasPendingChangesRef = React.useRef(false);
   const saveStatusTimerRef = React.useRef<number | null>(null);
+  const appendedTranscriptionIdsRef = React.useRef<Set<string>>(new Set());
   const onSaveRef = React.useRef(onSave);
   const buildPayloadRef = React.useRef<() => Evaluation | null>(() => null);
+
+  const {
+    transcription,
+    status: transcriptionStatus,
+    error: transcriptionError,
+    retry: retryTranscription,
+  } = useTranscriptionPolling({
+    entityType: 'evaluations',
+    entityId: activeEvaluation?.id || '',
+    voiceNoteId,
+    enabled: !!activeEvaluation?.id && !!voiceNoteId,
+  });
 
   React.useEffect(() => {
     onSaveRef.current = onSave;
@@ -145,6 +172,10 @@ export function EvaluationForm({
       },
     );
     setSubjectiveText(diagnosisWithSubjective.subjective || '');
+    setVoiceNoteId(null);
+    setPendingVoiceNote(null);
+    setVoiceUploadStatus('idle');
+    appendedTranscriptionIdsRef.current.clear();
 
     const hydratedSnapshot = JSON.stringify({
       orthopedicTests: (activeEvaluation.orthopedicTests ||
@@ -162,6 +193,65 @@ export function EvaluationForm({
     hasPendingChangesRef.current = false;
     hasHydratedRef.current = true;
   }, [activeEvaluation]);
+
+  React.useEffect(() => {
+    if (!pendingVoiceNote) {
+      setPendingVoicePreviewUrl((prev) => {
+        if (prev) {
+          URL.revokeObjectURL(prev);
+        }
+        return null;
+      });
+      return;
+    }
+
+    const nextUrl = URL.createObjectURL(pendingVoiceNote.blob);
+    setPendingVoicePreviewUrl((prev) => {
+      if (prev) {
+        URL.revokeObjectURL(prev);
+      }
+      return nextUrl;
+    });
+
+    return () => {
+      URL.revokeObjectURL(nextUrl);
+    };
+  }, [pendingVoiceNote]);
+
+  const appendSubjectiveTranscript = React.useCallback((text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    hasPendingChangesRef.current = true;
+    setSubjectiveText((prev) =>
+      prev.trim() ? `${prev}\n${trimmed}` : trimmed,
+    );
+  }, []);
+
+  React.useEffect(() => {
+    if (
+      transcriptionStatus !== 'completed' ||
+      !transcription ||
+      !voiceNoteId ||
+      appendedTranscriptionIdsRef.current.has(voiceNoteId)
+    ) {
+      return;
+    }
+
+    appendSubjectiveTranscript(transcription);
+    appendedTranscriptionIdsRef.current.add(voiceNoteId);
+    setVoiceUploadStatus('success');
+    toast({
+      title: 'Dictado completado',
+      description: 'La transcripción se añadió al texto de Subjetivo.',
+    });
+  }, [
+    transcriptionStatus,
+    transcription,
+    voiceNoteId,
+    appendSubjectiveTranscript,
+    toast,
+  ]);
 
   const buildPayload = React.useCallback((): Evaluation | null => {
     if (!activeEvaluation) return null;
@@ -297,6 +387,59 @@ export function EvaluationForm({
     }
   };
 
+  const handleSubjectiveRecordingComplete = async (
+    blob: Blob,
+    duration: number,
+  ) => {
+    setPendingVoiceNote({ blob, duration });
+    setVoiceUploadStatus('uploading');
+
+    try {
+      const note = await mediaApi.uploadEvaluationVoiceNote(
+        activeEvaluation.id,
+        blob,
+        duration,
+      );
+
+      setVoiceNoteId(note.id);
+      setVoiceUploadStatus('success');
+
+      if (note.transcriptionStatus === 'failed') {
+        setVoiceUploadStatus('error');
+        toast({
+          title: 'Error de transcripción',
+          description:
+            note.transcriptionError || 'No se pudo transcribir el audio.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (note.transcription?.trim().length > 0) {
+        appendSubjectiveTranscript(note.transcription);
+        appendedTranscriptionIdsRef.current.add(note.id);
+        toast({
+          title: 'Dictado completado',
+          description: 'La transcripción se añadió al texto de Subjetivo.',
+        });
+      } else {
+        toast({
+          title: 'Procesando transcripción',
+          description:
+            'Tu audio se guardó. El texto aparecerá en unos segundos.',
+        });
+      }
+    } catch (error) {
+      setVoiceUploadStatus('error');
+      console.error('Subjective voice upload error:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo guardar la grabación de voz en Subjetivo.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const hasDiagnosis = Boolean(
     diagnosis.functionalIndicator.trim() ||
     diagnosis.clinicalAspect.trim() ||
@@ -370,7 +513,41 @@ export function EvaluationForm({
           <p className="text-sm text-slate-500 dark:text-slate-400">
             Lo que el paciente reporta: sintomas, queja principal, historia.
           </p>
-          <VoiceRecorder onRecordingComplete={() => {}} className="w-full" />
+          {!pendingVoiceNote && !voiceNoteId && (
+            <VoiceRecorder
+              onRecordingComplete={handleSubjectiveRecordingComplete}
+              className="w-full"
+            />
+          )}
+          {(pendingVoiceNote || voiceNoteId) && (
+            <TranscriptionDisplay
+              status={
+                voiceUploadStatus === 'uploading'
+                  ? 'uploading'
+                  : voiceUploadStatus === 'error'
+                    ? 'failed'
+                    : transcriptionStatus === 'idle' ||
+                        transcriptionStatus === 'pending' ||
+                        transcriptionStatus === 'processing'
+                      ? 'pending'
+                      : transcriptionStatus
+              }
+              transcription={transcription || undefined}
+              audioUrl={pendingVoicePreviewUrl || undefined}
+              error={
+                transcriptionError ||
+                (voiceUploadStatus === 'error'
+                  ? 'No se pudo subir o transcribir el audio'
+                  : undefined)
+              }
+              onRetry={retryTranscription}
+              onRerecord={() => {
+                setVoiceNoteId(null);
+                setPendingVoiceNote(null);
+                setVoiceUploadStatus('idle');
+              }}
+            />
+          )}
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
             Motivo de consulta, historia y sintomas
           </label>
