@@ -6,6 +6,13 @@ import type {
   VoiceNote,
 } from '../types/patient';
 
+const getVoiceRecordingFilename = (mimeType: string): string => {
+  if (mimeType.includes('mp4')) return 'recording.m4a';
+  if (mimeType.includes('mpeg')) return 'recording.mp3';
+  if (mimeType.includes('wav')) return 'recording.wav';
+  return 'recording.webm';
+};
+
 export const mediaApi = {
   uploadPatientPhoto: async (patientId: string, file: Blob): Promise<void> => {
     const formData = new FormData();
@@ -74,7 +81,7 @@ export const mediaApi = {
     durationSeconds: number,
   ): Promise<VoiceNote> => {
     const formData = new FormData();
-    formData.append('file', file, 'recording.webm');
+    formData.append('file', file, getVoiceRecordingFilename(file.type));
     formData.append('durationSeconds', durationSeconds.toString());
 
     const response = await axios.post<VoiceNote>(
@@ -90,7 +97,7 @@ export const mediaApi = {
     durationSeconds: number,
   ): Promise<VoiceNote> => {
     const formData = new FormData();
-    formData.append('file', file, 'recording.webm');
+    formData.append('file', file, getVoiceRecordingFilename(file.type));
     formData.append('durationSeconds', durationSeconds.toString());
 
     const response = await axios.post<VoiceNote>(

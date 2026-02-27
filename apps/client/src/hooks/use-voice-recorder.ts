@@ -23,6 +23,30 @@ export interface UseVoiceRecorderReturn {
   resetRecording: () => void;
 }
 
+const RECORDER_MIME_TYPE_CANDIDATES = [
+  'audio/webm;codecs=opus',
+  'audio/webm',
+  'audio/mp4;codecs=mp4a.40.2',
+  'audio/mp4',
+];
+
+function getSupportedRecorderMimeType(): string | null {
+  if (
+    typeof MediaRecorder === 'undefined' ||
+    typeof MediaRecorder.isTypeSupported !== 'function'
+  ) {
+    return null;
+  }
+
+  for (const mimeType of RECORDER_MIME_TYPE_CANDIDATES) {
+    if (MediaRecorder.isTypeSupported(mimeType)) {
+      return mimeType;
+    }
+  }
+
+  return null;
+}
+
 export function useVoiceRecorder({
   autoStart = false,
   autoSave = false,
@@ -71,7 +95,10 @@ export function useVoiceRecorder({
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
-      const mediaRecorder = new MediaRecorder(stream);
+      const supportedMimeType = getSupportedRecorderMimeType();
+      const mediaRecorder = supportedMimeType
+        ? new MediaRecorder(stream, { mimeType: supportedMimeType })
+        : new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
@@ -86,7 +113,13 @@ export function useVoiceRecorder({
           clearInterval(timerRef.current);
           timerRef.current = null;
         }
-        const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const recorderMimeType =
+          mediaRecorder.mimeType ||
+          audioChunksRef.current[0]?.type ||
+          'audio/webm';
+        const blob = new Blob(audioChunksRef.current, {
+          type: recorderMimeType,
+        });
         setAudioBlob(blob);
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
