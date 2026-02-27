@@ -189,7 +189,9 @@ test.describe('Patient Clinical Journey - End to End', () => {
 
     // Step 3: Fill Evaluation
     await page.getByTestId('nav-evaluation-btn').click();
-    await page.getByRole('button', { name: 'A - Assessment' }).click();
+    await page
+      .getByRole('button', { name: /^A - (Analisis|Assessment)$/i })
+      .click();
     await page
       .getByPlaceholder('Indicador funcional')
       .fill('Dificultad al caminar');
