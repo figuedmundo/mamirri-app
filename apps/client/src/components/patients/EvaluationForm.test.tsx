@@ -3,8 +3,42 @@ import { describe, expect, it, vi } from 'vitest';
 import { EvaluationForm } from './EvaluationForm';
 import type { ClinicalCase, Evaluation } from '../../types/patient';
 
+const { uploadEvaluationVoiceNoteMock } = vi.hoisted(() => ({
+  uploadEvaluationVoiceNoteMock: vi.fn(),
+}));
+
 vi.mock('./VoiceRecorder', () => ({
-  VoiceRecorder: () => <div data-testid="voice-recorder">Voice Recorder</div>,
+  VoiceRecorder: ({
+    onRecordingComplete,
+  }: {
+    onRecordingComplete: (blob: Blob, duration: number) => void;
+  }) => (
+    <button
+      data-testid="voice-recorder"
+      onClick={() =>
+        onRecordingComplete(new Blob(['audio'], { type: 'audio/webm' }), 3)
+      }
+    >
+      Voice Recorder
+    </button>
+  ),
+}));
+
+vi.mock('../../api/media', () => ({
+  mediaApi: {
+    uploadEvaluationVoiceNote: (...args: unknown[]) =>
+      uploadEvaluationVoiceNoteMock(...args),
+  },
+}));
+
+vi.mock('../../hooks/use-transcription-polling', () => ({
+  useTranscriptionPolling: () => ({
+    transcription: null,
+    status: 'completed',
+    error: null,
+    isPolling: false,
+    retry: vi.fn(),
+  }),
 }));
 
 vi.mock('../../hooks/use-toast', () => ({
@@ -86,6 +120,38 @@ const mockClinicalCase: ClinicalCase = {
 };
 
 describe('EvaluationForm SOAP', () => {
+  it('appends each new subjective transcript without overwriting previous text', async () => {
+    uploadEvaluationVoiceNoteMock
+      .mockResolvedValueOnce({
+        id: 'vn-1',
+        transcription: 'Primer dictado subjetivo',
+        transcriptionStatus: 'completed',
+      })
+      .mockResolvedValueOnce({
+        id: 'vn-2',
+        transcription: 'Segundo dictado subjetivo',
+        transcriptionStatus: 'completed',
+      });
+
+    render(<EvaluationForm clinicalCase={mockClinicalCase} onSave={vi.fn()} />);
+
+    fireEvent.click(screen.getByTestId('voice-recorder'));
+    await waitFor(() =>
+      expect(
+        screen.getByPlaceholderText('Motivo de consulta, historia y síntomas'),
+      ).toHaveValue('Primer dictado subjetivo'),
+    );
+
+    fireEvent.click(screen.getByText('New Recording'));
+    fireEvent.click(screen.getByTestId('voice-recorder'));
+
+    await waitFor(() =>
+      expect(
+        screen.getByPlaceholderText('Motivo de consulta, historia y síntomas'),
+      ).toHaveValue('Primer dictado subjetivo\nSegundo dictado subjetivo'),
+    );
+  });
+
   it('renders SOAP tabs', () => {
     render(<EvaluationForm clinicalCase={mockClinicalCase} />);
 
