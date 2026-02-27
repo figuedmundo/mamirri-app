@@ -549,6 +549,7 @@ export function CaseDetailLayout({
               onSave={handleSaveEvaluation}
               onPosturogramChange={handlePosturogramChange}
               onPainScaleChange={handlePainScaleChange}
+              onNavigateToTimeline={() => setViewMode('timeline')}
             />
           </div>
         )}

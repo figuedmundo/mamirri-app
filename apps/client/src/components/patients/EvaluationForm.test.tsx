@@ -89,9 +89,11 @@ describe('EvaluationForm SOAP', () => {
   it('renders SOAP tabs', () => {
     render(<EvaluationForm clinicalCase={mockClinicalCase} />);
 
-    expect(screen.getByText('S - Subjective')).toBeInTheDocument();
-    expect(screen.getByText('O - Objective')).toBeInTheDocument();
-    expect(screen.getByText('A - Assessment')).toBeInTheDocument();
+    expect(screen.getByText('Evaluación SOAP')).toBeInTheDocument();
+    expect(screen.getByText(/Caso:\s*Test Case/)).toBeInTheDocument();
+    expect(screen.getByText('S - Subjetivo')).toBeInTheDocument();
+    expect(screen.getByText('O - Objetivo')).toBeInTheDocument();
+    expect(screen.getByText('A - Analisis')).toBeInTheDocument();
     expect(screen.getByText('P - Plan')).toBeInTheDocument();
   });
 
@@ -149,8 +151,9 @@ describe('EvaluationForm SOAP', () => {
   it('shows objective section and allows adding tests', () => {
     render(<EvaluationForm clinicalCase={mockClinicalCase} />);
 
-    fireEvent.click(screen.getByText('O - Objective'));
+    fireEvent.click(screen.getByText('O - Objetivo'));
     expect(screen.getByText('Escala de dolor')).toBeInTheDocument();
+    expect(screen.getByText('Actividad: 1/10')).toBeInTheDocument();
 
     fireEvent.change(screen.getByPlaceholderText('Buscar prueba'), {
       target: { value: 'Thomas' },
@@ -165,7 +168,7 @@ describe('EvaluationForm SOAP', () => {
     const onSave = vi.fn();
     render(<EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />);
 
-    fireEvent.click(screen.getByText('O - Objective'));
+    fireEvent.click(screen.getByText('O - Objetivo'));
     const sliders = screen.getAllByRole('slider');
     fireEvent.change(sliders[0], { target: { value: '8' } });
 
@@ -179,7 +182,7 @@ describe('EvaluationForm SOAP', () => {
     const onSave = vi.fn();
     render(<EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />);
 
-    fireEvent.click(screen.getByText('A - Assessment'));
+    fireEvent.click(screen.getByText('A - Analisis'));
     fireEvent.change(screen.getByPlaceholderText('Indicador funcional'), {
       target: { value: 'Dolor mandibular' },
     });
@@ -189,5 +192,71 @@ describe('EvaluationForm SOAP', () => {
     await waitFor(() => expect(onSave).toHaveBeenCalled());
     const payload = onSave.mock.calls[0][0] as Evaluation;
     expect(payload.diagnosis.functionalIndicator).toBe('Dolor mandibular');
+  });
+
+  it('shows plan guard and allows quick navigation to Analisis', () => {
+    render(<EvaluationForm clinicalCase={mockClinicalCase} />);
+
+    fireEvent.click(screen.getByText('P - Plan'));
+    expect(
+      screen.getByText(
+        /Completa el diagnostico en Analisis para poder definir el plan de tratamiento/i,
+      ),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Ir a Analisis'));
+    expect(screen.getByText('Analisis')).toBeInTheDocument();
+  });
+
+  it('renders editable plan fields when diagnosis exists', () => {
+    const evaluationWithDiagnosis: Evaluation = {
+      ...mockEvaluation,
+      diagnosis: {
+        ...mockEvaluation.diagnosis,
+        functionalIndicator: 'Dolor lumbar',
+      },
+    };
+
+    const caseWithDiagnosis: ClinicalCase = {
+      ...mockClinicalCase,
+      evaluation: evaluationWithDiagnosis,
+      evaluations: [evaluationWithDiagnosis],
+    };
+
+    render(<EvaluationForm clinicalCase={caseWithDiagnosis} />);
+    fireEvent.click(screen.getByText('P - Plan'));
+
+    expect(screen.getByText('Intervenciones planificadas')).toBeInTheDocument();
+    expect(screen.getByText('Frecuencia y duracion')).toBeInTheDocument();
+    expect(screen.getByText('Ejercicios para casa')).toBeInTheDocument();
+    expect(screen.getByText('Proxima cita')).toBeInTheDocument();
+    expect(screen.getByText('Notas adicionales')).toBeInTheDocument();
+  });
+
+  it('calls timeline navigation callback from Plan tab', () => {
+    const evaluationWithDiagnosis: Evaluation = {
+      ...mockEvaluation,
+      diagnosis: {
+        ...mockEvaluation.diagnosis,
+        functionalIndicator: 'Dolor lumbar',
+      },
+    };
+    const caseWithDiagnosis: ClinicalCase = {
+      ...mockClinicalCase,
+      evaluation: evaluationWithDiagnosis,
+      evaluations: [evaluationWithDiagnosis],
+    };
+    const onNavigateToTimeline = vi.fn();
+
+    render(
+      <EvaluationForm
+        clinicalCase={caseWithDiagnosis}
+        onNavigateToTimeline={onNavigateToTimeline}
+      />,
+    );
+    fireEvent.click(screen.getByText('P - Plan'));
+    fireEvent.click(screen.getByText('Ver cronograma de tratamiento →'));
+
+    expect(onNavigateToTimeline).toHaveBeenCalledTimes(1);
   });
 });

@@ -83,9 +83,9 @@ describe('EvaluationForm SOAP', () => {
   it('renders SOAP navigation', () => {
     render(<EvaluationForm clinicalCase={mockClinicalCase} />);
 
-    expect(screen.getByText('S - Subjective')).toBeInTheDocument();
-    expect(screen.getByText('O - Objective')).toBeInTheDocument();
-    expect(screen.getByText('A - Assessment')).toBeInTheDocument();
+    expect(screen.getByText('S - Subjetivo')).toBeInTheDocument();
+    expect(screen.getByText('O - Objetivo')).toBeInTheDocument();
+    expect(screen.getByText('A - Analisis')).toBeInTheDocument();
     expect(screen.getByText('P - Plan')).toBeInTheDocument();
   });
 
@@ -94,7 +94,9 @@ describe('EvaluationForm SOAP', () => {
 
     fireEvent.click(screen.getByText('P - Plan'));
     expect(
-      screen.getByText(/Completa el diagnóstico en Assessment/i),
+      screen.getByText(
+        /Completa el diagnostico en Analisis para poder definir el plan de tratamiento/i,
+      ),
     ).toBeInTheDocument();
   });
 });
