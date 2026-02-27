@@ -214,9 +214,10 @@ export class StorageService implements OnModuleInit {
   }
 
   async getFileUrl(path: string, expiry: number = 3600): Promise<string> {
+    const storageKey = this.toStorageKey(path);
     const command = new GetObjectCommand({
       Bucket: storageConfig().bucket,
-      Key: path,
+      Key: storageKey,
     });
 
     try {
@@ -224,21 +225,51 @@ export class StorageService implements OnModuleInit {
         expiresIn: expiry,
       });
 
-      if (url.includes('x-amz-checksum-mode=')) {
+      const hasChecksumMode = /[?&]x-amz-checksum-mode=/i.test(url);
+      const logSafeUrl = this.sanitizeSignedUrlForLogs(url);
+      this.logger.debug(
+        `Generated signed URL metadata for key=${storageKey} hasChecksumMode=${hasChecksumMode} url=${logSafeUrl}`,
+      );
+
+      if (hasChecksumMode) {
         this.logger.warn(
-          `Signed URL for ${path} includes checksum mode query. Falling back to direct object URL for MinIO compatibility.`,
+          `Signed URL for key=${storageKey} includes checksum mode query. Falling back to direct object URL for MinIO compatibility.`,
         );
-        return this.buildDirectObjectUrl(path);
+        return this.buildDirectObjectUrl(storageKey);
       }
 
-      this.logger.debug(`Generated signed URL for ${path}: ${url}`);
       return url;
     } catch (error) {
       if (this.isNotFoundError(error)) {
         throw new NotFoundException('File not found');
       }
-      this.logger.error(`Failed to generate URL for: ${path}`, error);
+      this.logger.error(`Failed to generate URL for key=${storageKey}`, error);
       throw new InternalServerErrorException('Failed to generate file URL');
+    }
+  }
+
+  toStorageKey(pathOrUrl: string): string {
+    if (!pathOrUrl || !pathOrUrl.startsWith('http')) {
+      return pathOrUrl;
+    }
+
+    try {
+      const url = new URL(pathOrUrl);
+      const parts = url.pathname
+        .split('/')
+        .filter((segment) => segment.length > 0);
+      const bucket = storageConfig().bucket;
+
+      if (parts.length >= 2 && parts[0] === bucket) {
+        return parts
+          .slice(1)
+          .map((segment) => decodeURIComponent(segment))
+          .join('/');
+      }
+
+      return parts.map((segment) => decodeURIComponent(segment)).join('/');
+    } catch {
+      return pathOrUrl;
     }
   }
 
@@ -259,6 +290,15 @@ export class StorageService implements OnModuleInit {
       .join('/');
 
     return `${normalizedEndpoint}/${config.bucket}/${encodedPath}`;
+  }
+
+  private sanitizeSignedUrlForLogs(rawUrl: string): string {
+    try {
+      const parsed = new URL(rawUrl);
+      return `${parsed.origin}${parsed.pathname}`;
+    } catch {
+      return 'invalid-url';
+    }
   }
 
   async deleteFile(path: string): Promise<void> {

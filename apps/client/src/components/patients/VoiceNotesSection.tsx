@@ -206,7 +206,18 @@ export function VoiceNotesSection({
                     className="flex-1 h-8"
                     controlsList="nodownload"
                     onError={(e) => {
-                      console.error('Audio loading error:', e);
+                      const audioEl = e.currentTarget;
+                      const src =
+                        audioEl.currentSrc || audioEl.src || note.audioUrl;
+                      const sanitizedSrc = src ? src.split('?')[0] : 'unknown';
+                      console.error('Audio loading error', {
+                        noteId: note.id,
+                        sanitizedSrc,
+                        networkState: audioEl.networkState,
+                        readyState: audioEl.readyState,
+                        errorCode: audioEl.error?.code,
+                        errorMessage: audioEl.error?.message,
+                      });
                       toast({
                         variant: 'destructive',
                         title: 'Error de carga',

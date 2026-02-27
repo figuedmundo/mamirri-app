@@ -2,6 +2,7 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Patient, TreatmentSession, Evaluation } from '@prisma/client';
@@ -31,6 +32,8 @@ import { StorageService } from '../storage/storage.service';
 
 @Injectable()
 export class PatientsService {
+  private readonly logger = new Logger(PatientsService.name);
+
   constructor(
     private prisma: PrismaService,
     private storageService: StorageService,
@@ -267,8 +270,24 @@ export class PatientsService {
                   note.audioUrl = await this.storageService.getFileUrl(
                     note.audioUrl,
                   );
-                } catch {
-                  // Ignore signing errors
+                } catch (error) {
+                  this.logger.warn(
+                    `Failed to sign evaluation voice note id=${note.id ?? 'unknown'} key=${note.audioUrl}`,
+                  );
+                  this.logger.debug(error);
+                }
+              } else if (note.audioUrl && note.audioUrl.startsWith('http')) {
+                try {
+                  const normalizedKey = this.storageService.toStorageKey(
+                    note.audioUrl,
+                  );
+                  note.audioUrl =
+                    await this.storageService.getFileUrl(normalizedKey);
+                } catch (error) {
+                  this.logger.warn(
+                    `Failed to normalize/sign evaluation voice note id=${note.id ?? 'unknown'} url=${note.audioUrl}`,
+                  );
+                  this.logger.debug(error);
                 }
               }
               return note;
@@ -324,8 +343,24 @@ export class PatientsService {
                     note.audioUrl = await this.storageService.getFileUrl(
                       note.audioUrl,
                     );
-                  } catch {
-                    // Ignore signing errors
+                  } catch (error) {
+                    this.logger.warn(
+                      `Failed to sign session voice note id=${note.id ?? 'unknown'} key=${note.audioUrl}`,
+                    );
+                    this.logger.debug(error);
+                  }
+                } else if (note.audioUrl && note.audioUrl.startsWith('http')) {
+                  try {
+                    const normalizedKey = this.storageService.toStorageKey(
+                      note.audioUrl,
+                    );
+                    note.audioUrl =
+                      await this.storageService.getFileUrl(normalizedKey);
+                  } catch (error) {
+                    this.logger.warn(
+                      `Failed to normalize/sign session voice note id=${note.id ?? 'unknown'} url=${note.audioUrl}`,
+                    );
+                    this.logger.debug(error);
                   }
                 }
                 return note;
