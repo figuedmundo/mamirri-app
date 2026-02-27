@@ -49,7 +49,10 @@ export function ComparisonBoard({
             Comparativa de Evolución
           </h1>
           <p className="text-slate-600 dark:text-slate-400 mt-1">
-            {clinicalCase.title}
+            Comparación de hallazgos clínicos y progreso funcional del caso
+          </p>
+          <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
+            Caso: {clinicalCase.title}
           </p>
         </div>
 

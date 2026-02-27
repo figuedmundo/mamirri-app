@@ -1,62 +1,84 @@
 # Patient Flow Evaluation (SOAP)
 
-The Patient Flow Evaluation in Mamirri App is designed to provide a **SOAP-based** (Subjective, Objective, Assessment, Plan) clinical documentation experience that minimizes cognitive load for physiotherapists while maximizing clinical accuracy.
+This document explains how Mamirri handles clinical evaluation using the SOAP structure and why the flow is organized this way for day-to-day physiotherapy use.
 
-## 📋 Overview
+## Use the SOAP flow in this order
 
-The evaluation flow follows a **Diagnosis-First** philosophy, where the therapist identifies the clinical problem before defining the treatment phases. It simplifies the relationship between a Clinical Case and its evaluations from a 1:N model to a **1:1 model**, reflecting that most patients do not complete full longitudinal assessment series in a typical clinic setting.
+Mamirri uses a diagnosis-first SOAP flow:
 
-## 🛠 Clinical Methodology (SOAP)
+1. **S - Subjetivo**
+2. **O - Objetivo**
+3. **A - Analisis**
+4. **P - Plan**
 
-The evaluation is structured into four sequential tabs, encouraging a progressive disclosure of information:
+The key rule is simple: complete **Analisis** before working in **Plan**.
 
-### 1. Subjective (S)
+## What each section is for
 
-- **Goal**: Capture the patient's perspective, history, and symptoms.
-- **Dictation-First**: Uses a floating voice recorder to capture the patient's story without the therapist needing to type.
-- **Transcription**: Audio is automatically transcribed and populated into the subjective notes area.
+### S - Subjetivo
 
-### 2. Objective (O)
+Capture what the patient reports in their own words: symptoms, history, and chief complaint.
 
-- **Goal**: Record measurable physical findings.
-- **Pain Scale**: Visual sliders for Rest, Activity, and Palpation pain (0-10).
-- **Orthopedic Tests**: A searchable library of physical tests (Thomas, Ober, Lasègue, etc.).
-  - Therapists only add the tests they actually perform, reducing on-screen clutter.
-  - Results are categorized (Normal, Mild, Moderate, Severe) with space for clinical interpretation.
+### O - Objetivo
 
-### 3. Assessment (A)
+Capture measurable findings:
 
-- **Goal**: Formulate a clinical diagnosis based on S and O.
-- **Diagnosis Structure**:
-  - **Functional Indicator**: Impact on patient function.
-  - **Clinical Aspect**: Observed signs and symptoms.
-  - **Anatomopathology**: Structural or tissue-level issues.
-  - **AVD Consequences**: Impact on Activities of Daily Living.
+- Pain scale (`Actividad`, `Reposo`, `Palpacion`, 0-10)
+- Orthopedic tests added on demand (not all shown by default)
+- Clinical observations recorded during examination
 
-### 4. Plan (P)
+### A - Analisis
 
-- **Goal**: Define the therapeutic strategy.
-- **Dependency**: The Plan tab is only fully enabled once a diagnosis has been formulated in the Assessment section.
-- **Manual Phases**: Treatment phases are defined manually by the therapist based on the diagnosis, rather than being pre-calculated.
+Document clinical reasoning and diagnosis using these fields:
 
-## 📱 User Experience (Tablet-Optimized)
+- `functionalIndicator`
+- `clinicalAspect`
+- `anatomopathology`
+- `avdConsequences`
 
-The interface is specifically designed for **Android and iPad tablets**:
+### P - Plan
 
-- **Large Touch Targets**: Easy selection of sections and buttons.
-- **Progressive Disclosure**: Only relevant fields are shown at any given time to avoid "form fatigue".
-- **Auto-Save**: Changes are automatically saved with a 350ms debounce to ensure no data loss even if the app is closed or the tablet battery dies.
+Define what will happen next. This section is for treatment intent, not session logging.
 
-## 💾 Data Model Integration
+Plan includes:
 
-- **1:1 Cardinality**: Each `ClinicalCase` now has exactly one `Evaluation`. This reduces complexity in data retrieval and reporting.
-- **JSON Storage**: Complex clinical data (pain scales, test results, diagnosis objects) is stored as JSON in PostgreSQL for maximum flexibility as clinical standards evolve.
-- **Transcription Integration**: Voice notes are linked directly to the evaluation, providing a permanent record of the raw subjective data.
+- Planned interventions
+- Frequency and duration
+- Home exercises
+- Next visit focus
+- Additional notes (education, referrals, discharge notes)
+
+## How Plan relates to Cronograma
+
+**Plan** and **Cronograma** are related, but they are not the same thing:
+
+- **Plan (SOAP):** what the therapist intends to do next
+- **Cronograma (Timeline):** what was actually executed session by session
+
+From the Plan tab, the therapist can jump to timeline management with **Ver cronograma de tratamiento**.
+
+## Data model used by this flow
+
+- One clinical case has one active evaluation (`ClinicalCase.evaluation`)
+- SOAP data is stored inside `Evaluation` JSON fields
+- Plan details are stored under `diagnosis.plan`
+
+This keeps the model practical for real-world clinics where many cases do not run through full multi-evaluation cycles.
+
+## UX decisions in the current implementation
+
+- All user-facing SOAP labels are Spanish (ADR 008)
+- Inputs use persistent labels (not placeholder-only)
+- Assessment fields include helper text so context stays clear after typing
+- Plan tab is actionable and no longer informational-only
+- Save feedback is visible (`Guardando...`, `✓ Guardado`, `Error al guardar`)
 
 ---
 
-**Last Modified:** 2026-02-26
+**Last Modified:** 2026-02-27
+
 **Related Documents:**
 
-- [Database Schema](../technical/database-schema.md)
-- [AI Analysis Guide](../technical/ai-analysis-feature-guide.md)
+- [Language Strategy (ADR 008)](../product/decisions/008-language-strategy-english-code-spanish-ui.md)
+- [Patient Journey Flow (Technical)](../technical/pacient_flow.md)
+- [Patients Module Technical Specification](../technical/patients-module.md)

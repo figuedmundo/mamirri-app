@@ -87,6 +87,7 @@ export interface DeviationStatus {
 }
 
 export interface OrthopedicTests {
+  [key: string]: TestResult | undefined;
   thomas: TestResult;
   ely: TestResult;
   ober: TestResult;
@@ -149,6 +150,15 @@ export interface Diagnosis {
   anatomopathology: string;
   avdConsequences: string;
   subjective?: string;
+  plan?: DiagnosisPlan;
+}
+
+export interface DiagnosisPlan {
+  interventions: string;
+  frequency: string;
+  homeExercises: string;
+  nextVisit: string;
+  additionalNotes: string;
 }
 
 export interface Footprint {
@@ -404,6 +414,8 @@ export interface EvaluationFormProps {
 
   /** Called when user updates pain scale */
   onPainScaleChange?: (painScale: PainScale) => void;
+
+  onNavigateToTimeline?: () => void;
 }
 
 export interface ComparisonProps {

@@ -1,0 +1,41 @@
+# Verification Report: Evaluation SOAP UX **Spec:**
+`2026-02-26-evaluation-soap-ux` **Date:** 2026-02-26 **Verifier:**
+implementation-verifier **Status:** ⚠️ Passed with Issues --- ## Executive
+Summary Implementation for the Evaluation SOAP UX spec is functionally complete
+and all task groups in `tasks.md` are marked done. Roadmap item 9.12 was updated
+to completed, and the full repository test suite passed with zero failures. The
+only issue found is missing per-task implementation markdown reports in the spec
+`implementation/` folder. --- ## 1. Tasks Verification **Status:** ✅ All
+Complete ### Completed Tasks - [x] Task Group 1: Extend Diagnosis Type with Plan
+Fields - [x] Subtask 1.1 - [x] Subtask 1.2 - [x] Subtask 1.3 - [x] Task Group 2:
+Spanish Labels, Persistent Labels, Section Descriptions, Pain Values, Auto-Save
+Indicator - [x] Subtask 2.1 - [x] Subtask 2.2 - [x] Subtask 2.3 - [x] Subtask
+2.4 - [x] Subtask 2.5 - [x] Subtask 2.6 - [x] Subtask 2.7 - [x] Subtask 2.8 -
+[x] Task Group 3: Functional Plan Section with Editable Fields - [x] Subtask 3.1
+- [x] Subtask 3.2 - [x] Subtask 3.3 - [x] Subtask 3.4 - [x] Subtask 3.5 - [x]
+Subtask 3.6 - [x] Task Group 4: Test Review & Gap Analysis - [x] Subtask 4.1 -
+[x] Subtask 4.2 - [x] Subtask 4.3 - [x] Subtask 4.4 ### Incomplete or Issues
+None --- ## 2. Documentation Verification **Status:** ⚠️ Issues Found ###
+Implementation Documentation - [ ] Task Group 1 Implementation report in
+`agent-os/specs/2026-02-26-evaluation-soap-ux/implementation/` - [ ] Task Group
+2 Implementation report in
+`agent-os/specs/2026-02-26-evaluation-soap-ux/implementation/` - [ ] Task Group
+3 Implementation report in
+`agent-os/specs/2026-02-26-evaluation-soap-ux/implementation/` - [ ] Task Group
+4 Implementation report in
+`agent-os/specs/2026-02-26-evaluation-soap-ux/implementation/` ### Verification
+Documentation - [x] Final verification report:
+`agent-os/specs/2026-02-26-evaluation-soap-ux/verifications/final-verification.html`
+- [x] UI screenshot evidence:
+`agent-os/specs/2026-02-26-evaluation-soap-ux/verification/screenshots/login-page.png`
+### Missing Documentation The `implementation/` directory is empty and does not
+contain per-task implementation reports. --- ## 3. Roadmap Updates **Status:**
+✅ Updated ### Updated Roadmap Items - [x] `agent-os/product/roadmap.md` item
+**9.12 Evaluation SOAP** ### Notes Roadmap item 9.12 was updated from unchecked
+to checked to reflect completion of this spec. --- ## 4. Test Suite Results
+**Status:** ✅ All Passing ### Test Summary - **Total Tests:** 798 -
+**Passing:** 798 - **Failing:** 0 - **Errors:** 0 ### Failed Tests None - all
+tests passing ### Notes - Full suite command executed: `pnpm test` (runs `turbo
+run test` across repo packages). - Package-level totals observed: -
+`packages/logger`: 4 passed - `apps/client` (Vitest): 409 passed - `apps/server`
+(Jest): 385 passed

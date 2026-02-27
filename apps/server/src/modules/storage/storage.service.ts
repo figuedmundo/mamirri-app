@@ -91,6 +91,8 @@ export class StorageService implements OnModuleInit {
       },
       region: 'us-east-1',
       forcePathStyle: true,
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     });
 
     if (config.publicEndpoint) {
@@ -107,6 +109,8 @@ export class StorageService implements OnModuleInit {
         },
         region: 'us-east-1',
         forcePathStyle: true,
+        requestChecksumCalculation: 'WHEN_REQUIRED',
+        responseChecksumValidation: 'WHEN_REQUIRED',
       });
     } else {
       this.logger.warn(
@@ -219,6 +223,14 @@ export class StorageService implements OnModuleInit {
       const url = await getSignedUrl(this.signingClient, command, {
         expiresIn: expiry,
       });
+
+      if (url.includes('x-amz-checksum-mode=')) {
+        this.logger.warn(
+          `Signed URL for ${path} includes checksum mode query. Falling back to direct object URL for MinIO compatibility.`,
+        );
+        return this.buildDirectObjectUrl(path);
+      }
+
       this.logger.debug(`Generated signed URL for ${path}: ${url}`);
       return url;
     } catch (error) {
@@ -228,6 +240,25 @@ export class StorageService implements OnModuleInit {
       this.logger.error(`Failed to generate URL for: ${path}`, error);
       throw new InternalServerErrorException('Failed to generate file URL');
     }
+  }
+
+  private buildDirectObjectUrl(path: string): string {
+    const config = storageConfig();
+
+    const endpoint = config.publicEndpoint
+      ? config.publicEndpoint.includes('://')
+        ? config.publicEndpoint
+        : `http${config.useSSL ? 's' : ''}://${config.publicEndpoint}`
+      : `http${config.useSSL ? 's' : ''}://${config.endpoint}:${config.port}`;
+
+    const normalizedEndpoint = endpoint.replace(/\/+$/, '');
+    const encodedPath = path
+      .split('/')
+      .filter((segment) => segment.length > 0)
+      .map((segment) => encodeURIComponent(segment))
+      .join('/');
+
+    return `${normalizedEndpoint}/${config.bucket}/${encodedPath}`;
   }
 
   async deleteFile(path: string): Promise<void> {

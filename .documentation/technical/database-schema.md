@@ -60,39 +60,23 @@ Represents a specific medical issue or "Episode of Care" for a patient. A patien
 
 ## Evaluation (`evaluation`)
 
-Clinical assessment performed within a Clinical Case. Replaced the 1:N evaluations array with a 1:1 relation to reflect clinical reality and simplify data entry.
+Clinical assessment document linked to a Clinical Case. The current model is one active evaluation per case.
 
-| Field            | Type       | Description                        |
-| ---------------- | ---------- | ---------------------------------- |
-| `id`             | `String`   | Unique identifier (CUID)           |
-| `date`           | `DateTime` | Date of evaluation                 |
-| `avdEvaluation`   | `Json`     | ADL assessment (Barthel/Lawton)    |
-| `painScale`      | `Json`     | Detailed pain map (location, 0-10) |
-| `diagnosis`      | `Json`     | SOAP structure (Functional, etc.)  |
-| `orthopedicTests` | `Json`     | Dynamically added physical tests   |
-| `posturogram`     | `Json`     | Posture analysis markers           |
-| `voiceNotes`      | `Json?`    | Optional voice recording link      |
-| `clinicalCaseId` | `String`   | Foreign key to `ClinicalCase`      |
+| Field             | Type       | Description                                                        |
+| ----------------- | ---------- | ------------------------------------------------------------------ |
+| `id`              | `String`   | Unique identifier (CUID)                                           |
+| `date`            | `DateTime` | Date of evaluation                                                 |
+| `avdEvaluation`   | `Json`     | ADL assessment (Barthel/Lawton)                                    |
+| `painScale`       | `Json`     | Pain values for `activity`, `rest`, and `palpation` (0-10)         |
+| `diagnosis`       | `Json`     | SOAP diagnosis payload, including `subjective` and optional `plan` |
+| `orthopedicTests` | `Json`     | Dynamically selected orthopedic tests and interpretations          |
+| `posturogram`     | `Json`     | Postural analysis markers                                          |
+| `voiceNotes`      | `Json?`    | Optional voice recording references                                |
+| `clinicalCaseId`  | `String`   | Foreign key to `ClinicalCase`                                      |
 
 **Relations:**
 
 - **One-to-One** with `ClinicalCase`.
-
-
-Clinical assessments performed within a Clinical Case. Supports 1:N cardinality (Initial, Progress, Final).
-
-| Field            | Type       | Description                        |
-| ---------------- | ---------- | ---------------------------------- |
-| `id`             | `String`   | Unique identifier (CUID)           |
-| `date`           | `DateTime` | Date of evaluation                 |
-| `type`           | `String`   | `INITIAL`, `PROGRESS`, `FINAL`     |
-| `painScale`      | `Json`     | Detailed pain map (location, 0-10) |
-| `diagnosis`      | `Json`     | Clinical diagnosis structure       |
-| `clinicalCaseId` | `String`   | Foreign key to `ClinicalCase`      |
-
-**Relations:**
-
-- **Many-to-One** with `ClinicalCase` (One Case has Many Evaluations).
 
 ## Treatment Sessions (`treatment_sessions`)
 
@@ -229,4 +213,4 @@ Stores vectorized text chunks for semantic search.
 
 ---
 
-**Last Updated:** 2026-02-18
+**Last Updated:** 2026-02-27

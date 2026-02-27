@@ -2,22 +2,22 @@
 
 **Module:** Patients  
 **Phase:** Phase 1 (Core Clinical)  
-**Last Updated:** 2026-01-16
+**Last Updated:** 2026-02-27
 
 ## Overview
 
-The Patients module is the core of the clinical system, managing patient demographics, clinical cases, evaluations, and treatment sessions. It implements a hierarchical data structure to support longitudinal patient care, following a expert-validated clinical flow.
+The Patients module is the core of the clinical system, managing patient demographics, clinical cases, SOAP evaluations, and treatment sessions. It implements a hierarchical data structure to support longitudinal patient care, following an expert-validated clinical flow.
 
 ## Clinical Model (Doctor's Model)
 
-The module follows a 6-stage clinical treatment flow:
+The module follows a SOAP-first clinical treatment flow with diagnosis before planning:
 
-1. **Initial Evaluation:** Baseline comprehensive assessment.
-2. **Diagnosis & Objectives:** Setting therapeutic, prophylactic, and educational goals.
-3. **Planning:** Establishing a 15-session schedule across 5 phases.
-4. **Progressive Execution:** Per-session tracking of techniques and patient response.
-5. **Final Evaluation:** Outcome measurement at the end of the intervention.
-6. **Recommendations:** Final report for the patient and other professionals.
+1. **S - Subjetivo:** Patient-reported symptoms and history.
+2. **O - Objetivo:** Measurable findings (pain, tests, observations).
+3. **A - Analisis:** Clinical reasoning and diagnosis.
+4. **P - Plan:** Planned interventions, frequency, home exercises, next visit, and notes.
+5. **Cronograma Execution:** Per-session tracking of what was actually done.
+6. **Review and Continuity:** Progress review, comparison, and follow-up recommendations.
 
 ## Data Model (Prisma)
 
@@ -28,9 +28,9 @@ The database schema has been refactored to English to comply with [ADR 008](../p
 1.  **User (Therapist):** Owns all patient data.
 2.  **Patient:** Basic demographics (name, age, occupation, phone, email, birthDate).
 3.  **ClinicalCase:** Represents a specific condition/treatment period (e.g., "Lumbar Pain 2024").
-    - **Evaluations (1:N):** Clinical assessments (Initial, Progress, Final).
+    - **Evaluation (1:1):** Single evolving SOAP document for the case.
     - **TreatmentPlan:** Planned phases and objectives.
-    - **TreatmentSessions (1:N):** Daily logs of visits (techniques, progress).
+    - **TreatmentSessions (1:N):** Session-level execution logs.
 
 ### Key Models
 
@@ -60,7 +60,7 @@ model ClinicalCase {
   startDate         DateTime
   endDate           DateTime?
   consultationReason String
-  evaluations       Evaluation[]
+  evaluation        Evaluation?
   treatmentSessions TreatmentSession[]
   treatmentPlan     TreatmentPlan?
   // ...
@@ -79,7 +79,7 @@ model ClinicalCase {
 ### Services
 
 - **PatientsService:**
-  - `create()`: Creates patient with initial clinical case, evaluation, and treatment plan
+  - `create()`: Creates patient with initial clinical case and evaluation
   - `findAll()`: Paginated list with search filter, scoped to therapist
   - `findOne()`: Single patient with all clinical data included
   - `update()`: Partial update with birthDate conversion
@@ -90,7 +90,7 @@ model ClinicalCase {
 - **ClinicalCasesService:**
   - `create()`: Create new clinical case for existing patient
   - `findAll()`: Paginated list with filters (patientId, status, search)
-  - `findOne()`: Case with evaluations, sessions, treatment plan
+  - `findOne()`: Case with evaluation, sessions, treatment plan
   - `update()`: Update case status, title, reason
   - `remove()`: Hard delete
 
@@ -111,14 +111,14 @@ model ClinicalCase {
 
 ### Components (English Code)
 
-| Component         | Purpose                                                   |
-| ----------------- | --------------------------------------------------------- |
-| `PatientList`     | Grid of patient cards with search, filters, quick actions |
-| `PatientProfile`  | Dashboard with active case, history, action buttons       |
-| `PatientForm`     | Create/Edit form with Zod validation                      |
-| `EvaluationForm`  | Clinical assessment form (posturogram, pain scale)        |
-| `Timeline`        | Chronological view of treatment sessions                  |
-| `ComparisonBoard` | Before/After visual comparison                            |
+| Component         | Purpose                                                             |
+| ----------------- | ------------------------------------------------------------------- |
+| `PatientList`     | Grid of patient cards with search, filters, quick actions           |
+| `PatientProfile`  | Dashboard with active case, history, action buttons                 |
+| `PatientForm`     | Create/Edit form with Zod validation                                |
+| `EvaluationForm`  | SOAP clinical assessment form (Subjetivo, Objetivo, Analisis, Plan) |
+| `Timeline`        | Chronological view of treatment sessions                            |
+| `ComparisonBoard` | Before/After visual comparison                                      |
 
 ### UI Components (Shadcn/Radix)
 
