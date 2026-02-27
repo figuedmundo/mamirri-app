@@ -87,6 +87,7 @@ export interface DeviationStatus {
 }
 
 export interface OrthopedicTests {
+  [key: string]: TestResult | undefined;
   thomas: TestResult;
   ely: TestResult;
   ober: TestResult;

@@ -178,6 +178,37 @@ describe('EvaluationForm SOAP', () => {
     expect(onSave).not.toHaveBeenCalled();
   });
 
+  it('persists newly added objective test in save payload and reload', async () => {
+    const onSave = vi.fn();
+    const { rerender } = render(
+      <EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />,
+    );
+
+    fireEvent.click(screen.getByText('O - Objetivo'));
+    fireEvent.change(screen.getByPlaceholderText('Buscar prueba'), {
+      target: { value: 'Ott' },
+    });
+    fireEvent.click(screen.getByText('+ Ott'));
+    fireEvent.click(screen.getByText('Guardar Evaluación'));
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    const payload = onSave.mock.calls[0][0] as Evaluation;
+    expect(payload.orthopedicTests.ott).toEqual({
+      result: 1,
+      interpretation: '',
+    });
+
+    const reloadedCase: ClinicalCase = {
+      ...mockClinicalCase,
+      evaluation: payload,
+      evaluations: [payload],
+    };
+
+    rerender(<EvaluationForm clinicalCase={reloadedCase} onSave={onSave} />);
+    fireEvent.click(screen.getByText('O - Objetivo'));
+    expect(screen.getByText('Ott')).toBeInTheDocument();
+  });
+
   it('calls onSave with updated diagnosis', async () => {
     const onSave = vi.fn();
     render(<EvaluationForm clinicalCase={mockClinicalCase} onSave={onSave} />);

@@ -5,6 +5,7 @@ import type {
   OrthopedicTests,
   PainScale,
   Diagnosis,
+  TestResult,
 } from '../../types/patient';
 import { getActiveEvaluation } from '../../lib/evaluation-utils';
 import { VoiceRecorder } from './VoiceRecorder';
@@ -37,6 +38,20 @@ const EMPTY_PLAN = {
   additionalNotes: '',
 };
 
+const getSelectedTestKeys = (tests: OrthopedicTests): string[] => {
+  return Object.entries(tests)
+    .filter(([, value]) => {
+      if (!value) return false;
+
+      const hasInterpretation = value.interpretation.trim().length > 0;
+      const hasResult =
+        value.result !== 0 && value.result !== '0' && value.result !== '';
+
+      return hasInterpretation || hasResult;
+    })
+    .map(([key]) => key);
+};
+
 export function EvaluationForm({
   clinicalCase,
   onSave,
@@ -53,7 +68,11 @@ export function EvaluationForm({
 
   const [subjectiveText, setSubjectiveText] = React.useState('');
   const [testSearch, setTestSearch] = React.useState('');
-  const [selectedTests, setSelectedTests] = React.useState<string[]>([]);
+  const [selectedTests, setSelectedTests] = React.useState<string[]>(() =>
+    getSelectedTestKeys(
+      (activeEvaluation?.orthopedicTests || {}) as OrthopedicTests,
+    ),
+  );
 
   const [orthopedicTests, setOrthopedicTests] = React.useState<OrthopedicTests>(
     () => (activeEvaluation?.orthopedicTests || {}) as OrthopedicTests,
@@ -103,6 +122,11 @@ export function EvaluationForm({
 
     setOrthopedicTests(
       (activeEvaluation.orthopedicTests || {}) as OrthopedicTests,
+    );
+    setSelectedTests(
+      getSelectedTestKeys(
+        (activeEvaluation.orthopedicTests || {}) as OrthopedicTests,
+      ),
     );
     setPainScale(
       activeEvaluation.painScale || {
@@ -189,11 +213,30 @@ export function EvaluationForm({
 
   const addTest = (key: string) => {
     if (selectedTests.includes(key)) return;
+    hasPendingChangesRef.current = true;
     setSelectedTests((prev) => [...prev, key]);
+    setOrthopedicTests((prev) => {
+      if ((prev as Record<string, TestResult | undefined>)[key]) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        [key]: { result: 1, interpretation: '' },
+      } as OrthopedicTests;
+    });
   };
 
   const removeTest = (key: string) => {
+    hasPendingChangesRef.current = true;
     setSelectedTests((prev) => prev.filter((k) => k !== key));
+    setOrthopedicTests((prev) => {
+      const next = {
+        ...(prev as Record<string, TestResult | undefined>),
+      };
+      delete next[key];
+      return next as OrthopedicTests;
+    });
   };
 
   const handleTestChange = (
