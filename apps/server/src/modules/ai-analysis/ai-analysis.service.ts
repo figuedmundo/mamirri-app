@@ -22,8 +22,26 @@ import {
   DifferentialDiagnosisItem,
   FollowUpQuestion,
   RedFlag,
+  Suggestion,
 } from './interfaces/analysis.interfaces';
 import { CaseDataAggregate } from './interfaces/aggregation.interfaces';
+import { ROLES, type Role } from '../../common/constants/roles';
+
+type StoredAnalysisResult = AnalysisResult & {
+  metadata?: AnalysisResult['metadata'] & { rawModelResponse?: string };
+};
+
+type OwnedAnalysisRecord = {
+  id: string;
+  createdAt: Date;
+  result: unknown;
+  clinicalCase: {
+    patient: {
+      therapistId: string;
+      clinicId: string | null;
+    };
+  };
+};
 
 @Injectable()
 export class AiAnalysisService {
@@ -126,6 +144,10 @@ export class AiAnalysisService {
 
     const llmResponse = await this.callLlm(systemPrompt, userPrompt);
 
+    this.logger.debug(
+      `Raw LLM response received (${llmResponse.length} chars): ${llmResponse.slice(0, 600)}`,
+    );
+
     const parsedResult = this.parseResponse(llmResponse);
 
     const translatedCitations = await this.translateCitationsInternal(
@@ -156,12 +178,20 @@ export class AiAnalysisService {
 
     let analysisId: string | undefined;
     try {
+      const resultForPersistence = {
+        ...resultWithoutId,
+        metadata: {
+          ...resultWithoutId.metadata,
+          rawModelResponse: llmResponse,
+        },
+      };
+
       const persisted = await (this.prisma as any).aiAnalysis.create({
         data: {
           clinicalCaseId,
           therapistId,
           clinicId: clinicId ?? null,
-          result: resultWithoutId as any,
+          result: resultForPersistence as any,
         },
       });
       analysisId = persisted.id;
@@ -183,7 +213,7 @@ export class AiAnalysisService {
     therapistId: string,
     clinicId?: string | null,
   ): Promise<AnalysisResult> {
-    const latest = await (this.prisma as any).aiAnalysis.findFirst({
+    const latest = (await (this.prisma as any).aiAnalysis.findFirst({
       where: {
         clinicalCaseId,
       },
@@ -195,32 +225,91 @@ export class AiAnalysisService {
           },
         },
       },
-    });
+    })) as OwnedAnalysisRecord | null;
 
     if (!latest) {
       throw new NotFoundException('Analysis not found');
     }
 
-    if (latest.clinicalCase.patient.therapistId !== therapistId) {
-      throw new ForbiddenException(
-        'You do not have access to this clinical case',
-      );
-    }
+    this.assertAnalysisAccess(latest, therapistId, clinicId, {
+      notFoundMessage: 'Analysis not found',
+      forbiddenMessage: 'You do not have access to this clinical case',
+    });
 
-    if (clinicId && latest.clinicalCase.patient.clinicId !== clinicId) {
-      throw new ForbiddenException(
-        'You do not have access to this clinical case',
-      );
-    }
+    const result = latest.result as StoredAnalysisResult;
 
-    const result = latest.result as AnalysisResult;
+    const sanitizedMetadata = {
+      ...(result.metadata || {}),
+    } as AnalysisResult['metadata'] & {
+      rawModelResponse?: string;
+    };
+    delete sanitizedMetadata.rawModelResponse;
 
     return {
       ...result,
       metadata: {
-        ...result.metadata,
+        ...sanitizedMetadata,
         analysisId: result.metadata?.analysisId ?? latest.id,
       },
+    };
+  }
+
+  async getRawModelResponse(
+    analysisId: string,
+    therapistId: string,
+    userRole: Role,
+    clinicId?: string | null,
+    includeSensitive = false,
+  ): Promise<{
+    analysisId: string;
+    rawModelResponse: string | null;
+    createdAt: Date;
+    isRedacted: boolean;
+  }> {
+    if (userRole !== ROLES.ADMIN && userRole !== ROLES.CLINIC_OWNER) {
+      throw new ForbiddenException(
+        'Only clinic owners or admins can access raw AI responses',
+      );
+    }
+
+    const analysis = await this.getOwnedAnalysisRecord(
+      analysisId,
+      therapistId,
+      clinicId,
+      {
+        notFoundMessage: 'Analysis not found',
+        forbiddenMessage: 'You do not have access to this analysis',
+      },
+      {
+        allowClinicOwner: userRole === ROLES.CLINIC_OWNER,
+        allowAdmin: userRole === ROLES.ADMIN,
+      },
+    );
+
+    const result = analysis.result as StoredAnalysisResult;
+    const rawModelResponse =
+      typeof result.metadata?.rawModelResponse === 'string'
+        ? result.metadata.rawModelResponse
+        : null;
+    const responseText =
+      rawModelResponse && !includeSensitive
+        ? this.redactRawModelResponse(rawModelResponse)
+        : rawModelResponse;
+
+    this.logRawResponseAccess({
+      analysisId,
+      accessorUserId: therapistId,
+      role: userRole,
+      includeSensitive,
+      hasPayload: responseText !== null,
+      payloadLength: responseText?.length ?? 0,
+    });
+
+    return {
+      analysisId: analysis.id,
+      rawModelResponse: responseText,
+      createdAt: analysis.createdAt,
+      isRedacted: !includeSensitive,
     };
   }
 
@@ -297,7 +386,20 @@ export class AiAnalysisService {
     therapistId: string,
     clinicId?: string | null,
   ) {
-    const analysis = await (this.prisma as any).aiAnalysis.findUnique({
+    await this.getOwnedAnalysisRecord(analysisId, therapistId, clinicId, {
+      notFoundMessage: 'Analysis not found',
+      forbiddenMessage: 'You do not have access to this analysis',
+    });
+  }
+
+  private async getOwnedAnalysisRecord(
+    analysisId: string,
+    therapistId: string,
+    clinicId: string | null | undefined,
+    messages: { notFoundMessage: string; forbiddenMessage: string },
+    permissions: { allowClinicOwner?: boolean; allowAdmin?: boolean } = {},
+  ): Promise<OwnedAnalysisRecord> {
+    const analysis = (await (this.prisma as any).aiAnalysis.findUnique({
       where: { id: analysisId },
       include: {
         clinicalCase: {
@@ -306,19 +408,77 @@ export class AiAnalysisService {
           },
         },
       },
-    });
+    })) as OwnedAnalysisRecord | null;
 
+    this.assertAnalysisAccess(
+      analysis,
+      therapistId,
+      clinicId,
+      messages,
+      permissions,
+    );
+
+    return analysis;
+  }
+
+  private assertAnalysisAccess(
+    analysis: OwnedAnalysisRecord | null,
+    therapistId: string,
+    clinicId: string | null | undefined,
+    messages: { notFoundMessage: string; forbiddenMessage: string },
+    permissions: { allowClinicOwner?: boolean; allowAdmin?: boolean } = {},
+  ): asserts analysis is OwnedAnalysisRecord {
     if (!analysis) {
-      throw new NotFoundException('Analysis not found');
+      throw new NotFoundException(messages.notFoundMessage);
+    }
+
+    if (permissions.allowAdmin) {
+      return;
+    }
+
+    if (permissions.allowClinicOwner) {
+      if (!clinicId || analysis.clinicalCase.patient.clinicId !== clinicId) {
+        throw new ForbiddenException(messages.forbiddenMessage);
+      }
+      return;
     }
 
     if (analysis.clinicalCase.patient.therapistId !== therapistId) {
-      throw new ForbiddenException('You do not have access to this analysis');
+      throw new ForbiddenException(messages.forbiddenMessage);
     }
 
     if (clinicId && analysis.clinicalCase.patient.clinicId !== clinicId) {
-      throw new ForbiddenException('You do not have access to this analysis');
+      throw new ForbiddenException(messages.forbiddenMessage);
     }
+  }
+
+  private redactRawModelResponse(value: string): string {
+    return value
+      .replace(
+        /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi,
+        '[REDACTED_EMAIL]',
+      )
+      .replace(/\+?\d[\d()\-\s]{6,}\d/g, '[REDACTED_PHONE]')
+      .replace(
+        /\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g,
+        '[REDACTED_TOKEN]',
+      );
+  }
+
+  private logRawResponseAccess(entry: {
+    analysisId: string;
+    accessorUserId: string;
+    role: Role;
+    includeSensitive: boolean;
+    hasPayload: boolean;
+    payloadLength: number;
+  }): void {
+    this.logger.log(
+      `AUDIT_RAW_RESPONSE_READ ${JSON.stringify({
+        ...entry,
+        timestamp: new Date().toISOString(),
+      })}`,
+    );
   }
 
   private async rerankChunks(
@@ -580,21 +740,21 @@ export class AiAnalysisService {
 
   private parseResponse(llmResponse: string): AnalysisResult {
     try {
-      const jsonMatch = llmResponse.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
+      const parsed = this.extractJsonObject(llmResponse);
+      if (!parsed) {
         throw new Error('No JSON found in LLM response');
       }
 
-      const parsed = JSON.parse(jsonMatch[0]);
-
       return {
-        summary: parsed.summary,
-        primarySuggestion: parsed.primarySuggestion || {
+        summary:
+          typeof parsed.summary === 'string' && parsed.summary.trim().length > 0
+            ? parsed.summary
+            : undefined,
+        primarySuggestion: this.normalizeSuggestion(parsed.primarySuggestion, {
           title: 'Sin recomendación',
           description: 'No se pudo generar una recomendación',
-          confidence: 'LOW',
-        },
-        alternatives: parsed.alternatives || [],
+        }),
+        alternatives: this.normalizeAlternatives(parsed.alternatives),
         followUpQuestions: this.normalizeFollowUpQuestions(
           parsed.followUpQuestions,
         ),
@@ -605,12 +765,8 @@ export class AiAnalysisService {
         confidenceJustification: this.normalizeConfidenceJustification(
           parsed.confidenceJustification,
         ),
-        citations: parsed.citations || [],
-        reasoning: parsed.reasoning || {
-          step1_understanding: '',
-          step2_literature: '',
-          step3_synthesis: '',
-        },
+        citations: this.normalizeCitations(parsed.citations),
+        reasoning: this.normalizeReasoning(parsed.reasoning),
         metadata: {
           queryTokens: 0,
           responseTokens: 0,
@@ -623,6 +779,177 @@ export class AiAnalysisService {
       this.logger.error(`Failed to parse LLM response: ${error.message}`);
       return this.getDefaultResult();
     }
+  }
+
+  private extractJsonObject(
+    llmResponse: string,
+  ): Record<string, unknown> | null {
+    const candidates: string[] = [];
+    const trimmed = llmResponse.trim();
+    if (trimmed.length > 0) {
+      candidates.push(trimmed);
+    }
+
+    const markdownMatches = llmResponse.matchAll(
+      /```(?:json)?\s*([\s\S]*?)\s*```/gi,
+    );
+    for (const match of markdownMatches) {
+      if (match[1]) {
+        candidates.push(match[1].trim());
+      }
+    }
+
+    const balancedSlices = this.extractBalancedJsonSlices(llmResponse);
+    candidates.push(...balancedSlices);
+
+    for (const candidate of candidates) {
+      if (!candidate) continue;
+
+      try {
+        const parsed = JSON.parse(candidate);
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          return parsed as Record<string, unknown>;
+        }
+      } catch {
+        continue;
+      }
+    }
+
+    return null;
+  }
+
+  private extractBalancedJsonSlices(text: string): string[] {
+    const slices: string[] = [];
+    let start = -1;
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+
+      if (inString) {
+        if (escaped) {
+          escaped = false;
+        } else if (char === '\\') {
+          escaped = true;
+        } else if (char === '"') {
+          inString = false;
+        }
+        continue;
+      }
+
+      if (char === '"') {
+        inString = true;
+        continue;
+      }
+
+      if (char === '{') {
+        if (depth === 0) {
+          start = i;
+        }
+        depth += 1;
+      } else if (char === '}') {
+        if (depth > 0) {
+          depth -= 1;
+          if (depth === 0 && start >= 0) {
+            slices.push(text.slice(start, i + 1));
+            start = -1;
+          }
+        }
+      }
+    }
+
+    return slices;
+  }
+
+  private normalizeSuggestion(
+    value: unknown,
+    fallback: { title: string; description: string },
+  ): Suggestion {
+    const payload =
+      value && typeof value === 'object'
+        ? (value as Record<string, unknown>)
+        : {};
+
+    const title = String(payload.title ?? '').trim() || fallback.title;
+    const description =
+      String(payload.description ?? '').trim() || fallback.description;
+    const confidence = this.normalizeConfidence(
+      String(payload.confidence ?? 'LOW'),
+    );
+    const reasoning = String(payload.reasoning ?? '').trim();
+
+    return {
+      title,
+      description,
+      confidence,
+      ...(reasoning.length > 0 ? { reasoning } : {}),
+    };
+  }
+
+  private normalizeAlternatives(value: unknown): Suggestion[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter(
+        (item): item is Record<string, unknown> =>
+          !!item && typeof item === 'object',
+      )
+      .map((item) =>
+        this.normalizeSuggestion(item, {
+          title: 'Alternativa clínica',
+          description:
+            'No se proporcionó una descripción para esta alternativa.',
+        }),
+      )
+      .filter((item) => item.title.length > 0 && item.description.length > 0);
+  }
+
+  private normalizeCitations(value: unknown): Citation[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter(
+        (item): item is Record<string, unknown> =>
+          !!item && typeof item === 'object',
+      )
+      .map((item) => ({
+        quote: String(item.quote ?? '').trim(),
+        quoteOriginal:
+          typeof item.quoteOriginal === 'string'
+            ? item.quoteOriginal.trim() || undefined
+            : undefined,
+        documentTitle: String(item.documentTitle ?? '').trim(),
+        author: String(item.author ?? '').trim(),
+        pageNumber:
+          typeof item.pageNumber === 'number' &&
+          Number.isFinite(item.pageNumber)
+            ? item.pageNumber
+            : undefined,
+        relevance:
+          typeof item.relevance === 'number' && Number.isFinite(item.relevance)
+            ? item.relevance
+            : 0,
+      }))
+      .filter((citation) => citation.quote.length > 0);
+  }
+
+  private normalizeReasoning(value: unknown): AnalysisResult['reasoning'] {
+    const payload =
+      value && typeof value === 'object'
+        ? (value as Record<string, unknown>)
+        : {};
+
+    return {
+      step1_understanding: String(payload.step1_understanding ?? '').trim(),
+      step2_literature: String(payload.step2_literature ?? '').trim(),
+      step3_synthesis: String(payload.step3_synthesis ?? '').trim(),
+    };
   }
 
   private rehydrateResult(

@@ -10,6 +10,13 @@ export interface Feedback {
   comment?: string;
 }
 
+export interface RawAnalysisResponse {
+  analysisId: string;
+  rawModelResponse: string | null;
+  createdAt: string;
+  isRedacted: boolean;
+}
+
 export const aiAnalysisApi = {
   analyzeCase: async (caseId: string): Promise<AnalysisResult> => {
     const { data } = await axiosClient.post<AnalysisResult>(
@@ -30,6 +37,19 @@ export const aiAnalysisApi = {
       }
       throw error;
     }
+  },
+
+  getRawModelResponse: async (
+    analysisId: string,
+    includeSensitive = false,
+  ): Promise<RawAnalysisResponse> => {
+    const { data } = await axiosClient.get<RawAnalysisResponse>(
+      `/ai/analyses/${analysisId}/raw-response`,
+      {
+        params: { includeSensitive },
+      },
+    );
+    return data;
   },
 
   getFeedbacks: async (analysisId: string): Promise<Feedback[]> => {

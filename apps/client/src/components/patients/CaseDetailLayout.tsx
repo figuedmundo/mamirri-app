@@ -41,6 +41,19 @@ import {
   BookOpen,
 } from 'lucide-react';
 
+function getCurrentUserRoleFromStorage(): string | null {
+  try {
+    const serialized = localStorage.getItem('user_data');
+    if (!serialized) {
+      return null;
+    }
+    const parsed = JSON.parse(serialized) as { role?: unknown };
+    return typeof parsed.role === 'string' ? parsed.role : null;
+  } catch {
+    return null;
+  }
+}
+
 type ViewMode =
   | 'timeline'
   | 'session-detail'
@@ -64,6 +77,11 @@ export function CaseDetailLayout({
   const [localCase, setLocalCase] = useState<ClinicalCase>(clinicalCase);
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
+  const [viewerRole] = useState<string | null>(() =>
+    getCurrentUserRoleFromStorage(),
+  );
+  const canViewRawResponseDebug =
+    viewerRole === 'CLINIC_OWNER' || viewerRole === 'ADMIN';
   const { toast } = useToast();
   const { data: latestAnalysis } = useLatestAnalysisQuery(localCase.id, {
     enabled: !!localCase.id,
@@ -565,6 +583,7 @@ export function CaseDetailLayout({
         analysisResult={latestAnalysis ?? null}
         isOpen={isAnalysisOpen}
         onClose={() => setIsAnalysisOpen(false)}
+        canViewRawResponseDebug={canViewRawResponseDebug}
       />
     </div>
   );

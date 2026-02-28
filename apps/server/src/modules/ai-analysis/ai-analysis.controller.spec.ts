@@ -42,6 +42,7 @@ describe('AiAnalysisController', () => {
     const mockService = {
       analyzeCase: jest.fn(),
       getLatestAnalysis: jest.fn(),
+      getRawModelResponse: jest.fn(),
     };
 
     const mockVisionService = {
@@ -230,6 +231,97 @@ describe('AiAnalysisController', () => {
 
       await expect(
         controller.getLatestAnalysis('case-123', { userId: 'wrong-therapist' }),
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
+
+  describe('GET /ai/analyses/:analysisId/raw-response', () => {
+    it('should return raw model response for valid request', async () => {
+      service.getRawModelResponse.mockResolvedValue({
+        analysisId: 'analysis-123',
+        rawModelResponse: '{"primarySuggestion":{"title":"Test"}}',
+        createdAt: new Date('2026-02-28T00:00:00.000Z'),
+        isRedacted: true,
+      });
+
+      const result = await controller.getRawModelResponse(
+        'analysis-123',
+        {
+          userId: 'therapist-123',
+          role: 'CLINIC_OWNER',
+        },
+        'false',
+      );
+
+      expect(result.analysisId).toBe('analysis-123');
+      expect(result.rawModelResponse).toContain('primarySuggestion');
+      expect(result.isRedacted).toBe(true);
+      expect(service.getRawModelResponse).toHaveBeenCalledWith(
+        'analysis-123',
+        'therapist-123',
+        'CLINIC_OWNER',
+        undefined,
+        false,
+      );
+    });
+
+    it('should pass includeSensitive=true when requested', async () => {
+      service.getRawModelResponse.mockResolvedValue({
+        analysisId: 'analysis-123',
+        rawModelResponse: '{"private":true}',
+        createdAt: new Date('2026-02-28T00:00:00.000Z'),
+        isRedacted: false,
+      });
+
+      await controller.getRawModelResponse(
+        'analysis-123',
+        {
+          userId: 'therapist-123',
+          role: 'ADMIN',
+        },
+        'true',
+      );
+
+      expect(service.getRawModelResponse).toHaveBeenCalledWith(
+        'analysis-123',
+        'therapist-123',
+        'ADMIN',
+        undefined,
+        true,
+      );
+    });
+
+    it('should throw 404 when analysis does not exist', async () => {
+      service.getRawModelResponse.mockRejectedValue(
+        new NotFoundException('Analysis not found'),
+      );
+
+      await expect(
+        controller.getRawModelResponse(
+          'analysis-404',
+          {
+            userId: 'therapist-123',
+            role: 'CLINIC_OWNER',
+          },
+          'false',
+        ),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw 403 when therapist does not own analysis', async () => {
+      service.getRawModelResponse.mockRejectedValue(
+        new ForbiddenException('Access denied'),
+      );
+
+      await expect(
+        controller.getRawModelResponse(
+          'analysis-123',
+          {
+            userId: 'wrong-therapist',
+            role: 'THERAPIST',
+          },
+          'false',
+        ),
       ).rejects.toThrow(ForbiddenException);
     });
   });

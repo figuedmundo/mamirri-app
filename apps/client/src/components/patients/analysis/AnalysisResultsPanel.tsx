@@ -18,18 +18,21 @@ import { RedFlagsSection } from './RedFlagsSection';
 import { FollowUpQuestionsSection } from './FollowUpQuestionsSection';
 import { DifferentialDiagnosisSection } from './DifferentialDiagnosisSection';
 import { ConfidenceJustificationSection } from './ConfidenceJustificationSection';
+import { RawResponseDebugSection } from './RawResponseDebugSection';
 import { useSuggestionFeedback } from '@/hooks/use-suggestion-feedback';
 
 interface AnalysisResultsPanelProps {
   analysisResult: AnalysisResult | null;
   isOpen: boolean;
   onClose: () => void;
+  canViewRawResponseDebug?: boolean;
 }
 
 export function AnalysisResultsPanel({
   analysisResult,
   isOpen,
   onClose,
+  canViewRawResponseDebug = false,
 }: AnalysisResultsPanelProps) {
   const { feedbacks, submitFeedback, removeFeedback } = useSuggestionFeedback(
     analysisResult?.metadata.analysisId,
@@ -130,6 +133,11 @@ export function AnalysisResultsPanel({
           )}
 
           <CitationsSection citations={analysisResult.citations} />
+
+          <RawResponseDebugSection
+            analysisId={analysisResult.metadata.analysisId}
+            isVisible={canViewRawResponseDebug}
+          />
 
           <AnalysisDisclaimer />
         </ScrollArea>
