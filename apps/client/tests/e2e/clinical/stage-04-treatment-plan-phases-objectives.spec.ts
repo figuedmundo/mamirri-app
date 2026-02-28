@@ -12,7 +12,7 @@ test.describe('Stage 4: Treatment Plan - Phases and Objectives', () => {
     const caseId = 'c-plan-1';
 
     // Mock Patient with completed diagnosis to unblock Plan
-    await page.route(`**/api/v1/patients/${patientId}`, async (route) => {
+    await page.route(`**/api/v1/patients/${patientId}**`, async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -94,7 +94,10 @@ test.describe('Stage 4: Treatment Plan - Phases and Objectives', () => {
     // Verify 5 phases in PhaseProgress
     for (let i = 1; i <= 5; i++) {
       await expect(
-        page.getByText(`Fase ${i}`).or(page.getByText(`Phase ${i}`)).first(),
+        page
+          .getByText(`Fase ${i}`)
+          .or(page.getByText(`Phase ${i}`))
+          .first(),
       ).toBeVisible();
     }
 
@@ -102,18 +105,20 @@ test.describe('Stage 4: Treatment Plan - Phases and Objectives', () => {
     await page.getByTestId('nav-objectives-btn').click();
     await expect(page.getByText('Objetivos', { exact: true })).toBeVisible();
 
-    await expect(page.getByPlaceholder(/Ej: Reducir dolor lumbar/i)).toHaveValue(
-      'Feel better',
-    );
-    await expect(page.getByPlaceholder(/Ej: Prevenir recurrencia/i)).toHaveValue(
-      'Avoid injury',
-    );
+    await expect(
+      page.getByPlaceholder(/Ej: Reducir dolor lumbar/i),
+    ).toHaveValue('Feel better');
+    await expect(
+      page.getByPlaceholder(/Ej: Prevenir recurrencia/i),
+    ).toHaveValue('Avoid injury');
     await expect(page.getByPlaceholder(/Ej: Enseñar postura/i)).toHaveValue(
       'Learn exercises',
     );
-    
+
     // Test updating objectives
-    await page.getByPlaceholder(/Ej: Reducir dolor lumbar/i).fill('New therapeutic goal');
+    await page
+      .getByPlaceholder(/Ej: Reducir dolor lumbar/i)
+      .fill('New therapeutic goal');
     await page.waitForTimeout(500); // Debounce
   });
 });

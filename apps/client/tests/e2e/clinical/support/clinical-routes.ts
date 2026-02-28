@@ -80,7 +80,7 @@ export const mockPatientFlow = async (page: Page, overrides = {}) => {
 
   const data = { ...defaultData, ...overrides };
 
-  await page.route(`**/api/v1/patients/${patientId}`, async (route) => {
+  await page.route(`**/api/v1/patients/${patientId}**`, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
