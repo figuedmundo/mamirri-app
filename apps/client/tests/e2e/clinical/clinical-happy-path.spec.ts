@@ -56,7 +56,7 @@ test.describe('Patient Clinical Journey - End to End', () => {
 
     // 2. Mock Patient Detail for the journey
     let hasDiagnosis = false;
-    await page.route(`**/api/v1/patients/${patientId}`, async (route) => {
+    await page.route(`**/api/v1/patients/${patientId}**`, async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
