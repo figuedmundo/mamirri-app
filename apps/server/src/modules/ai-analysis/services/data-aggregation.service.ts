@@ -152,7 +152,11 @@ export class DataAggregationService {
       return JSON.stringify(value);
     }
 
-    return String(value);
+    if (typeof value === 'number' || typeof value === 'boolean') {
+      return String(value);
+    }
+
+    return undefined;
   }
 
   private async extractVisionFindings(

@@ -872,13 +872,15 @@ export class AiAnalysisService {
         ? (value as Record<string, unknown>)
         : {};
 
-    const title = String(payload.title ?? '').trim() || fallback.title;
+    const title =
+      this.coerceString(payload.title, fallback.title).trim() || fallback.title;
     const description =
-      String(payload.description ?? '').trim() || fallback.description;
+      this.coerceString(payload.description, fallback.description).trim() ||
+      fallback.description;
     const confidence = this.normalizeConfidence(
-      String(payload.confidence ?? 'LOW'),
+      this.coerceString(payload.confidence, 'LOW') || 'LOW',
     );
-    const reasoning = String(payload.reasoning ?? '').trim();
+    const reasoning = this.coerceString(payload.reasoning).trim();
 
     return {
       title,
@@ -919,13 +921,13 @@ export class AiAnalysisService {
           !!item && typeof item === 'object',
       )
       .map((item) => ({
-        quote: String(item.quote ?? '').trim(),
+        quote: this.coerceString(item.quote).trim(),
         quoteOriginal:
           typeof item.quoteOriginal === 'string'
             ? item.quoteOriginal.trim() || undefined
             : undefined,
-        documentTitle: String(item.documentTitle ?? '').trim(),
-        author: String(item.author ?? '').trim(),
+        documentTitle: this.coerceString(item.documentTitle).trim(),
+        author: this.coerceString(item.author).trim(),
         pageNumber:
           typeof item.pageNumber === 'number' &&
           Number.isFinite(item.pageNumber)
@@ -946,9 +948,11 @@ export class AiAnalysisService {
         : {};
 
     return {
-      step1_understanding: String(payload.step1_understanding ?? '').trim(),
-      step2_literature: String(payload.step2_literature ?? '').trim(),
-      step3_synthesis: String(payload.step3_synthesis ?? '').trim(),
+      step1_understanding: this.coerceString(
+        payload.step1_understanding,
+      ).trim(),
+      step2_literature: this.coerceString(payload.step2_literature).trim(),
+      step3_synthesis: this.coerceString(payload.step3_synthesis).trim(),
     };
   }
 
@@ -1185,8 +1189,8 @@ export class AiAnalysisService {
           !!item && typeof item === 'object',
       )
       .map((item) => ({
-        question: String(item.question ?? ''),
-        reason: String(item.reason ?? ''),
+        question: this.coerceString(item.question),
+        reason: this.coerceString(item.reason),
         soapSection: this.normalizeSoapSection(item.soapSection),
       }))
       .filter((item) => item.question.length > 0);
@@ -1203,9 +1207,11 @@ export class AiAnalysisService {
           !!item && typeof item === 'object',
       )
       .map((item) => ({
-        flag: String(item.flag ?? ''),
-        urgency: this.normalizeConfidence(String(item.urgency ?? 'LOW')),
-        recommendedAction: String(item.recommendedAction ?? ''),
+        flag: this.coerceString(item.flag),
+        urgency: this.normalizeConfidence(
+          this.coerceString(item.urgency, 'LOW') || 'LOW',
+        ),
+        recommendedAction: this.coerceString(item.recommendedAction),
       }))
       .filter((item) => item.flag.length > 0);
   }
@@ -1223,9 +1229,9 @@ export class AiAnalysisService {
           !!item && typeof item === 'object',
       )
       .map((item) => ({
-        condition: String(item.condition ?? ''),
-        supportingEvidence: String(item.supportingEvidence ?? ''),
-        contradictingEvidence: String(item.contradictingEvidence ?? ''),
+        condition: this.coerceString(item.condition),
+        supportingEvidence: this.coerceString(item.supportingEvidence),
+        contradictingEvidence: this.coerceString(item.contradictingEvidence),
       }))
       .filter((item) => item.condition.length > 0);
   }
@@ -1240,8 +1246,8 @@ export class AiAnalysisService {
     const payload = value as Record<string, unknown>;
 
     return {
-      literatureSupport: String(payload.literatureSupport ?? ''),
-      clinicalAlignment: String(payload.clinicalAlignment ?? ''),
+      literatureSupport: this.coerceString(payload.literatureSupport),
+      clinicalAlignment: this.coerceString(payload.clinicalAlignment),
       limitingFactors: Array.isArray(payload.limitingFactors)
         ? payload.limitingFactors.map((factor) => String(factor))
         : [],
@@ -1251,7 +1257,7 @@ export class AiAnalysisService {
   private normalizeSoapSection(
     value: unknown,
   ): 'SUBJETIVO' | 'OBJETIVO' | 'ANALISIS' | 'PLAN' | 'GENERAL' {
-    const raw = String(value ?? 'GENERAL').toUpperCase();
+    const raw = this.coerceString(value, 'GENERAL').toUpperCase();
     if (raw === 'SUBJETIVO') return 'SUBJETIVO';
     if (raw === 'OBJETIVO') return 'OBJETIVO';
     if (raw === 'ANALISIS') return 'ANALISIS';
@@ -1264,5 +1270,15 @@ export class AiAnalysisService {
     if (normalized === 'HIGH') return 'HIGH';
     if (normalized === 'MEDIUM') return 'MEDIUM';
     return 'LOW';
+  }
+
+  private coerceString(value: unknown, fallback = ''): string {
+    if (typeof value === 'string') {
+      return value;
+    }
+    if (typeof value === 'number' || typeof value === 'boolean') {
+      return String(value);
+    }
+    return fallback;
   }
 }
