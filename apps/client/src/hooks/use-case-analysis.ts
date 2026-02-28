@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { aiAnalysisApi } from '@/api/ai-analysis';
 import type { AnalysisResult } from '@/types/analysis';
 import { useToast } from './use-toast';
+import { queryKeys } from '@/lib/query-keys';
 
 interface UseCaseAnalysisReturn {
   analyzeCase: (caseId: string) => Promise<AnalysisResult | undefined>;
@@ -11,6 +13,7 @@ interface UseCaseAnalysisReturn {
 }
 
 export function useCaseAnalysis(): UseCaseAnalysisReturn {
+  const queryClient = useQueryClient();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [result, setResult] = useState<AnalysisResult | null>(null);
@@ -22,6 +25,8 @@ export function useCaseAnalysis(): UseCaseAnalysisReturn {
     try {
       const data = await aiAnalysisApi.analyzeCase(caseId);
       setResult(data);
+      queryClient.setQueryData(queryKeys.aiAnalysis.latest(caseId), data);
+      queryClient.setQueryData(queryKeys.aiAnalysis.detail(caseId), data);
       return data;
     } catch (err: unknown) {
       const errorObj =

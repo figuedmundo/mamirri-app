@@ -243,4 +243,35 @@ export class AiAnalysisController {
       user.clinicId,
     );
   }
+
+  @Get('cases/:caseId/analyses/latest')
+  @ApiOperation({
+    summary: 'Get latest analysis by case',
+    description:
+      'Returns the most recent AI analysis result for a clinical case.',
+  })
+  @ApiParam({ name: 'caseId', description: 'ID of the clinical case' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Latest analysis retrieved successfully',
+    type: AnalysisResultDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Analysis not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Access denied',
+  })
+  async getLatestAnalysis(
+    @Param('caseId') caseId: string,
+    @CurrentTherapist() user: { userId: string; clinicId?: string | null },
+  ): Promise<AnalysisResultDto> {
+    return this.aiAnalysisService.getLatestAnalysis(
+      caseId,
+      user.userId,
+      user.clinicId,
+    );
+  }
 }

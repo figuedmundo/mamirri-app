@@ -30,7 +30,7 @@ import type { UpdateEvaluationDto } from '../../api/patients';
 import { useUploadEvaluationVoiceNote } from '../../hooks/use-media';
 import { AnalyzeButton } from './AnalyzeButton';
 import { AnalysisResultsPanel } from './analysis/AnalysisResultsPanel';
-import type { AnalysisResult } from '@/types/analysis';
+import { useLatestAnalysisQuery } from '@/hooks/use-ai-analysis';
 import {
   Mic,
   ArrowLeft,
@@ -63,11 +63,11 @@ export function CaseDetailLayout({
 }: CaseDetailLayoutProps) {
   const [localCase, setLocalCase] = useState<ClinicalCase>(clinicalCase);
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
-    null,
-  );
   const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
   const { toast } = useToast();
+  const { data: latestAnalysis } = useLatestAnalysisQuery(localCase.id, {
+    enabled: !!localCase.id,
+  });
 
   const updateEvaluation = useUpdateEvaluation();
   const updateObjectives = useUpdateTreatmentPlanObjectives();
@@ -482,9 +482,8 @@ export function CaseDetailLayout({
           <AnalyzeButton
             caseId={localCase.id}
             evaluationCount={getCaseEvaluations(localCase).length}
-            hasResults={!!analysisResult}
-            onAnalysisComplete={(result) => {
-              setAnalysisResult(result);
+            hasResults={!!latestAnalysis}
+            onAnalysisComplete={() => {
               setIsAnalysisOpen(true);
               toast({
                 title: 'Análisis completado',
@@ -563,7 +562,7 @@ export function CaseDetailLayout({
       />
 
       <AnalysisResultsPanel
-        analysisResult={analysisResult}
+        analysisResult={latestAnalysis ?? null}
         isOpen={isAnalysisOpen}
         onClose={() => setIsAnalysisOpen(false)}
       />

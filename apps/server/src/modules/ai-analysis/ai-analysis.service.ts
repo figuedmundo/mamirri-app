@@ -16,8 +16,12 @@ import { CohereClientV2 } from 'cohere-ai';
 import { withRetry } from '../transcription/utils/retry';
 import {
   AnalysisResult,
+  ConfidenceJustification,
   RagChunk,
   Citation,
+  DifferentialDiagnosisItem,
+  FollowUpQuestion,
+  RedFlag,
 } from './interfaces/analysis.interfaces';
 import { CaseDataAggregate } from './interfaces/aggregation.interfaces';
 
@@ -117,6 +121,7 @@ export class AiAnalysisService {
       ragChunks,
       caseData.visionFindings,
       caseData.voiceTranscripts,
+      caseData.soapDecomposition,
     );
 
     const llmResponse = await this.callLlm(systemPrompt, userPrompt);
@@ -169,6 +174,52 @@ export class AiAnalysisService {
       metadata: {
         ...resultWithoutId.metadata,
         analysisId,
+      },
+    };
+  }
+
+  async getLatestAnalysis(
+    clinicalCaseId: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ): Promise<AnalysisResult> {
+    const latest = await (this.prisma as any).aiAnalysis.findFirst({
+      where: {
+        clinicalCaseId,
+      },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        clinicalCase: {
+          include: {
+            patient: true,
+          },
+        },
+      },
+    });
+
+    if (!latest) {
+      throw new NotFoundException('Analysis not found');
+    }
+
+    if (latest.clinicalCase.patient.therapistId !== therapistId) {
+      throw new ForbiddenException(
+        'You do not have access to this clinical case',
+      );
+    }
+
+    if (clinicId && latest.clinicalCase.patient.clinicId !== clinicId) {
+      throw new ForbiddenException(
+        'You do not have access to this clinical case',
+      );
+    }
+
+    const result = latest.result as AnalysisResult;
+
+    return {
+      ...result,
+      metadata: {
+        ...result.metadata,
+        analysisId: result.metadata?.analysisId ?? latest.id,
       },
     };
   }
@@ -419,7 +470,7 @@ export class AiAnalysisService {
       // NEW: Rerank deduplicated results
       // Build a combined query for reranking
       const combinedQuery = `${finalDiagnosisQuery} ${finalTreatmentQuery}`;
-      const reranked = await this.rerankChunks(combinedQuery, deduplicated, 8);
+      const reranked = await this.rerankChunks(combinedQuery, deduplicated, 5);
 
       this.logger.debug(
         `After reranking: ${reranked.length} chunks (top relevance: ${reranked[0]?.relevanceScore?.toFixed(3) || 'N/A'})`,
@@ -537,12 +588,23 @@ export class AiAnalysisService {
       const parsed = JSON.parse(jsonMatch[0]);
 
       return {
+        summary: parsed.summary,
         primarySuggestion: parsed.primarySuggestion || {
           title: 'Sin recomendación',
           description: 'No se pudo generar una recomendación',
           confidence: 'LOW',
         },
         alternatives: parsed.alternatives || [],
+        followUpQuestions: this.normalizeFollowUpQuestions(
+          parsed.followUpQuestions,
+        ),
+        redFlags: this.normalizeRedFlags(parsed.redFlags),
+        differentialDiagnosis: this.normalizeDifferentialDiagnosis(
+          parsed.differentialDiagnosis,
+        ),
+        confidenceJustification: this.normalizeConfidenceJustification(
+          parsed.confidenceJustification,
+        ),
         citations: parsed.citations || [],
         reasoning: parsed.reasoning || {
           step1_understanding: '',
@@ -603,6 +665,54 @@ export class AiAnalysisService {
 
     return {
       ...result,
+      summary: result.summary
+        ? this.anonymizerService.rehydrate(result.summary, mapping)
+        : undefined,
+      followUpQuestions: result.followUpQuestions?.map((question) => ({
+        ...question,
+        question: this.anonymizerService.rehydrate(question.question, mapping),
+        reason: this.anonymizerService.rehydrate(question.reason, mapping),
+      })),
+      redFlags: result.redFlags?.map((flag) => ({
+        ...flag,
+        flag: this.anonymizerService.rehydrate(flag.flag, mapping),
+        recommendedAction: this.anonymizerService.rehydrate(
+          flag.recommendedAction,
+          mapping,
+        ),
+      })),
+      differentialDiagnosis: result.differentialDiagnosis?.map((diagnosis) => ({
+        ...diagnosis,
+        condition: this.anonymizerService.rehydrate(
+          diagnosis.condition,
+          mapping,
+        ),
+        supportingEvidence: this.anonymizerService.rehydrate(
+          diagnosis.supportingEvidence,
+          mapping,
+        ),
+        contradictingEvidence: this.anonymizerService.rehydrate(
+          diagnosis.contradictingEvidence,
+          mapping,
+        ),
+      })),
+      confidenceJustification: result.confidenceJustification
+        ? {
+            ...result.confidenceJustification,
+            literatureSupport: this.anonymizerService.rehydrate(
+              result.confidenceJustification.literatureSupport,
+              mapping,
+            ),
+            clinicalAlignment: this.anonymizerService.rehydrate(
+              result.confidenceJustification.clinicalAlignment,
+              mapping,
+            ),
+            limitingFactors:
+              result.confidenceJustification.limitingFactors?.map((factor) =>
+                this.anonymizerService.rehydrate(factor, mapping),
+              ) || [],
+          }
+        : undefined,
       primarySuggestion: rehydratedPrimary,
       alternatives: rehydratedAlternatives,
       reasoning: rehydratedReasoning,
@@ -636,11 +746,20 @@ export class AiAnalysisService {
 
   private getDefaultResult(): AnalysisResult {
     return {
+      summary: 'No se pudo generar un resumen clínico.',
       primarySuggestion: {
         title: 'Análisis no disponible',
         description:
           'El servicio de análisis no está disponible en este momento. Por favor, intente más tarde.',
         confidence: 'LOW',
+      },
+      followUpQuestions: [],
+      redFlags: [],
+      differentialDiagnosis: [],
+      confidenceJustification: {
+        literatureSupport: 'Sin soporte suficiente',
+        clinicalAlignment: 'Alineación clínica no evaluable',
+        limitingFactors: ['Servicio no disponible'],
       },
       alternatives: [],
       citations: [],
@@ -668,6 +787,8 @@ export class AiAnalysisService {
 
   private getMockResponse(): string {
     return JSON.stringify({
+      summary:
+        'Paciente con presentación compatible con fascitis plantar. Se prioriza manejo conservador con seguimiento clínico estrecho.',
       primarySuggestion: {
         title: 'Tratamiento conservador para fascitis plantar',
         description:
@@ -684,6 +805,27 @@ export class AiAnalysisService {
           confidence: 'MEDIUM',
         },
       ],
+      followUpQuestions: [
+        {
+          question: '¿Se evaluó la primera pisada matutina y su intensidad?',
+          reason: 'Ayuda a confirmar patrón típico de fascitis plantar.',
+          soapSection: 'SUBJETIVO',
+        },
+      ],
+      redFlags: [],
+      differentialDiagnosis: [
+        {
+          condition: 'Neuropatía del nervio tibial posterior',
+          supportingEvidence: 'Dolor plantar persistente.',
+          contradictingEvidence:
+            'No hay síntomas neurológicos claros en el caso presentado.',
+        },
+      ],
+      confidenceJustification: {
+        literatureSupport: 'Soporte moderado con fuentes concordantes.',
+        clinicalAlignment: 'Alta alineación con clínica reportada.',
+        limitingFactors: ['Falta de pruebas complementarias funcionales.'],
+      },
       citations: [
         {
           quote:
@@ -703,5 +845,97 @@ export class AiAnalysisService {
           'Se recomienda iniciar con un programa de estiramientos y terapia manual, evaluando la respuesta a las 6 semanas.',
       },
     });
+  }
+
+  private normalizeFollowUpQuestions(value: unknown): FollowUpQuestion[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter(
+        (item): item is Record<string, unknown> =>
+          !!item && typeof item === 'object',
+      )
+      .map((item) => ({
+        question: String(item.question ?? ''),
+        reason: String(item.reason ?? ''),
+        soapSection: this.normalizeSoapSection(item.soapSection),
+      }))
+      .filter((item) => item.question.length > 0);
+  }
+
+  private normalizeRedFlags(value: unknown): RedFlag[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter(
+        (item): item is Record<string, unknown> =>
+          !!item && typeof item === 'object',
+      )
+      .map((item) => ({
+        flag: String(item.flag ?? ''),
+        urgency: this.normalizeConfidence(String(item.urgency ?? 'LOW')),
+        recommendedAction: String(item.recommendedAction ?? ''),
+      }))
+      .filter((item) => item.flag.length > 0);
+  }
+
+  private normalizeDifferentialDiagnosis(
+    value: unknown,
+  ): DifferentialDiagnosisItem[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter(
+        (item): item is Record<string, unknown> =>
+          !!item && typeof item === 'object',
+      )
+      .map((item) => ({
+        condition: String(item.condition ?? ''),
+        supportingEvidence: String(item.supportingEvidence ?? ''),
+        contradictingEvidence: String(item.contradictingEvidence ?? ''),
+      }))
+      .filter((item) => item.condition.length > 0);
+  }
+
+  private normalizeConfidenceJustification(
+    value: unknown,
+  ): ConfidenceJustification | undefined {
+    if (!value || typeof value !== 'object') {
+      return undefined;
+    }
+
+    const payload = value as Record<string, unknown>;
+
+    return {
+      literatureSupport: String(payload.literatureSupport ?? ''),
+      clinicalAlignment: String(payload.clinicalAlignment ?? ''),
+      limitingFactors: Array.isArray(payload.limitingFactors)
+        ? payload.limitingFactors.map((factor) => String(factor))
+        : [],
+    };
+  }
+
+  private normalizeSoapSection(
+    value: unknown,
+  ): 'SUBJETIVO' | 'OBJETIVO' | 'ANALISIS' | 'PLAN' | 'GENERAL' {
+    const raw = String(value ?? 'GENERAL').toUpperCase();
+    if (raw === 'SUBJETIVO') return 'SUBJETIVO';
+    if (raw === 'OBJETIVO') return 'OBJETIVO';
+    if (raw === 'ANALISIS') return 'ANALISIS';
+    if (raw === 'PLAN') return 'PLAN';
+    return 'GENERAL';
+  }
+
+  private normalizeConfidence(value: string): 'HIGH' | 'MEDIUM' | 'LOW' {
+    const normalized = value.toUpperCase().trim();
+    if (normalized === 'HIGH') return 'HIGH';
+    if (normalized === 'MEDIUM') return 'MEDIUM';
+    return 'LOW';
   }
 }

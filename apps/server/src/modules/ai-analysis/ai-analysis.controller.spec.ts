@@ -41,6 +41,7 @@ describe('AiAnalysisController', () => {
   beforeEach(async () => {
     const mockService = {
       analyzeCase: jest.fn(),
+      getLatestAnalysis: jest.fn(),
     };
 
     const mockVisionService = {
@@ -193,6 +194,43 @@ describe('AiAnalysisController', () => {
         false,
         undefined,
       );
+    });
+  });
+
+  describe('GET /ai/cases/:caseId/analyses/latest', () => {
+    it('should return latest analysis for valid request', async () => {
+      service.getLatestAnalysis.mockResolvedValue(mockAnalysisResult as any);
+
+      const result = await controller.getLatestAnalysis('case-123', {
+        userId: 'therapist-123',
+      });
+
+      expect(result).toEqual(mockAnalysisResult);
+      expect(service.getLatestAnalysis).toHaveBeenCalledWith(
+        'case-123',
+        'therapist-123',
+        undefined,
+      );
+    });
+
+    it('should throw 404 for missing analysis', async () => {
+      service.getLatestAnalysis.mockRejectedValue(
+        new NotFoundException('Analysis not found'),
+      );
+
+      await expect(
+        controller.getLatestAnalysis('case-404', { userId: 'therapist-123' }),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw 403 for unauthorized access', async () => {
+      service.getLatestAnalysis.mockRejectedValue(
+        new ForbiddenException('Access denied'),
+      );
+
+      await expect(
+        controller.getLatestAnalysis('case-123', { userId: 'wrong-therapist' }),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 });

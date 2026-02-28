@@ -44,6 +44,7 @@ describe('AiAnalysis Persistence', () => {
           useValue: {
             aiAnalysis: {
               create: jest.fn().mockResolvedValue({ id: 'persisted-id' }),
+              findFirst: jest.fn(),
             },
           },
         },
@@ -128,5 +129,34 @@ describe('AiAnalysis Persistence', () => {
 
     expect(result).toBeDefined();
     expect(result.metadata.analysisId).toBeUndefined();
+  });
+
+  it('2.3 should return latest analysis when found', async () => {
+    ((prisma as any).aiAnalysis.findFirst as jest.Mock).mockResolvedValue({
+      id: 'analysis-latest',
+      result: {
+        ...mockAnalysisResult,
+        metadata: { ...mockAnalysisResult.metadata },
+      },
+      clinicalCase: {
+        patient: {
+          therapistId: 'therapist-123',
+          clinicId: null,
+        },
+      },
+    });
+
+    const result = await service.getLatestAnalysis('case-123', 'therapist-123');
+
+    expect((prisma as any).aiAnalysis.findFirst).toHaveBeenCalled();
+    expect(result.metadata.analysisId).toBe('analysis-latest');
+  });
+
+  it('2.4 should throw not found when latest analysis does not exist', async () => {
+    ((prisma as any).aiAnalysis.findFirst as jest.Mock).mockResolvedValue(null);
+
+    await expect(
+      service.getLatestAnalysis('case-404', 'therapist-123'),
+    ).rejects.toThrow('Analysis not found');
   });
 });

@@ -60,6 +60,59 @@ class ReasoningDto {
   step3_synthesis: string;
 }
 
+class FollowUpQuestionDto {
+  @ApiProperty({ description: 'Pregunta clínica de seguimiento' })
+  question: string;
+
+  @ApiProperty({ description: 'Motivo clínico de la pregunta' })
+  reason: string;
+
+  @ApiProperty({
+    description: 'Sección SOAP relacionada',
+    enum: ['SUBJETIVO', 'OBJETIVO', 'ANALISIS', 'PLAN', 'GENERAL'],
+  })
+  soapSection: 'SUBJETIVO' | 'OBJETIVO' | 'ANALISIS' | 'PLAN' | 'GENERAL';
+}
+
+class RedFlagDto {
+  @ApiProperty({ description: 'Señal de alarma detectada' })
+  flag: string;
+
+  @ApiProperty({
+    description: 'Nivel de urgencia',
+    enum: ['HIGH', 'MEDIUM', 'LOW'],
+  })
+  urgency: 'HIGH' | 'MEDIUM' | 'LOW';
+
+  @ApiProperty({ description: 'Acción recomendada' })
+  recommendedAction: string;
+}
+
+class DifferentialDiagnosisDto {
+  @ApiProperty({ description: 'Condición considerada' })
+  condition: string;
+
+  @ApiProperty({ description: 'Evidencia a favor de la condición' })
+  supportingEvidence: string;
+
+  @ApiProperty({ description: 'Evidencia en contra de la condición' })
+  contradictingEvidence: string;
+}
+
+class ConfidenceJustificationDto {
+  @ApiProperty({ description: 'Soporte de literatura para la recomendación' })
+  literatureSupport: string;
+
+  @ApiProperty({ description: 'Alineación clínica con el caso' })
+  clinicalAlignment: string;
+
+  @ApiProperty({
+    description: 'Factores que limitan la confianza',
+    type: [String],
+  })
+  limitingFactors: string[];
+}
+
 class ServiceStatusDto {
   @ApiProperty({ description: 'RAG service status' })
   rag: boolean;
@@ -140,6 +193,12 @@ class MetadataDto {
 
 export class AnalysisResultDto {
   @ApiProperty({
+    description: 'Resumen breve del análisis clínico',
+    required: false,
+  })
+  summary?: string;
+
+  @ApiProperty({
     description: 'Primary treatment suggestion',
     type: SuggestionDto,
   })
@@ -151,6 +210,34 @@ export class AnalysisResultDto {
     maxItems: 3,
   })
   alternatives: SuggestionDto[];
+
+  @ApiProperty({
+    description: 'Preguntas de seguimiento sugeridas',
+    type: [FollowUpQuestionDto],
+    required: false,
+  })
+  followUpQuestions?: FollowUpQuestionDto[];
+
+  @ApiProperty({
+    description: 'Red flags detectadas durante el análisis',
+    type: [RedFlagDto],
+    required: false,
+  })
+  redFlags?: RedFlagDto[];
+
+  @ApiProperty({
+    description: 'Diagnóstico diferencial considerado',
+    type: [DifferentialDiagnosisDto],
+    required: false,
+  })
+  differentialDiagnosis?: DifferentialDiagnosisDto[];
+
+  @ApiProperty({
+    description: 'Justificación de la confianza del análisis',
+    type: ConfidenceJustificationDto,
+    required: false,
+  })
+  confidenceJustification?: ConfidenceJustificationDto;
 
   @ApiProperty({
     description: 'Citations from medical literature',

@@ -15,6 +15,19 @@ export function useAnalyzeCaseQuery(
   });
 }
 
+export function useLatestAnalysisQuery(
+  caseId: string,
+  options?: { enabled?: boolean },
+) {
+  return useQuery({
+    queryKey: queryKeys.aiAnalysis.latest(caseId),
+    queryFn: () => aiAnalysisApi.getLatestAnalysis(caseId),
+    enabled: !!caseId && (options?.enabled ?? true),
+    staleTime: 5 * 60 * 1000,
+    ...options,
+  });
+}
+
 export function useSubmitFeedbackMutation() {
   const { toast } = useToast();
 
