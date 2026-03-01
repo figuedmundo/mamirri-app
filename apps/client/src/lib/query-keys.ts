@@ -28,6 +28,8 @@ export const queryKeys = {
       [...queryKeys.aiAnalysis.lists(), { filters }] as const,
     details: () => [...queryKeys.aiAnalysis.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.aiAnalysis.details(), id] as const,
+    latest: (caseId: string) =>
+      [...queryKeys.aiAnalysis.all, 'latest', caseId] as const,
   },
   library: {
     all: ['library'] as const,

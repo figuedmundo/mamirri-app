@@ -26,9 +26,11 @@ import { AnalysisResultDto } from './dto/analysis-result.dto';
 import { AnalyzeImageDto } from './dto/analyze-image.dto';
 import { VisionAnalysisResultDto } from './dto/vision-analysis-result.dto';
 import { SubmitFeedbackDto, FeedbackResponseDto } from './dto/feedback.dto';
+import { RawAnalysisResponseDto } from './dto/raw-analysis-response.dto';
 import { VisionService } from './services/vision.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTherapist } from '../patients/decorators/current-therapist.decorator';
+import type { Role } from '../../common/constants/roles';
 
 @ApiTags('ai')
 @ApiBearerAuth()
@@ -239,6 +241,79 @@ export class AiAnalysisController {
   ): Promise<FeedbackResponseDto[]> {
     return this.aiAnalysisService.getFeedbacks(
       analysisId,
+      user.userId,
+      user.clinicId,
+    );
+  }
+
+  @Get('analyses/:analysisId/raw-response')
+  @ApiOperation({
+    summary: 'Get raw LLM response by analysis',
+    description:
+      'Returns the stored raw model response for debugging and prompt tuning.',
+  })
+  @ApiParam({ name: 'analysisId', description: 'ID of the AI analysis' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Raw model response retrieved successfully',
+    type: RawAnalysisResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Analysis not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Access denied',
+  })
+  @ApiQuery({
+    name: 'includeSensitive',
+    required: false,
+    type: Boolean,
+    description:
+      'When true, returns full raw response. Default returns redacted response.',
+  })
+  async getRawModelResponse(
+    @Param('analysisId') analysisId: string,
+    @CurrentTherapist()
+    user: { userId: string; clinicId?: string | null; role: Role },
+    @Query('includeSensitive') includeSensitive?: string,
+  ): Promise<RawAnalysisResponseDto> {
+    return this.aiAnalysisService.getRawModelResponse(
+      analysisId,
+      user.userId,
+      user.role,
+      user.clinicId,
+      includeSensitive === 'true',
+    );
+  }
+
+  @Get('cases/:caseId/analyses/latest')
+  @ApiOperation({
+    summary: 'Get latest analysis by case',
+    description:
+      'Returns the most recent AI analysis result for a clinical case.',
+  })
+  @ApiParam({ name: 'caseId', description: 'ID of the clinical case' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Latest analysis retrieved successfully',
+    type: AnalysisResultDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Analysis not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Access denied',
+  })
+  async getLatestAnalysis(
+    @Param('caseId') caseId: string,
+    @CurrentTherapist() user: { userId: string; clinicId?: string | null },
+  ): Promise<AnalysisResultDto> {
+    return this.aiAnalysisService.getLatestAnalysis(
+      caseId,
       user.userId,
       user.clinicId,
     );

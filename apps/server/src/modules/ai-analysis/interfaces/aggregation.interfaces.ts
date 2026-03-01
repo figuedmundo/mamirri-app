@@ -31,6 +31,13 @@ export interface VisionAnalysisStats {
   failedImageIds: string[];
 }
 
+export interface SoapDecomposition {
+  subjective?: string;
+  objective?: string;
+  analysis?: string;
+  plan?: string;
+}
+
 export interface CaseDataAggregate extends ClinicalCase {
   patient: Patient;
   evaluations: (Evaluation & { footprints: Footprint[] })[];
@@ -38,4 +45,5 @@ export interface CaseDataAggregate extends ClinicalCase {
   visionFindings: VisionFinding[];
   voiceTranscripts: VoiceNote[];
   visionStats?: VisionAnalysisStats;
+  soapDecomposition?: SoapDecomposition;
 }

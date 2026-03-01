@@ -37,6 +37,10 @@ vi.mock('../../api/media', () => ({
   },
 }));
 
+vi.mock('@/hooks/use-ai-analysis', () => ({
+  useLatestAnalysisQuery: () => ({ data: null }),
+}));
+
 const renderWithQuery = (ui: React.ReactElement) => {
   const queryClient = new QueryClient({
     defaultOptions: {

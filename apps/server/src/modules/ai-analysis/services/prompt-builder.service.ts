@@ -4,6 +4,7 @@ import {
   buildUserPrompt,
 } from '../constants/system-prompts';
 import { RagChunk } from '../interfaces/analysis.interfaces';
+import { SoapDecomposition } from '../interfaces/aggregation.interfaces';
 import { VisionFinding, VoiceNote } from '../interfaces/aggregation.interfaces';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class PromptBuilderService {
     ragChunks: RagChunk[],
     visionFindings?: VisionFinding[],
     voiceTranscripts?: VoiceNote[],
+    soapDecomposition?: SoapDecomposition,
   ): string {
     const ragContext = this.formatRagContext(ragChunks);
 
@@ -32,7 +34,36 @@ export class PromptBuilderService {
       expandedCaseText += `\n\n### Transcripciones de Voz (Contexto Adicional)\n${voiceContext}`;
     }
 
+    if (soapDecomposition) {
+      const soapContext = this.buildSoapContext(soapDecomposition);
+      if (soapContext) {
+        expandedCaseText += `\n\n### Contexto SOAP Estructurado\n${soapContext}`;
+      }
+    }
+
     return buildUserPrompt(expandedCaseText, ragContext);
+  }
+
+  buildSoapContext(soap: SoapDecomposition): string {
+    const sections: string[] = [];
+
+    if (soap.subjective) {
+      sections.push(`- **Subjetivo:** ${soap.subjective}`);
+    }
+
+    if (soap.objective) {
+      sections.push(`- **Objetivo:** ${soap.objective}`);
+    }
+
+    if (soap.analysis) {
+      sections.push(`- **Análisis del Terapeuta:** ${soap.analysis}`);
+    }
+
+    if (soap.plan) {
+      sections.push(`- **Plan:** ${soap.plan}`);
+    }
+
+    return sections.join('\n');
   }
 
   buildVisionContext(visionFindings: VisionFinding[]): string {
@@ -56,13 +87,20 @@ export class PromptBuilderService {
       return 'No se encontró literatura médica relevante.';
     }
 
-    const formattedChunks = chunks.map((chunk, index) => {
+    const optimizedChunks = this.optimizeChunksForContext(chunks);
+
+    const formattedChunks = optimizedChunks.map((chunk, index) => {
+      const section =
+        typeof chunk.documentMetadata?.section === 'string'
+          ? chunk.documentMetadata.section
+          : null;
       const pageInfo = chunk.pageNumber
         ? `\n**Página:** ${chunk.pageNumber}`
         : '';
+      const sectionInfo = section ? `\n**Sección:** ${section}` : '';
       return `### Fuente ${index + 1}
 **Documento:** ${chunk.documentTitle}
-**Autor:** ${chunk.documentAuthor}${pageInfo}
+**Autor:** ${chunk.documentAuthor}${pageInfo}${sectionInfo}
 **Relevancia:** ${(chunk.similarity * 100).toFixed(1)}%
 
 ${chunk.content}
@@ -73,10 +111,31 @@ ${chunk.content}
     return formattedChunks.join('\n\n');
   }
 
+  private optimizeChunksForContext(chunks: RagChunk[]): RagChunk[] {
+    const ranked = [...chunks]
+      .sort(
+        (a, b) =>
+          (b.relevanceScore ?? b.similarity) -
+          (a.relevanceScore ?? a.similarity),
+      )
+      .slice(0, 5);
+
+    if (ranked.length <= 2) {
+      return ranked;
+    }
+
+    const first = ranked[0];
+    const last = ranked[1];
+    const middle = ranked.slice(2);
+
+    return [first, ...middle, last];
+  }
+
   buildDiagnosisQuery(caseData: {
     consultationReason?: string;
     initialMedicalDiagnosis?: string;
     evaluations?: Array<{ diagnosis?: Record<string, unknown> }>;
+    soapDecomposition?: SoapDecomposition;
   }): string {
     const parts: string[] = [];
 
@@ -88,10 +147,34 @@ ${chunk.content}
       parts.push(caseData.initialMedicalDiagnosis);
     }
 
-    if (caseData.evaluations && caseData.evaluations.length > 0) {
-      const latestEval = caseData.evaluations[caseData.evaluations.length - 1];
-      if (latestEval.diagnosis) {
-        parts.push(JSON.stringify(latestEval.diagnosis));
+    if (caseData.soapDecomposition) {
+      const soap = caseData.soapDecomposition;
+      if (soap.subjective) {
+        parts.push(`síntomas subjetivos ${soap.subjective}`);
+      }
+      if (soap.objective) {
+        parts.push(`hallazgos objetivos ${soap.objective}`);
+      }
+      if (soap.analysis) {
+        parts.push(`análisis clínico ${soap.analysis}`);
+      }
+      if (soap.plan) {
+        parts.push(`plan terapéutico ${soap.plan}`);
+      }
+    }
+
+    if (
+      parts.length === 0 &&
+      caseData.evaluations &&
+      caseData.evaluations.length > 0
+    ) {
+      const latestEval = caseData.evaluations[0];
+      if (latestEval.diagnosis && typeof latestEval.diagnosis === 'object') {
+        for (const [key, value] of Object.entries(latestEval.diagnosis)) {
+          if (typeof value === 'string' && value.trim()) {
+            parts.push(`${key} ${value}`);
+          }
+        }
       }
     }
 
@@ -101,6 +184,7 @@ ${chunk.content}
   buildTreatmentQuery(caseData: {
     consultationReason?: string;
     initialMedicalDiagnosis?: string;
+    soapDecomposition?: SoapDecomposition;
   }): string {
     const parts: string[] = ['tratamiento fisioterapia'];
 
@@ -108,6 +192,14 @@ ${chunk.content}
       parts.push(caseData.initialMedicalDiagnosis);
     } else if (caseData.consultationReason) {
       parts.push(caseData.consultationReason);
+    }
+
+    if (caseData.soapDecomposition?.plan) {
+      parts.push(`plan propuesto ${caseData.soapDecomposition.plan}`);
+    }
+
+    if (caseData.soapDecomposition?.analysis) {
+      parts.push(`análisis clínico ${caseData.soapDecomposition.analysis}`);
     }
 
     return parts.join(' ').slice(0, 500);

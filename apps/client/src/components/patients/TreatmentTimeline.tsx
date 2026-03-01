@@ -51,6 +51,11 @@ export function TreatmentTimeline({
   const { toast } = useToast();
 
   const { treatmentPlan, treatmentSessions } = clinicalCase;
+  const hasStructuredPlan = Boolean(
+    treatmentPlan &&
+    Array.isArray(treatmentPlan.phases) &&
+    treatmentPlan.phases.length > 0,
+  );
   const fallbackPhases = React.useMemo(
     () => [
       {
@@ -63,13 +68,12 @@ export function TreatmentTimeline({
     ],
     [],
   );
-  const timelinePhases =
-    treatmentPlan && treatmentPlan.phases.length > 0
-      ? treatmentPlan.phases
-      : fallbackPhases;
+  const timelinePhases = hasStructuredPlan
+    ? treatmentPlan!.phases
+    : fallbackPhases;
 
   React.useEffect(() => {
-    if (!treatmentPlan) {
+    if (!hasStructuredPlan) {
       return () => {};
     }
 
@@ -102,7 +106,7 @@ export function TreatmentTimeline({
     });
 
     return cleanup;
-  }, [toast, treatmentPlan]);
+  }, [toast, hasStructuredPlan]);
 
   const currentPhase =
     treatmentSessions.length > 0
@@ -278,7 +282,7 @@ export function TreatmentTimeline({
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {!treatmentPlan && (
+      {!hasStructuredPlan && (
         <div className="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 border border-amber-200 dark:border-amber-800">
           <h2 className="text-sm font-semibold text-amber-900 dark:text-amber-200 mb-1">
             Plan de tratamiento pendiente

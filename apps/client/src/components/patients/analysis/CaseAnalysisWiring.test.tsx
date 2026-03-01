@@ -42,6 +42,12 @@ vi.mock('@/hooks/use-voice-recorder', () => ({
   }),
 }));
 
+let latestAnalysisForTest: AnalysisResult | null = null;
+
+vi.mock('@/hooks/use-ai-analysis', () => ({
+  useLatestAnalysisQuery: () => ({ data: latestAnalysisForTest }),
+}));
+
 vi.mock('../../../api/patients', () => ({
   patientsApi: {
     updateEvaluation: vi.fn(),
@@ -184,7 +190,12 @@ vi.mock('../AnalyzeButton', () => ({
     hasResults: boolean;
   }) => (
     <div>
-      <button onClick={() => onAnalysisComplete(mockAnalysisResult)}>
+      <button
+        onClick={() => {
+          latestAnalysisForTest = mockAnalysisResult;
+          onAnalysisComplete(mockAnalysisResult);
+        }}
+      >
         Analyze
       </button>
       {hasResults && <button onClick={onViewResults}>Ver resultados</button>}
@@ -197,6 +208,7 @@ describe('Case Analysis Wiring', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    latestAnalysisForTest = null;
   });
 
   it('AnalysisResultsPanel does not render when analysisResult is null', () => {

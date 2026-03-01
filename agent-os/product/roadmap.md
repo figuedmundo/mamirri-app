@@ -201,6 +201,7 @@ Methodology: Agile Development (1-week Sprints).
 - [x] 9.10 Therapist onboarding
 - [x] 9.11 Pacient flow evaluation
 - [x] 9.12 Evaluation SOAP
+- [x] 9.13 Pacient AI analysis refinment
 
 **🎯 Milestone 5:** "Mother used it with a real patient without asking for help"
 

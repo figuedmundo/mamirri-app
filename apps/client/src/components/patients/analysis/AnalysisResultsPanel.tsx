@@ -13,18 +13,26 @@ import { CitationsSection } from './CitationsSection';
 import { PatternRecognitionSection } from './PatternRecognitionSection';
 import { ServiceStatusIndicator } from './ServiceStatusIndicator';
 import { AnalysisDisclaimer } from './AnalysisDisclaimer';
+import { SummarySection } from './SummarySection';
+import { RedFlagsSection } from './RedFlagsSection';
+import { FollowUpQuestionsSection } from './FollowUpQuestionsSection';
+import { DifferentialDiagnosisSection } from './DifferentialDiagnosisSection';
+import { ConfidenceJustificationSection } from './ConfidenceJustificationSection';
+import { RawResponseDebugSection } from './RawResponseDebugSection';
 import { useSuggestionFeedback } from '@/hooks/use-suggestion-feedback';
 
 interface AnalysisResultsPanelProps {
   analysisResult: AnalysisResult | null;
   isOpen: boolean;
   onClose: () => void;
+  canViewRawResponseDebug?: boolean;
 }
 
 export function AnalysisResultsPanel({
   analysisResult,
   isOpen,
   onClose,
+  canViewRawResponseDebug = false,
 }: AnalysisResultsPanelProps) {
   const { feedbacks, submitFeedback, removeFeedback } = useSuggestionFeedback(
     analysisResult?.metadata.analysisId,
@@ -76,7 +84,19 @@ export function AnalysisResultsPanel({
           )}
 
         <ScrollArea className="flex-1 p-6">
+          <SummarySection summary={analysisResult.summary} />
+
+          <RedFlagsSection redFlags={analysisResult.redFlags} />
+
           <PatternRecognitionSection reasoning={analysisResult.reasoning} />
+
+          <DifferentialDiagnosisSection
+            diagnoses={analysisResult.differentialDiagnosis}
+          />
+
+          <FollowUpQuestionsSection
+            questions={analysisResult.followUpQuestions}
+          />
 
           <h3 className="font-semibold mb-3">Recomendación Principal</h3>
           <SuggestionCard
@@ -88,6 +108,10 @@ export function AnalysisResultsPanel({
             onFeedbackChange={(isPositive, comment) =>
               handleFeedbackChange(0, isPositive, comment)
             }
+          />
+
+          <ConfidenceJustificationSection
+            confidence={analysisResult.confidenceJustification}
           />
 
           {analysisResult.alternatives.length > 0 && (
@@ -109,6 +133,11 @@ export function AnalysisResultsPanel({
           )}
 
           <CitationsSection citations={analysisResult.citations} />
+
+          <RawResponseDebugSection
+            analysisId={analysisResult.metadata.analysisId}
+            isVisible={canViewRawResponseDebug}
+          />
 
           <AnalysisDisclaimer />
         </ScrollArea>

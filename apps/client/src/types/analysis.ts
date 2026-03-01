@@ -7,6 +7,30 @@ export interface Suggestion {
   reasoning?: string;
 }
 
+export interface FollowUpQuestion {
+  question: string;
+  reason: string;
+  soapSection: 'SUBJETIVO' | 'OBJETIVO' | 'ANALISIS' | 'PLAN' | 'GENERAL';
+}
+
+export interface RedFlag {
+  flag: string;
+  urgency: ConfidenceLevel;
+  recommendedAction: string;
+}
+
+export interface DifferentialDiagnosisItem {
+  condition: string;
+  supportingEvidence: string;
+  contradictingEvidence: string;
+}
+
+export interface ConfidenceJustification {
+  literatureSupport: string;
+  clinicalAlignment: string;
+  limitingFactors: string[];
+}
+
 export interface Citation {
   quote: string;
   quoteOriginal?: string;
@@ -41,8 +65,13 @@ export interface Reasoning {
 }
 
 export interface AnalysisResult {
+  summary?: string;
   primarySuggestion: Suggestion;
   alternatives: Suggestion[];
+  followUpQuestions?: FollowUpQuestion[];
+  redFlags?: RedFlag[];
+  differentialDiagnosis?: DifferentialDiagnosisItem[];
+  confidenceJustification?: ConfidenceJustification;
   citations: Citation[];
   reasoning: Reasoning;
   metadata: AnalysisMetadata;
