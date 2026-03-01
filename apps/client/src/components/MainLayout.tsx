@@ -50,6 +50,7 @@ export function MainLayout({ children }: MainLayoutProps) {
     clinicName: authUser?.clinicName ?? null,
     role: authUser?.role ?? null,
   };
+  const appVersion = import.meta.env.VITE_APP_VERSION || '1.0.1';
 
   const handleNavigate = (href: string) => {
     navigate(href);
@@ -67,6 +68,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   return (
     <AppShell
       navigationItems={navigationItems}
+      appVersion={appVersion}
       user={user}
       onNavigate={handleNavigate}
       onLogout={handleLogout}
