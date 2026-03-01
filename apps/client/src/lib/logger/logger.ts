@@ -238,6 +238,6 @@ export const logger = new Logger({
   format: 'json',
   output: import.meta.env.PROD ? 'stdout' : 'console',
   serviceName: 'mamirri-client',
-  version: '1.0.0',
+  version: import.meta.env.VITE_APP_VERSION || '1.0.1',
   environment: import.meta.env.MODE || 'development',
 });
