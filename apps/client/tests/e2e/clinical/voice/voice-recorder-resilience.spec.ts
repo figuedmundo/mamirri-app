@@ -73,9 +73,35 @@ test.describe('Voice Recorder Resilience', () => {
 
     // Mock Patients List
     await page.route('**/api/v1/patients', async (route) => {
+      const url = new URL(route.request().url());
       if (
         route.request().method() === 'GET' &&
-        route.request().url().endsWith('/patients')
+        url.pathname.endsWith('/patients')
+      ) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            data: [
+              {
+                id: patientId,
+                name: 'Resilience Patient',
+                occupation: 'Tester',
+              },
+            ],
+            meta: { total: 1, page: 1, lastPage: 1 },
+          }),
+        });
+      } else {
+        await route.continue();
+      }
+    });
+
+    await page.route('**/api/v1/patients?**', async (route) => {
+      const url = new URL(route.request().url());
+      if (
+        route.request().method() === 'GET' &&
+        url.pathname.endsWith('/patients')
       ) {
         await route.fulfill({
           status: 200,
@@ -150,6 +176,17 @@ test.describe('Voice Recorder Resilience', () => {
       });
     });
 
+    await page.route(
+      `**/api/v1/ai/cases/${caseId}/analyses/latest**`,
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(null),
+        });
+      },
+    );
+
     await page.route('**/api/v1/media/**', async (route) => {
       await route.fulfill({
         status: 201,
@@ -158,7 +195,20 @@ test.describe('Voice Recorder Resilience', () => {
       });
     });
 
-    await page.goto(`/pacientes/${patientId}/casos/${caseId}`);
+    await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          response.request().method() === 'GET' &&
+          response.url().includes(`/api/v1/patients/${patientId}`) &&
+          response.status() === 200,
+      ),
+      page.goto(`/pacientes/${patientId}/casos/${caseId}`, {
+        waitUntil: 'domcontentloaded',
+      }),
+    ]);
+    await expect(page.getByTestId('nav-timeline-btn')).toBeVisible({
+      timeout: 10000,
+    });
 
     // Use header recorder (floating bar)
     await expect(page.getByTestId('floating-grabar-evolucion-btn')).toBeVisible(
