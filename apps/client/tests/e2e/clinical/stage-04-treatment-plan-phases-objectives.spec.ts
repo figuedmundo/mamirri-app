@@ -85,7 +85,23 @@ test.describe('Stage 4: Treatment Plan - Phases and Objectives', () => {
       });
     });
 
-    await page.goto(`/pacientes/${patientId}/casos/${caseId}`);
+    await page.route(
+      `**/api/v1/ai/cases/${caseId}/analyses/latest**`,
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(null),
+        });
+      },
+    );
+
+    await page.goto(`/pacientes/${patientId}/casos/${caseId}`, {
+      waitUntil: 'domcontentloaded',
+    });
+    await expect(page.getByTestId('nav-timeline-btn')).toBeVisible({
+      timeout: 10000,
+    });
 
     // Verify Timeline Tab
     await page.getByTestId('nav-timeline-btn').click();

@@ -146,6 +146,17 @@ test.describe('Patient Clinical Journey - End to End', () => {
       });
     });
 
+    await page.route(
+      `**/api/v1/ai/cases/${caseId}/analyses/latest**`,
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(null),
+        });
+      },
+    );
+
     // 3. Mock Evaluation Patch
     await page.route(
       `**/api/v1/patients/evaluations/${evalId}`,
@@ -179,8 +190,19 @@ test.describe('Patient Clinical Journey - End to End', () => {
     await expect(
       page.locator('[role="dialog"][data-state="open"]'),
     ).toHaveCount(0, { timeout: 15000 });
-    await page.goto(`/pacientes/${patientId}/casos/${caseId}`, {
-      waitUntil: 'networkidle',
+    await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          response.request().method() === 'GET' &&
+          response.url().includes(`/api/v1/patients/${patientId}`) &&
+          response.status() === 200,
+      ),
+      page.goto(`/pacientes/${patientId}/casos/${caseId}`, {
+        waitUntil: 'domcontentloaded',
+      }),
+    ]);
+    await expect(page.getByTestId('nav-timeline-btn')).toBeVisible({
+      timeout: 10000,
     });
     // Step 2: Verification of unblocking plan
     await expect(
