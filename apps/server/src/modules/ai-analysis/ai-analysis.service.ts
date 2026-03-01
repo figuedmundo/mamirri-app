@@ -43,6 +43,14 @@ type OwnedAnalysisRecord = {
   };
 };
 
+type OwnedClinicalCaseRecord = {
+  id: string;
+  patient: {
+    therapistId: string;
+    clinicId: string | null;
+  };
+};
+
 @Injectable()
 export class AiAnalysisService {
   private readonly logger = new Logger(AiAnalysisService.name);
@@ -212,29 +220,40 @@ export class AiAnalysisService {
     clinicalCaseId: string,
     therapistId: string,
     clinicId?: string | null,
-  ): Promise<AnalysisResult> {
+  ): Promise<AnalysisResult | null> {
+    const clinicalCase = (await (this.prisma as any).clinicalCase.findUnique({
+      where: { id: clinicalCaseId },
+      include: {
+        patient: true,
+      },
+    })) as OwnedClinicalCaseRecord | null;
+
+    if (!clinicalCase) {
+      throw new NotFoundException('Clinical case not found');
+    }
+
+    if (clinicalCase.patient.therapistId !== therapistId) {
+      throw new ForbiddenException(
+        'You do not have access to this clinical case',
+      );
+    }
+
+    if (clinicId && clinicalCase.patient.clinicId !== clinicId) {
+      throw new ForbiddenException(
+        'You do not have access to this clinical case',
+      );
+    }
+
     const latest = (await (this.prisma as any).aiAnalysis.findFirst({
       where: {
         clinicalCaseId,
       },
       orderBy: { createdAt: 'desc' },
-      include: {
-        clinicalCase: {
-          include: {
-            patient: true,
-          },
-        },
-      },
     })) as OwnedAnalysisRecord | null;
 
     if (!latest) {
-      throw new NotFoundException('Analysis not found');
+      return null;
     }
-
-    this.assertAnalysisAccess(latest, therapistId, clinicId, {
-      notFoundMessage: 'Analysis not found',
-      forbiddenMessage: 'You do not have access to this clinical case',
-    });
 
     const result = latest.result as StoredAnalysisResult;
 

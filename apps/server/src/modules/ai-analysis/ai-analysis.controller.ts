@@ -297,7 +297,8 @@ export class AiAnalysisController {
   @ApiParam({ name: 'caseId', description: 'ID of the clinical case' })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Latest analysis retrieved successfully',
+    description:
+      'Latest analysis retrieved successfully (returns null when the case has no analyses yet)',
     type: AnalysisResultDto,
   })
   @ApiResponse({
@@ -311,7 +312,7 @@ export class AiAnalysisController {
   async getLatestAnalysis(
     @Param('caseId') caseId: string,
     @CurrentTherapist() user: { userId: string; clinicId?: string | null },
-  ): Promise<AnalysisResultDto> {
+  ): Promise<AnalysisResultDto | null> {
     return this.aiAnalysisService.getLatestAnalysis(
       caseId,
       user.userId,

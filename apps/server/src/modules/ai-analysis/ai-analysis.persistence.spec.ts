@@ -42,6 +42,9 @@ describe('AiAnalysis Persistence', () => {
         {
           provide: PrismaService,
           useValue: {
+            clinicalCase: {
+              findUnique: jest.fn(),
+            },
             aiAnalysis: {
               create: jest.fn().mockResolvedValue({ id: 'persisted-id' }),
               findFirst: jest.fn(),
@@ -140,6 +143,14 @@ describe('AiAnalysis Persistence', () => {
   });
 
   it('2.3 should return latest analysis when found', async () => {
+    ((prisma as any).clinicalCase.findUnique as jest.Mock).mockResolvedValue({
+      id: 'case-123',
+      patient: {
+        therapistId: 'therapist-123',
+        clinicId: 'clinic-123',
+      },
+    });
+
     ((prisma as any).aiAnalysis.findFirst as jest.Mock).mockResolvedValue({
       id: 'analysis-latest',
       result: {
@@ -149,29 +160,58 @@ describe('AiAnalysis Persistence', () => {
           rawModelResponse: '{"mock":true}',
         },
       },
-      clinicalCase: {
-        patient: {
-          therapistId: 'therapist-123',
-          clinicId: 'clinic-123',
-        },
-      },
     });
 
     const result = await service.getLatestAnalysis('case-123', 'therapist-123');
 
     expect((prisma as any).aiAnalysis.findFirst).toHaveBeenCalled();
+    expect(result).not.toBeNull();
+    if (!result) {
+      throw new Error('Expected latest analysis to be present');
+    }
     expect(result.metadata.analysisId).toBe('analysis-latest');
     expect(
       (result.metadata as { rawModelResponse?: string }).rawModelResponse,
     ).toBeUndefined();
   });
 
-  it('2.4 should throw not found when latest analysis does not exist', async () => {
+  it('2.4 should return null when latest analysis does not exist', async () => {
+    ((prisma as any).clinicalCase.findUnique as jest.Mock).mockResolvedValue({
+      id: 'case-404',
+      patient: {
+        therapistId: 'therapist-123',
+        clinicId: 'clinic-123',
+      },
+    });
     ((prisma as any).aiAnalysis.findFirst as jest.Mock).mockResolvedValue(null);
 
+    const result = await service.getLatestAnalysis('case-404', 'therapist-123');
+
+    expect(result).toBeNull();
+  });
+
+  it('2.5 should throw not found when clinical case does not exist', async () => {
+    ((prisma as any).clinicalCase.findUnique as jest.Mock).mockResolvedValue(
+      null,
+    );
+
     await expect(
-      service.getLatestAnalysis('case-404', 'therapist-123'),
-    ).rejects.toThrow('Analysis not found');
+      service.getLatestAnalysis('case-missing', 'therapist-123'),
+    ).rejects.toThrow('Clinical case not found');
+  });
+
+  it('2.6 should throw forbidden when therapist cannot access clinical case', async () => {
+    ((prisma as any).clinicalCase.findUnique as jest.Mock).mockResolvedValue({
+      id: 'case-123',
+      patient: {
+        therapistId: 'other-therapist',
+        clinicId: 'clinic-123',
+      },
+    });
+
+    await expect(
+      service.getLatestAnalysis('case-123', 'therapist-123'),
+    ).rejects.toThrow('You do not have access to this clinical case');
   });
 
   it('should return raw model response for owned analysis', async () => {

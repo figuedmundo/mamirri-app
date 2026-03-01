@@ -55,10 +55,25 @@ export function setupInterceptors(instance: AxiosInstance) {
         ? Date.now() - config.metadata.startTime
         : undefined;
 
+      const status = error.response?.status;
+      const url = config?.url ?? '';
+      const isExpectedLatestAnalysisMiss =
+        status === 404 &&
+        /\/ai\/cases\/[^/]+\/analyses\/latest(?:\?.*)?$/.test(url);
+
+      if (isExpectedLatestAnalysisMiss) {
+        logger.info('API Response: 404 latest analysis not found (expected)', {
+          status,
+          duration,
+          url,
+        });
+        return Promise.reject(error);
+      }
+
       logger.error(`API Error: ${error.message}`, error, {
-        status: error.response?.status,
+        status,
         duration,
-        url: config?.url,
+        url,
         code: error.code,
       });
 

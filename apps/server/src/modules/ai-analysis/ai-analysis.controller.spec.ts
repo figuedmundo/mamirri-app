@@ -214,14 +214,14 @@ describe('AiAnalysisController', () => {
       );
     });
 
-    it('should throw 404 for missing analysis', async () => {
-      service.getLatestAnalysis.mockRejectedValue(
-        new NotFoundException('Analysis not found'),
-      );
+    it('should return null when no analysis exists yet', async () => {
+      service.getLatestAnalysis.mockResolvedValue(null);
 
-      await expect(
-        controller.getLatestAnalysis('case-404', { userId: 'therapist-123' }),
-      ).rejects.toThrow(NotFoundException);
+      const result = await controller.getLatestAnalysis('case-404', {
+        userId: 'therapist-123',
+      });
+
+      expect(result).toBeNull();
     });
 
     it('should throw 403 for unauthorized access', async () => {
