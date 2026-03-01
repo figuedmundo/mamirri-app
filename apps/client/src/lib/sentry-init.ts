@@ -29,7 +29,7 @@ export async function initSentry(): Promise<void> {
       // Always capture 100% of sessions with errors
       replaysOnErrorSampleRate: 1.0,
       environment: import.meta.env.MODE,
-      release: import.meta.env.VITE_APP_VERSION || '1.0.0',
+      release: import.meta.env.VITE_APP_VERSION || '1.0.1',
       // PII Scrubbing for clinical data protection
       beforeSend(event) {
         // Remove sensitive headers

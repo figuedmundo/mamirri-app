@@ -155,7 +155,7 @@ services:
       dockerfile: docker/client/Dockerfile
       args:
         VITE_SENTRY_DSN: ${VITE_SENTRY_DSN}
-        VITE_APP_VERSION: ${VERSION:-1.0.0}
+        VITE_APP_VERSION: ${VERSION:-1.0.1}
     container_name: physio_client
     environment:
       NODE_ENV: production
