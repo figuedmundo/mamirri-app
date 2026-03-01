@@ -24,3 +24,11 @@ Refactored the case analysis data flow to load persisted AI analyses on case ope
   - `src/components/patients/CaseDetailLayout.test.tsx`
   - `src/components/patients/ZeroFrictionVoiceFlow.test.tsx`
 - Full client test suite passed: 74/74 files, 415/415 tests.
+
+## Latest AI Analysis Updates (2026-03-01)
+
+- Added raw-response client contract in `apps/client/src/api/ai-analysis.ts`:
+  - `RawAnalysisResponse` type.
+  - `getRawModelResponse(analysisId, includeSensitive)` API method.
+- Updated case-level data wiring in `apps/client/src/components/patients/CaseDetailLayout.tsx` to expose raw-response debugging only when authorized context is available.
+- Kept latest-analysis query behavior unchanged for normal case workflows; raw-response fetching remains explicit and opt-in.

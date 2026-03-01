@@ -23,3 +23,16 @@ Reviewed and executed targeted coverage for this feature slice, then validated s
 - Full frontend tests: 74 files, 415 tests, all passing.
 - Workspace typecheck: successful.
 - Workspace build: successful.
+
+## Latest AI Analysis Verification Updates (2026-03-01)
+
+- Added regression coverage for pending treatment-plan visibility in `apps/client/src/components/patients/TreatmentTimeline.test.tsx`.
+- Stabilized clinical E2E navigation readiness for AI-analysis-adjacent case flows:
+  - `apps/client/tests/e2e/clinical/clinical-happy-path.spec.ts`
+  - `apps/client/tests/e2e/clinical/stage-04-treatment-plan-phases-objectives.spec.ts`
+  - `apps/client/tests/e2e/clinical/voice/voice-recorder-resilience.spec.ts`
+- Re-verified with:
+  - `pnpm --filter client exec playwright test apps/client/tests/e2e/clinical/clinical-happy-path.spec.ts apps/client/tests/e2e/clinical/stage-04-treatment-plan-phases-objectives.spec.ts apps/client/tests/e2e/clinical/voice/voice-recorder-resilience.spec.ts --workers=1`
+  - `pnpm --filter client exec playwright test apps/client/tests/e2e/clinical/clinical-happy-path.spec.ts apps/client/tests/e2e/clinical/stage-04-treatment-plan-phases-objectives.spec.ts apps/client/tests/e2e/clinical/voice/voice-recorder-resilience.spec.ts --workers=1 --repeat-each=6`
+  - `pnpm --filter client test:e2e`
+  - `pnpm --filter client check-types`

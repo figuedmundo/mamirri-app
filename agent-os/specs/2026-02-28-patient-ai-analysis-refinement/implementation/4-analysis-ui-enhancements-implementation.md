@@ -21,3 +21,11 @@ Enhanced analysis presentation with layered summary/safety/diagnostic sections a
 - Focused frontend panel tests passed:
   - `src/components/patients/analysis/AnalysisResultsPanel.test.tsx`
 - Full client test suite passed: 74/74 files, 415/415 tests.
+
+## Latest AI Analysis Updates (2026-03-01)
+
+- Added `RawResponseDebugSection` in `apps/client/src/components/patients/analysis/RawResponseDebugSection.tsx`.
+- Integrated raw-response debug controls into analysis UI flow so privileged users can:
+  - Fetch redacted raw model output by default.
+  - Explicitly request sensitive raw output when needed.
+- Kept baseline clinical UX intact for non-privileged users by hiding debug-only controls.
