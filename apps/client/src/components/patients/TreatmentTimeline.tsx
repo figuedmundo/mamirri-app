@@ -51,9 +51,32 @@ export function TreatmentTimeline({
   const { toast } = useToast();
 
   const { treatmentPlan, treatmentSessions } = clinicalCase;
+  const hasStructuredPlan = Boolean(
+    treatmentPlan &&
+    Array.isArray(treatmentPlan.phases) &&
+    treatmentPlan.phases.length > 0,
+  );
+  const fallbackPhases = React.useMemo(
+    () => [
+      {
+        number: 1,
+        name: 'General',
+        durationWeeks: 0,
+        techniques: [],
+        objectives: '',
+      },
+    ],
+    [],
+  );
+  const timelinePhases = hasStructuredPlan
+    ? treatmentPlan!.phases
+    : fallbackPhases;
 
   React.useEffect(() => {
-    // Process queued photos when back online
+    if (!hasStructuredPlan) {
+      return () => {};
+    }
+
     const cleanup = onOnline(async () => {
       const pending = await photoQueue.getAll();
       if (pending.length === 0) return;
@@ -80,11 +103,10 @@ export function TreatmentTimeline({
         title: 'Sincronización completada',
         description: 'Todas las fotos pendientes se han subido.',
       });
-      // Trigger refresh if needed, for now user might need to reload or we rely on parent update
     });
 
     return cleanup;
-  }, [toast]);
+  }, [toast, hasStructuredPlan]);
 
   const currentPhase =
     treatmentSessions.length > 0
@@ -260,6 +282,18 @@ export function TreatmentTimeline({
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
+      {!hasStructuredPlan && (
+        <div className="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 border border-amber-200 dark:border-amber-800">
+          <h2 className="text-sm font-semibold text-amber-900 dark:text-amber-200 mb-1">
+            Plan de tratamiento pendiente
+          </h2>
+          <p className="text-amber-800 dark:text-amber-300 text-sm">
+            Puedes registrar sesiones desde ahora. Define objetivos y plan
+            cuando estés listo.
+          </p>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
@@ -284,7 +318,7 @@ export function TreatmentTimeline({
       <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <PhaseProgress
-            phases={treatmentPlan.phases}
+            phases={timelinePhases}
             currentPhase={currentPhase}
             sessions={treatmentSessions}
             selectedPhase={selectedPhase}
@@ -334,7 +368,7 @@ export function TreatmentTimeline({
           setEditingSession(null);
         }}
         onSubmit={handleFormSubmit}
-        phases={treatmentPlan.phases}
+        phases={timelinePhases}
         initialData={editingSession || undefined}
         isLoading={isSubmitting}
       />

@@ -13,15 +13,17 @@ export class PatientPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.newPatientButton = page.getByRole('button', {
-      name: /Nuevo Paciente/i,
-    });
-    this.nameInput = page.getByLabel('Nombre completo *');
-    this.occupationInput = page.getByLabel('Ocupación actual *');
-    this.phoneInput = page.getByLabel(/^Teléfono \*/);
-    this.emailInput = page.getByLabel('Email');
-    this.ecNameInput = page.getByLabel('Contacto Emergencia (Nombre) *');
-    this.ecPhoneInput = page.getByLabel('Contacto Emergencia (Teléfono) *');
+    this.newPatientButton = page
+      .getByRole('button', {
+        name: /Nuevo Paciente|Agregar Primer Paciente/i,
+      })
+      .first();
+    this.nameInput = page.locator('#name');
+    this.occupationInput = page.locator('#occupation');
+    this.phoneInput = page.locator('#phone');
+    this.emailInput = page.locator('#email');
+    this.ecNameInput = page.locator('#ec-name');
+    this.ecPhoneInput = page.locator('#ec-phone');
     this.createButton = page.getByRole('button', { name: /Crear Paciente/i });
   }
 
@@ -40,7 +42,19 @@ export class PatientPage extends BasePage {
       phone: string;
     };
   }) {
+    await this.newPatientButton.waitFor({ state: 'visible', timeout: 10000 });
     await this.newPatientButton.click();
+    try {
+      await this.nameInput.waitFor({ state: 'visible', timeout: 5000 });
+    } catch {
+      const fallbackCreateButton = this.page
+        .getByRole('button', {
+          name: /Nuevo Paciente|Agregar Primer Paciente/i,
+        })
+        .last();
+      await fallbackCreateButton.click({ force: true });
+      await this.nameInput.waitFor({ state: 'visible', timeout: 10000 });
+    }
     await this.nameInput.fill(data.name);
     await this.occupationInput.fill(data.occupation);
     await this.phoneInput.fill(data.phone);

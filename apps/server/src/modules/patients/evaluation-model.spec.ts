@@ -9,20 +9,21 @@ describe('Evaluation Model Schema', () => {
     schemaContent = await fs.readFile(schemaPath, 'utf-8');
   });
 
-  it('should have a type field to categorize evaluations', () => {
-    const evaluationBlock = schemaContent
-      .split('model Evaluation {')[1]
-      .split('}')[0];
-    expect(evaluationBlock).toMatch(/type\s+String/);
+  it('should have optional 1:1 relation to ClinicalCase', () => {
+    // ClinicalCase has `evaluation Evaluation?` (not evaluations[])
+    const clinicalCaseBlock = schemaContent
+      .split('model ClinicalCase {')[1]
+      .split('model ')[0];
+    expect(clinicalCaseBlock).toMatch(/evaluation\s+Evaluation\?/);
   });
 
-  it('should NOT have a unique constraint on clinicalCaseId to allow 1:N relation', () => {
+  it('should have a unique constraint on clinicalCaseId for 1:1 relation', () => {
     const evaluationBlock = schemaContent
       .split('model Evaluation {')[1]
       .split('}')[0];
 
     expect(evaluationBlock).toContain('clinicalCaseId  String');
-    expect(evaluationBlock).not.toMatch(/clinicalCaseId\s+String\s+@unique/);
+    expect(evaluationBlock).toMatch(/clinicalCaseId\s+String\s+@unique/);
   });
 
   it('should have JSON fields for complex clinical data', () => {

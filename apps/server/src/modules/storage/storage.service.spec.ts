@@ -165,6 +165,21 @@ describe('StorageService', () => {
         NotFoundException,
       );
     });
+
+    it('should fallback to direct object URL when checksum mode is present', async () => {
+      (getSignedUrl as jest.Mock).mockResolvedValueOnce(
+        'http://localhost:9000/test-bucket/voice-notes/test.webm?x-amz-checksum-mode=ENABLED&X-Amz-Signature=test',
+      );
+
+      const url = await service.getFileUrl(
+        'voice-notes/evaluation/test.webm',
+        3600,
+      );
+
+      expect(url).toBe(
+        'http://localhost:9000/test-bucket/voice-notes/evaluation/test.webm',
+      );
+    });
   });
 
   describe('deleteFile', () => {

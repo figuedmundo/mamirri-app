@@ -92,10 +92,7 @@ export function ObjectivesView({
   const handleRecordingComplete = async (blob: Blob, duration: number) => {
     if (!dictatingType) return;
 
-    const activeCase = clinicalCase;
-    const activeEval = activeCase.evaluations?.find(
-      (e) => e.type === 'INITIAL' || e.type === 'FINAL',
-    );
+    const activeEval = clinicalCase.evaluation;
 
     if (!activeEval) {
       toast({

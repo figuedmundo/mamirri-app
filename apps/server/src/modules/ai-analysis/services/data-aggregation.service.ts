@@ -7,6 +7,7 @@ import {
 import { PrismaService } from '../../../prisma/prisma.service';
 import {
   CaseDataAggregate,
+  SoapDecomposition,
   VisionFinding,
   VoiceNote,
   VisionAnalysisStats,
@@ -83,6 +84,8 @@ export class DataAggregationService {
       recentSessions,
     );
 
+    const soapDecomposition = this.extractSoapDecomposition(evaluations);
+
     return {
       ...clinicalCase,
       evaluations: evaluations as any,
@@ -90,7 +93,70 @@ export class DataAggregationService {
       visionFindings,
       voiceTranscripts,
       visionStats,
+      soapDecomposition,
     };
+  }
+
+  private extractSoapDecomposition(evaluations: any[]): SoapDecomposition {
+    const latestEvaluation = evaluations[0];
+    if (!latestEvaluation || !latestEvaluation.diagnosis) {
+      return {};
+    }
+
+    const diagnosis = latestEvaluation.diagnosis as Record<string, unknown>;
+
+    const subjective =
+      this.extractSoapSection(diagnosis, 'subjective') ??
+      this.extractSoapSection(diagnosis, 'subjetivo') ??
+      this.extractSoapSection(diagnosis, 's');
+
+    const objective =
+      this.extractSoapSection(diagnosis, 'objective') ??
+      this.extractSoapSection(diagnosis, 'objetivo') ??
+      this.extractSoapSection(diagnosis, 'o');
+
+    const analysis =
+      this.extractSoapSection(diagnosis, 'analysis') ??
+      this.extractSoapSection(diagnosis, 'análisis') ??
+      this.extractSoapSection(diagnosis, 'analisis') ??
+      this.extractSoapSection(diagnosis, 'assessment') ??
+      this.extractSoapSection(diagnosis, 'a');
+
+    const plan =
+      this.extractSoapSection(diagnosis, 'plan') ??
+      this.extractSoapSection(diagnosis, 'p');
+
+    return {
+      subjective,
+      objective,
+      analysis,
+      plan,
+    };
+  }
+
+  private extractSoapSection(
+    diagnosis: Record<string, unknown>,
+    key: string,
+  ): string | undefined {
+    const value = diagnosis[key];
+    if (value === undefined || value === null) {
+      return undefined;
+    }
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      return trimmed.length > 0 ? trimmed : undefined;
+    }
+
+    if (typeof value === 'object') {
+      return JSON.stringify(value);
+    }
+
+    if (typeof value === 'number' || typeof value === 'boolean') {
+      return String(value);
+    }
+
+    return undefined;
   }
 
   private async extractVisionFindings(

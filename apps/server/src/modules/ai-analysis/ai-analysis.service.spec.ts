@@ -311,4 +311,51 @@ describe('AiAnalysisService', () => {
       expect(result).toEqual(chunks);
     });
   });
+
+  describe('parseResponse', () => {
+    it('parses JSON wrapped in markdown code fences', () => {
+      const response = [
+        'Respuesta:',
+        '```json',
+        JSON.stringify({
+          primarySuggestion: {
+            title: 'Movilizacion articular',
+            description: 'Priorizar movilizacion suave y progresiva.',
+            confidence: 'HIGH',
+          },
+          alternatives: [],
+          citations: [],
+          reasoning: {
+            step1_understanding: 'Dolor mecanico con rigidez matutina.',
+            step2_literature: 'Evidencia moderada para terapia manual.',
+            step3_synthesis: 'Iniciar con carga gradual y reevaluar.',
+          },
+        }),
+        '```',
+      ].join('\n');
+
+      const parsed = (service as any).parseResponse(response);
+
+      expect(parsed.primarySuggestion.title).toBe('Movilizacion articular');
+      expect(parsed.primarySuggestion.description).toContain('Priorizar');
+      expect(parsed.primarySuggestion.confidence).toBe('HIGH');
+    });
+
+    it('fills fallback fields when primarySuggestion is empty object', () => {
+      const response = JSON.stringify({
+        primarySuggestion: {},
+        alternatives: [],
+        citations: [],
+        reasoning: {},
+      });
+
+      const parsed = (service as any).parseResponse(response);
+
+      expect(parsed.primarySuggestion.title).toBe('Sin recomendación');
+      expect(parsed.primarySuggestion.description).toBe(
+        'No se pudo generar una recomendación',
+      );
+      expect(parsed.primarySuggestion.confidence).toBe('LOW');
+    });
+  });
 });

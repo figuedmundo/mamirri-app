@@ -4,6 +4,7 @@ import type { AnalysisResult } from '@/types/analysis';
 import { vi, describe, it, expect } from 'vitest';
 
 const mockResult: AnalysisResult = {
+  summary: 'Resumen breve del caso clínico.',
   primarySuggestion: {
     title: 'Primary',
     description: 'Desc',
@@ -13,6 +14,32 @@ const mockResult: AnalysisResult = {
   alternatives: [
     { title: 'Alt 1', description: 'Alt Desc', confidence: 'MEDIUM' },
   ],
+  followUpQuestions: [
+    {
+      question: '¿Hay dolor al primer apoyo matutino?',
+      reason: 'Orienta a patrón de fascitis plantar.',
+      soapSection: 'SUBJETIVO',
+    },
+  ],
+  redFlags: [
+    {
+      flag: 'Pérdida súbita de fuerza neurológica',
+      urgency: 'HIGH',
+      recommendedAction: 'Derivación médica urgente.',
+    },
+  ],
+  differentialDiagnosis: [
+    {
+      condition: 'Neuropatía tibial posterior',
+      supportingEvidence: 'Dolor plantar persistente',
+      contradictingEvidence: 'Sin parestesias reportadas',
+    },
+  ],
+  confidenceJustification: {
+    literatureSupport: 'Evidencia moderada',
+    clinicalAlignment: 'Alta alineación',
+    limitingFactors: ['Faltan pruebas funcionales complementarias'],
+  },
   citations: [
     {
       quote: 'Quote',
@@ -71,6 +98,51 @@ describe('AnalysisResultsPanel', () => {
     );
     expect(screen.getByText('Comprensión del Caso:')).toBeInTheDocument();
     expect(screen.getByText('Understanding')).toBeInTheDocument();
+  });
+
+  it('displays summary section at the top', () => {
+    render(
+      <AnalysisResultsPanel
+        analysisResult={mockResult}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText('Resumen Clínico')).toBeInTheDocument();
+    expect(
+      screen.getByText('Resumen breve del caso clínico.'),
+    ).toBeInTheDocument();
+  });
+
+  it('renders red flags when present', () => {
+    render(
+      <AnalysisResultsPanel
+        analysisResult={mockResult}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText('Red Flags / Derivación')).toBeInTheDocument();
+    expect(
+      screen.getByText('Pérdida súbita de fuerza neurológica'),
+    ).toBeInTheDocument();
+  });
+
+  it('renders follow-up questions section when present', () => {
+    render(
+      <AnalysisResultsPanel
+        analysisResult={mockResult}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText('Preguntas de Seguimiento')).toBeInTheDocument();
+    expect(
+      screen.getByText('¿Hay dolor al primer apoyo matutino?'),
+    ).toBeInTheDocument();
   });
 
   it('displays citations section', () => {
@@ -136,6 +208,25 @@ describe('AnalysisResultsPanel', () => {
       />,
     );
     expect(screen.queryByText('Warning 1')).not.toBeInTheDocument();
+  });
+
+  it('hides red flags section when none are provided', () => {
+    const resultWithoutFlags: AnalysisResult = {
+      ...mockResult,
+      redFlags: [],
+    };
+
+    render(
+      <AnalysisResultsPanel
+        analysisResult={resultWithoutFlags}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.queryByText('Red Flags / Derivación'),
+    ).not.toBeInTheDocument();
   });
 
   it('displays citation author when present', () => {

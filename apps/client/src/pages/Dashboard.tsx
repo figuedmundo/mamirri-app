@@ -25,7 +25,7 @@ export const Dashboard = () => {
   const recentPatients: Patient[] = [];
 
   const handleNewPatient = () => {
-    navigate('/pacientes/nuevo');
+    navigate('/pacientes?action=new');
   };
 
   return (

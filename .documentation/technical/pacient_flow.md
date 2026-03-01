@@ -1,232 +1,127 @@
-# Patient Journey Flow - Design OS (Pacientes)
+# Patient Journey Flow (Pacientes)
 
-This document outlines the architectural flow and patient journey within the **Pacientes** section of Design OS. It illustrates how components interact to transition a patient from initial admission to long-term evolution tracking.
+This document describes the current patient evaluation flow in the Pacientes module and how SOAP documentation connects to treatment execution.
 
-## Clinical Model (Doctor's Requirements)
+## Current clinical flow
 
-Based on clinical expertise, the treatment process follows a **6-stage flow**:
+The current implementation uses a SOAP-first, diagnosis-first flow:
 
-### Treatment Stages
+1. Create or open a patient case
+2. Complete SOAP evaluation in this order:
+   - `S - Subjetivo`
+   - `O - Objetivo`
+   - `A - Analisis`
+   - `P - Plan`
+3. Use **Plan** to define intended treatment strategy
+4. Move to **Cronograma** to execute and track sessions
+5. Review progress through timeline and comparison views
 
-| Stage | Spanish Name            | Description                                                                      | Data Entities                                      |
-| ----- | ----------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------- |
-| **1** | Valoración Inicial      | Anamnesis + kinetic-functional exam (posturogram, pain points, orthopedic tests) | `Evaluation (INITIAL)`                             |
-| **2** | Diagnóstico + Objetivos | Functional diagnosis + therapeutic/prophylactic/educational objectives           | `Evaluation.diagnosis`, `TreatmentPlan.objectives` |
-| **3** | Planificación           | Select techniques, establish 15-session schedule across 5 weeks                  | `TreatmentPlan.phases[]`                           |
-| **4** | Ejecución Progresiva    | 5 phases of treatment (initial→intermediate→advanced) with per-session tracking  | `TreatmentSession[]`                               |
-| **5** | Evaluación Final        | Second comprehensive evaluation to measure outcomes                              | `Evaluation (FINAL)`                               |
-| **6** | Recomendaciones         | Treatment report with suggestions for patient and other professionals            | `CaseRecommendations` (future)                     |
+## Why this flow exists
 
-### Evaluation Model
+The flow reduces cognitive load for therapists during real consultations:
 
-The patient undergoes **two formal comprehensive evaluations**:
+- Diagnosis is explicit before planning
+- Objective tests are added only when needed
+- Plan is actionable (not a placeholder)
+- Timeline is focused on execution, not planning intent
 
-1. **Evaluación Inicial (Initial)**: Baseline at treatment start
-   - Posturogram (4 anatomical views)
-   - Pain scale (END 0-10)
-   - Orthopedic tests (Thomas, Ely, Ober, Schober)
-   - Functional indices (Barthel 0-100, Lawton 0-8)
+## SOAP responsibilities in Mamirri
 
-2. **Evaluación Final (Final)**: After 15-session intervention
-   - Same metrics as initial for comparison
-   - Validates treatment effectiveness
+### S - Subjetivo
 
-**Evolution tracking** (Evolución Kinésica) happens per-session via `TreatmentSession` records, not full evaluations.
+- Capture patient-reported symptoms and history
+- Voice recording and transcription support subjective capture
 
----
+### O - Objetivo
 
-## 1. Architectural Overview (UML Class Diagram)
+- Capture measurable findings (pain, tests, observations)
+- Pain uses `Actividad`, `Reposo`, and `Palpacion` (0-10)
+- Orthopedic tests are selected on demand
 
-The following diagram shows the relationship between the main view components and the data structures they manage.
+### A - Analisis
 
-```mermaid
-classDiagram
-    class PacientesView {
-        +selectedPatientId: string
-        +render()
-    }
+- Capture clinical reasoning and diagnosis details
+- Main fields:
+  - `functionalIndicator`
+  - `clinicalAspect`
+  - `anatomopathology`
+  - `avdConsequences`
 
-    class PacientesList {
-        +pacientes: Paciente[]
-        +onView(id)
-        +onCreate()
-    }
+### P - Plan
 
-    class CaseDetailLayout {
-        +paciente: Paciente
-        +caso: CasoClinico
-        +activeSessionId: string
-        +onBack()
-    }
+- Capture what the therapist plans to do next
+- Main fields:
+  - Intervenciones planificadas
+  - Frecuencia y duracion
+  - Ejercicios para casa
+  - Proxima cita
+  - Notas adicionales
 
-    class CaseTimeline {
-        +caso: CasoClinico
-        +onSelectSession(id)
-    }
+Important distinction:
 
-    class TreatmentTimeline {
-        +sesiones: SesionDeTratamiento[]
-        +onAddSession()
-    }
+- **Plan** = treatment intent
+- **Cronograma** = treatment execution over sessions
 
-    class ComparacionBoard {
-        +casoClinico: CasoClinico
-        +initialEvaluation: Evaluation
-        +finalEvaluation: Evaluation
-    }
+## Data model and component mapping
 
-    class PosturogramViewer {
-        +imageBefore: string
-        +imageAfter: string
-    }
+### Data model
 
-    class EvaluacionForm {
-        +casoClinico: CasoClinico
-        +evaluationType: 'INITIAL' | 'PROGRESS' | 'FINAL'
-        +onSave()
-        +onVoiceDictation()
-    }
+- `ClinicalCase` has a single active `evaluation`
+- SOAP details are stored in JSON fields under `Evaluation`
+- Plan data lives under `evaluation.diagnosis.plan`
 
-    PacientesView --> PacientesList : Displays first
-    PacientesView --> CaseDetailLayout : Displays on selection
-    CaseDetailLayout --> CaseTimeline : Left Navigation
-    CaseDetailLayout --> TreatmentTimeline : Detailed Session History
-    CaseDetailLayout --> ComparacionBoard : Final Success Analysis
-    CaseDetailLayout --> PosturogramViewer : Visual Comparison
-    EvaluacionForm ..> CaseDetailLayout : Provides evaluation data
-    CaseDetailLayout o-- "1..*" Evaluation : evaluations[]
-```
+### Key components
 
-## 2. Patient Journey Flow (Sequence Diagram)
+- `CaseDetailLayout.tsx`
+  - Orchestrates timeline, evaluation, objectives, and comparison views
+- `EvaluationForm.tsx`
+  - Owns SOAP UI and saves payload to the active evaluation
+  - Gates Plan until diagnosis exists
+  - Provides link action to open timeline
+- `TreatmentTimeline.tsx`
+  - Tracks real session execution and phase progress
 
-This diagram tracks the lifecycle of a patient interaction, from discovery to final report.
+## Sequence (high-level)
 
 ```mermaid
 sequenceDiagram
-    participant U as User (Physiotherapist)
-    participant PL as PacientesList
-    participant EF as EvaluacionForm
+    participant T as Therapist
     participant CDL as CaseDetailLayout
+    participant EF as EvaluationForm
     participant TT as TreatmentTimeline
-    participant CB as ComparacionBoard
 
-    Note over U, PL: Stage 1: Discovery
-    U->>PL: Open Patients Dashboard
-    PL-->>U: Show Patient Cards (Metrics/Status)
-    U->>PL: Click "View Patient"
+    T->>CDL: Open active case
+    CDL->>EF: Render SOAP evaluation
 
-    Note over U, EF: Stage 2: Initial Evaluation (Valoración Inicial)
-    U->>EF: Create New Clinical Case
-    U->>EF: Start Voice Dictation (Anamnesis)
-    U->>EF: Map Posture (Posturograma - 4 views)
-    U->>EF: Perform Orthopedic Tests (Thomas, Ely, Ober, Schober)
-    U->>EF: Record AVD (Barthel/Lawton)
-    U->>EF: Set Evaluation Type = INITIAL
-    EF->>U: Save Initial Evaluation
+    T->>EF: Fill Subjetivo
+    T->>EF: Fill Objetivo
+    T->>EF: Fill Analisis
 
-    Note over U, CDL: Stage 3: Treatment Planning
-    U->>CDL: Define Treatment Objectives (therapeutic/prophylactic/educational)
-    U->>CDL: Set 15-session schedule (5 phases × 3 sessions)
-
-    Note over U, TT: Stage 4: Progressive Execution (15 sessions)
-    loop Each Session (1-15)
-        U->>TT: Record Session (techniques, patient response, pain level)
-        TT-->>U: Update Phase Progress (1→5)
+    alt Diagnosis present
+        T->>EF: Fill Plan fields
+        T->>EF: Click "Ver cronograma de tratamiento"
+        EF->>CDL: onNavigateToTimeline()
+        CDL->>TT: Switch to timeline view
+    else Diagnosis missing
+        EF-->>T: Show "Ir a Analisis" guidance
     end
 
-    Note over U, EF: Stage 5: Final Evaluation
-    U->>EF: Open EvaluacionForm
-    U->>EF: Set Evaluation Type = FINAL
-    U->>EF: Repeat all baseline measurements
-    EF->>U: Save Final Evaluation
-
-    Note over U, CB: Stage 6: Comparative Analysis & Report
-    U->>CB: Open ComparacionBoard
-    CB-->>U: Compare Initial vs Final (Posture, Pain, Barthel, Tests)
-    U->>CB: Export Final Report (PDF)
-    U->>CDL: Add Recommendations for patient/professionals
+    T->>TT: Register treatment sessions
 ```
 
-## 3. Journey Stages Breakdown
+## Notes for contributors
 
-### Stage 1: Discovery (Dashboard)
-
-- **Main Component:** `PatientList.tsx`
-- **Goal:** Quick status check of the patient population.
-- **Key Action:** Identify which patients need attention based on active case status and pain trends.
-
-### Stage 2: Initial Evaluation (Valoración Inicial)
-
-- **Main Component:** `EvaluacionForm.tsx`
-- **Goal:** Establish the "Initial State" using kinetic-functional metrics.
-- **Evaluation Type:** `INITIAL`
-- **Input Methods:**
-  - **Voice:** AI-structured anamnesis.
-  - **Visual:** Interactive body map (Posturograma - 4 anatomical views).
-  - **Clinical:** Numeric results for orthopedic and functional tests.
-
-### Stage 3: Treatment Planning
-
-- **Main Component:** `CaseDetailLayout.tsx` (Treatment Plan section)
-- **Goal:** Define objectives and 15-session schedule.
-- **Objectives:** Therapeutic, Prophylactic, Educational
-- **Schedule:** 5 phases × 3 sessions/phase = 15 sessions over 5 weeks
-
-### Stage 4: Progressive Execution (Evolución Kinésica)
-
-- **Main Components:** `CaseDetailLayout.tsx`, `CaseTimeline.tsx`, `TreatmentTimeline.tsx`
-- **Goal:** Track the 15-session intervention model across 5 phases.
-- **Phases:**
-  1. Initial: Gentle mobilizations, pain relief
-  2. Early-Intermediate: Begin stretching
-  3. Intermediate: Flexibility gains
-  4. Late-Intermediate: Therapeutic exercises
-  5. Advanced: Functional strengthening, confidence building
-
-### Stage 5: Final Evaluation
-
-- **Main Component:** `EvaluacionForm.tsx`
-- **Goal:** Comprehensive re-measurement to compare with baseline.
-- **Evaluation Type:** `FINAL`
-- **Same measurements as Initial:** Posturogram, Pain (END), Orthopedic tests, AVD indices
-
-### Stage 6: Comparative Analysis & Report
-
-- **Main Components:** `PosturogramViewer.tsx`, `ComparacionBoard.tsx`
-- **Goal:** Visual and clinical validation of the treatment plan.
-- **Comparison:** Initial vs Final evaluation data
-- **Output:** PDF report with comparative charts (pain reduction, functional improvement)
-- **Future:** `CaseRecommendations` for treatment continuation suggestions
-
-## 4. Data Flow Principles
-
-1.  **Top-Down Props:** Data flows from `PacientesView` down to specialized components.
-2.  **Evaluations Array:** `ClinicalCase.evaluations[]` contains multiple evaluations (Initial, Progress, Final).
-3.  **Utility Functions:** Use `getInitialEvaluation()`, `getFinalEvaluation()` to access specific evaluations.
-4.  **Encapsulated Logic:** `EvaluacionForm` handles its own complex state before emitting `onSave`.
-5.  **Visual Consistency:** Components use the Design OS aesthetic (Stone/Lime palette).
-
-## 5. Data Model Notes
-
-### Key Relationships
-
-```
-Patient (1) ──> (*) ClinicalCase
-ClinicalCase (1) ──> (*) Evaluation    ← 1:N (INITIAL, PROGRESS, FINAL)
-ClinicalCase (1) ──> (1) TreatmentPlan
-ClinicalCase (1) ──> (*) TreatmentSession
-Evaluation (1) ──> (*) Footprint
-Evaluation (1) ──> (*) PostureVideo
-```
-
-### Evaluation Types
-
-| Type       | Purpose                        | When Created      |
-| ---------- | ------------------------------ | ----------------- |
-| `INITIAL`  | Baseline measurement           | Case creation     |
-| `PROGRESS` | Mid-treatment check (optional) | During treatment  |
-| `FINAL`    | Outcome measurement            | After 15 sessions |
+- Follow ADR 008: code in English, UI strings in Spanish
+- Keep SOAP labels and section descriptions user-facing and explicit
+- Do not collapse Plan and Timeline into one concept
+- Keep evaluation form tablet-friendly (clear labels, large touch targets)
 
 ---
 
-**Last Updated:** 2026-01-17
+**Last Updated:** 2026-02-27
+
+**Related Documents:**
+
+- [Patient Flow Evaluation (Feature)](../features/patient-flow-evaluation.md)
+- [Patients Module](./patients-module.md)
+- [Language Strategy ADR 008](../product/decisions/008-language-strategy-english-code-spanish-ui.md)

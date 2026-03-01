@@ -8,7 +8,10 @@ import type {
   TreatmentObjectives,
 } from '../../types/patient';
 import { useState, useEffect } from 'react';
-import { getActiveEvaluation } from '../../lib/evaluation-utils';
+import {
+  getActiveEvaluation,
+  getCaseEvaluations,
+} from '../../lib/evaluation-utils';
 import { TreatmentTimeline } from './TreatmentTimeline';
 import { SessionDetailView } from './treatment-timeline/SessionDetailView';
 import { EvaluationForm } from './EvaluationForm';
@@ -23,10 +26,11 @@ import {
   useUpdateEvaluation,
   useUpdateTreatmentPlanObjectives,
 } from '../../hooks/use-patients';
+import type { UpdateEvaluationDto } from '../../api/patients';
 import { useUploadEvaluationVoiceNote } from '../../hooks/use-media';
 import { AnalyzeButton } from './AnalyzeButton';
 import { AnalysisResultsPanel } from './analysis/AnalysisResultsPanel';
-import type { AnalysisResult } from '@/types/analysis';
+import { useLatestAnalysisQuery } from '@/hooks/use-ai-analysis';
 import {
   Mic,
   ArrowLeft,
@@ -36,6 +40,19 @@ import {
   Target,
   BookOpen,
 } from 'lucide-react';
+
+function getCurrentUserRoleFromStorage(): string | null {
+  try {
+    const serialized = localStorage.getItem('user_data');
+    if (!serialized) {
+      return null;
+    }
+    const parsed = JSON.parse(serialized) as { role?: unknown };
+    return typeof parsed.role === 'string' ? parsed.role : null;
+  } catch {
+    return null;
+  }
+}
 
 type ViewMode =
   | 'timeline'
@@ -59,18 +76,22 @@ export function CaseDetailLayout({
 }: CaseDetailLayoutProps) {
   const [localCase, setLocalCase] = useState<ClinicalCase>(clinicalCase);
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
-    null,
-  );
   const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
+  const [viewerRole] = useState<string | null>(() =>
+    getCurrentUserRoleFromStorage(),
+  );
+  const canViewRawResponseDebug =
+    viewerRole === 'CLINIC_OWNER' || viewerRole === 'ADMIN';
   const { toast } = useToast();
+  const { data: latestAnalysis } = useLatestAnalysisQuery(localCase.id, {
+    enabled: !!localCase.id,
+  });
 
   const updateEvaluation = useUpdateEvaluation();
   const updateObjectives = useUpdateTreatmentPlanObjectives();
   const uploadVoiceNote = useUploadEvaluationVoiceNote();
 
   const activeEval = getActiveEvaluation(localCase);
-  const activeEvalType = activeEval?.type;
   const treatmentPlanId = localCase.treatmentPlan?.id;
 
   const handleRecordingComplete = async (blob: Blob, duration: number) => {
@@ -212,31 +233,46 @@ export function CaseDetailLayout({
     setViewMode('session-detail');
   };
 
-  const handleSaveEvaluation = async (evaluation: Evaluation) => {
+  const handleSaveEvaluation = async (
+    evaluation: Evaluation,
+    options?: { silent?: boolean },
+  ) => {
+    const isSilent = options?.silent === true;
+
     try {
-      const updatedEvaluations = localCase.evaluations.map((e) =>
-        e.id === evaluation.id ? evaluation : e,
-      );
-      if (!localCase.evaluations.find((e) => e.id === evaluation.id)) {
-        updatedEvaluations.push(evaluation);
+      setLocalCase({ ...localCase, evaluation, evaluations: [evaluation] });
+
+      const data: UpdateEvaluationDto = {
+        posturogram: evaluation.posturogram,
+        orthopedicTests: evaluation.orthopedicTests,
+        avdEvaluation: evaluation.avdEvaluation,
+        painScale: evaluation.painScale,
+        diagnosis: evaluation.diagnosis,
+      };
+
+      if (evaluation.voiceNotes) {
+        data.voiceNotes = evaluation.voiceNotes;
       }
-      setLocalCase({ ...localCase, evaluations: updatedEvaluations });
 
       await updateEvaluation.mutateAsync({
         id: evaluation.id,
-        data: evaluation,
+        data,
       });
 
-      toast({
-        title: 'Evaluacion actualizada',
-        description: 'Los cambios se han guardado correctamente.',
-      });
+      if (!isSilent) {
+        toast({
+          title: 'Evaluacion actualizada',
+          description: 'Los cambios se han guardado correctamente.',
+        });
+      }
     } catch {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'No se pudo guardar la evaluacion.',
-      });
+      if (!isSilent) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'No se pudo guardar la evaluacion.',
+        });
+      }
     }
   };
 
@@ -246,10 +282,11 @@ export function CaseDetailLayout({
 
     try {
       const updatedEval = { ...activeEval, posturogram };
-      const updatedEvaluations = localCase.evaluations.map((e) =>
-        e.id === updatedEval.id ? updatedEval : e,
-      );
-      setLocalCase({ ...localCase, evaluations: updatedEvaluations });
+      setLocalCase({
+        ...localCase,
+        evaluation: updatedEval,
+        evaluations: [updatedEval],
+      });
 
       await updateEvaluation.mutateAsync({
         id: activeEval.id,
@@ -270,10 +307,11 @@ export function CaseDetailLayout({
 
     try {
       const updatedEval = { ...activeEval, painScale };
-      const updatedEvaluations = localCase.evaluations.map((e) =>
-        e.id === updatedEval.id ? updatedEval : e,
-      );
-      setLocalCase({ ...localCase, evaluations: updatedEvaluations });
+      setLocalCase({
+        ...localCase,
+        evaluation: updatedEval,
+        evaluations: [updatedEval],
+      });
 
       await updateEvaluation.mutateAsync({
         id: activeEval.id,
@@ -306,6 +344,16 @@ export function CaseDetailLayout({
   };
 
   const handleObjectivesChange = async (objectives: TreatmentObjectives) => {
+    if (!localCase.treatmentPlan?.id) {
+      toast({
+        title: 'Plan no disponible',
+        description:
+          'Define el diagnóstico en la evaluación antes de crear objetivos del plan.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     try {
       setLocalCase({
         ...localCase,
@@ -396,17 +444,6 @@ export function CaseDetailLayout({
           >
             <ClipboardList size={16} />
             <span className="hidden sm:inline">Evaluacion</span>
-            {activeEvalType && (
-              <span
-                className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
-                  activeEvalType === 'INITIAL'
-                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300'
-                    : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                }`}
-              >
-                {activeEvalType === 'INITIAL' ? 'INICIAL' : 'FINAL'}
-              </span>
-            )}
           </button>
           <button
             onClick={() => setViewMode('objectives')}
@@ -462,10 +499,9 @@ export function CaseDetailLayout({
           </button>
           <AnalyzeButton
             caseId={localCase.id}
-            evaluationCount={localCase.evaluations?.length ?? 0}
-            hasResults={!!analysisResult}
-            onAnalysisComplete={(result) => {
-              setAnalysisResult(result);
+            evaluationCount={getCaseEvaluations(localCase).length}
+            hasResults={!!latestAnalysis}
+            onAnalysisComplete={() => {
               setIsAnalysisOpen(true);
               toast({
                 title: 'Análisis completado',
@@ -530,6 +566,7 @@ export function CaseDetailLayout({
               onSave={handleSaveEvaluation}
               onPosturogramChange={handlePosturogramChange}
               onPainScaleChange={handlePainScaleChange}
+              onNavigateToTimeline={() => setViewMode('timeline')}
             />
           </div>
         )}
@@ -543,9 +580,10 @@ export function CaseDetailLayout({
       />
 
       <AnalysisResultsPanel
-        analysisResult={analysisResult}
+        analysisResult={latestAnalysis ?? null}
         isOpen={isAnalysisOpen}
         onClose={() => setIsAnalysisOpen(false)}
+        canViewRawResponseDebug={canViewRawResponseDebug}
       />
     </div>
   );

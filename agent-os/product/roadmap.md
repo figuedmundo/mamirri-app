@@ -197,9 +197,11 @@ Methodology: Agile Development (1-week Sprints).
 - [x] 9.6 Improve create patient form
 - [x] 9.7 Improve login
 - [x] 9.8 Possibility to add a clinic that will habe theraphists and patients (multi-tenancy)
-- [x] 9.9 Clinic onboarding 
+- [x] 9.9 Clinic onboarding
 - [x] 9.10 Therapist onboarding
-- [ ] 9.11 Pacient onboarding
+- [x] 9.11 Pacient flow evaluation
+- [x] 9.12 Evaluation SOAP
+- [x] 9.13 Pacient AI analysis refinment
 
 **🎯 Milestone 5:** "Mother used it with a real patient without asking for help"
 

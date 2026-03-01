@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CaseDetailLayout } from '../CaseDetailLayout';
 import type { Patient, ClinicalCase } from '../../../types/patient';
-import { EvaluationType } from '../../../types/patient';
 import type { AnalysisResult } from '@/types/analysis';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
@@ -41,6 +40,12 @@ vi.mock('@/hooks/use-voice-recorder', () => ({
     stopRecording: vi.fn(),
     cancelRecording: vi.fn(),
   }),
+}));
+
+let latestAnalysisForTest: AnalysisResult | null = null;
+
+vi.mock('@/hooks/use-ai-analysis', () => ({
+  useLatestAnalysisQuery: () => ({ data: latestAnalysisForTest }),
 }));
 
 vi.mock('../../../api/patients', () => ({
@@ -102,7 +107,6 @@ const mockClinicalCase: ClinicalCase = {
       id: 'eval-001',
       clinicalCaseId: 'caso-001',
       date: '2024-01-01T00:00:00Z',
-      type: EvaluationType.INITIAL,
       posturogram: {},
       orthopedicTests: {
         thomas: { result: 'normal', interpretation: '' },
@@ -186,7 +190,12 @@ vi.mock('../AnalyzeButton', () => ({
     hasResults: boolean;
   }) => (
     <div>
-      <button onClick={() => onAnalysisComplete(mockAnalysisResult)}>
+      <button
+        onClick={() => {
+          latestAnalysisForTest = mockAnalysisResult;
+          onAnalysisComplete(mockAnalysisResult);
+        }}
+      >
         Analyze
       </button>
       {hasResults && <button onClick={onViewResults}>Ver resultados</button>}
@@ -199,6 +208,7 @@ describe('Case Analysis Wiring', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    latestAnalysisForTest = null;
   });
 
   it('AnalysisResultsPanel does not render when analysisResult is null', () => {

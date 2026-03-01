@@ -74,7 +74,6 @@ describe('generateComparisonReport', () => {
         id: 'e1',
         clinicalCaseId: 'c1',
         date: '2026-01-15',
-        type: 'INITIAL',
         posturogram: {},
         orthopedicTests: {
           schober: { result: 13, interpretation: 'Normal' },

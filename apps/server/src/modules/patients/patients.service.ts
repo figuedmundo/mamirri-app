@@ -2,6 +2,7 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Patient, TreatmentSession, Evaluation } from '@prisma/client';
@@ -31,6 +32,8 @@ import { StorageService } from '../storage/storage.service';
 
 @Injectable()
 export class PatientsService {
+  private readonly logger = new Logger(PatientsService.name);
+
   constructor(
     private prisma: PrismaService,
     private storageService: StorageService,
@@ -64,82 +67,52 @@ export class PatientsService {
               status: 'active',
               startDate: new Date(),
               consultationReason: 'Initial evaluation',
-              evaluations: {
+              evaluation: {
                 create: {
                   clinicId: clinicId ?? null,
                   date: new Date(),
-                  type: 'INITIAL',
                   posturogram: {},
                   orthopedicTests: {},
-                  avdEvaluation: {},
-                  painScale: {},
-                  diagnosis: {},
-                },
-              },
-              treatmentPlan: {
-                create: {
-                  clinicId: clinicId ?? null,
-                  objectives: {},
-                  phases: [
-                    {
-                      number: 1,
-                      name: 'Inicial',
-                      durationWeeks: 3,
-                      techniques: [
-                        'Movilizaciones',
-                        'Crioterapia',
-                        'Masaje descontracturante',
-                      ],
-                      objectives:
-                        'Alivio del dolor y reducción de contracturas',
+                  avdEvaluation: {
+                    barthel: {
+                      feeding: 0,
+                      bathing: 0,
+                      grooming: 0,
+                      dressing: 0,
+                      bowels: 0,
+                      bladder: 0,
+                      toiletUse: 0,
+                      transfers: 0,
+                      mobility: 0,
+                      stairs: 0,
+                      total: 0,
+                      interpretation: '',
                     },
-                    {
-                      number: 2,
-                      name: 'Temprana Intermedia',
-                      durationWeeks: 3,
-                      techniques: [
-                        'Estiramientos suaves',
-                        'Movilidad articular',
-                        'Termoterapia',
-                      ],
-                      objectives: 'Iniciar estiramientos y mejorar movilidad',
+                    lawton: {
+                      phoneUse: 0,
+                      shopping: 0,
+                      foodPreparation: 0,
+                      housekeeping: 0,
+                      laundry: 0,
+                      transportation: 0,
+                      medication: 0,
+                      finances: 0,
+                      total: 0,
+                      interpretation: '',
                     },
-                    {
-                      number: 3,
-                      name: 'Intermedia',
-                      durationWeeks: 3,
-                      techniques: [
-                        'Estiramientos progresivos',
-                        'Fortalecimiento isométrico',
-                        'Propiocepción',
-                      ],
-                      objectives: 'Ganancia de flexibilidad y estabilidad',
-                    },
-                    {
-                      number: 4,
-                      name: 'Tardía Intermedia',
-                      durationWeeks: 3,
-                      techniques: [
-                        'Ejercicios terapéuticos',
-                        'Fortalecimiento isotónico',
-                        'Trabajo funcional',
-                      ],
-                      objectives:
-                        'Fortalecimiento muscular y ejercicios terapéuticos',
-                    },
-                    {
-                      number: 5,
-                      name: 'Avanzada',
-                      durationWeeks: 3,
-                      techniques: [
-                        'Fortalecimiento funcional',
-                        'Ejercicios pliométricos',
-                        'Retorno a actividades',
-                      ],
-                      objectives:
-                        'Fortalecimiento funcional y preparación para alta',
-                    },
-                  ],
+                  },
+                  painScale: {
+                    activity: 0,
+                    rest: 0,
+                    palpation: 0,
+                    type: 'chronic',
+                  },
+                  diagnosis: {
+                    functionalIndicator: '',
+                    clinicalAspect: '',
+                    anatomopathology: '',
+                    avdConsequences: '',
+                  },
                 },
               },
             },
@@ -148,7 +121,7 @@ export class PatientsService {
         include: {
           clinicalCases: {
             include: {
-              evaluations: true,
+              evaluation: true,
               treatmentPlan: true,
             },
           },
@@ -196,7 +169,7 @@ export class PatientsService {
                   photos: true,
                 },
               },
-              evaluations: {
+              evaluation: {
                 include: {
                   footprints: true,
                   postureVideos: true,
@@ -241,7 +214,7 @@ export class PatientsService {
       include: {
         clinicalCases: {
           include: {
-            evaluations: {
+            evaluation: {
               include: {
                 footprints: true,
                 postureVideos: true,
@@ -279,58 +252,72 @@ export class PatientsService {
     if (!patient.clinicalCases) return patient;
 
     for (const clinicalCase of patient.clinicalCases) {
-      // Hydrate Evaluations
-      if (clinicalCase.evaluations) {
-        for (const evaluation of clinicalCase.evaluations) {
-          // Voice Notes
-          if (
-            evaluation.voiceNotes &&
-            Array.isArray(evaluation.voiceNotes) &&
-            evaluation.voiceNotes.length > 0
-          ) {
-            evaluation.voiceNotes = await Promise.all(
-              evaluation.voiceNotes.map(async (note: any) => {
-                if (note.createdAt && !note.date) {
-                  note.date = note.createdAt;
-                }
-                if (note.audioUrl && !note.audioUrl.startsWith('http')) {
-                  try {
-                    note.audioUrl = await this.storageService.getFileUrl(
-                      note.audioUrl,
-                    );
-                  } catch {
-                    // Ignore signing errors
-                  }
-                }
-                return note;
-              }),
-            );
-          }
-
-          // Footprints
-          if (evaluation.footprints) {
-            for (const footprint of evaluation.footprints) {
-              if (footprint.url && !footprint.url.startsWith('http')) {
+      if (clinicalCase.evaluation) {
+        const evaluation = clinicalCase.evaluation;
+        // Voice Notes
+        if (
+          evaluation.voiceNotes &&
+          Array.isArray(evaluation.voiceNotes) &&
+          evaluation.voiceNotes.length > 0
+        ) {
+          evaluation.voiceNotes = await Promise.all(
+            evaluation.voiceNotes.map(async (note: any) => {
+              if (note.createdAt && !note.date) {
+                note.date = note.createdAt;
+              }
+              if (note.audioUrl && !note.audioUrl.startsWith('http')) {
                 try {
-                  footprint.url = await this.storageService.getFileUrl(
-                    footprint.url,
+                  note.audioUrl = await this.storageService.getFileUrl(
+                    note.audioUrl,
                   );
-                } catch {
-                  // Ignore signing errors
+                } catch (error) {
+                  this.logger.warn(
+                    `Failed to sign evaluation voice note id=${note.id ?? 'unknown'} key=${note.audioUrl}`,
+                  );
+                  this.logger.debug(error);
                 }
+              } else if (note.audioUrl && note.audioUrl.startsWith('http')) {
+                try {
+                  const normalizedKey = this.storageService.toStorageKey(
+                    note.audioUrl,
+                  );
+                  note.audioUrl =
+                    await this.storageService.getFileUrl(normalizedKey);
+                } catch (error) {
+                  this.logger.warn(
+                    `Failed to normalize/sign evaluation voice note id=${note.id ?? 'unknown'} url=${note.audioUrl}`,
+                  );
+                  this.logger.debug(error);
+                }
+              }
+              return note;
+            }),
+          );
+        }
+
+        // Footprints
+        if (evaluation.footprints) {
+          for (const footprint of evaluation.footprints) {
+            if (footprint.url && !footprint.url.startsWith('http')) {
+              try {
+                footprint.url = await this.storageService.getFileUrl(
+                  footprint.url,
+                );
+              } catch {
+                // Ignore signing errors
               }
             }
           }
+        }
 
-          // Posture Videos
-          if (evaluation.postureVideos) {
-            for (const video of evaluation.postureVideos) {
-              if (video.url && !video.url.startsWith('http')) {
-                try {
-                  video.url = await this.storageService.getFileUrl(video.url);
-                } catch {
-                  // Ignore signing errors
-                }
+        // Posture Videos
+        if (evaluation.postureVideos) {
+          for (const video of evaluation.postureVideos) {
+            if (video.url && !video.url.startsWith('http')) {
+              try {
+                video.url = await this.storageService.getFileUrl(video.url);
+              } catch {
+                // Ignore signing errors
               }
             }
           }
@@ -356,8 +343,24 @@ export class PatientsService {
                     note.audioUrl = await this.storageService.getFileUrl(
                       note.audioUrl,
                     );
-                  } catch {
-                    // Ignore signing errors
+                  } catch (error) {
+                    this.logger.warn(
+                      `Failed to sign session voice note id=${note.id ?? 'unknown'} key=${note.audioUrl}`,
+                    );
+                    this.logger.debug(error);
+                  }
+                } else if (note.audioUrl && note.audioUrl.startsWith('http')) {
+                  try {
+                    const normalizedKey = this.storageService.toStorageKey(
+                      note.audioUrl,
+                    );
+                    note.audioUrl =
+                      await this.storageService.getFileUrl(normalizedKey);
+                  } catch (error) {
+                    this.logger.warn(
+                      `Failed to normalize/sign session voice note id=${note.id ?? 'unknown'} url=${note.audioUrl}`,
+                    );
+                    this.logger.debug(error);
                   }
                 }
                 return note;

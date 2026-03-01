@@ -44,6 +44,8 @@ describe('AiAnalysis Persistence', () => {
           useValue: {
             aiAnalysis: {
               create: jest.fn().mockResolvedValue({ id: 'persisted-id' }),
+              findFirst: jest.fn(),
+              findUnique: jest.fn(),
             },
           },
         },
@@ -111,10 +113,17 @@ describe('AiAnalysis Persistence', () => {
       data: expect.objectContaining({
         clinicalCaseId,
         therapistId,
-        result: expect.any(Object),
+        result: expect.objectContaining({
+          metadata: expect.objectContaining({
+            rawModelResponse: expect.any(String),
+          }),
+        }),
       }),
     });
     expect(result.metadata.analysisId).toBe('persisted-id');
+    expect(
+      (result.metadata as { rawModelResponse?: string }).rawModelResponse,
+    ).toBeUndefined();
   });
 
   it('2.2 should not fail analysis if persistence fails', async () => {
@@ -128,5 +137,200 @@ describe('AiAnalysis Persistence', () => {
 
     expect(result).toBeDefined();
     expect(result.metadata.analysisId).toBeUndefined();
+  });
+
+  it('2.3 should return latest analysis when found', async () => {
+    ((prisma as any).aiAnalysis.findFirst as jest.Mock).mockResolvedValue({
+      id: 'analysis-latest',
+      result: {
+        ...mockAnalysisResult,
+        metadata: {
+          ...mockAnalysisResult.metadata,
+          rawModelResponse: '{"mock":true}',
+        },
+      },
+      clinicalCase: {
+        patient: {
+          therapistId: 'therapist-123',
+          clinicId: 'clinic-123',
+        },
+      },
+    });
+
+    const result = await service.getLatestAnalysis('case-123', 'therapist-123');
+
+    expect((prisma as any).aiAnalysis.findFirst).toHaveBeenCalled();
+    expect(result.metadata.analysisId).toBe('analysis-latest');
+    expect(
+      (result.metadata as { rawModelResponse?: string }).rawModelResponse,
+    ).toBeUndefined();
+  });
+
+  it('2.4 should throw not found when latest analysis does not exist', async () => {
+    ((prisma as any).aiAnalysis.findFirst as jest.Mock).mockResolvedValue(null);
+
+    await expect(
+      service.getLatestAnalysis('case-404', 'therapist-123'),
+    ).rejects.toThrow('Analysis not found');
+  });
+
+  it('should return raw model response for owned analysis', async () => {
+    ((prisma as any).aiAnalysis.findUnique as jest.Mock).mockResolvedValue({
+      id: 'analysis-raw-1',
+      createdAt: new Date('2026-02-28T00:00:00.000Z'),
+      result: {
+        ...mockAnalysisResult,
+        metadata: {
+          ...mockAnalysisResult.metadata,
+          rawModelResponse: '{"debug":true}',
+        },
+      },
+      clinicalCase: {
+        patient: {
+          therapistId: 'therapist-123',
+          clinicId: 'clinic-123',
+        },
+      },
+    });
+
+    const response = await service.getRawModelResponse(
+      'analysis-raw-1',
+      'therapist-123',
+      'CLINIC_OWNER',
+      'clinic-123',
+    );
+
+    expect(response.analysisId).toBe('analysis-raw-1');
+    expect(response.rawModelResponse).toBe('{"debug":true}');
+    expect(response.isRedacted).toBe(true);
+  });
+
+  it('should return null raw response when not present', async () => {
+    ((prisma as any).aiAnalysis.findUnique as jest.Mock).mockResolvedValue({
+      id: 'analysis-raw-2',
+      createdAt: new Date('2026-02-28T00:00:00.000Z'),
+      result: {
+        ...mockAnalysisResult,
+        metadata: {
+          ...mockAnalysisResult.metadata,
+        },
+      },
+      clinicalCase: {
+        patient: {
+          therapistId: 'therapist-123',
+          clinicId: 'clinic-123',
+        },
+      },
+    });
+
+    const response = await service.getRawModelResponse(
+      'analysis-raw-2',
+      'therapist-123',
+      'CLINIC_OWNER',
+      'clinic-123',
+    );
+
+    expect(response.rawModelResponse).toBeNull();
+    expect(response.isRedacted).toBe(true);
+  });
+
+  it('should throw forbidden for raw response when analysis belongs to another therapist', async () => {
+    ((prisma as any).aiAnalysis.findUnique as jest.Mock).mockResolvedValue({
+      id: 'analysis-raw-3',
+      createdAt: new Date('2026-02-28T00:00:00.000Z'),
+      result: {
+        ...mockAnalysisResult,
+      },
+      clinicalCase: {
+        patient: {
+          therapistId: 'other-therapist',
+          clinicId: null,
+        },
+      },
+    });
+
+    await expect(
+      service.getRawModelResponse(
+        'analysis-raw-3',
+        'therapist-123',
+        'CLINIC_OWNER',
+      ),
+    ).rejects.toThrow('You do not have access to this analysis');
+  });
+
+  it('should allow admin to access raw response across clinics', async () => {
+    ((prisma as any).aiAnalysis.findUnique as jest.Mock).mockResolvedValue({
+      id: 'analysis-raw-4',
+      createdAt: new Date('2026-02-28T00:00:00.000Z'),
+      result: {
+        ...mockAnalysisResult,
+        metadata: {
+          ...mockAnalysisResult.metadata,
+          rawModelResponse: '{"adminView":true}',
+        },
+      },
+      clinicalCase: {
+        patient: {
+          therapistId: 'another-therapist',
+          clinicId: 'other-clinic',
+        },
+      },
+    });
+
+    const response = await service.getRawModelResponse(
+      'analysis-raw-4',
+      'admin-user',
+      'ADMIN',
+      null,
+      true,
+    );
+
+    expect(response.rawModelResponse).toBe('{"adminView":true}');
+    expect(response.isRedacted).toBe(false);
+  });
+
+  it('should redact sensitive data by default in raw response', async () => {
+    ((prisma as any).aiAnalysis.findUnique as jest.Mock).mockResolvedValue({
+      id: 'analysis-raw-5',
+      createdAt: new Date('2026-02-28T00:00:00.000Z'),
+      result: {
+        ...mockAnalysisResult,
+        metadata: {
+          ...mockAnalysisResult.metadata,
+          rawModelResponse:
+            'Contact test@example.com phone +356 9912 3456 token eyJabc.def.ghi',
+        },
+      },
+      clinicalCase: {
+        patient: {
+          therapistId: 'therapist-123',
+          clinicId: 'clinic-123',
+        },
+      },
+    });
+
+    const response = await service.getRawModelResponse(
+      'analysis-raw-5',
+      'owner-123',
+      'CLINIC_OWNER',
+      'clinic-123',
+      false,
+    );
+
+    expect(response.rawModelResponse).toContain('[REDACTED_EMAIL]');
+    expect(response.rawModelResponse).toContain('[REDACTED_PHONE]');
+    expect(response.rawModelResponse).toContain('[REDACTED_TOKEN]');
+  });
+
+  it('should reject therapist role for raw response endpoint', async () => {
+    await expect(
+      service.getRawModelResponse(
+        'analysis-raw-6',
+        'therapist-123',
+        'THERAPIST',
+      ),
+    ).rejects.toThrow(
+      'Only clinic owners or admins can access raw AI responses',
+    );
   });
 });

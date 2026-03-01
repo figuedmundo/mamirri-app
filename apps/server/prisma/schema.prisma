@@ -122,7 +122,7 @@ model ClinicalCase {
   status                  String
   title                   String
   patient                 Patient            @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  evaluations             Evaluation[]
+  evaluation              Evaluation?
   insoles                 Insole[]
   treatmentPlan           TreatmentPlan?
   treatmentSessions       TreatmentSession[]
@@ -135,7 +135,7 @@ model ClinicalCase {
 
 model Evaluation {
   id              String         @id @default(cuid())
-  clinicalCaseId  String
+  clinicalCaseId  String         @unique
   clinicId        String?
   avdEvaluation   Json
   date            DateTime
@@ -144,7 +144,6 @@ model Evaluation {
   painScale       Json
   posturogram     Json
   voiceNotes      Json?
-  type            String
   clinicalCase    ClinicalCase   @relation(fields: [clinicalCaseId], references: [id], onDelete: Cascade)
   footprints      Footprint[]
   postureVideos   PostureVideo[]

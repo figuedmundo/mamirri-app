@@ -16,10 +16,32 @@ import { CohereClientV2 } from 'cohere-ai';
 import { withRetry } from '../transcription/utils/retry';
 import {
   AnalysisResult,
+  ConfidenceJustification,
   RagChunk,
   Citation,
+  DifferentialDiagnosisItem,
+  FollowUpQuestion,
+  RedFlag,
+  Suggestion,
 } from './interfaces/analysis.interfaces';
 import { CaseDataAggregate } from './interfaces/aggregation.interfaces';
+import { ROLES, type Role } from '../../common/constants/roles';
+
+type StoredAnalysisResult = AnalysisResult & {
+  metadata?: AnalysisResult['metadata'] & { rawModelResponse?: string };
+};
+
+type OwnedAnalysisRecord = {
+  id: string;
+  createdAt: Date;
+  result: unknown;
+  clinicalCase: {
+    patient: {
+      therapistId: string;
+      clinicId: string | null;
+    };
+  };
+};
 
 @Injectable()
 export class AiAnalysisService {
@@ -117,9 +139,14 @@ export class AiAnalysisService {
       ragChunks,
       caseData.visionFindings,
       caseData.voiceTranscripts,
+      caseData.soapDecomposition,
     );
 
     const llmResponse = await this.callLlm(systemPrompt, userPrompt);
+
+    this.logger.debug(
+      `Raw LLM response received (${llmResponse.length} chars): ${llmResponse.slice(0, 600)}`,
+    );
 
     const parsedResult = this.parseResponse(llmResponse);
 
@@ -151,12 +178,20 @@ export class AiAnalysisService {
 
     let analysisId: string | undefined;
     try {
+      const resultForPersistence = {
+        ...resultWithoutId,
+        metadata: {
+          ...resultWithoutId.metadata,
+          rawModelResponse: llmResponse,
+        },
+      };
+
       const persisted = await (this.prisma as any).aiAnalysis.create({
         data: {
           clinicalCaseId,
           therapistId,
           clinicId: clinicId ?? null,
-          result: resultWithoutId as any,
+          result: resultForPersistence as any,
         },
       });
       analysisId = persisted.id;
@@ -170,6 +205,111 @@ export class AiAnalysisService {
         ...resultWithoutId.metadata,
         analysisId,
       },
+    };
+  }
+
+  async getLatestAnalysis(
+    clinicalCaseId: string,
+    therapistId: string,
+    clinicId?: string | null,
+  ): Promise<AnalysisResult> {
+    const latest = (await (this.prisma as any).aiAnalysis.findFirst({
+      where: {
+        clinicalCaseId,
+      },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        clinicalCase: {
+          include: {
+            patient: true,
+          },
+        },
+      },
+    })) as OwnedAnalysisRecord | null;
+
+    if (!latest) {
+      throw new NotFoundException('Analysis not found');
+    }
+
+    this.assertAnalysisAccess(latest, therapistId, clinicId, {
+      notFoundMessage: 'Analysis not found',
+      forbiddenMessage: 'You do not have access to this clinical case',
+    });
+
+    const result = latest.result as StoredAnalysisResult;
+
+    const sanitizedMetadata = {
+      ...(result.metadata || {}),
+    } as AnalysisResult['metadata'] & {
+      rawModelResponse?: string;
+    };
+    delete sanitizedMetadata.rawModelResponse;
+
+    return {
+      ...result,
+      metadata: {
+        ...sanitizedMetadata,
+        analysisId: result.metadata?.analysisId ?? latest.id,
+      },
+    };
+  }
+
+  async getRawModelResponse(
+    analysisId: string,
+    therapistId: string,
+    userRole: Role,
+    clinicId?: string | null,
+    includeSensitive = false,
+  ): Promise<{
+    analysisId: string;
+    rawModelResponse: string | null;
+    createdAt: Date;
+    isRedacted: boolean;
+  }> {
+    if (userRole !== ROLES.ADMIN && userRole !== ROLES.CLINIC_OWNER) {
+      throw new ForbiddenException(
+        'Only clinic owners or admins can access raw AI responses',
+      );
+    }
+
+    const analysis = await this.getOwnedAnalysisRecord(
+      analysisId,
+      therapistId,
+      clinicId,
+      {
+        notFoundMessage: 'Analysis not found',
+        forbiddenMessage: 'You do not have access to this analysis',
+      },
+      {
+        allowClinicOwner: userRole === ROLES.CLINIC_OWNER,
+        allowAdmin: userRole === ROLES.ADMIN,
+      },
+    );
+
+    const result = analysis.result as StoredAnalysisResult;
+    const rawModelResponse =
+      typeof result.metadata?.rawModelResponse === 'string'
+        ? result.metadata.rawModelResponse
+        : null;
+    const responseText =
+      rawModelResponse && !includeSensitive
+        ? this.redactRawModelResponse(rawModelResponse)
+        : rawModelResponse;
+
+    this.logRawResponseAccess({
+      analysisId,
+      accessorUserId: therapistId,
+      role: userRole,
+      includeSensitive,
+      hasPayload: responseText !== null,
+      payloadLength: responseText?.length ?? 0,
+    });
+
+    return {
+      analysisId: analysis.id,
+      rawModelResponse: responseText,
+      createdAt: analysis.createdAt,
+      isRedacted: !includeSensitive,
     };
   }
 
@@ -246,7 +386,20 @@ export class AiAnalysisService {
     therapistId: string,
     clinicId?: string | null,
   ) {
-    const analysis = await (this.prisma as any).aiAnalysis.findUnique({
+    await this.getOwnedAnalysisRecord(analysisId, therapistId, clinicId, {
+      notFoundMessage: 'Analysis not found',
+      forbiddenMessage: 'You do not have access to this analysis',
+    });
+  }
+
+  private async getOwnedAnalysisRecord(
+    analysisId: string,
+    therapistId: string,
+    clinicId: string | null | undefined,
+    messages: { notFoundMessage: string; forbiddenMessage: string },
+    permissions: { allowClinicOwner?: boolean; allowAdmin?: boolean } = {},
+  ): Promise<OwnedAnalysisRecord> {
+    const analysis = (await (this.prisma as any).aiAnalysis.findUnique({
       where: { id: analysisId },
       include: {
         clinicalCase: {
@@ -255,19 +408,77 @@ export class AiAnalysisService {
           },
         },
       },
-    });
+    })) as OwnedAnalysisRecord | null;
 
+    this.assertAnalysisAccess(
+      analysis,
+      therapistId,
+      clinicId,
+      messages,
+      permissions,
+    );
+
+    return analysis;
+  }
+
+  private assertAnalysisAccess(
+    analysis: OwnedAnalysisRecord | null,
+    therapistId: string,
+    clinicId: string | null | undefined,
+    messages: { notFoundMessage: string; forbiddenMessage: string },
+    permissions: { allowClinicOwner?: boolean; allowAdmin?: boolean } = {},
+  ): asserts analysis is OwnedAnalysisRecord {
     if (!analysis) {
-      throw new NotFoundException('Analysis not found');
+      throw new NotFoundException(messages.notFoundMessage);
+    }
+
+    if (permissions.allowAdmin) {
+      return;
+    }
+
+    if (permissions.allowClinicOwner) {
+      if (!clinicId || analysis.clinicalCase.patient.clinicId !== clinicId) {
+        throw new ForbiddenException(messages.forbiddenMessage);
+      }
+      return;
     }
 
     if (analysis.clinicalCase.patient.therapistId !== therapistId) {
-      throw new ForbiddenException('You do not have access to this analysis');
+      throw new ForbiddenException(messages.forbiddenMessage);
     }
 
     if (clinicId && analysis.clinicalCase.patient.clinicId !== clinicId) {
-      throw new ForbiddenException('You do not have access to this analysis');
+      throw new ForbiddenException(messages.forbiddenMessage);
     }
+  }
+
+  private redactRawModelResponse(value: string): string {
+    return value
+      .replace(
+        /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi,
+        '[REDACTED_EMAIL]',
+      )
+      .replace(/\+?\d[\d()\-\s]{6,}\d/g, '[REDACTED_PHONE]')
+      .replace(
+        /\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g,
+        '[REDACTED_TOKEN]',
+      );
+  }
+
+  private logRawResponseAccess(entry: {
+    analysisId: string;
+    accessorUserId: string;
+    role: Role;
+    includeSensitive: boolean;
+    hasPayload: boolean;
+    payloadLength: number;
+  }): void {
+    this.logger.log(
+      `AUDIT_RAW_RESPONSE_READ ${JSON.stringify({
+        ...entry,
+        timestamp: new Date().toISOString(),
+      })}`,
+    );
   }
 
   private async rerankChunks(
@@ -419,7 +630,7 @@ export class AiAnalysisService {
       // NEW: Rerank deduplicated results
       // Build a combined query for reranking
       const combinedQuery = `${finalDiagnosisQuery} ${finalTreatmentQuery}`;
-      const reranked = await this.rerankChunks(combinedQuery, deduplicated, 8);
+      const reranked = await this.rerankChunks(combinedQuery, deduplicated, 5);
 
       this.logger.debug(
         `After reranking: ${reranked.length} chunks (top relevance: ${reranked[0]?.relevanceScore?.toFixed(3) || 'N/A'})`,
@@ -529,26 +740,33 @@ export class AiAnalysisService {
 
   private parseResponse(llmResponse: string): AnalysisResult {
     try {
-      const jsonMatch = llmResponse.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
+      const parsed = this.extractJsonObject(llmResponse);
+      if (!parsed) {
         throw new Error('No JSON found in LLM response');
       }
 
-      const parsed = JSON.parse(jsonMatch[0]);
-
       return {
-        primarySuggestion: parsed.primarySuggestion || {
+        summary:
+          typeof parsed.summary === 'string' && parsed.summary.trim().length > 0
+            ? parsed.summary
+            : undefined,
+        primarySuggestion: this.normalizeSuggestion(parsed.primarySuggestion, {
           title: 'Sin recomendación',
           description: 'No se pudo generar una recomendación',
-          confidence: 'LOW',
-        },
-        alternatives: parsed.alternatives || [],
-        citations: parsed.citations || [],
-        reasoning: parsed.reasoning || {
-          step1_understanding: '',
-          step2_literature: '',
-          step3_synthesis: '',
-        },
+        }),
+        alternatives: this.normalizeAlternatives(parsed.alternatives),
+        followUpQuestions: this.normalizeFollowUpQuestions(
+          parsed.followUpQuestions,
+        ),
+        redFlags: this.normalizeRedFlags(parsed.redFlags),
+        differentialDiagnosis: this.normalizeDifferentialDiagnosis(
+          parsed.differentialDiagnosis,
+        ),
+        confidenceJustification: this.normalizeConfidenceJustification(
+          parsed.confidenceJustification,
+        ),
+        citations: this.normalizeCitations(parsed.citations),
+        reasoning: this.normalizeReasoning(parsed.reasoning),
         metadata: {
           queryTokens: 0,
           responseTokens: 0,
@@ -561,6 +779,181 @@ export class AiAnalysisService {
       this.logger.error(`Failed to parse LLM response: ${error.message}`);
       return this.getDefaultResult();
     }
+  }
+
+  private extractJsonObject(
+    llmResponse: string,
+  ): Record<string, unknown> | null {
+    const candidates: string[] = [];
+    const trimmed = llmResponse.trim();
+    if (trimmed.length > 0) {
+      candidates.push(trimmed);
+    }
+
+    const markdownMatches = llmResponse.matchAll(
+      /```(?:json)?\s*([\s\S]*?)\s*```/gi,
+    );
+    for (const match of markdownMatches) {
+      if (match[1]) {
+        candidates.push(match[1].trim());
+      }
+    }
+
+    const balancedSlices = this.extractBalancedJsonSlices(llmResponse);
+    candidates.push(...balancedSlices);
+
+    for (const candidate of candidates) {
+      if (!candidate) continue;
+
+      try {
+        const parsed = JSON.parse(candidate);
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          return parsed as Record<string, unknown>;
+        }
+      } catch {
+        continue;
+      }
+    }
+
+    return null;
+  }
+
+  private extractBalancedJsonSlices(text: string): string[] {
+    const slices: string[] = [];
+    let start = -1;
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+
+      if (inString) {
+        if (escaped) {
+          escaped = false;
+        } else if (char === '\\') {
+          escaped = true;
+        } else if (char === '"') {
+          inString = false;
+        }
+        continue;
+      }
+
+      if (char === '"') {
+        inString = true;
+        continue;
+      }
+
+      if (char === '{') {
+        if (depth === 0) {
+          start = i;
+        }
+        depth += 1;
+      } else if (char === '}') {
+        if (depth > 0) {
+          depth -= 1;
+          if (depth === 0 && start >= 0) {
+            slices.push(text.slice(start, i + 1));
+            start = -1;
+          }
+        }
+      }
+    }
+
+    return slices;
+  }
+
+  private normalizeSuggestion(
+    value: unknown,
+    fallback: { title: string; description: string },
+  ): Suggestion {
+    const payload =
+      value && typeof value === 'object'
+        ? (value as Record<string, unknown>)
+        : {};
+
+    const title =
+      this.coerceString(payload.title, fallback.title).trim() || fallback.title;
+    const description =
+      this.coerceString(payload.description, fallback.description).trim() ||
+      fallback.description;
+    const confidence = this.normalizeConfidence(
+      this.coerceString(payload.confidence, 'LOW') || 'LOW',
+    );
+    const reasoning = this.coerceString(payload.reasoning).trim();
+
+    return {
+      title,
+      description,
+      confidence,
+      ...(reasoning.length > 0 ? { reasoning } : {}),
+    };
+  }
+
+  private normalizeAlternatives(value: unknown): Suggestion[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter(
+        (item): item is Record<string, unknown> =>
+          !!item && typeof item === 'object',
+      )
+      .map((item) =>
+        this.normalizeSuggestion(item, {
+          title: 'Alternativa clínica',
+          description:
+            'No se proporcionó una descripción para esta alternativa.',
+        }),
+      )
+      .filter((item) => item.title.length > 0 && item.description.length > 0);
+  }
+
+  private normalizeCitations(value: unknown): Citation[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter(
+        (item): item is Record<string, unknown> =>
+          !!item && typeof item === 'object',
+      )
+      .map((item) => ({
+        quote: this.coerceString(item.quote).trim(),
+        quoteOriginal:
+          typeof item.quoteOriginal === 'string'
+            ? item.quoteOriginal.trim() || undefined
+            : undefined,
+        documentTitle: this.coerceString(item.documentTitle).trim(),
+        author: this.coerceString(item.author).trim(),
+        pageNumber:
+          typeof item.pageNumber === 'number' &&
+          Number.isFinite(item.pageNumber)
+            ? item.pageNumber
+            : undefined,
+        relevance:
+          typeof item.relevance === 'number' && Number.isFinite(item.relevance)
+            ? item.relevance
+            : 0,
+      }))
+      .filter((citation) => citation.quote.length > 0);
+  }
+
+  private normalizeReasoning(value: unknown): AnalysisResult['reasoning'] {
+    const payload =
+      value && typeof value === 'object'
+        ? (value as Record<string, unknown>)
+        : {};
+
+    return {
+      step1_understanding: this.coerceString(
+        payload.step1_understanding,
+      ).trim(),
+      step2_literature: this.coerceString(payload.step2_literature).trim(),
+      step3_synthesis: this.coerceString(payload.step3_synthesis).trim(),
+    };
   }
 
   private rehydrateResult(
@@ -603,6 +996,54 @@ export class AiAnalysisService {
 
     return {
       ...result,
+      summary: result.summary
+        ? this.anonymizerService.rehydrate(result.summary, mapping)
+        : undefined,
+      followUpQuestions: result.followUpQuestions?.map((question) => ({
+        ...question,
+        question: this.anonymizerService.rehydrate(question.question, mapping),
+        reason: this.anonymizerService.rehydrate(question.reason, mapping),
+      })),
+      redFlags: result.redFlags?.map((flag) => ({
+        ...flag,
+        flag: this.anonymizerService.rehydrate(flag.flag, mapping),
+        recommendedAction: this.anonymizerService.rehydrate(
+          flag.recommendedAction,
+          mapping,
+        ),
+      })),
+      differentialDiagnosis: result.differentialDiagnosis?.map((diagnosis) => ({
+        ...diagnosis,
+        condition: this.anonymizerService.rehydrate(
+          diagnosis.condition,
+          mapping,
+        ),
+        supportingEvidence: this.anonymizerService.rehydrate(
+          diagnosis.supportingEvidence,
+          mapping,
+        ),
+        contradictingEvidence: this.anonymizerService.rehydrate(
+          diagnosis.contradictingEvidence,
+          mapping,
+        ),
+      })),
+      confidenceJustification: result.confidenceJustification
+        ? {
+            ...result.confidenceJustification,
+            literatureSupport: this.anonymizerService.rehydrate(
+              result.confidenceJustification.literatureSupport,
+              mapping,
+            ),
+            clinicalAlignment: this.anonymizerService.rehydrate(
+              result.confidenceJustification.clinicalAlignment,
+              mapping,
+            ),
+            limitingFactors:
+              result.confidenceJustification.limitingFactors?.map((factor) =>
+                this.anonymizerService.rehydrate(factor, mapping),
+              ) || [],
+          }
+        : undefined,
       primarySuggestion: rehydratedPrimary,
       alternatives: rehydratedAlternatives,
       reasoning: rehydratedReasoning,
@@ -636,11 +1077,20 @@ export class AiAnalysisService {
 
   private getDefaultResult(): AnalysisResult {
     return {
+      summary: 'No se pudo generar un resumen clínico.',
       primarySuggestion: {
         title: 'Análisis no disponible',
         description:
           'El servicio de análisis no está disponible en este momento. Por favor, intente más tarde.',
         confidence: 'LOW',
+      },
+      followUpQuestions: [],
+      redFlags: [],
+      differentialDiagnosis: [],
+      confidenceJustification: {
+        literatureSupport: 'Sin soporte suficiente',
+        clinicalAlignment: 'Alineación clínica no evaluable',
+        limitingFactors: ['Servicio no disponible'],
       },
       alternatives: [],
       citations: [],
@@ -668,6 +1118,8 @@ export class AiAnalysisService {
 
   private getMockResponse(): string {
     return JSON.stringify({
+      summary:
+        'Paciente con presentación compatible con fascitis plantar. Se prioriza manejo conservador con seguimiento clínico estrecho.',
       primarySuggestion: {
         title: 'Tratamiento conservador para fascitis plantar',
         description:
@@ -684,6 +1136,27 @@ export class AiAnalysisService {
           confidence: 'MEDIUM',
         },
       ],
+      followUpQuestions: [
+        {
+          question: '¿Se evaluó la primera pisada matutina y su intensidad?',
+          reason: 'Ayuda a confirmar patrón típico de fascitis plantar.',
+          soapSection: 'SUBJETIVO',
+        },
+      ],
+      redFlags: [],
+      differentialDiagnosis: [
+        {
+          condition: 'Neuropatía del nervio tibial posterior',
+          supportingEvidence: 'Dolor plantar persistente.',
+          contradictingEvidence:
+            'No hay síntomas neurológicos claros en el caso presentado.',
+        },
+      ],
+      confidenceJustification: {
+        literatureSupport: 'Soporte moderado con fuentes concordantes.',
+        clinicalAlignment: 'Alta alineación con clínica reportada.',
+        limitingFactors: ['Falta de pruebas complementarias funcionales.'],
+      },
       citations: [
         {
           quote:
@@ -703,5 +1176,109 @@ export class AiAnalysisService {
           'Se recomienda iniciar con un programa de estiramientos y terapia manual, evaluando la respuesta a las 6 semanas.',
       },
     });
+  }
+
+  private normalizeFollowUpQuestions(value: unknown): FollowUpQuestion[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter(
+        (item): item is Record<string, unknown> =>
+          !!item && typeof item === 'object',
+      )
+      .map((item) => ({
+        question: this.coerceString(item.question),
+        reason: this.coerceString(item.reason),
+        soapSection: this.normalizeSoapSection(item.soapSection),
+      }))
+      .filter((item) => item.question.length > 0);
+  }
+
+  private normalizeRedFlags(value: unknown): RedFlag[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter(
+        (item): item is Record<string, unknown> =>
+          !!item && typeof item === 'object',
+      )
+      .map((item) => ({
+        flag: this.coerceString(item.flag),
+        urgency: this.normalizeConfidence(
+          this.coerceString(item.urgency, 'LOW') || 'LOW',
+        ),
+        recommendedAction: this.coerceString(item.recommendedAction),
+      }))
+      .filter((item) => item.flag.length > 0);
+  }
+
+  private normalizeDifferentialDiagnosis(
+    value: unknown,
+  ): DifferentialDiagnosisItem[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter(
+        (item): item is Record<string, unknown> =>
+          !!item && typeof item === 'object',
+      )
+      .map((item) => ({
+        condition: this.coerceString(item.condition),
+        supportingEvidence: this.coerceString(item.supportingEvidence),
+        contradictingEvidence: this.coerceString(item.contradictingEvidence),
+      }))
+      .filter((item) => item.condition.length > 0);
+  }
+
+  private normalizeConfidenceJustification(
+    value: unknown,
+  ): ConfidenceJustification | undefined {
+    if (!value || typeof value !== 'object') {
+      return undefined;
+    }
+
+    const payload = value as Record<string, unknown>;
+
+    return {
+      literatureSupport: this.coerceString(payload.literatureSupport),
+      clinicalAlignment: this.coerceString(payload.clinicalAlignment),
+      limitingFactors: Array.isArray(payload.limitingFactors)
+        ? payload.limitingFactors.map((factor) => String(factor))
+        : [],
+    };
+  }
+
+  private normalizeSoapSection(
+    value: unknown,
+  ): 'SUBJETIVO' | 'OBJETIVO' | 'ANALISIS' | 'PLAN' | 'GENERAL' {
+    const raw = this.coerceString(value, 'GENERAL').toUpperCase();
+    if (raw === 'SUBJETIVO') return 'SUBJETIVO';
+    if (raw === 'OBJETIVO') return 'OBJETIVO';
+    if (raw === 'ANALISIS') return 'ANALISIS';
+    if (raw === 'PLAN') return 'PLAN';
+    return 'GENERAL';
+  }
+
+  private normalizeConfidence(value: string): 'HIGH' | 'MEDIUM' | 'LOW' {
+    const normalized = value.toUpperCase().trim();
+    if (normalized === 'HIGH') return 'HIGH';
+    if (normalized === 'MEDIUM') return 'MEDIUM';
+    return 'LOW';
+  }
+
+  private coerceString(value: unknown, fallback = ''): string {
+    if (typeof value === 'string') {
+      return value;
+    }
+    if (typeof value === 'number' || typeof value === 'boolean') {
+      return String(value);
+    }
+    return fallback;
   }
 }

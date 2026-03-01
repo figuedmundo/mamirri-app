@@ -91,6 +91,8 @@ export class StorageService implements OnModuleInit {
       },
       region: 'us-east-1',
       forcePathStyle: true,
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     });
 
     if (config.publicEndpoint) {
@@ -107,6 +109,8 @@ export class StorageService implements OnModuleInit {
         },
         region: 'us-east-1',
         forcePathStyle: true,
+        requestChecksumCalculation: 'WHEN_REQUIRED',
+        responseChecksumValidation: 'WHEN_REQUIRED',
       });
     } else {
       this.logger.warn(
@@ -210,23 +214,90 @@ export class StorageService implements OnModuleInit {
   }
 
   async getFileUrl(path: string, expiry: number = 3600): Promise<string> {
+    const storageKey = this.toStorageKey(path);
     const command = new GetObjectCommand({
       Bucket: storageConfig().bucket,
-      Key: path,
+      Key: storageKey,
     });
 
     try {
       const url = await getSignedUrl(this.signingClient, command, {
         expiresIn: expiry,
       });
-      this.logger.debug(`Generated signed URL for ${path}: ${url}`);
+
+      const hasChecksumMode = /[?&]x-amz-checksum-mode=/i.test(url);
+      const logSafeUrl = this.sanitizeSignedUrlForLogs(url);
+      this.logger.debug(
+        `Generated signed URL metadata for key=${storageKey} hasChecksumMode=${hasChecksumMode} url=${logSafeUrl}`,
+      );
+
+      if (hasChecksumMode) {
+        this.logger.warn(
+          `Signed URL for key=${storageKey} includes checksum mode query. Falling back to direct object URL for MinIO compatibility.`,
+        );
+        return this.buildDirectObjectUrl(storageKey);
+      }
+
       return url;
     } catch (error) {
       if (this.isNotFoundError(error)) {
         throw new NotFoundException('File not found');
       }
-      this.logger.error(`Failed to generate URL for: ${path}`, error);
+      this.logger.error(`Failed to generate URL for key=${storageKey}`, error);
       throw new InternalServerErrorException('Failed to generate file URL');
+    }
+  }
+
+  toStorageKey(pathOrUrl: string): string {
+    if (!pathOrUrl || !pathOrUrl.startsWith('http')) {
+      return pathOrUrl;
+    }
+
+    try {
+      const url = new URL(pathOrUrl);
+      const parts = url.pathname
+        .split('/')
+        .filter((segment) => segment.length > 0);
+      const bucket = storageConfig().bucket;
+
+      if (parts.length >= 2 && parts[0] === bucket) {
+        return parts
+          .slice(1)
+          .map((segment) => decodeURIComponent(segment))
+          .join('/');
+      }
+
+      return parts.map((segment) => decodeURIComponent(segment)).join('/');
+    } catch {
+      return pathOrUrl;
+    }
+  }
+
+  private buildDirectObjectUrl(path: string): string {
+    const config = storageConfig();
+
+    const endpoint = config.publicEndpoint
+      ? config.publicEndpoint.includes('://')
+        ? config.publicEndpoint
+        : `http${config.useSSL ? 's' : ''}://${config.publicEndpoint}`
+      : `http${config.useSSL ? 's' : ''}://${config.endpoint}:${config.port}`;
+
+    const normalizedEndpoint = endpoint.replace(/\/+$/, '');
+    const encodedPath = path
+      .split('/')
+      .filter((segment) => segment.length > 0)
+      .map((segment) => encodeURIComponent(segment))
+      .join('/');
+
+    return `${normalizedEndpoint}/${config.bucket}/${encodedPath}`;
+  }
+
+  private sanitizeSignedUrlForLogs(rawUrl: string): string {
+    try {
+      const parsed = new URL(rawUrl);
+      return `${parsed.origin}${parsed.pathname}`;
+    } catch {
+      return 'invalid-url';
     }
   }
 

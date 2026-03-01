@@ -18,7 +18,7 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('${')) {
     .replace('${POSTGRES_DB}', process.env.POSTGRES_DB || '');
 }
 
-describe('Evaluation Integration (1:N Relation)', () => {
+describe('Evaluation Integration (1:1 Relation)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -47,7 +47,7 @@ describe('Evaluation Integration (1:N Relation)', () => {
     }
   });
 
-  it('should allow multiple evaluations for a single clinical case', async () => {
+  it('should allow one evaluation for a single clinical case', async () => {
     const therapist = await prisma.user.create({
       data: {
         email: `therapist-eval-${Date.now()}@example.com`,
@@ -77,10 +77,9 @@ describe('Evaluation Integration (1:N Relation)', () => {
       },
     });
 
-    const eval1 = await prisma.evaluation.create({
+    const evaluation = await prisma.evaluation.create({
       data: {
         date: new Date(),
-        type: 'INITIAL',
         posturogram: {},
         orthopedicTests: {},
         avdEvaluation: {},
@@ -89,33 +88,16 @@ describe('Evaluation Integration (1:N Relation)', () => {
         clinicalCaseId: clinicalCase.id,
       },
     });
-
-    const eval2 = await prisma.evaluation.create({
-      data: {
-        date: new Date(),
-        type: 'FINAL',
-        posturogram: {},
-        orthopedicTests: {},
-        avdEvaluation: {},
-        painScale: { level: 2, location: 'knee' },
-        diagnosis: { code: 'M25.5' },
-        clinicalCaseId: clinicalCase.id,
-      },
-    });
-
-    expect(eval1).toBeDefined();
-    expect(eval2).toBeDefined();
-    expect(eval1.id).not.toBe(eval2.id);
-    expect(eval1.clinicalCaseId).toBe(clinicalCase.id);
-    expect(eval2.clinicalCaseId).toBe(clinicalCase.id);
+    expect(evaluation).toBeDefined();
+    expect(evaluation.clinicalCaseId).toBe(clinicalCase.id);
 
     const caseWithEvals = await prisma.clinicalCase.findUnique({
       where: { id: clinicalCase.id },
-      include: { evaluations: true },
+      include: { evaluation: true },
     });
 
     expect(caseWithEvals).toBeDefined();
-    expect(caseWithEvals?.evaluations).toHaveLength(2);
+    expect(caseWithEvals?.evaluation).toBeDefined();
 
     await prisma.evaluation.deleteMany({
       where: { clinicalCaseId: clinicalCase.id },

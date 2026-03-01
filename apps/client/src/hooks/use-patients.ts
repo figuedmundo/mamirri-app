@@ -183,24 +183,12 @@ export function useDeleteSession() {
 
 export function useUpdateEvaluation() {
   const queryClient = useQueryClient();
-  const { toast } = useToast();
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateEvaluationDto }) =>
       patientsApi.updateEvaluation(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.patients.lists() });
-      toast({
-        title: 'Éxito',
-        description: 'Evaluación actualizada correctamente',
-      });
-    },
-    onError: () => {
-      toast({
-        title: 'Error',
-        description: 'No se pudo actualizar la evaluación',
-        variant: 'destructive',
-      });
+      queryClient.invalidateQueries({ queryKey: queryKeys.patients.all });
     },
   });
 }

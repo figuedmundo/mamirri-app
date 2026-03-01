@@ -30,6 +30,10 @@ vi.mock('../../lib/pdf/generateComparisonReport', () => ({
   generateComparisonReport: vi.fn(),
 }));
 
+vi.mock('@/hooks/use-ai-analysis', () => ({
+  useLatestAnalysisQuery: () => ({ data: null }),
+}));
+
 const renderWithQuery = (ui: React.ReactElement) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -72,7 +76,6 @@ const mockCase: ClinicalCase = {
       id: 'e1',
       clinicalCaseId: 'c1',
       date: '2025-01-10',
-      type: 'INITIAL',
       posturogram: {},
       orthopedicTests: {
         thomas: { result: 'negative', interpretation: '' },

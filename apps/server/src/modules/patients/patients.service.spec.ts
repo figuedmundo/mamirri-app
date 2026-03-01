@@ -48,6 +48,7 @@ describe('PatientsService', () => {
           provide: StorageService,
           useValue: {
             getFileUrl: jest.fn(),
+            toStorageKey: jest.fn((value) => value),
           },
         },
       ],

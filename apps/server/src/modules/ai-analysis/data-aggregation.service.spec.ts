@@ -217,4 +217,38 @@ describe('DataAggregationService', () => {
       result.voiceTranscripts.find((v) => v.source === 'SESSION')?.transcript,
     ).toBe('Session note');
   });
+
+  it('should decompose SOAP data from latest evaluation diagnosis', async () => {
+    mockPrismaService.clinicalCase.findUnique.mockResolvedValue({
+      id: 'case-1',
+      patient: { therapistId: 'therapist-1' },
+    });
+
+    mockPrismaService.evaluation.findMany.mockResolvedValue([
+      {
+        id: 'eval-latest',
+        date: mockDate,
+        diagnosis: {
+          subjective: 'Dolor matutino plantar',
+          objective: 'Dolor a la palpación medial calcánea',
+          analysis: 'Compatible con fascitis plantar',
+          plan: 'Estiramientos y descarga progresiva',
+        },
+        posturogram: {},
+        footprints: [],
+        voiceNotes: [],
+      },
+    ]);
+
+    mockPrismaService.treatmentSession.findMany.mockResolvedValue([]);
+
+    const result = await service.aggregateCaseData('case-1', 'therapist-1');
+
+    expect(result.soapDecomposition).toEqual({
+      subjective: 'Dolor matutino plantar',
+      objective: 'Dolor a la palpación medial calcánea',
+      analysis: 'Compatible con fascitis plantar',
+      plan: 'Estiramientos y descarga progresiva',
+    });
+  });
 });
