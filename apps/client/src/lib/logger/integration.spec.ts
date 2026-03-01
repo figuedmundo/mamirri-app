@@ -71,6 +71,39 @@ describe('Frontend Integration', () => {
     );
   });
 
+  it('should avoid error logs for expected latest-analysis 404', async () => {
+    const instance = axios.create();
+    setupInterceptors(instance);
+
+    instance.defaults.adapter = async (config) => {
+      throw {
+        response: {
+          status: 404,
+          data: { message: 'Analysis not found' },
+          headers: {},
+        },
+        message: 'Request failed with status code 404',
+        config: { ...config, url: '/ai/cases/case-123/analyses/latest' },
+        isAxiosError: true,
+      };
+    };
+
+    try {
+      await instance.get('/ai/cases/case-123/analyses/latest');
+    } catch {
+      // Expected
+    }
+
+    expect(logger.error).not.toHaveBeenCalled();
+    expect(logger.info).toHaveBeenCalledWith(
+      expect.stringContaining('latest analysis not found (expected)'),
+      expect.objectContaining({
+        status: 404,
+        url: '/ai/cases/case-123/analyses/latest',
+      }),
+    );
+  });
+
   it('should send logs to backend aggregation endpoint', async () => {
     const testLogger = new Logger({
       level: LogLevel.DEBUG,
