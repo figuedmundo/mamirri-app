@@ -6,6 +6,7 @@ import {
   usePatientsQuery,
   usePatientQuery,
   useCreatePatient,
+  useCreateCase,
   useUpdatePatient,
   useDeletePatient,
 } from './use-patients';
@@ -130,6 +131,62 @@ describe('use-patients', () => {
       expect(invalidateSpy).toHaveBeenCalledWith({
         queryKey: ['patients', 'list'],
       });
+    });
+  });
+
+  describe('useCreateCase', () => {
+    it('creates case and invalidates list and detail queries', async () => {
+      const createdCase = {
+        id: 'case-1',
+        patientId: '1',
+        title: 'Dolor de hombro',
+        status: 'active',
+        startDate: '2026-03-01',
+        consultationReason: 'Dolor en rotacion externa',
+      };
+
+      vi.mocked(patientsApi.createCase).mockResolvedValue(createdCase as never);
+
+      const queryClient = createQueryClient();
+      const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+
+      const { result } = renderHook(() => useCreateCase(), {
+        wrapper: createWrapper(queryClient),
+      });
+
+      await result.current.mutateAsync({
+        patientId: '1',
+        title: 'Dolor de hombro',
+        consultationReason: 'Dolor en rotacion externa',
+      });
+
+      expect(patientsApi.createCase).toHaveBeenCalledWith({
+        patientId: '1',
+        title: 'Dolor de hombro',
+        consultationReason: 'Dolor en rotacion externa',
+      });
+      expect(invalidateSpy).toHaveBeenCalledWith({
+        queryKey: ['patients', 'list'],
+      });
+      expect(invalidateSpy).toHaveBeenCalledWith({
+        queryKey: ['patients', 'detail', '1'],
+      });
+    });
+
+    it('returns error state when create case fails', async () => {
+      vi.mocked(patientsApi.createCase).mockRejectedValue(new Error('boom'));
+
+      const queryClient = createQueryClient();
+      const { result } = renderHook(() => useCreateCase(), {
+        wrapper: createWrapper(queryClient),
+      });
+
+      await expect(
+        result.current.mutateAsync({
+          patientId: '1',
+          title: 'x',
+        }),
+      ).rejects.toThrow('boom');
     });
   });
 

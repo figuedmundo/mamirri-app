@@ -1,6 +1,7 @@
 import axios from '../lib/axios';
 import type {
   Patient,
+  ClinicalCase,
   Evaluation,
   TreatmentSession,
   TreatmentPlan,
@@ -30,6 +31,12 @@ export interface CreateTreatmentSessionDto {
   patientResponse: string;
   finalPainLevel: number;
   observations?: string;
+}
+
+export interface CreateClinicalCaseDto {
+  patientId: string;
+  title: string;
+  consultationReason?: string;
 }
 
 export interface UpdateTreatmentSessionDto {
@@ -146,6 +153,11 @@ export const patientsApi = {
   create: async (data: CreatePatientDto) => {
     const response = await axios.post<Patient>('/patients', data);
     return mapPatient(response.data);
+  },
+
+  createCase: async (data: CreateClinicalCaseDto) => {
+    const response = await axios.post<ClinicalCase>('/cases', data);
+    return response.data;
   },
 
   update: async (id: string, data: Partial<CreatePatientDto>) => {
