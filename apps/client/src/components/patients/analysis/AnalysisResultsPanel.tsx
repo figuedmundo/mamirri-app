@@ -34,9 +34,11 @@ export function AnalysisResultsPanel({
   onClose,
   canViewRawResponseDebug = false,
 }: AnalysisResultsPanelProps) {
-  const { feedbacks, submitFeedback, removeFeedback } = useSuggestionFeedback(
-    analysisResult?.metadata.analysisId,
-  );
+  const metadata = analysisResult?.metadata;
+  const analysisId = metadata?.analysisId;
+
+  const { feedbacks, submitFeedback, removeFeedback } =
+    useSuggestionFeedback(analysisId);
 
   if (!analysisResult) return null;
 
@@ -58,9 +60,7 @@ export function AnalysisResultsPanel({
         <DialogHeader className="p-6 border-b border-slate-200 dark:border-slate-800">
           <div className="flex justify-between items-center mr-8">
             <DialogTitle>Análisis Clínico IA</DialogTitle>
-            <ServiceStatusIndicator
-              status={analysisResult.metadata.serviceStatus}
-            />
+            <ServiceStatusIndicator status={metadata?.serviceStatus} />
           </div>
           <DialogDescription>
             Resultados basados en {analysisResult.citations.length} fuentes
@@ -68,20 +68,19 @@ export function AnalysisResultsPanel({
           </DialogDescription>
         </DialogHeader>
 
-        {analysisResult.metadata.warnings &&
-          analysisResult.metadata.warnings.length > 0 && (
-            <div className="px-6 py-3 space-y-2">
-              {analysisResult.metadata.warnings.map((warning, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-2 p-2 text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200 rounded-md dark:bg-amber-950/30 dark:text-amber-200 dark:border-amber-800"
-                >
-                  <AlertTriangle size={14} className="shrink-0" />
-                  <span>{warning}</span>
-                </div>
-              ))}
-            </div>
-          )}
+        {metadata?.warnings && metadata.warnings.length > 0 && (
+          <div className="px-6 py-3 space-y-2">
+            {metadata.warnings.map((warning, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-2 p-2 text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200 rounded-md dark:bg-amber-950/30 dark:text-amber-200 dark:border-amber-800"
+              >
+                <AlertTriangle size={14} className="shrink-0" />
+                <span>{warning}</span>
+              </div>
+            ))}
+          </div>
+        )}
 
         <ScrollArea className="flex-1 p-6">
           <SummarySection summary={analysisResult.summary} />
@@ -102,7 +101,7 @@ export function AnalysisResultsPanel({
           <SuggestionCard
             suggestion={analysisResult.primarySuggestion}
             type="primary"
-            analysisId={analysisResult.metadata.analysisId}
+            analysisId={analysisId}
             suggestionIndex={0}
             feedback={feedbacks.get(0)}
             onFeedbackChange={(isPositive, comment) =>
@@ -121,7 +120,7 @@ export function AnalysisResultsPanel({
                 <SuggestionCard
                   key={i}
                   suggestion={alt}
-                  analysisId={analysisResult.metadata.analysisId}
+                  analysisId={analysisId}
                   suggestionIndex={i + 1}
                   feedback={feedbacks.get(i + 1)}
                   onFeedbackChange={(isPositive, comment) =>
@@ -135,7 +134,7 @@ export function AnalysisResultsPanel({
           <CitationsSection citations={analysisResult.citations} />
 
           <RawResponseDebugSection
-            analysisId={analysisResult.metadata.analysisId}
+            analysisId={analysisId}
             isVisible={canViewRawResponseDebug}
           />
 

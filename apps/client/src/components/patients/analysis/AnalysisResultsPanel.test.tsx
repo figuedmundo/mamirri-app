@@ -210,6 +210,24 @@ describe('AnalysisResultsPanel', () => {
     expect(screen.queryByText('Warning 1')).not.toBeInTheDocument();
   });
 
+  it('renders safely when metadata is missing', () => {
+    const resultWithoutMetadata = {
+      ...mockResult,
+      metadata: undefined,
+    } as unknown as AnalysisResult;
+
+    render(
+      <AnalysisResultsPanel
+        analysisResult={resultWithoutMetadata}
+        isOpen={true}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText('Análisis Clínico IA')).toBeInTheDocument();
+    expect(screen.getByText('Primary')).toBeInTheDocument();
+  });
+
   it('hides red flags section when none are provided', () => {
     const resultWithoutFlags: AnalysisResult = {
       ...mockResult,
