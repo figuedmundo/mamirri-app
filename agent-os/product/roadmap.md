@@ -202,6 +202,7 @@ Methodology: Agile Development (1-week Sprints).
 - [x] 9.11 Pacient flow evaluation
 - [x] 9.12 Evaluation SOAP
 - [x] 9.13 Pacient AI analysis refinment
+- [x] 9.14 Pacient can have many cases
 
 **🎯 Milestone 5:** "Mother used it with a real patient without asking for help"
 
