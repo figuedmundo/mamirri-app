@@ -71,6 +71,55 @@ interface PatientFormProps {
   onCancel: () => void;
 }
 
+const normalizeTextField = (
+  value: FormDataEntryValue | null,
+): string | undefined => {
+  if (typeof value !== 'string') return undefined;
+  return value.trim();
+};
+
+const normalizePhoneField = (
+  value: FormDataEntryValue | null,
+): string | undefined => {
+  if (typeof value !== 'string') return undefined;
+  return value.replace(/\s+/g, '').trim();
+};
+
+const buildSubmissionData = (
+  formElement: HTMLFormElement,
+  currentData: PatientFormData,
+): PatientFormData => {
+  const raw = new FormData(formElement);
+
+  const name = normalizeTextField(raw.get('name'));
+  const occupation = normalizeTextField(raw.get('occupation'));
+  const phone = normalizePhoneField(raw.get('phone'));
+  const email = normalizeTextField(raw.get('email'));
+  const previousOccupation = normalizeTextField(raw.get('previousOccupation'));
+  const emergencyName = normalizeTextField(raw.get('emergencyContact.name'));
+  const emergencyPhone = normalizePhoneField(raw.get('emergencyContact.phone'));
+  const medicalFlagsOther = normalizeTextField(raw.get('medicalFlagsOther'));
+  const referralSourceDetails = normalizeTextField(
+    raw.get('referralSourceDetails'),
+  );
+
+  return {
+    ...currentData,
+    name: name ?? currentData.name,
+    occupation: occupation ?? currentData.occupation,
+    phone: phone ?? currentData.phone,
+    email: email ?? currentData.email,
+    previousOccupation: previousOccupation ?? currentData.previousOccupation,
+    emergencyContact: {
+      name: emergencyName ?? currentData.emergencyContact.name,
+      phone: emergencyPhone ?? currentData.emergencyContact.phone,
+    },
+    medicalFlagsOther: medicalFlagsOther ?? currentData.medicalFlagsOther,
+    referralSourceDetails:
+      referralSourceDetails ?? currentData.referralSourceDetails,
+  };
+};
+
 const calculateAge = (birthDate: string): number => {
   if (!birthDate) return 0;
   const today = new Date();
@@ -156,6 +205,15 @@ export function PatientForm({
         [field]: value,
       },
     }));
+
+    const errorKey = `emergencyContact.${field}`;
+    if (errors[errorKey]) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[errorKey];
+        return next;
+      });
+    }
   };
 
   const handleFlagToggle = (flag: string) => {
@@ -168,10 +226,12 @@ export function PatientForm({
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const result = patientSchema.safeParse(formData);
+    const payload = buildSubmissionData(e.currentTarget, formData);
+
+    const result = patientSchema.safeParse(payload);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
@@ -181,6 +241,8 @@ export function PatientForm({
       setErrors(fieldErrors);
       return;
     }
+
+    setErrors({});
 
     try {
       setIsSubmitting(true);
@@ -218,6 +280,8 @@ export function PatientForm({
                 </Label>
                 <Input
                   id="name"
+                  name="name"
+                  autoComplete="name"
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
                   placeholder="Ej: Juan Pérez"
@@ -281,6 +345,8 @@ export function PatientForm({
                 </Label>
                 <Input
                   id="occupation"
+                  name="occupation"
+                  autoComplete="organization-title"
                   value={formData.occupation}
                   onChange={(e) => handleChange('occupation', e.target.value)}
                   placeholder="Ej: Ingeniero"
@@ -305,6 +371,9 @@ export function PatientForm({
                 </Label>
                 <Input
                   id="phone"
+                  name="phone"
+                  autoComplete="tel"
+                  inputMode="tel"
                   value={formData.phone}
                   onChange={(e) => handleChange('phone', e.target.value)}
                   placeholder="Ej: 600 000 000"
@@ -321,7 +390,9 @@ export function PatientForm({
                 </Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
+                  autoComplete="email"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
                   placeholder="paciente@ejemplo.com"
@@ -338,6 +409,8 @@ export function PatientForm({
                 </Label>
                 <Input
                   id="ec-name"
+                  name="emergencyContact.name"
+                  autoComplete="section-emergency name"
                   value={formData.emergencyContact.name}
                   onChange={(e) =>
                     handleEmergencyChange('name', e.target.value)
@@ -361,6 +434,9 @@ export function PatientForm({
                 </Label>
                 <Input
                   id="ec-phone"
+                  name="emergencyContact.phone"
+                  autoComplete="section-emergency tel"
+                  inputMode="tel"
                   value={formData.emergencyContact.phone}
                   onChange={(e) =>
                     handleEmergencyChange('phone', e.target.value)
@@ -418,6 +494,7 @@ export function PatientForm({
                     </Label>
                     <Input
                       id="medicalFlagsOther"
+                      name="medicalFlagsOther"
                       value={formData.medicalFlagsOther}
                       onChange={(e) =>
                         handleChange('medicalFlagsOther', e.target.value)
@@ -473,6 +550,7 @@ export function PatientForm({
                     </Label>
                     <Input
                       id="referralSourceDetails"
+                      name="referralSourceDetails"
                       value={formData.referralSourceDetails}
                       onChange={(e) =>
                         handleChange('referralSourceDetails', e.target.value)
