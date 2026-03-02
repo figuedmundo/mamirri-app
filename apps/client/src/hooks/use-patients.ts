@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { patientsApi } from '../api/patients';
 import type {
+  CreateClinicalCaseDto,
   CreatePatientDto,
   CreateTreatmentSessionDto,
   UpdateEvaluationDto,
@@ -42,6 +43,32 @@ export function useCreatePatient() {
       toast({
         title: 'Error',
         description: 'No se pudo crear el paciente',
+        variant: 'destructive',
+      });
+    },
+  });
+}
+
+export function useCreateCase() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: (data: CreateClinicalCaseDto) => patientsApi.createCase(data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.patients.lists() });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.patients.detail(variables.patientId),
+      });
+      toast({
+        title: 'Exito',
+        description: 'Caso clinico creado correctamente',
+      });
+    },
+    onError: () => {
+      toast({
+        title: 'Error',
+        description: 'No se pudo crear el caso clinico',
         variant: 'destructive',
       });
     },

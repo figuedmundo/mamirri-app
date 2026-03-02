@@ -194,6 +194,30 @@ const mockPatient: Patient = {
   ],
 };
 
+const mockPatientWithManyCases: Patient = {
+  ...mockPatient,
+  clinicalCases: [
+    mockPatient.clinicalCases[0],
+    {
+      ...mockPatient.clinicalCases[0],
+      id: 'c2',
+      title: 'Recuperacion de tobillo',
+      status: 'completed',
+      consultationReason: 'Esguince previo',
+      endDate: '2025-02-20',
+      treatmentSessions: [],
+    },
+    {
+      ...mockPatient.clinicalCases[0],
+      id: 'c3',
+      title: 'Control postural',
+      status: 'inactive',
+      consultationReason: 'Seguimiento preventivo',
+      treatmentSessions: [],
+    },
+  ],
+};
+
 describe('PatientProfile', () => {
   it('renders patient name and status badge', () => {
     render(<PatientProfile patient={mockPatient} />);
@@ -324,5 +348,54 @@ describe('PatientProfile', () => {
     fireEvent.click(caseCard!);
 
     expect(onViewCase).toHaveBeenCalledWith('c1');
+  });
+
+  it('renders active cases first and collapsed completed/inactive summaries', () => {
+    render(<PatientProfile patient={mockPatientWithManyCases} />);
+
+    expect(screen.getByText('Dolor Lumbar Cronico')).toBeInTheDocument();
+    expect(screen.getByText('Recuperacion de tobillo')).toBeInTheDocument();
+    expect(screen.getByText('Control postural')).toBeInTheDocument();
+    expect(screen.getByText('Completado')).toBeInTheDocument();
+    expect(screen.getByText('Inactivo')).toBeInTheDocument();
+  });
+
+  it('expands a collapsed case when clicked', () => {
+    render(<PatientProfile patient={mockPatientWithManyCases} />);
+
+    const collapsed = screen.getByRole('button', {
+      name: /Recuperacion de tobillo/i,
+    });
+    fireEvent.click(collapsed);
+
+    expect(
+      screen.getAllByText('Recuperacion de tobillo').length,
+    ).toBeGreaterThan(0);
+  });
+
+  it('shows Nuevo Caso button in header and empty state when callback exists', () => {
+    const onCreateCase = vi.fn();
+
+    const { rerender } = render(
+      <PatientProfile
+        patient={mockPatientWithManyCases}
+        onCreateCase={onCreateCase}
+      />,
+    );
+
+    fireEvent.click(screen.getAllByRole('button', { name: /Nuevo Caso/i })[0]);
+    expect(onCreateCase).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <PatientProfile
+        patient={{ ...mockPatientWithManyCases, clinicalCases: [] }}
+        onCreateCase={onCreateCase}
+      />,
+    );
+
+    const buttons = screen.getAllByRole('button', { name: /Nuevo Caso/i });
+    expect(buttons).toHaveLength(2);
+    fireEvent.click(buttons[1]);
+    expect(onCreateCase).toHaveBeenCalledTimes(2);
   });
 });
