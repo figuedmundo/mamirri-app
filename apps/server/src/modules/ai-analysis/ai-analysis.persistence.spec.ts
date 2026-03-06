@@ -75,8 +75,8 @@ describe('AiAnalysis Persistence', () => {
         {
           provide: PromptBuilderService,
           useValue: {
-            buildSystemPrompt: jest.fn(),
-            buildUserPrompt: jest.fn(),
+            buildSystemPrompt: jest.fn().mockReturnValue('mock-system-prompt'),
+            buildUserPrompt: jest.fn().mockReturnValue('mock-user-prompt'),
             buildDiagnosisQuery: jest.fn(),
             buildTreatmentQuery: jest.fn(),
             buildContraindicationsQuery: jest.fn(),
@@ -119,6 +119,8 @@ describe('AiAnalysis Persistence', () => {
         result: expect.objectContaining({
           metadata: expect.objectContaining({
             rawModelResponse: expect.any(String),
+            systemPrompt: 'mock-system-prompt',
+            userPrompt: 'mock-user-prompt',
           }),
         }),
       }),
@@ -158,6 +160,8 @@ describe('AiAnalysis Persistence', () => {
         metadata: {
           ...mockAnalysisResult.metadata,
           rawModelResponse: '{"mock":true}',
+          systemPrompt: 'stored-system-prompt',
+          userPrompt: 'stored-user-prompt',
         },
       },
     });
@@ -172,6 +176,12 @@ describe('AiAnalysis Persistence', () => {
     expect(result.metadata.analysisId).toBe('analysis-latest');
     expect(
       (result.metadata as { rawModelResponse?: string }).rawModelResponse,
+    ).toBeUndefined();
+    expect(
+      (result.metadata as { systemPrompt?: string }).systemPrompt,
+    ).toBeUndefined();
+    expect(
+      (result.metadata as { userPrompt?: string }).userPrompt,
     ).toBeUndefined();
   });
 
@@ -223,6 +233,8 @@ describe('AiAnalysis Persistence', () => {
         metadata: {
           ...mockAnalysisResult.metadata,
           rawModelResponse: '{"debug":true}',
+          systemPrompt: 'You are a clinical assistant',
+          userPrompt: 'Analyze this case: test@example.com',
         },
       },
       clinicalCase: {
@@ -242,6 +254,8 @@ describe('AiAnalysis Persistence', () => {
 
     expect(response.analysisId).toBe('analysis-raw-1');
     expect(response.rawModelResponse).toBe('{"debug":true}');
+    expect(response.systemPrompt).toBe('You are a clinical assistant');
+    expect(response.userPrompt).toContain('[REDACTED_EMAIL]');
     expect(response.isRedacted).toBe(true);
   });
 
@@ -271,6 +285,8 @@ describe('AiAnalysis Persistence', () => {
     );
 
     expect(response.rawModelResponse).toBeNull();
+    expect(response.systemPrompt).toBeNull();
+    expect(response.userPrompt).toBeNull();
     expect(response.isRedacted).toBe(true);
   });
 
@@ -307,6 +323,8 @@ describe('AiAnalysis Persistence', () => {
         metadata: {
           ...mockAnalysisResult.metadata,
           rawModelResponse: '{"adminView":true}',
+          systemPrompt: 'admin-system-prompt',
+          userPrompt: 'admin-user-prompt',
         },
       },
       clinicalCase: {
@@ -326,6 +344,8 @@ describe('AiAnalysis Persistence', () => {
     );
 
     expect(response.rawModelResponse).toBe('{"adminView":true}');
+    expect(response.systemPrompt).toBe('admin-system-prompt');
+    expect(response.userPrompt).toBe('admin-user-prompt');
     expect(response.isRedacted).toBe(false);
   });
 
@@ -339,6 +359,10 @@ describe('AiAnalysis Persistence', () => {
           ...mockAnalysisResult.metadata,
           rawModelResponse:
             'Contact test@example.com phone +356 9912 3456 token eyJabc.def.ghi',
+          systemPrompt:
+            'System prompt with email admin@clinic.com',
+          userPrompt:
+            'User prompt with phone +356 7777 8888',
         },
       },
       clinicalCase: {
@@ -360,6 +384,8 @@ describe('AiAnalysis Persistence', () => {
     expect(response.rawModelResponse).toContain('[REDACTED_EMAIL]');
     expect(response.rawModelResponse).toContain('[REDACTED_PHONE]');
     expect(response.rawModelResponse).toContain('[REDACTED_TOKEN]');
+    expect(response.systemPrompt).toContain('[REDACTED_EMAIL]');
+    expect(response.userPrompt).toContain('[REDACTED_PHONE]');
   });
 
   it('should reject therapist role for raw response endpoint', async () => {

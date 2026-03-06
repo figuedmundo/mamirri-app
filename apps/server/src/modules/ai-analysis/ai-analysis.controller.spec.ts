@@ -240,6 +240,8 @@ describe('AiAnalysisController', () => {
       service.getRawModelResponse.mockResolvedValue({
         analysisId: 'analysis-123',
         rawModelResponse: '{"primarySuggestion":{"title":"Test"}}',
+        systemPrompt: 'You are a clinical assistant',
+        userPrompt: 'Analyze case data...',
         createdAt: new Date('2026-02-28T00:00:00.000Z'),
         isRedacted: true,
       });
@@ -255,6 +257,8 @@ describe('AiAnalysisController', () => {
 
       expect(result.analysisId).toBe('analysis-123');
       expect(result.rawModelResponse).toContain('primarySuggestion');
+      expect(result.systemPrompt).toBe('You are a clinical assistant');
+      expect(result.userPrompt).toBe('Analyze case data...');
       expect(result.isRedacted).toBe(true);
       expect(service.getRawModelResponse).toHaveBeenCalledWith(
         'analysis-123',
@@ -269,6 +273,8 @@ describe('AiAnalysisController', () => {
       service.getRawModelResponse.mockResolvedValue({
         analysisId: 'analysis-123',
         rawModelResponse: '{"private":true}',
+        systemPrompt: 'system prompt',
+        userPrompt: 'user prompt',
         createdAt: new Date('2026-02-28T00:00:00.000Z'),
         isRedacted: false,
       });

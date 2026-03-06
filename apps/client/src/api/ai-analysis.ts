@@ -13,6 +13,8 @@ export interface Feedback {
 export interface RawAnalysisResponse {
   analysisId: string;
   rawModelResponse: string | null;
+  systemPrompt: string | null;
+  userPrompt: string | null;
   createdAt: string;
   isRedacted: boolean;
 }

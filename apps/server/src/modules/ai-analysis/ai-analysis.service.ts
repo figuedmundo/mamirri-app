@@ -28,7 +28,11 @@ import { CaseDataAggregate } from './interfaces/aggregation.interfaces';
 import { ROLES, type Role } from '../../common/constants/roles';
 
 type StoredAnalysisResult = AnalysisResult & {
-  metadata?: AnalysisResult['metadata'] & { rawModelResponse?: string };
+  metadata?: AnalysisResult['metadata'] & {
+    rawModelResponse?: string;
+    systemPrompt?: string;
+    userPrompt?: string;
+  };
 };
 
 type OwnedAnalysisRecord = {
@@ -191,6 +195,8 @@ export class AiAnalysisService {
         metadata: {
           ...resultWithoutId.metadata,
           rawModelResponse: llmResponse,
+          systemPrompt,
+          userPrompt,
         },
       };
 
@@ -261,8 +267,12 @@ export class AiAnalysisService {
       ...(result.metadata || {}),
     } as AnalysisResult['metadata'] & {
       rawModelResponse?: string;
+      systemPrompt?: string;
+      userPrompt?: string;
     };
     delete sanitizedMetadata.rawModelResponse;
+    delete sanitizedMetadata.systemPrompt;
+    delete sanitizedMetadata.userPrompt;
 
     return {
       ...result,
@@ -282,6 +292,8 @@ export class AiAnalysisService {
   ): Promise<{
     analysisId: string;
     rawModelResponse: string | null;
+    systemPrompt: string | null;
+    userPrompt: string | null;
     createdAt: Date;
     isRedacted: boolean;
   }> {
@@ -310,10 +322,27 @@ export class AiAnalysisService {
       typeof result.metadata?.rawModelResponse === 'string'
         ? result.metadata.rawModelResponse
         : null;
+    const storedSystemPrompt =
+      typeof result.metadata?.systemPrompt === 'string'
+        ? result.metadata.systemPrompt
+        : null;
+    const storedUserPrompt =
+      typeof result.metadata?.userPrompt === 'string'
+        ? result.metadata.userPrompt
+        : null;
+
     const responseText =
       rawModelResponse && !includeSensitive
         ? this.redactRawModelResponse(rawModelResponse)
         : rawModelResponse;
+    const systemPromptText =
+      storedSystemPrompt && !includeSensitive
+        ? this.redactRawModelResponse(storedSystemPrompt)
+        : storedSystemPrompt;
+    const userPromptText =
+      storedUserPrompt && !includeSensitive
+        ? this.redactRawModelResponse(storedUserPrompt)
+        : storedUserPrompt;
 
     this.logRawResponseAccess({
       analysisId,
@@ -327,6 +356,8 @@ export class AiAnalysisService {
     return {
       analysisId: analysis.id,
       rawModelResponse: responseText,
+      systemPrompt: systemPromptText,
+      userPrompt: userPromptText,
       createdAt: analysis.createdAt,
       isRedacted: !includeSensitive,
     };
