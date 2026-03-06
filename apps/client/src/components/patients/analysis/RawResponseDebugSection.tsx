@@ -14,6 +14,8 @@ export function RawResponseDebugSection({
   const [isLoading, setIsLoading] = useState(false);
   const [isSensitiveView, setIsSensitiveView] = useState(false);
   const [responseText, setResponseText] = useState<string | null>(null);
+  const [systemPrompt, setSystemPrompt] = useState<string | null>(null);
+  const [userPrompt, setUserPrompt] = useState<string | null>(null);
   const [isRedacted, setIsRedacted] = useState<boolean>(true);
 
   if (!isVisible || !analysisId) {
@@ -28,6 +30,8 @@ export function RawResponseDebugSection({
         includeSensitive,
       );
       setResponseText(response.rawModelResponse);
+      setSystemPrompt(response.systemPrompt);
+      setUserPrompt(response.userPrompt);
       setIsRedacted(response.isRedacted);
       setIsSensitiveView(includeSensitive);
     } finally {
@@ -72,9 +76,37 @@ export function RawResponseDebugSection({
           <p className="mt-3 text-xs text-slate-600 dark:text-slate-400">
             Modo actual: {isRedacted ? 'redactado' : 'sensible'}
           </p>
-          <pre className="mt-2 max-h-60 overflow-auto rounded-md bg-slate-900 p-3 text-xs text-slate-100">
-            {responseText || '(sin contenido raw)'}
-          </pre>
+
+          {systemPrompt && (
+            <div className="mt-3">
+              <h4 className="text-xs font-semibold text-amber-800 dark:text-amber-300">
+                System Prompt
+              </h4>
+              <pre className="mt-1 max-h-48 overflow-auto rounded-md bg-slate-900 p-3 text-xs text-slate-100">
+                {systemPrompt}
+              </pre>
+            </div>
+          )}
+
+          {userPrompt && (
+            <div className="mt-3">
+              <h4 className="text-xs font-semibold text-amber-800 dark:text-amber-300">
+                User Prompt
+              </h4>
+              <pre className="mt-1 max-h-48 overflow-auto rounded-md bg-slate-900 p-3 text-xs text-slate-100">
+                {userPrompt}
+              </pre>
+            </div>
+          )}
+
+          <div className="mt-3">
+            <h4 className="text-xs font-semibold text-amber-800 dark:text-amber-300">
+              Respuesta LLM
+            </h4>
+            <pre className="mt-1 max-h-60 overflow-auto rounded-md bg-slate-900 p-3 text-xs text-slate-100">
+              {responseText || '(sin contenido raw)'}
+            </pre>
+          </div>
         </>
       )}
     </div>

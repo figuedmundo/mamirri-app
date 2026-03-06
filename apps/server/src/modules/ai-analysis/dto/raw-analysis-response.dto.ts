@@ -10,6 +10,18 @@ export class RawAnalysisResponseDto {
   })
   rawModelResponse: string | null;
 
+  @ApiProperty({
+    description: 'System prompt sent to the LLM model',
+    nullable: true,
+  })
+  systemPrompt: string | null;
+
+  @ApiProperty({
+    description: 'User prompt sent to the LLM model',
+    nullable: true,
+  })
+  userPrompt: string | null;
+
   @ApiProperty({ description: 'Timestamp when analysis was created' })
   createdAt: Date;
 
