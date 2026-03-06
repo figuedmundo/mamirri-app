@@ -260,6 +260,78 @@ describe('PatientForm Logic', () => {
     );
   });
 
+  it('uses latest emergency contact DOM values on submit', async () => {
+    const user = userEvent.setup({ delay: null });
+    render(
+      <PatientForm
+        mode="create"
+        onSubmit={mockOnSubmit}
+        onCancel={mockOnCancel}
+      />,
+    );
+
+    await user.type(screen.getByLabelText(/Nombre completo \*/i), 'Juan Perez');
+    await user.type(
+      screen.getByLabelText(/Ocupación actual \*/i),
+      'Carpintero',
+    );
+    await user.type(screen.getByLabelText(/Teléfono \*/i), '1234567');
+
+    const datePicker = screen.getByTestId('split-date-picker');
+    fireEvent.change(datePicker, { target: { value: '1990-01-01' } });
+
+    const ecName = screen.getByLabelText(
+      /Contacto Emergencia \(Nombre\) \*/i,
+    ) as HTMLInputElement;
+    const ecPhone = screen.getByLabelText(
+      /Contacto Emergencia \(Teléfono\) \*/i,
+    ) as HTMLInputElement;
+
+    ecName.value = 'Maria Perez';
+    ecPhone.value = '87 654 321';
+
+    await user.click(screen.getByRole('button', { name: /Crear Paciente/i }));
+
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          emergencyContact: {
+            name: 'Maria Perez',
+            phone: '87654321',
+          },
+        }),
+      );
+    });
+  });
+
+  it('clears emergency contact error while typing', async () => {
+    const user = userEvent.setup({ delay: null });
+    render(
+      <PatientForm
+        mode="create"
+        onSubmit={mockOnSubmit}
+        onCancel={mockOnCancel}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: /Crear Paciente/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/El nombre del contacto es requerido/i),
+      ).toBeInTheDocument();
+    });
+
+    await user.type(
+      screen.getByLabelText(/Contacto Emergencia \(Nombre\) \*/i),
+      'M',
+    );
+
+    expect(
+      screen.queryByText(/El nombre del contacto es requerido/i),
+    ).not.toBeInTheDocument();
+  });
+
   it('populates form with initial data in edit mode', () => {
     const initialData = {
       name: 'Existing Patient',
