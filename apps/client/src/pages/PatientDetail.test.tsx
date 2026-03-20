@@ -63,6 +63,7 @@ vi.mock('../hooks/use-patients', () => ({
   }),
   useUpdatePatient: () => ({ mutateAsync: vi.fn() }),
   useCreateCase: () => ({ mutateAsync: mutateCreateCase, isPending: false }),
+  useUpdateCase: () => ({ mutateAsync: vi.fn(), isPending: false }),
 }));
 
 vi.mock('../hooks/use-media', () => ({

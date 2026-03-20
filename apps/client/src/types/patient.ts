@@ -397,6 +397,8 @@ export interface PatientProfileProps {
 
   onCreateCase?: () => void;
 
+  onEditCase?: (caseId: string) => void;
+
   onViewCase?: (caseId: string) => void;
 
   /** Called when patient data needs to be refreshed */

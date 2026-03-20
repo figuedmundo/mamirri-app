@@ -45,6 +45,7 @@ export function PatientProfile({
   onCaptureVideo,
   onSchedule,
   onCreateCase,
+  onEditCase,
   onViewCase,
   onRefresh,
 }: PatientProfileProps) {
@@ -370,6 +371,7 @@ export function PatientProfile({
                   clinicalCase={clinicalCase}
                   evaluation={getActiveEvaluation(clinicalCase)}
                   onViewCase={onViewCase}
+                  onEditCase={onEditCase}
                   getStatusColor={getStatusColor}
                   formatDate={formatDate}
                 />
@@ -524,6 +526,7 @@ interface ClinicalCaseCardProps {
   clinicalCase: ClinicalCase;
   evaluation?: Evaluation;
   onViewCase?: (caseId: string) => void;
+  onEditCase?: (caseId: string) => void;
   getStatusColor: (status: string) => string;
   formatDate: (date: string) => string;
 }
@@ -532,6 +535,7 @@ function ClinicalCaseCard({
   clinicalCase,
   evaluation,
   onViewCase,
+  onEditCase,
   getStatusColor,
   formatDate,
 }: ClinicalCaseCardProps) {
@@ -557,6 +561,19 @@ function ClinicalCaseCard({
                     ? 'Completado'
                     : 'Inactivo'}
               </span>
+              {onEditCase && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEditCase(clinicalCase.id);
+                  }}
+                  className="inline-flex items-center justify-center rounded-md p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+                  title="Editar caso"
+                >
+                  <Edit2 className="h-4 w-4" />
+                </button>
+              )}
             </div>
             <p className="mt-2 text-slate-600 dark:text-slate-400 line-clamp-2">
               {clinicalCase.consultationReason}

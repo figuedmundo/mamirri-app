@@ -57,6 +57,12 @@ export interface UpdateEvaluationDto {
   voiceNotes?: VoiceNote[];
 }
 
+export interface UpdateClinicalCaseDto {
+  title?: string;
+  consultationReason?: string;
+  status?: 'active' | 'completed' | 'inactive';
+}
+
 export interface UpdateTreatmentPlanObjectivesDto {
   therapeutic?: string;
   prophylactic?: string;
@@ -157,6 +163,11 @@ export const patientsApi = {
 
   createCase: async (data: CreateClinicalCaseDto) => {
     const response = await axios.post<ClinicalCase>('/cases', data);
+    return response.data;
+  },
+
+  updateCase: async (id: string, data: UpdateClinicalCaseDto) => {
+    const response = await axios.patch<ClinicalCase>(`/cases/${id}`, data);
     return response.data;
   },
 
