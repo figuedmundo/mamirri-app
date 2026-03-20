@@ -34,7 +34,7 @@
     "knowledge:list": "ts-node scripts/list-books.ts",
     "knowledge:update": "ts-node scripts/update-book.ts",
     "knowledge:archive": "ts-node scripts/archive-book.ts",
-    "knowledge:backup": "docker exec -t physio_db pg_dump -U physio_user physio_db | gzip > ../../backups/full_db_$(date +%Y%m%d_%H%M%S).sql.gz",
+    "knowledge:backup": "docker exec physio_db pg_dump -U physio_user physio_db 2>/dev/null | gzip > ../../backups/full_db_$(date +%Y%m%d_%H%M%S).sql.gz",
     "knowledge:export": "ts-node scripts/export-book.ts",
     "knowledge:import": "ts-node scripts/restore-db.ts",
     "knowledge:wipe": "docker exec -it physio_db psql -U physio_user -d physio_db -c \"TRUNCATE documents, embeddings CASCADE;\"",

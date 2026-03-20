@@ -46,7 +46,7 @@ export class TranscriptionProcessor {
     }
 
     for (const evaluation of evaluations) {
-      const voiceNotes = evaluation.voiceNotes as unknown as VoiceNote[];
+      const voiceNotes = evaluation.voiceNotes as VoiceNote[];
       if (!Array.isArray(voiceNotes)) continue;
 
       let updated = false;
@@ -94,7 +94,7 @@ export class TranscriptionProcessor {
     }
 
     for (const session of sessions) {
-      const voiceNotes = session.voiceNotes as unknown as VoiceNote[];
+      const voiceNotes = session.voiceNotes as VoiceNote[];
       if (!Array.isArray(voiceNotes)) continue;
 
       let updated = false;

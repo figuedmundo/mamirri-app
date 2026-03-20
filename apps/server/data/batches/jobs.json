@@ -523,5 +523,201 @@
       "success": 381,
       "errors": 0
     }
+  },
+  {
+    "batchId": "batch-7vpHSnWfX2XE2nvKwqd9fyemdFMdyStmDtAwz",
+    "bookTitle": "Biophysical Foundations of Human Movement",
+    "status": "completed",
+    "chunkCount": 720,
+    "timestamp": "2026-03-18T00:41:18.129Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/biophysical_foundations_of_human_movement_1773794475109.json",
+    "documentId": "bfb4b873-e6ed-4a6f-a0fd-38b5abb09d01",
+    "completedAt": "2026-03-18T00:53:33.294Z",
+    "stats": {
+      "success": 720,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrGWZE7QS6jt8GPQTWuGaagsj75YEuUrN",
+    "bookTitle": "clinical biomechanics of the lower extremities",
+    "status": "completed",
+    "chunkCount": 888,
+    "timestamp": "2026-03-18T00:41:21.207Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/clinical_biomechanics_of_the_lower_extremities_1773794478554.json",
+    "documentId": "51b3354d-d39b-468f-85ee-212bc960e394",
+    "completedAt": "2026-03-18T00:53:40.224Z",
+    "stats": {
+      "success": 888,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrGbNTxMn9kD3fPUGr9ZhQfg5czbq2ecY",
+    "bookTitle": "Foot Orthoses: Principles and Clinical Applications",
+    "status": "completed",
+    "chunkCount": 537,
+    "timestamp": "2026-03-18T00:41:23.255Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/foot_orthoses__principles_and_clinical_applications_1773794481478.json",
+    "documentId": "5dd94211-760b-40ec-a77c-9e69017836ca",
+    "completedAt": "2026-03-18T00:53:46.153Z",
+    "stats": {
+      "success": 537,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrGdceYvpeG59xdbhUUTtXAf5pxBrzkXL",
+    "bookTitle": "Handbook of footwear design and manufacture",
+    "status": "completed",
+    "chunkCount": 485,
+    "timestamp": "2026-03-18T00:41:24.920Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/handbook_of_footwear_design_and_manufacture_1773794483466.json",
+    "documentId": "8a95e302-62ec-47e1-9465-1e3f68b50444",
+    "completedAt": "2026-03-18T00:53:51.711Z",
+    "stats": {
+      "success": 485,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrGhR6J3vquju12Rd3ag5hMMRHr6NGcix",
+    "bookTitle": "Human Walking",
+    "status": "completed",
+    "chunkCount": 476,
+    "timestamp": "2026-03-18T00:41:26.941Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/human_walking_1773794485190.json",
+    "documentId": "7898fc40-ea0f-4d3f-850d-d91dfe93db02",
+    "completedAt": "2026-03-18T00:53:57.295Z",
+    "stats": {
+      "success": 476,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrHpEsmYE4x4tsT3pbwYaatGbSw9Xj65f",
+    "bookTitle": "Kinesiology of the Musculoskeletal System: Foundations for Rehabilitation",
+    "status": "completed",
+    "chunkCount": 1641,
+    "timestamp": "2026-03-18T00:41:32.330Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/kinesiology_of_the_musculoskeletal_system__foundations_for_rehabilitation_1773794487750.json",
+    "documentId": "9776a67d-12d5-47e2-adb4-5b1f25df5b2a",
+    "completedAt": "2026-03-18T00:54:09.031Z",
+    "stats": {
+      "success": 1641,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrHt5HZzfsxH4TanDwEwmf1Rcu9VBPNbX",
+    "bookTitle": "La salud a tus pies",
+    "status": "completed",
+    "chunkCount": 143,
+    "timestamp": "2026-03-18T00:41:33.386Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/la_salud_a_tus_pies_1773794492438.json",
+    "documentId": "b4c04af3-8d68-465c-976b-de6316e10250",
+    "completedAt": "2026-03-18T00:54:13.349Z",
+    "stats": {
+      "success": 143,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrJmbeqNNXz6rDvsEPFtwPK9cvAzgsenr",
+    "bookTitle": "Manual Mobilization of the Joints: Traction-Manipulation of the Extremities and Spine",
+    "status": "completed",
+    "chunkCount": 98,
+    "timestamp": "2026-03-18T00:41:34.139Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/manual_mobilization_of_the_joints__traction_manipulation_of_the_extremities_and_spine_1773794493436.json",
+    "documentId": "72c38f3f-163d-4b82-aa6e-19e18040d8f1",
+    "completedAt": "2026-03-18T00:54:16.154Z",
+    "stats": {
+      "success": 98,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrJqQiU8Q9CfxPLEYN5wY7s8XkPrsTBTn",
+    "bookTitle": "Manual Mobilization of the Joints: Joint Examination and Basic Treatment",
+    "status": "completed",
+    "chunkCount": 363,
+    "timestamp": "2026-03-18T00:41:35.278Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/manual_mobilization_of_the_joints__joint_examination_and_basic_treatment_1773794494266.json",
+    "documentId": "032a2388-30c4-4f55-a87b-1bcad061948d",
+    "completedAt": "2026-03-18T00:54:20.756Z",
+    "stats": {
+      "success": 363,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrJtRbzwzVghNocrsopJV5EgXAxUPmLZB",
+    "bookTitle": "Movement: Functional Movement Systems: Screening, Assessment and Corrective Strategies",
+    "status": "completed",
+    "chunkCount": 735,
+    "timestamp": "2026-03-18T00:41:37.652Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/movement__functional_movement_systems__screening__assessment_and_corrective_strategies_1773794495611.json",
+    "documentId": "9145b28d-2a57-4fcf-82c1-cc93fac5d47c",
+    "completedAt": "2026-03-18T00:54:27.873Z",
+    "stats": {
+      "success": 735,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrJvZT2G5qRhyTSYtH2vhBcJWoNEJqnhL",
+    "bookTitle": "Orthopedic Shoe Repair Illustrated",
+    "status": "completed",
+    "chunkCount": 34,
+    "timestamp": "2026-03-18T00:41:38.427Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/orthopedic_shoe_repair_illustrated_1773794497692.json",
+    "documentId": "2e6f8be9-f5b7-4b97-8615-67f661d581bb",
+    "completedAt": "2026-03-18T00:54:31.026Z",
+    "stats": {
+      "success": 34,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrJzfY3gLf5DiBUC3XL5CyJoyyZwEahTL",
+    "bookTitle": "Parametric Design of Custom Foot Orthotic Model",
+    "status": "completed",
+    "chunkCount": 17,
+    "timestamp": "2026-03-18T00:41:39.127Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/parametric_design_of_custom_foot_orthotic_model_1773794498463.json",
+    "documentId": "53047c76-91ef-45b1-99d8-afa69a92d960",
+    "completedAt": "2026-03-18T00:54:32.775Z",
+    "stats": {
+      "success": 17,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrK6dnvmpfZrgf9zE6LpQyLCNfjnBCnEp",
+    "bookTitle": "Ross and Wilson Anatomy and Physiology in Health and Illness",
+    "status": "completed",
+    "chunkCount": 830,
+    "timestamp": "2026-03-18T00:41:42.916Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/ross_and_wilson_anatomy_and_physiology_in_health_and_illness_1773794499497.json",
+    "documentId": "f7c3b70b-4ea1-4efe-8c53-206d69a0cf54",
+    "completedAt": "2026-03-18T00:54:39.267Z",
+    "stats": {
+      "success": 830,
+      "errors": 0
+    }
+  },
+  {
+    "batchId": "batch-7vpHSrL3CDBUavZn7t8UFH93ULCJbG4GuffPK",
+    "bookTitle": "The Biomechanics of the Foot and Ankle",
+    "status": "completed",
+    "chunkCount": 528,
+    "timestamp": "2026-03-18T00:41:44.701Z",
+    "stagingFilePath": "/Users/edmundo.figueroaherbas@medirect.com.mt/projects/personal/mamirri-app/apps/server/data/batches/staging/the_biomechanics_of_the_foot_and_ankle_1773794503144.json",
+    "documentId": "97a7e531-10d1-432b-bfd8-97f06421d16a",
+    "completedAt": "2026-03-18T00:54:44.619Z",
+    "stats": {
+      "success": 528,
+      "errors": 0
+    }
   }
 ]
