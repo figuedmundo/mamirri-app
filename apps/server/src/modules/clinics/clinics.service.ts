@@ -334,7 +334,8 @@ export class ClinicsService {
       },
     });
 
-    const baseUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
+    const baseUrl =
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
     const inviteUrl = `${baseUrl}/invite/accept?token=${invitation.token}`;
 
     // Send invitation email (graceful degradation if email service unavailable)

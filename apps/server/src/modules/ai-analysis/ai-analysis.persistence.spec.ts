@@ -359,10 +359,8 @@ describe('AiAnalysis Persistence', () => {
           ...mockAnalysisResult.metadata,
           rawModelResponse:
             'Contact test@example.com phone +356 9912 3456 token eyJabc.def.ghi',
-          systemPrompt:
-            'System prompt with email admin@clinic.com',
-          userPrompt:
-            'User prompt with phone +356 7777 8888',
+          systemPrompt: 'System prompt with email admin@clinic.com',
+          userPrompt: 'User prompt with phone +356 7777 8888',
         },
       },
       clinicalCase: {

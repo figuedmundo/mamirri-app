@@ -38,12 +38,19 @@ async function bootstrap() {
     process.exit(1);
   }
 
-  const absolutePath = path.isAbsolute(backupFile)
-    ? backupFile
-    : path.resolve(process.cwd(), backupFile);
+  const monorepoRoot = path.resolve(__dirname, '../../..');
+  const candidates = path.isAbsolute(backupFile)
+    ? [backupFile]
+    : [
+        path.resolve(process.cwd(), backupFile),
+        path.resolve(monorepoRoot, backupFile),
+      ];
 
-  if (!fs.existsSync(absolutePath)) {
-    console.error(`❌ Error: Backup file not found at ${absolutePath}`);
+  const absolutePath = candidates.find((p) => fs.existsSync(p));
+
+  if (!absolutePath) {
+    console.error(`❌ Error: Backup file not found. Tried:`);
+    candidates.forEach((p) => console.error(`   - ${p}`));
     process.exit(1);
   }
 

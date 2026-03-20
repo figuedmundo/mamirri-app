@@ -10,6 +10,7 @@ import {
   usePatientQuery,
   useUpdatePatient,
   useCreateCase,
+  useUpdateCase,
 } from '../hooks/use-patients';
 import {
   useUploadEvaluationVoiceNote,
@@ -47,6 +48,7 @@ export default function PatientDetail() {
   const { data: patient, isLoading, isError } = usePatientQuery(id!);
   const updatePatient = useUpdatePatient();
   const createCase = useCreateCase();
+  const updateCase = useUpdateCase();
   const uploadVoiceNote = useUploadEvaluationVoiceNote();
   const uploadVideo = useUploadPostureVideo();
 
@@ -59,6 +61,14 @@ export default function PatientDetail() {
   const [createCaseTitleError, setCreateCaseTitleError] = useState<
     string | null
   >(null);
+
+  const [isEditCaseOpen, setIsEditCaseOpen] = useState(false);
+  const [editCaseId, setEditCaseId] = useState<string | null>(null);
+  const [editCaseTitle, setEditCaseTitle] = useState('');
+  const [editCaseReason, setEditCaseReason] = useState('');
+  const [editCaseTitleError, setEditCaseTitleError] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     if (isError) {
@@ -305,6 +315,50 @@ export default function PatientDetail() {
     resetCreateCaseForm();
   };
 
+  const handleEditCase = (caseId: string) => {
+    const clinicalCase = patient?.clinicalCases.find((c) => c.id === caseId);
+    if (!clinicalCase) return;
+    setEditCaseId(caseId);
+    setEditCaseTitle(clinicalCase.title);
+    setEditCaseReason(clinicalCase.consultationReason || '');
+    setEditCaseTitleError(null);
+    setIsEditCaseOpen(true);
+  };
+
+  const closeEditCaseDialog = () => {
+    setIsEditCaseOpen(false);
+    setEditCaseId(null);
+    setEditCaseTitle('');
+    setEditCaseReason('');
+    setEditCaseTitleError(null);
+  };
+
+  const handleEditCaseSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!id || !editCaseId) return;
+
+    const title = editCaseTitle.trim();
+    if (title.length < 3) {
+      setEditCaseTitleError('El titulo debe tener al menos 3 caracteres.');
+      return;
+    }
+    if (title.length > 200) {
+      setEditCaseTitleError('El titulo no puede exceder 200 caracteres.');
+      return;
+    }
+
+    await updateCase.mutateAsync({
+      id: editCaseId,
+      patientId: id,
+      data: {
+        title,
+        consultationReason: editCaseReason.trim(),
+      },
+    });
+
+    closeEditCaseDialog();
+  };
+
   if (isLoading) {
     return (
       <div className="p-8 flex items-center justify-center min-h-[400px]">
@@ -341,6 +395,7 @@ export default function PatientDetail() {
         patient={patient}
         onEdit={handleEdit}
         onCreateCase={handleCreateCase}
+        onEditCase={handleEditCase}
         onVoiceDictation={handleVoiceDictation}
         onCaptureFootprint={handleCaptureFootprint}
         onCaptureVideo={handleCaptureVideo}
@@ -477,6 +532,90 @@ export default function PatientDetail() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog
+        open={isEditCaseOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            closeEditCaseDialog();
+            return;
+          }
+          setIsEditCaseOpen(true);
+        }}
+      >
+        <DialogContent className="sm:max-w-[560px] p-0">
+          <DialogHeader className="border-b p-6">
+            <DialogTitle>Editar Caso Clinico</DialogTitle>
+            <DialogDescription className="sr-only">
+              Formulario para editar el caso clinico del paciente.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form className="space-y-4 p-6" onSubmit={handleEditCaseSubmit}>
+            <div className="space-y-2">
+              <label
+                htmlFor="edit-case-title"
+                className="text-sm font-medium text-slate-700 dark:text-slate-300"
+              >
+                Titulo *
+              </label>
+              <input
+                id="edit-case-title"
+                type="text"
+                value={editCaseTitle}
+                onChange={(event) => {
+                  setEditCaseTitle(event.target.value);
+                  if (editCaseTitleError) {
+                    setEditCaseTitleError(null);
+                  }
+                }}
+                maxLength={200}
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                placeholder="Ej: Rehabilitacion de hombro"
+              />
+              {editCaseTitleError && (
+                <p className="text-xs text-rose-600 dark:text-rose-400">
+                  {editCaseTitleError}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="edit-case-reason"
+                className="text-sm font-medium text-slate-700 dark:text-slate-300"
+              >
+                Motivo de consulta
+              </label>
+              <textarea
+                id="edit-case-reason"
+                value={editCaseReason}
+                onChange={(event) => setEditCaseReason(event.target.value)}
+                rows={4}
+                className="w-full resize-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                placeholder="Describe brevemente el motivo de consulta"
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={closeEditCaseDialog}
+                className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                disabled={updateCase.isPending}
+                className="inline-flex items-center justify-center rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {updateCase.isPending ? 'Guardando...' : 'Guardar Cambios'}
+              </button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={isVideoDialogOpen} onOpenChange={setIsVideoDialogOpen}>
         <DialogContent className="sm:max-w-[500px] h-[80vh] flex flex-col p-0 overflow-hidden">

@@ -4,6 +4,7 @@ import type {
   CreateClinicalCaseDto,
   CreatePatientDto,
   CreateTreatmentSessionDto,
+  UpdateClinicalCaseDto,
   UpdateEvaluationDto,
   UpdateTreatmentSessionDto,
   UpdateTreatmentPlanObjectivesDto,
@@ -69,6 +70,39 @@ export function useCreateCase() {
       toast({
         title: 'Error',
         description: 'No se pudo crear el caso clinico',
+        variant: 'destructive',
+      });
+    },
+  });
+}
+
+export function useUpdateCase() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      patientId: string;
+      data: UpdateClinicalCaseDto;
+    }) => patientsApi.updateCase(id, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.patients.lists() });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.patients.detail(variables.patientId),
+      });
+      toast({
+        title: 'Éxito',
+        description: 'Caso clínico actualizado correctamente',
+      });
+    },
+    onError: () => {
+      toast({
+        title: 'Error',
+        description: 'No se pudo actualizar el caso clínico',
         variant: 'destructive',
       });
     },
